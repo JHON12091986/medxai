@@ -54,11 +54,11 @@ class NinaConfig(BaseModel):
     api_rate_limit_rpm:   int = 60
     ews_server:           str = "webmail.basicbanklimited.com"
     ews_domain:           str = "basic.bank"
-    ews_username:         str = "alamba"
+    ews_username:         Optional[str] = None
     ews_password:         Optional[str] = None
     ews_auth_type:        str = "NTLM"
-    ews_my_email:         str = "alamba@basicbanklimited.com"
-    ews_shared_email:     str = "basicid@basicbanklimited.com"
+    ews_my_email:         Optional[str] = None
+    ews_shared_email:     Optional[str] = None
     ews_max_emails:       int = 10
     ews_keywords:         str = "SWIFT,LC,MT103,MT202,MT700,discrepancy,amendment,BG,overdue,urgent"
     log_level:            str = "INFO"
@@ -102,7 +102,7 @@ def load_config() -> NinaConfig:
             "xai_api_key":"XAIAPIKEY","sambanova_api_key":"SAMBANOVAAPIKEY",
             "hyperbolic_api_key":"HYPERBOLICAPIKEY","novita_api_key":"NOVITAAPIKEY",
             "one_brain_api_key":"ONEBRAINAPIKEY","one_brain_api_base":"ONEBRAINAPIBASE",
-            "api_secret_key":"APISECRETKEY","ews_password":"EWSPASSWORD",
+            "api_secret_key":"APISECRETKEY","ews_password":"EWSPASSWORD","ews_username":"EWS_USERNAME","ews_my_email":"EWS_MY_EMAIL","ews_shared_email":"EWS_SHARED_EMAIL",
             "dead_man_ping_url":"DEADMANPINGURL",
         }.items() if os.getenv(v)}
     )
