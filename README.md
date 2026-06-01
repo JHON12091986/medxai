@@ -21,6 +21,19 @@ NINA (Neural Intelligence & Notification Agent) is a self-hosted, Telegram-based
 
 ---
 
+## Platform History
+
+NINA was originally developed on **Windows** (February–April 2026). Following the release of Ubuntu 26.04 LTS, the project was ported to a dedicated always-on Linux machine for continuous deployment.
+
+| Phase | Platform | Versions |
+|-------|----------|----------|
+| Development | Windows 11, Python 3.11+ | v1.0 – v8.0 |
+| Production | Ubuntu 26.04 LTS, Python 3.14 | v9.0 – present |
+
+Core Python logic is platform-agnostic. Windows users can run NINA under WSL2 or native Python without modification.
+
+---
+
 ## Requirements
 
 - Python 3.10+
