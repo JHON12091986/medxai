@@ -1,0 +1,18 @@
+[
+  {
+    "id": "GROQ_FREE",
+    "base": "https://api.groq.com/openai/v1",
+    "model": "llama-3.3-70b-versatile",
+    "key_required": true,
+    "healthy": false,
+    "checked_at": "2026-05-22T02:00:00+0600"
+  },
+  {
+    "id": "CEREBRAS_FREE",
+    "base": "https://api.cerebras.ai/v1",
+    "model": "llama-3.3-70b",
+    "key_required": true,
+    "healthy": false,
+    "checked_at": "2026-05-22T02:00:00+0600"
+  }
+]

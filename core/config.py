@@ -1,0 +1,115 @@
+"""NINA v12 — NinaConfig + RATELIMITS (Stage 1+2)."""
+import os
+from pathlib import Path
+from pydantic import BaseModel
+from typing import Optional
+from dotenv import load_dotenv
+
+load_dotenv()
+
+RATELIMITS = {
+    "GROQ":       {"rpm":30,  "tpd":14400,   "rpd":14400, "min_spacing_s":2},
+    "CEREBRAS":   {"rpm":30,  "tpd":100000,  "rpd":None,  "min_spacing_s":2},
+    "GEMINI":     {"rpm":15,  "tpd":1500000, "rpd":1500,  "min_spacing_s":4},
+    "MISTRAL":    {"rpm":1,   "tpd":None,    "rpd":None,  "min_spacing_s":61},
+    "POLLINATIONS":{"rpm":5,  "tpd":None,    "rpd":None,  "min_spacing_s":12},
+    "CHUTES":     {"rpm":3,   "tpd":None,    "rpd":None,  "min_spacing_s":20},
+    "HFPUBLIC":   {"rpm":10,  "tpd":None,    "rpd":None,  "min_spacing_s":6},
+    "DEEPSEEK":   {"rpm":60,  "tpd":500000,  "rpd":None,  "min_spacing_s":1},
+    "TOGETHER":   {"rpm":60,  "tpd":None,    "rpd":None,  "min_spacing_s":1},
+    "COHERE":     {"rpm":20,  "tpd":None,    "rpd":1000,  "min_spacing_s":3},
+    "FIREWORKS":  {"rpm":30,  "tpd":None,    "rpd":None,  "min_spacing_s":2},
+    "XAI":        {"rpm":60,  "tpd":None,    "rpd":None,  "min_spacing_s":1},
+    "SAMBANOVA":  {"rpm":30,  "tpd":100000,  "rpd":None,  "min_spacing_s":2},
+    "HYPERBOLIC": {"rpm":60,  "tpd":None,    "rpd":None,  "min_spacing_s":1},
+    "NOVITA":     {"rpm":30,  "tpd":None,    "rpd":None,  "min_spacing_s":2},
+    "PERPLEXITY": {"rpm":50,  "tpd":None,    "rpd":None,  "min_spacing_s":2},
+    "OPENAI":     {"rpm":500, "tpd":None,    "rpd":None,  "min_spacing_s":0},
+    "ONEBRAIN":   {"rpm":20,  "tpd":None,    "rpd":None,  "min_spacing_s":3},
+    "OPENROUTER": {"rpm":20,  "tpd":None,    "rpd":None,  "min_spacing_s":3},
+}
+
+class NinaConfig(BaseModel):
+    telegram_bot_token:   str
+    authorized_user_id:   str
+    ollama_host:          str = "http://localhost:11434"
+    cerebras_api_key:     Optional[str] = None
+    groq_api_key:         Optional[str] = None
+    gemini_api_key:       Optional[str] = None
+    mistral_api_key:      Optional[str] = None
+    openrouter_api_key:   Optional[str] = None
+    openai_api_key:       Optional[str] = None
+    deepseek_api_key:     Optional[str] = None
+    perplexity_api_key:   Optional[str] = None
+    together_api_key:     Optional[str] = None
+    cohere_api_key:       Optional[str] = None
+    fireworks_api_key:    Optional[str] = None
+    xai_api_key:          Optional[str] = None
+    sambanova_api_key:    Optional[str] = None
+    hyperbolic_api_key:   Optional[str] = None
+    novita_api_key:       Optional[str] = None
+    one_brain_api_key:    Optional[str] = None
+    one_brain_api_base:   Optional[str] = None
+    api_secret_key:       Optional[str] = None
+    api_rate_limit_rpm:   int = 60
+    ews_server:           str = "webmail.basicbanklimited.com"
+    ews_domain:           str = "basic.bank"
+    ews_username:         str = "alamba"
+    ews_password:         Optional[str] = None
+    ews_auth_type:        str = "NTLM"
+    ews_my_email:         str = "alamba@basicbanklimited.com"
+    ews_shared_email:     str = "basicid@basicbanklimited.com"
+    ews_max_emails:       int = 10
+    ews_keywords:         str = "SWIFT,LC,MT103,MT202,MT700,discrepancy,amendment,BG,overdue,urgent"
+    log_level:            str = "INFO"
+    workspace_dir:        Path = Path("data/workspace")
+    max_ram_gb:           float = 12.0
+    ram_guard_gb:         float = 10.5
+    disk_guard_pct:       float = 90.0
+    idle_threshold_min:   int = 15
+    idle_report_min:      int = 30
+    idle_auto_approve:    bool = False
+    session_max_turns:    int = 20
+    agent_timeout_s:      int = 300
+    flood_window_s:       int = 30
+    flood_max_messages:   int = 10
+    dead_man_ping_url:    Optional[str] = None
+    dead_man_max_interval_min: int = 65
+    thermal_warn_cpu:     int = 80
+    thermal_warn_gpu:     int = 80
+    thermal_guard_cpu:    int = 90
+    thermal_guard_gpu:    int = 85
+    thermal_critical_cpu: int = 95
+    thermal_critical_gpu: int = 90
+
+def load_config() -> NinaConfig:
+    tok = os.getenv("TELEGRAMBOTTOKEN")
+    uid = os.getenv("AUTHORIZEDUSERID")
+    if not tok:
+        raise RuntimeError("TELEGRAM_BOT_TOKEN missing from .env — cannot start NINA.")
+    if not uid:
+        raise RuntimeError("AUTHORIZED_USER_ID missing from .env — cannot start NINA.")
+    cfg = NinaConfig(
+        telegram_bot_token = tok,
+        authorized_user_id = uid,
+        **{k: os.getenv(v) for k,v in {
+            "ollama_host":"OLLAMAHOST","cerebras_api_key":"CEREBRASAPIKEY",
+            "groq_api_key":"GROQAPIKEY","gemini_api_key":"GEMINIAPIKEY",
+            "mistral_api_key":"MISTRALAPIKEY","openrouter_api_key":"OPENROUTERAPIKEY",
+            "openai_api_key":"OPENAIAPIKEY","deepseek_api_key":"DEEPSEEKAPIKEY",
+            "perplexity_api_key":"PERPLEXITYAPIKEY","together_api_key":"TOGETHERAPIKEY",
+            "cohere_api_key":"COHEREAPIKEY","fireworks_api_key":"FIREWORKSAPIKEY",
+            "xai_api_key":"XAIAPIKEY","sambanova_api_key":"SAMBANOVAAPIKEY",
+            "hyperbolic_api_key":"HYPERBOLICAPIKEY","novita_api_key":"NOVITAAPIKEY",
+            "one_brain_api_key":"ONEBRAINAPIKEY","one_brain_api_base":"ONEBRAINAPIBASE",
+            "api_secret_key":"APISECRETKEY","ews_password":"EWSPASSWORD",
+            "dead_man_ping_url":"DEADMANPINGURL",
+        }.items() if os.getenv(v)}
+    )
+    if v := os.getenv("IDLE_AUTO_APPROVE"):
+        cfg.idle_auto_approve = v.lower() == "true"
+    if v := os.getenv("IDLE_THRESHOLD_MIN"):
+        cfg.idle_threshold_min = int(v)
+    if v := os.getenv("IDLE_REPORT_MIN"):
+        cfg.idle_report_min = int(v)
+    return cfg
