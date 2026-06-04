@@ -171,7 +171,7 @@ None = sensor readings silently skipped — no false aborts.
 - Baseline will reset to PASS once a clean run clears the incident history
 - mypy 22 advisory findings are non-blocking (core/config.py NinaConfig kwargs, tools/system.py)
 
-## Development Policy (Summary — see nina-dev-policy.md for full rules)
+## Development Policy (Summary — see nina_dev_policy.md for full rules)
 1. One change per session. Never stack fixes.
 2. Run `./guardian` before AND after every patch to core/, tools/, or interfaces/
 3. Every patch needs a runtime proof — not just no import error
