@@ -1,6 +1,6 @@
 ---
 # NINA Context — Attach to every new Perplexity/Claude thread about NINA
-# Version: 12.2 | Updated: 2026-06-04 | Stage: A✅ B(partial) C(queued)
+# Version: 12.2 | Updated: 2026-06-05 | Stage: A✅ B(partial) C(queued)
 ---
 
 ## Owner Profile
@@ -40,6 +40,10 @@ If it passes, build it. If not, defer it.
     sudo systemctl stop nina
     sudo systemctl restart nina
     sudo systemctl status nina
+
+    # Post-session sync (RUN AT END OF EVERY SESSION)
+    cd ~/nina && ./nina_sync.sh      # Mirrors space files, commits, pushes, notifies Telegram
+    cd ~/nina && ./nina_sync.sh --dry-run   # Preview without committing
 
     # Logs
     journalctl -u nina -f            # Live
@@ -126,7 +130,8 @@ None = sensor readings silently skipped — no false aborts.
       data/memory/facts.json   Persistent key-value personal facts store (F-02 populated)
       logs/              8 rotating log files, 7-day retention
       .env               Secrets — NEVER commit, NEVER send to cloud
-      guardian.sh        Shell verification script — run after EVERY patch
+      guardian.sh        Shell verification script — run before AND after every patch
+      nina_sync.sh       Post-session sync — mirrors space files, commits, pushes, Telegram notify
 
 ## Telegram Commands
 | Command | Action |
@@ -180,6 +185,7 @@ None = sensor readings silently skipped — no false aborts.
 6. New capability = new tool file. Never add capability logic to core/nina.py
 7. Protected files — extra caution: interfaces/telegraminterface.py, .env, core/router.py
 8. Sensitive task = local model only. No exceptions.
+9. Run `./nina_sync.sh` at the end of every session — no exceptions.
 
 ## Phase 1 Status
 

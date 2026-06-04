@@ -1,8 +1,8 @@
 ---
-name: nina-dev-policy
+name: nina_dev_policy
 description: NINA's strict development policy and workflow rules. Load when helping with any code changes, patches, commits, or deployments to NINA. Every rule here is mandatory.
-version: 1.3
-updated: 2026-06-04
+version: 1.4
+updated: 2026-06-05
 ---
 
 # NINA Dev Policy v1.3
@@ -20,6 +20,18 @@ updated: 2026-06-04
 10. Warnings must be managed — ACCEPTED NOW / FIX NEXT / BLOCK RELEASE
 11. Small changes win — prefer one-line fixes over rewrites
 12. **Done = ID + one purpose + guardian ran + runtime verified + rollback exists + logs updated**
+13. **Run `./nina_sync.sh` at the end of every session** — commits space files, updates log, pushes to GitHub, notifies Telegram
+
+## Session Workflow
+
+    # Start of session
+    cd ~/nina && ./guardian          # Health check before any work
+
+    # End of session (mandatory)
+    cd ~/nina && ./nina_sync.sh      # Sync everything, commit, push, notify
+
+    # Dry-run preview (optional)
+    cd ~/nina && ./nina_sync.sh --dry-run
 
 ## Change ID System
 - `R-XX` — bug fix / reliability
@@ -103,3 +115,4 @@ Types: fix | feat | security | refactor | docs | chore
 - [ ] Rollback path documented
 - [ ] `nina_update_log.md` updated (Python append, not heredoc)
 - [ ] `nina_problem_log.md` updated if bug fixed or new issue found
+- [ ] `./nina_sync.sh` run at session end
