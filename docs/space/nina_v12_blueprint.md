@@ -3,7 +3,7 @@ Version: 12.2
 Type: Architecture & Design Reference
 Status: Active — Phase 1
 Owner: M. Baizid Alam, BASIC Bank, Dhaka
-Last Updated: 2026-06-04
+Last Updated: 2026-06-05
 Note: Public-safe architecture document. Does NOT contain system prompt, personality rules, or operator instructions.
 ---
 
@@ -83,11 +83,11 @@ Thermal guard overrides:
 | Shell | tools/shell.py | Shell command execution (allowlisted) |
 | Files | tools/files.py | File read/write operations |
 | System | tools/system.py | CPU/RAM/disk/thermal monitoring |
-| GPU Tuner | tools/gpu-tuner.py | Dynamic GPU management |
-| Office Mail | tools/office-mail.py | EWS/NTLM Exchange email access |
+| GPU Tuner | tools/gpu_tuner.py | Dynamic GPU management |
+| Office Mail | tools/office_mail.py | EWS/NTLM Exchange email access |
 | Finance | tools/finance.py | Expenditure tracker (Phase 1) |
 | Market | tools/market.py | DSE/CSE share alerts (Phase 1) |
-| Upgrade Pipeline | tools/upgrade-pipeline.py | Structured self-upgrade system |
+| Upgrade Pipeline | tools/upgrade_pipeline.py | Structured self-upgrade system |
 
 ## Guardian Watchdog
 Guardian is the reliability backbone of NINA. It:
@@ -101,7 +101,7 @@ Guardian MUST pass before any deployment.
 
 ## Scheduled Jobs (13 Core Jobs)
 | Job | Frequency | Purpose |
-|-----|-----------|---------|
+|-----|-----------|---------| 
 | Morning report | Daily 07:00 | Email triage + market summary |
 | Heartbeat | Every 5 min | Health check + Telegram alive signal |
 | Thermal health | Every 5 min | CPU/GPU temperature monitoring |
@@ -125,23 +125,27 @@ Guardian MUST pass before any deployment.
 ## File Naming Convention
 | Type | Convention | Example |
 |------|-----------|---------|
-| Documentation | UPPER-KEBAB.md for root docs | README.md, CHANGELOG.md |
-| Architecture docs | kebab-case.md in docs/ | docs/blueprint.md |
-| Python source | kebab-case.py | core/router.py |
-| Shell scripts | kebab-case.sh | guardian.sh |
-| Config/.env | UPPER_SNAKE keys | GROQ_API_KEY |
+| Root documentation | UPPER_SNAKE.md | README.md, CHANGELOG.md |
+| All other docs/space files | snake_case.md | nina_context.md, nina_dev_policy.md |
+| Python source files | snake_case.py | router.py, office_mail.py, gpu_tuner.py |
+| Shell scripts | snake_case.sh | guardian.sh, nina_sync.sh |
+| Config/.env keys | UPPER_SNAKE | GROQ_API_KEY, EWS_PASSWORD |
+| JSON/data files | snake_case.json | facts.json, expenses.json |
+| Directories | snake_case/ | tools/, crons/, interfaces/ |
+
+**Rule:** snake_case everywhere. No hyphens in any filename. Python imports break on hyphens.
 
 ## Repository Structure
     nina/
       README.md, CHANGELOG.md, CONTRIBUTING.md, SECURITY.md, LICENSE (MIT)
-      .env.example, requirements.txt, main.py, guardian.sh, nina.service
+      .env.example, requirements.txt, main.py, guardian.sh, nina_sync.sh, nina.service
       core/     agent.py, config.py, memory.py, nina.py, router.py, capabilities.py, hotreload.py
-      tools/    browser.py, files.py, finance.py, gpu-tuner.py, market.py,
-                office-mail.py, search.py, shell.py, system.py, upgrade-pipeline.py
-      interfaces/   api.py, telegram-interface.py
-      crons/        manager.py, backup-jobs.py
+      tools/    browser.py, files.py, finance.py, gpu_tuner.py, market.py,
+                office_mail.py, search.py, shell.py, system.py, upgrade_pipeline.py
+      interfaces/   api.py, telegram_interface.py
+      crons/        manager.py, backup_jobs.py
       data/         facts.json, expenses.json, reminders.json, jobs.sqlite (all gitignored)
-      docs/         blueprint.md, update-log.md, problem-log.md, phase1-trajectory.md
+      docs/         blueprint.md, update_log.md, problem_log.md, phase1_trajectory.md
 
 ## What Is NOT in the Public Repo
 | File | Reason |
