@@ -22,3 +22,4 @@ data/proposals/
 data/nina.pid
 data/.guardian_hash
 data/healthcheck_registry.txt
+logs/
