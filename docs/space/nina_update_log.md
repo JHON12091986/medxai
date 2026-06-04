@@ -351,3 +351,13 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Files changed:** docs/space/nina_context.md,docs/space/nina_dev_policy.md,docs/space/nina_update_log.md,nina_context.md,nina_dev_policy.md,upgrades/
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 019 — 2026-06-05 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_context.md,docs/space/nina_update_log.md,docs/space/nina_v12_blueprint.md,nina_context.md,nina_v12_blueprint.md,upgrades/
+
+**Verification:** git push OK, nina.service active
