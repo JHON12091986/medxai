@@ -56,8 +56,19 @@ class MemorySystem:
         except Exception:
             docs = []
 
+        # ── F-02: personal_context — fixed top section, always injected ─────
+        _pc: dict = {}
+        try:
+            if FACTS_FILE.exists():
+                _dd = json.loads(await asyncio.to_thread(FACTS_FILE.read_text))
+                _pc = _dd.get("personal_context", {})
+        except Exception:
+            _pc = {}
+
         prefs, recents = [], []
         for k, v in self.facts.items():
+            if k == "personal_context":
+                continue
             val   = v["value"] if isinstance(v, dict) else str(v)
             ts    = v.get("ts", 0.0) if isinstance(v, dict) else 0.0
             entry = f"{k}: {val}"
@@ -69,9 +80,17 @@ class MemorySystem:
         recents.sort(key=lambda x: x[0], reverse=True)
         recent_lines = [e for _, e in recents[:7]]
 
-        facts_block = "\n".join(prefs + recent_lines) or "(none)"
-        docs_block  = "\n".join(docs) if docs else "(none)"
-        return f"Facts:\n{facts_block}\nRecent context:\n{docs_block}"
+        parts = []
+        if _pc:
+            block = "\n".join(f"  {k}: {v}" for k, v in _pc.items())
+            parts.append(f"[Owner]\n{block}")
+        if prefs or recent_lines:
+            facts_block = "\n".join(prefs + recent_lines)
+            parts.append(f"Facts:\n{facts_block}")
+        if docs:
+            parts.append("Recent context:\n" + "\n".join(docs))
+
+        return "\n\n".join(parts) if parts else "(none)"
 
     async def save_turn(self, role: str, content: str):
         try:
