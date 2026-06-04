@@ -14,6 +14,18 @@ echo " NINA POST-SESSION SYNC  $(date '+%Y-%m-%d %H:%M')"
 echo "================================================"
 cd "$NINA"
 
+echo "[0/4] Health check..."
+HYPHEN_FILES=$(find "$NINA" -maxdepth 1 -name "nina-*.md" -o -name "nina-*.sh" | sed "s|$NINA/||" | sort)
+UNDER_FILES=$(find "$NINA" -maxdepth 1 -name "nina_*.md" -o -name "nina_*.sh" | sed "s|$NINA/||" | sort)
+if [ -n "$HYPHEN_FILES" ] && [ -n "$UNDER_FILES" ]; then
+  echo "  ⚠ Naming inconsistency detected in ~/nina/ root:"
+  echo "    Hyphen files:    $(echo $HYPHEN_FILES | tr ' ' ',')"
+  echo "    Underscore files: $(echo $UNDER_FILES | tr ' ' ',')"
+  echo "    → Consider standardizing to underscore (see nina-dev-policy.md)"
+else
+  echo "  ✓ Naming convention consistent"
+fi
+
 echo "[1/4] Auto-fetch from Downloads..."
 for f in "${!SPACE_SOURCES[@]}"; do
   if [ -f "$DOWNLOADS/$f" ]; then
