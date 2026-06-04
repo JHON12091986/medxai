@@ -311,3 +311,13 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Verification:** py_compile OK, service restarted PID 13115, Telegram identity test passed
 
 **Rollback:** cp upgrades/backups/memory.py.bak.20260604_190900 core/memory.py
+
+---
+
+## Entry 015 — 2026-06-05 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** nina_sync.sh,upgrades/
+
+**Verification:** git push OK, nina.service active

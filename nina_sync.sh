@@ -34,7 +34,7 @@ _tg_notify() {
   user_id=$(grep -E '^AUTHORIZEDUSERID=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
   if [ -n "$token" ] && [ -n "$user_id" ]; then
     curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
-      -d "chat_id=${user_id}" -d "text=${msg}" -d "parse_mode=HTML" > /dev/null 2>&1 || true
+      -d "chat_id=${user_id}" -d "text=${msg}" > /dev/null 2>&1 || true
   fi
 }
 
@@ -156,12 +156,12 @@ else
     git push origin main
     STAT=$(git show --stat HEAD | tail -1)
     echo "  ✓ Pushed — $STAT"
-    _tg_notify "✅ <b>NINA sync</b> [$TS]
+    _tg_notify "✅ NINA sync [$TS]
 $STAT
 Service: $SVC_STATUS"
   else
     echo "  Nothing to commit"
-    _tg_notify "ℹ️ <b>NINA sync</b> [$TS] — nothing to commit. Service: $SVC_STATUS"
+    _tg_notify "ℹ️ NINA sync [$TS] — nothing to commit. Service: $SVC_STATUS"
   fi
 fi
 
