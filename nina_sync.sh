@@ -22,7 +22,7 @@ TS=$(date '+%Y-%m-%d %H:%M')
 DATE=$(date '+%Y-%m-%d')
 
 echo "================================================"
-echo " NINA POST-SESSION SYNC  $TS${DRY_RUN:+ [DRY-RUN]}"
+echo " NINA POST-SESSION SYNC  $TS$([ "$DRY_RUN" = true ] && echo " [DRY-RUN]")"
 echo "================================================"
 
 cd "$NINA"
