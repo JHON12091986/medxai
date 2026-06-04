@@ -56,7 +56,7 @@ $ALL_OK || echo "  ⚠ Some files missing — check above"
 echo "[3/4] Staging..."
 git add docs/space/ nina_context.md nina_dev_policy.md nina_phase1_roadmap.md \
         nina_v12_blueprint.md core/memory.py data/memory/facts.json \
-        nina-sync.sh 2>/dev/null || true
+        nina_sync.sh 2>/dev/null || true
 git add -u 2>/dev/null || true
 
 echo "[4/4] Committing..."
