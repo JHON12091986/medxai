@@ -3,8 +3,8 @@ NINA=~/nina
 DOWNLOADS=~/Downloads
 declare -A SPACE_SOURCES=(
   [nina_context.md]="$NINA/nina_context.md"
-  [nina-dev-policy.md]="$NINA/nina-dev-policy.md"
-  [nina-phase1-roadmap.md]="$NINA/nina-phase1-roadmap.md"
+  [nina_dev_policy.md]="$NINA/nina_dev_policy.md"
+  [nina_phase1_roadmap.md]="$NINA/nina_phase1_roadmap.md"
   [nina_v12_blueprint.md]="$NINA/nina_v12_blueprint.md"
   [nina_update_log.md]="$NINA/logs/nina_update_log.md"
   [nina_problem_log.md]="$NINA/logs/nina_problem_log.md"
@@ -21,7 +21,7 @@ if [ -n "$HYPHEN_FILES" ] && [ -n "$UNDER_FILES" ]; then
   echo "  ⚠ Naming inconsistency detected in ~/nina/ root:"
   echo "    Hyphen files:    $(echo $HYPHEN_FILES | tr ' ' ',')"
   echo "    Underscore files: $(echo $UNDER_FILES | tr ' ' ',')"
-  echo "    → Consider standardizing to underscore (see nina-dev-policy.md)"
+  echo "    → Consider standardizing to underscore (see nina_dev_policy.md)"
 else
   echo "  ✓ Naming convention consistent"
 fi
@@ -54,7 +54,7 @@ done
 $ALL_OK || echo "  ⚠ Some files missing — check above"
 
 echo "[3/4] Staging..."
-git add docs/space/ nina_context.md nina-dev-policy.md nina-phase1-roadmap.md \
+git add docs/space/ nina_context.md nina_dev_policy.md nina_phase1_roadmap.md \
         nina_v12_blueprint.md core/memory.py data/memory/facts.json \
         nina-sync.sh 2>/dev/null || true
 git add -u 2>/dev/null || true
