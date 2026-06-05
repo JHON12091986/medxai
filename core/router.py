@@ -210,19 +210,19 @@ class ResponseCache:
     def __init__(self):
         self.s: dict = {}
 
-    def _k(self, prompt: str, messages: list = None) -> str:
+    def _k(self, prompt: str, messages: list | None = None) -> str:
         ctx = prompt.strip().lower()
         if messages:
             ctx += "".join(f"{m.get('role','')}:{m.get('content','')}" for m in messages[-4:])
         return hashlib.sha256(ctx.encode("utf-8", errors="replace")).hexdigest()
 
-    def get(self, prompt: str, tt: str, messages: list = None) -> Optional[str]:
+    def get(self, prompt: str, tt: str, messages: list | None = None) -> Optional[str]:
         if CACHE_TTL.get(tt, 0) == 0:
             return None
         e = self.s.get(self._k(prompt, messages))
         return e["response"] if e and time.time() < e["expires_at"] else None
 
-    def set(self, prompt: str, tt: str, response: str, provider: str, messages: list = None):
+    def set(self, prompt: str, tt: str, response: str, provider: str, messages: list | None = None):
         if len(self.s) > 500:
             self.purge_expired()
         ttl = CACHE_TTL.get(tt, 0)
@@ -340,7 +340,8 @@ class HybridRouter:
     def _ordered_providers(self, task: ClassifiedTask, force_local: bool = False) -> list:
         if task.is_sensitive or force_local:
             return ["LOCALFAST", "LOCALHEAVY"]
-        avail, degraded = [], []
+        avail: list[str] = []
+        degraded: list[str] = []
         for pid, h in self.health.items():
             if pid in LOCAL_PROVIDERS:
                 continue
@@ -418,7 +419,7 @@ class HybridRouter:
 
     async def call_provider(self, pid: str, messages: list, task: ClassifiedTask):
         backoffs = [0.0, 1.0]
-        last_exc = None
+        last_exc: Exception | None = None
         for attempt, delay in enumerate(backoffs):
             if delay > 0:
                 await asyncio.sleep(delay)

@@ -93,7 +93,7 @@ def load_config() -> NinaConfig:
     cfg = NinaConfig(
         telegram_bot_token = tok,
         authorized_user_id = uid,
-        **{k: os.getenv(v) for k,v in {
+        **{k: os.getenv(v) for k,v in {  # type: ignore  # dynamically populated config fields
             "ollama_host":"OLLAMAHOST","cerebras_api_key":"CEREBRASAPIKEY",
             "groq_api_key":"GROQAPIKEY","gemini_api_key":"GEMINIAPIKEY",
             "mistral_api_key":"MISTRALAPIKEY","openrouter_api_key":"OPENROUTERAPIKEY",
