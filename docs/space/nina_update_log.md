@@ -735,15 +735,27 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 053 — 2026-06-06 · Security Guard for Remote Patches
+## Entry 053 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 054 — 2026-06-06 · Fix mypy type advisories
 
 **Triggered by:** Manual/Agent intervention
 
 **What changed:** 
-- `tools/upgradepipeline.py`: Added strict Content-Type checking (`text/` and `application/json`) and a maximum file size limit (512KB) before processing any remote patch payloads fetched via `httpx`. (R-88)
+- `tools/system.py`: Annotated `temps` variable with `Dict[str, Optional[int]]` to fix assignment type checking.
+- `tools/search.py`: Changed intermediate variable name from `results` to `ddg_results` to prevent `list` reassignment over an implicitly inferred `str` type and adjusted logging reference.
+- `core/router.py`: Cast `RATELIMITS` to `dict` during `get()` calls in `is_near_limit` and `is_exhausted` functions to resolve untyped object attribute errors. (R-89)
 
 **Verification:** 
-- Compiled and linted `tools/upgradepipeline.py` with `python3 -m py_compile` and `pyflakes`. Both passed.
+- `python3 -m py_compile`, `pyflakes`, and `mypy --ignore-missing-imports` ran successfully and all 5 specific lines were cleared from the advisory list.
 
 **Rollback path:** 
-- Revert commit R-88 via `git revert`.
+- Revert commit R-89 via `git revert`.
