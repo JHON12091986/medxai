@@ -477,3 +477,63 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Commit:** `feat: calibrate system prompt tone, remove duplicate tools block F-03`
 
+
+---
+
+## Entry 028 — 2026-06-05 · DEV 5 — Bangla Pipeline Repair
+
+**Session:** DEV 5  
+**Health score:** 8.2/10 (WARN — deploy not blocked)  
+**Date:** 2026-06-05 22:17 +0600
+
+### Features completed
+
+**F-03 through F-03f — Tone Calibration & Bangla Detection**
+- F-03: `SYSTEM_PROMPT_TEMPLATE` tone block added (`core/nina.py`) — peer-level register, zero-filler, language mirroring
+- F-03a–F-03e: Bangla language detection and override prepend implemented iteratively
+- F-03f: `_BANGLA_RE` Unicode block `U+0980–U+09FF` regex in `core/router.py`; `_BANGLA_PREFERRED` provider chain `[GEMINI, OPENAI, MISTRAL, CEREBRAS, GROQ, PERPLEXITY]`; Bangla route logged per-request
+
+### Patches applied this session
+
+**R-01 · `core/router.py` — GEMINI model updated**
+- `gemini-1.5-pro` → `gemini-2.0-flash` (deprecated endpoint returning http_404)
+- `py_compile` + `pyflakes` OK · committed `31f5f9a`
+
+**G-01 · `tools/search.py` — Search tool triple fix**
+- `_clean_query()` strips LLM junk (newlines, brackets, step markers) before API call
+- DDG v8.1.1: `ddgs.text(query, ...)` → `ddgs.text(keywords=query, ...)` (was raising "keywords is mandatory")
+- Empty-query guard added
+- `py_compile` + `pyflakes` OK · committed `50c37ca`
+
+**G-02 · `core/agent.py` — Tool dispatch: Step prefix stripping**
+- `[Step N/M]` prefix stripped from response before TOOL: parsing
+- Fallback INPUT: extraction when LLM omits the keyword
+- `py_compile` + `pyflakes` OK · committed `731f332`
+
+**G-03 · `core/agent.py` — Tool dispatch: Markdown stripping**
+- MISTRAL wraps calls as `**TOOL:web**` — extractor was parsing `**` as tool name
+- Strip all `*`, `_`, `` ` `` markdown before TOOL: parsing
+- `py_compile` + `pyflakes` OK · committed `a0c0fae`
+
+### Root cause trace
+```
+GEMINI http_404 (deprecated model) → R-01 fixed
+GEMINI http_429 (free tier quota)  → working around via MISTRAL fallback
+OPENAI http_401 (expired key)      → user action required
+Tavily 400 (junk in query)         → G-01 fixed
+DDG "keywords mandatory"           → G-01 fixed
+MISTRAL **TOOL:web** markdown      → G-02 + G-03 fixed
+Serper query='**' off-topic        → G-03 fixed
+```
+
+### Open items
+- GEMINI free tier hitting 429 on repeated requests — upgrade to paid key recommended
+- OPENAI key expired (http_401) — renew at platform.openai.com/api-keys
+- Multi-step agent loop slow on MISTRAL (~10–45s/step) until GEMINI quota restored
+
+### Verification
+- `py_compile` + `pyflakes` on all changed files: OK
+- `systemctl status nina` → active (running)
+- Bangla route firing correctly: `bangla_detected override_prepended` confirmed in logs
+- Search tool G-01+G-03 fixes not yet confirmed in live traffic (restart pending)
+
