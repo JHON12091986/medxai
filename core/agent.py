@@ -125,14 +125,15 @@ class AgentLoop:
 
             if "TOOL:" in response:
                 try:
-                    # Strip [Step N/M] prefix so it never pollutes tool inputs
                     import re as _re
-                    clean_resp = _re.sub(r'^\[Step \d+/\d+\]\s*', '', response, flags=_re.MULTILINE)
-                    tool_name  = clean_resp.split("TOOL:")[1].split()[0].lower()
+                    # Strip markdown bold/italic and [Step N/M] so MISTRAL's **TOOL:web** works
+                    clean_resp = _re.sub(r'[*_`]', '', response)
+                    clean_resp = _re.sub(r'^\[Step \d+/\d+\]\s*', '', clean_resp, flags=_re.MULTILINE)
+                    tool_name = clean_resp.split("TOOL:")[1].split()[0].strip(":- ").lower()
                     if "INPUT:" in clean_resp:
                         tool_input = clean_resp.split("INPUT:")[1].split("\n")[0].strip()
                     else:
-                        # Fallback: grab the rest of the TOOL: line as the query
+                        # Fallback: grab the rest of the TOOL:<name> line as the query
                         after_tool = clean_resp.split(f"TOOL:{tool_name}", 1)[1]
                         tool_input = after_tool.split("\n")[0].strip().lstrip(":- ")
                     tool = self.tools.get(tool_name)
