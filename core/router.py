@@ -467,7 +467,7 @@ class HybridRouter:
         return "⚠️ All providers are currently unavailable. Try again in a moment, or send `status` to check provider health."
 
     async def parallel_route(self, prompt: str, messages: list, task: ClassifiedTask, local_fast_fn) -> str:
-        if psutil.virtual_memory().used / 1e9 > self.config.ramguardgb:
+        if psutil.virtual_memory().used / 1e9 > self.config.ram_guard_gb:
             return await self.route(prompt, messages, task)
 
         cloud = [p for p in self._ordered_providers(task) if p not in LOCAL_PROVIDERS]
@@ -533,7 +533,7 @@ class HybridRouter:
                     self.cache.purge_expired()
                     last_cache_purge = now
 
-                if psutil.virtual_memory().used / 1e9 > self.config.ramguardgb:
+                if psutil.virtual_memory().used / 1e9 > self.config.ram_guard_gb:
                     continue
 
                 half_open = [p for p in self.health if p not in LOCAL_PROVIDERS and self._has_key(p) and self.health[p].cb.state == "HALF_OPEN"]
