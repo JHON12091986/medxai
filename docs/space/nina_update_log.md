@@ -577,3 +577,29 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 038 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
+
+## Entry 039 — 2026-06-06 · S-82 Jules verification session — all 4 fixes confirmed in main
+
+**Triggered by:** Jules verification session S-82 against F-82 issue batch (4 fixes: Gemini payload, SSRF, Bangla dedup, classify_task delimiters)
+
+**Files changed:** None — verification-only session, no PR opened
+
+**Findings:**
+- F-82a (Gemini payload mapping): confirmed live in core/router.py — `gemini_contents` list built correctly with role/parts schema
+- F-82b (SSRF domain resolution): confirmed live in tools/browser.py — `socket.gethostbyname()` present, correct order, no dead code
+- F-82c (Bangla dedup): confirmed live in interfaces/telegram_interface.py — `_BANGLA_RE` and override prepend fully removed
+- F-82d (classify_task delimiters): confirmed live in core/router.py — `<text>` XML tags wrapping user input
+
+**Verification:** All 4 fixes were applied by agy during DEV 5.3 (2026-06-06 00:24, commit 09edabe/79ef01f/bcad202/1942c6e). Jules found nothing to do.
+
+**Rollback:** N/A — no files modified this session.
