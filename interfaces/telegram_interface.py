@@ -74,6 +74,21 @@ class TelegramInterface:
             await self._app.stop()
             await self._app.shutdown()
 
+    def _mask_secrets(self, text: str) -> str:
+        if not isinstance(text, str):
+            return text
+        for k, v in self.config.dict().items():
+            if v and isinstance(v, str) and any(x in k.lower() for x in ['key', 'token', 'secret', 'password']):
+                if v in text:
+                    masked = v[:4] + "***" + v[-4:] if len(v) > 8 else "***"
+                    text = text.replace(v, masked)
+        return text
+
+    async def _reply(self, update, text: str, **kwargs):
+        text = self._mask_secrets(str(text))
+        return await self._reply(update, text, **kwargs)
+
+
     # ---- Security gate -------------------------------------------------------
 
     async def _handle_update(self, update: Update, ctx: ContextTypes.DEFAULT_TYPE):
@@ -89,9 +104,9 @@ class TelegramInterface:
         if update.message.document and update.message.document.file_name.endswith(".py"):
             size = update.message.document.file_size or 0
             if size > 100_000:
-                await update.message.reply_text("File too large. Max 100KB.")
+                await self._reply(update, "File too large. Max 100KB.")
                 return
-            await update.message.reply_text("Routing to upgrade pipeline...")
+            await self._reply(update, "Routing to upgrade pipeline...")
             await update.message.delete()
             asyncio.create_task(self._handle_upgrade_file(update, ctx))
             return
@@ -105,7 +120,7 @@ class TelegramInterface:
         if len(self._flood_window) >= self.config.flood_max_messages:
             queued = len(self._flood_window) - self.config.flood_max_messages + 1
             sec_log.warning(f"authorized_user_flood uid={uid}", extra={"log": "security.log"})
-            await update.message.reply_text(f"Slow down -- {queued} message(s) queued.")
+            await self._reply(update, f"Slow down -- {queued} message(s) queued.")
             return
         self._flood_window.append(now)
 
@@ -129,26 +144,26 @@ class TelegramInterface:
         router: HybridRouter = self.nina.router
 
         if cmd == "help":
-            await update.message.reply_text(HELP_TEXT, parse_mode=None)
+            await self._reply(update, HELP_TEXT, parse_mode=None)
 
         elif cmd == "status":
             reply = await self.nina.get_status()
-            await update.message.reply_text(reply)
+            await self._reply(update, reply)
 
         elif cmd == "router":
-            await update.message.reply_text(router.get_status())
+            await self._reply(update, router.get_status())
 
         elif cmd == "logs":
             log_path = Path("logs/nina.log")
             if log_path.exists():
                 lines = log_path.read_text().splitlines()[-50:]
-                await update.message.reply_text("\n".join(lines)[-4000:])
+                await self._reply(update, "\n".join(lines)[-4000:])
             else:
-                await update.message.reply_text("nina.log not found.")
+                await self._reply(update, "nina.log not found.")
 
         elif cmd == "start":
             self.session_history.clear()
-            await update.message.reply_text("Session cleared.")
+            await self._reply(update, "Session cleared.")
 
         elif cmd == "reset":
             await self._handle_reset(update)
@@ -156,9 +171,9 @@ class TelegramInterface:
         elif cmd == "abort":
             if self._active_task and not self._active_task.done():
                 self._active_task.cancel()
-                await update.message.reply_text("Task aborted.")
+                await self._reply(update, "Task aborted.")
             else:
-                await update.message.reply_text("No active task.")
+                await self._reply(update, "No active task.")
 
         elif cmd == "ask":
             await self._stream_reply(update, arg, ClassifiedTask("quick", 300, False, False))
@@ -173,25 +188,25 @@ class TelegramInterface:
 
         elif cmd == "shell":
             result = await self.nina.tools["shell"].run(arg)
-            await update.message.reply_text(result[:4000])
+            await self._reply(update, result[:4000])
 
         elif cmd == "remember":
             await self.nina.memory.remember(arg)
-            await update.message.reply_text(f"Remembered: {arg}")
+            await self._reply(update, f"Remembered: {arg}")
 
         elif cmd == "forget":
             await self.nina.memory.forget(arg)
-            await update.message.reply_text(f"Forgot: {arg}")
+            await self._reply(update, f"Forgot: {arg}")
 
         elif cmd == "addkey":
             await self._handle_addkey(update, arg)
 
         elif cmd in ("approve", "reject", "patch", "generate", "rollback"):
             result = await self.nina.pipeline.handle_command(cmd, arg)
-            await update.message.reply_text(result[:4000])
+            await self._reply(update, result[:4000])
 
         else:
-            await update.message.reply_text("Unknown command. /help for the list.")
+            await self._reply(update, "Unknown command. /help for the list.")
 
     # ---- NLP fallback --------------------------------------------------------
 
@@ -241,7 +256,7 @@ class TelegramInterface:
                                "latest", "fetch", "find", "what is", "how much"]
             if any(k in text.lower() for k in search_keywords):
                 result = await search(text)
-                await update.message.reply_text(result[:4000])
+                await self._reply(update, result[:4000])
                 return
             task = await classify_task(text, self._local_fast)
             await self._stream_reply(update, text, task, use_agent=True)
@@ -260,7 +275,7 @@ class TelegramInterface:
         self.session_history.append({"role": "user", "content": prompt})
 
         msgs = [{"role": "system", "content": self.nina.system_prompt}] + self.session_history
-        sent = await update.message.reply_text("...")
+        sent = await self._reply(update, "...")
 
         try:
             if use_agent:
@@ -281,7 +296,7 @@ class TelegramInterface:
                     pass
             if len(result) > 4096:
                 for chunk in [result[i:i+4096] for i in range(4096, len(result), 4096)]:
-                    await update.message.reply_text(chunk)
+                    await self._reply(update, chunk)
 
             self.session_history.append({"role": "assistant", "content": result})
 
@@ -297,28 +312,28 @@ class TelegramInterface:
     # ---- Reset UX ------------------------------------------------------------
 
     async def _handle_reset(self, update: Update):
-        await update.message.reply_text(
+        await self._reply(update, 
             "Reset will wipe all session memory. Creating backup first...")
         try:
             backup_path = await self.nina.memory.backup()
             await self.nina.memory.wipe_and_reinitialize()
             self.nina.router.cache.clear()
             self.session_history.clear()
-            await update.message.reply_text(
+            await self._reply(update, 
                 f"Reset complete. Memory and cache cleared. Backup at: {backup_path}",
                 parse_mode=None)
         except Exception as e:
-            await update.message.reply_text(f"Reset failed: {e} -- untouched.")
+            await self._reply(update, f"Reset failed: {e} -- untouched.")
 
     # ---- addkey flow ---------------------------------------------------------
 
     async def _handle_addkey(self, update: Update, arg: str):
         if arg.strip().lower() == "list":
-            await update.message.reply_text(self.nina.router.get_status())
+            await self._reply(update, self.nina.router.get_status())
             return
         parts = arg.split(None, 1)
         if len(parts) != 2:
-            await update.message.reply_text("Usage: addkey PROVIDER key", parse_mode=None)
+            await self._reply(update, "Usage: addkey PROVIDER key", parse_mode=None)
             return
         provider, key = parts
         result = await self.nina.router.activate_key(provider.upper(), key)
@@ -329,7 +344,7 @@ class TelegramInterface:
             pass
         logger.info(f"addkey provider={provider.upper()} key set",
                     extra={"log": "nina.security"})
-        await update.message.reply_text(f"{result} (key {masked}, message deleted)")
+        await self._reply(update, f"{result} (key {masked}, message deleted)")
 
     # ---- Upgrade file handler ------------------------------------------------
 
@@ -339,9 +354,9 @@ class TelegramInterface:
             content = await f.download_as_bytearray()
             result  = await self.nina.pipeline.handle_command(
                 "patch", content.decode(), update.message.document.file_name)
-            await update.message.reply_text(result[:4000])
+            await self._reply(update, result[:4000])
         except Exception as e:
-            await update.message.reply_text(f"Upgrade file error: {e}")
+            await self._reply(update, f"Upgrade file error: {e}")
 
     # ---- Local fast helper ---------------------------------------------------
 
@@ -358,6 +373,7 @@ class TelegramInterface:
     # ---- send_message --------------------------------------------------------
 
     async def send_message(self, text: str):
+        text = self._mask_secrets(text)
         def esc(t):
             return re.sub(r'([_*\[\]()~`>#+\-=|{}.!])', r'\\\1', t)
         try:

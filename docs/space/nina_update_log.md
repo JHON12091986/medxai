@@ -702,3 +702,30 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_phase1_roadmap.md,docs/space/nina_update_log.md,nina_context.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,shrink_roadmap.py,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 050 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,shrink_roadmap.py,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 051 — 2026-06-06 · Fix duplicate log handlers and ghost process conflict
+
+**Triggered by:** Manual/Agent intervention
+
+**What changed:** 
+- `core/nina.py`: Guard duplicate log handler additions on restart. Removed redundant `fcntl.flock` to avoid conflict with `main.py`. (R-83)
+- `main.py`: Clean stale lock by sending SIGTERM to ghost processes identified in PID file and waiting before acquiring the single-instance lock. Added `try/except BlockingIOError` during lock acquisition to log properly and exit cleanly. (R-84)
+
+**Verification:** 
+- `python3 -m py_compile` and `pyflakes` ran successfully.
+- Service `nina.service` restarted and remained active (`sudo systemctl restart nina.service`).
+
+**Rollback path:** 
+- Revert commits R-83 and R-84 via `git revert`.
