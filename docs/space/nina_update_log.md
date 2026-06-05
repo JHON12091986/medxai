@@ -618,20 +618,15 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** git push OK, nina.service active
 
-## Entry 042 — 2026-06-06 · fix: restrict guardian signature matching to runtime logs only (G-07)
+---
 
-**Triggered by:** Task ID G-07
+## Entry 042 — 2026-06-06 · D-sync Post-session sync
 
-**Files changed:**
-- guardian_engine.py: fix signature matching restricted to runtime log text only, no source file scanning
+**Triggered by:** nina_sync.sh v3 automated run
 
-**What was fixed:**
-- Removed unused `py_file_texts` parameter from `match_signatures()` to explicitly prevent source file contents from being passed to the signature matching engine.
-- Confirmed `all_log_text` does not combine `py_file_texts`, ensuring no false positive BLOCKERs trigger from python code comments/constants.
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
 
-**Verification:** Ran `py_compile`, `pyflakes`, and `./guardian` successfully.
-
-**Rollback:** git revert HEAD
+**Verification:** git push OK, nina.service active
 
 ## Entry 043 — 2026-06-06 · fix: initialise suppressed_findings before report assembly (G-06)
 
