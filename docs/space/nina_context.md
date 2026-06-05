@@ -35,7 +35,6 @@ Local-first autonomous AI operator — not a chatbot. Runs 24/7 on owner's lapto
 - **Service:** systemd `nina.service` — Restart=always, depends on `ollama.service`
 - **Local models:** Ollama — `qwen2.5:1.5b` (LOCALFAST), `qwen2.5:7b` (LOCALHEAVY), `nomic-embed-text` (embeddings)
 - **EWS:** webmail.basicbanklimited.com — Auth: NTLM — Domain: basic.bank
-- **Dev Stack:** Perplexity Enterprise Pro with Claude Sonnet 4.6, Antigravity CLI agy v1.0.5, Jules at jules.google, NotebookLM (Gemini CLI removed June 5 2026)
 
 ## Start / Stop / Restart
 
