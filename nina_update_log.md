@@ -439,3 +439,13 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** py_compile + pyflakes not applicable (shell script); bash -n OK; --dry-run OK
 
+
+---
+
+## Entry 026 — 2026-06-05 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
