@@ -632,3 +632,17 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Verification:** Ran `py_compile`, `pyflakes`, and `./guardian` successfully.
 
 **Rollback:** git revert HEAD
+
+## Entry 043 — 2026-06-06 · fix: initialise suppressed_findings before report assembly (G-06)
+
+**Triggered by:** Task ID G-06
+
+**Files changed:**
+- guardian_engine.py: moved `suppressed_findings = []` immediately before report assembly
+
+**What was fixed:**
+- Ensure `suppressed_findings` is defined right before JSON report assembly to prevent any potential NameError and ensure handoff data consistency.
+
+**Verification:** Ran `py_compile`, `pyflakes`, and `./guardian` successfully.
+
+**Rollback:** git revert HEAD

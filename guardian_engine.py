@@ -1539,7 +1539,6 @@ def run_engine(args):
 
     findings = match_signatures(all_log_text, env_keys)
     findings = resolve_root_cause(findings)
-    suppressed_findings = []
 
     blockers = [f for f in findings if f["severity"] == "BLOCKER"]
     warns    = [f for f in findings if f["severity"] == "WARN"]
@@ -1678,6 +1677,7 @@ def run_engine(args):
     ]
 
     # ── Assemble full JSON report ─────────────────────────────────────────────
+    suppressed_findings = []
     report = {
         "guardian_version": "2.0",
         "run_id": run_id,
