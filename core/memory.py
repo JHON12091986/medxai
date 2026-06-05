@@ -57,13 +57,9 @@ class MemorySystem:
             docs = []
 
         # ── F-02: personal_context — fixed top section, always injected ─────
-        _pc: dict = {}
-        try:
-            if FACTS_FILE.exists():
-                _dd = json.loads(await asyncio.to_thread(FACTS_FILE.read_text))
-                _pc = _dd.get("personal_context", {})
-        except Exception:
-            _pc = {}
+        # Facts are already loaded into self.facts by initialize(); read from
+        # memory instead of hitting disk on every build_context call (R-83).
+        _pc: dict = self.facts.get("personal_context", {})
 
         prefs, recents = [], []
         for k, v in self.facts.items():
