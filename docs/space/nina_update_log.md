@@ -547,3 +547,28 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 035 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
+
+## Entry 036 — 2026-06-06 · O-03 + O-06 closed, B-3 F-03 confirmed done
+
+**Triggered by:** DEV 5.4 verification read of tools/shell.py and tools/browser.py
+
+**Files changed:** None — read-only verification session
+
+**Findings:**
+- O-06: `cat` is NOT in `ALLOWED_BASES` in tools/shell.py — closed by R-48. ✅
+- O-03: `socket.gethostbyname()` is live in `_is_internal()` in tools/browser.py — closed by R-64 + F-82b. ✅
+- B-3 F-03: Tone calibration + duplicate 'Available tools' line removal confirmed shipped 2026-06-05. ✅
+
+**Verification:** Read-only, no compile needed, service unchanged.
+
+**Rollback:** N/A — no files modified.
