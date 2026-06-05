@@ -715,17 +715,25 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 051 — 2026-06-06 · Fix duplicate log handlers and ghost process conflict
+## Entry 051 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,interfaces/telegram_interface.py,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 052 — 2026-06-06 · Suppress duplicate_handler false positive
 
 **Triggered by:** Manual/Agent intervention
 
 **What changed:** 
-- `core/nina.py`: Guard duplicate log handler additions on restart. Removed redundant `fcntl.flock` to avoid conflict with `main.py`. (R-83)
-- `main.py`: Clean stale lock by sending SIGTERM to ghost processes identified in PID file and waiting before acquiring the single-instance lock. Added `try/except BlockingIOError` during lock acquisition to log properly and exit cleanly. (R-84)
+- `guardian_engine.py`: Added a source_check condition to the `logger.duplicate_handler` signature. It now verifies that `root.addHandler` actually appears outside a guard in `core/nina.py` source code before emitting the WARN. This suppresses false positives from old journal lines when the source is already guarded (R-87).
 
 **Verification:** 
-- `python3 -m py_compile` and `pyflakes` ran successfully.
-- Service `nina.service` restarted and remained active (`sudo systemctl restart nina.service`).
+- `python3 -m py_compile` ran successfully on `guardian_engine.py`.
 
 **Rollback path:** 
-- Revert commits R-83 and R-84 via `git revert`.
+- Revert commit R-87 via `git revert`.
