@@ -628,19 +628,15 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** git push OK, nina.service active
 
-## Entry 043 — 2026-06-06 · fix: initialise suppressed_findings before report assembly (G-06)
+---
 
-**Triggered by:** Task ID G-06
+## Entry 043 — 2026-06-06 · D-sync Post-session sync
 
-**Files changed:**
-- guardian_engine.py: moved `suppressed_findings = []` immediately before report assembly
+**Triggered by:** nina_sync.sh v3 automated run
 
-**What was fixed:**
-- Ensure `suppressed_findings` is defined right before JSON report assembly to prevent any potential NameError and ensure handoff data consistency.
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
 
-**Verification:** Ran `py_compile`, `pyflakes`, and `./guardian` successfully.
-
-**Rollback:** git revert HEAD
+**Verification:** git push OK, nina.service active
 
 ## Entry 044 — 2026-06-06 · ops: reset guardian baseline to clear stale health score (G-42)
 
