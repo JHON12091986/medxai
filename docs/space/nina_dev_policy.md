@@ -7,6 +7,13 @@ updated: 2026-06-05
 
 # NINA Dev Policy v1.3
 
+## Dev Environment Stack
+- **AI Tooling:** Perplexity Enterprise Pro with Claude Sonnet 4.6
+- **Developer CLI:** Antigravity CLI agy v1.0.5
+- **Primary Developer Agent:** Jules at jules.google
+- **Reference & Search:** NotebookLM
+- **Note:** Gemini CLI was removed on June 5, 2026.
+
 ## The 12 Rules (Non-Negotiable)
 1. Every change has an ID — no anonymous fixes
 2. One purpose per patch — never bundle unrelated changes

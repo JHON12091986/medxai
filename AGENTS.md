@@ -3,6 +3,13 @@
 NINA is a self-hosted personal AI assistant running on Ubuntu 26.04 via systemd.
 Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 
+## Dev Environment Stack
+- **AI Tooling:** Perplexity Enterprise Pro with Claude Sonnet 4.6
+- **Developer CLI:** Antigravity CLI agy v1.0.5
+- **Primary Developer Agent:** Jules at jules.google
+- **Reference & Search:** NotebookLM
+- **Note:** Gemini CLI was removed on June 5, 2026.
+
 ## Key Files
 - core/router.py — HybridRouter V4, CircuitBreaker, 19+ providers
 - core/agent.py — AgentLoop, THINK-PLAN-ACT, thermal guard
@@ -25,7 +32,6 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 - Do not remove or weaken shell allowlist in tools/shell.py
 
 ## Current Open Issues
-- R-76: guardian_engine.py suppressed_findings NameError — needs coherent single-patch fix
 - O-01: Playwright not installed (non-blocking)
 - O-02: EWS password not set (non-blocking)
 - O-04: memory context per-session refresh not implemented
