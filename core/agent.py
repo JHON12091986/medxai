@@ -56,7 +56,24 @@ class AgentLoop:
                            extra={"log":"agent.log"})
             return f"Task timed out after {self.config.agent_timeout_s}s."
 
+    # F-03c: Bangla language override — injected before routing
+    _BANGLA_RANGE = range(0x0980, 0x0A00)
+
+    @staticmethod
+    def _is_bangla(text: str) -> bool:
+        return any(0x0980 <= ord(ch) <= 0x09FF for ch in text)
+
+    _BANGLA_OVERRIDE = (
+        "[LANGUAGE OVERRIDE: User wrote in Bangla. "
+        "Your ENTIRE response must be in Bangla. "
+        "No English except unavoidable technical terms like API, token, git.]\n\n"
+    )
+
     async def _inner(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
+        # Prepend language override before any routing if message is in Bangla
+        if self._is_bangla(goal):
+            goal = self._BANGLA_OVERRIDE + goal
+
         ram = await system.get_ram_used_gb()
         if ram >= self.config.ram_guard_gb:
             logger.warning(f"agent_loop_skipped ram={ram:.1f}GB guard={self.config.ram_guard_gb}GB")
