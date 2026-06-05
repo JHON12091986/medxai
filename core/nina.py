@@ -74,7 +74,8 @@ class NinaOS:
         ch.setLevel(getattr(logging, self.config.log_level, logging.INFO))
         ch.setFormatter(logging.Formatter("%(levelname)s:%(name)s:%(message)s"))
         if not _has_handler(root, stream=True):
-            root.addHandler(ch)
+            if not any(isinstance(h, type(ch)) for h in root.handlers):
+                root.addHandler(ch)
 
         file_map = {
             "nina": ("nina.log", logging.DEBUG),
@@ -90,7 +91,9 @@ class NinaOS:
         for logger_name, (filename, level) in file_map.items():
             lg = logging.getLogger(logger_name)
             if not _has_handler(lg, filename=filename):
-                lg.addHandler(file_handler(filename, level))
+                fh = file_handler(filename, level)
+                if not any(isinstance(h, type(fh)) for h in lg.handlers):
+                    lg.addHandler(fh)
 
         # Prevent router_log from propagating JSON lines to console
         logging.getLogger("nina.router_log").propagate = False
