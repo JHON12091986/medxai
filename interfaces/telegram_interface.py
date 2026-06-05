@@ -252,19 +252,8 @@ class TelegramInterface:
 
     # ---- Streaming reply -----------------------------------------------------
 
-    # Bangla Unicode block: U+0980–U+09FF
-    _BANGLA_RE = re.compile(r'[\u0980-\u09FF]')
-    _BANGLA_OVERRIDE = (
-        "[LANGUAGE OVERRIDE: Respond entirely in Bangla. "
-        "No English except technical terms.]\n\n"
-    )
-
     async def _stream_reply(self, update: Update, prompt: str,
                             task: ClassifiedTask, use_agent: bool = False):
-        # F-03e: Bangla detection — prepend override directive before agent call
-        if self._BANGLA_RE.search(prompt):
-            prompt = self._BANGLA_OVERRIDE + prompt
-            logger.debug("bangla_detected override_prepended")
 
         while len(self.session_history) > self.config.session_max_turns * 2:
             self.session_history.pop(0)
