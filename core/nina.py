@@ -1,5 +1,5 @@
 """NINA v12 — NinaOS orchestrator (Stage 1)."""
-import fcntl, logging, os, time
+import logging, os, time
 from core.config import load_config
 from core.router import HybridRouter
 from core.memory import MemorySystem
@@ -44,10 +44,8 @@ class NinaOS:
         self._force_local_fast = False
 
     async def start(self):
-        # Single-instance lock
+        # Single-instance lock moved to main.py
         os.makedirs("data", exist_ok=True)
-        self._lock_fh = open("data/nina.lock","w")
-        fcntl.flock(self._lock_fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
         import logging.handlers
         os.makedirs("logs", exist_ok=True)
@@ -156,7 +154,6 @@ class NinaOS:
         await self.router.close()
         await self.memory.close()
         await self.telegram.stop()
-        fcntl.flock(self._lock_fh, fcntl.LOCK_UN)
         logging.getLogger("nina").info("NINA shutdown complete")
 
     async def run_morning_report(self):
