@@ -1,5 +1,5 @@
 # core/router.py
-import asyncio, hashlib, json, logging, time, uuid
+import asyncio, hashlib, json, logging, re, time, uuid
 from collections import deque
 from dataclasses import dataclass, field
 from typing import Optional
@@ -7,6 +7,13 @@ import httpx, psutil
 from core.config import NinaConfig, RATELIMITS
 
 logger = logging.getLogger("nina.router")
+
+# F-03f: Bangla Unicode block U+0980–U+09FF
+_BANGLA_RE = re.compile(r'[\u0980-\u09FF]')
+# Instruction-compliant providers in preference order for Bangla requests.
+# GEMINI is first (best multilingual instruction-following).
+# The normal scored chain is appended as fallback so nothing is ever lost.
+_BANGLA_PREFERRED = ["GEMINI", "OPENAI", "MISTRAL", "CEREBRAS", "GROQ", "PERPLEXITY"]
 PROVIDERS_TIER1 = {
     "POLLINATIONS": {"base_url": "https://text.pollinations.ai/openai", "model": "mistral", "key_field": None},
     "CHUTES": {"base_url": "https://llm.chutes.ai/v1", "model": "deepseek-r1", "key_field": None},
@@ -433,7 +440,33 @@ class HybridRouter:
             self.cost.record("CACHE", task.task_type, 0, 0, 0.0, 0, 0, cached=True, req_id=req_id)
             return cached
 
-        for pid in self._ordered_providers(task, force_local):
+        # F-03f: Bangla detection — force instruction-compliant provider order.
+        # Sensitive tasks always stay local regardless of language.
+        if not force_local and not task.is_sensitive and _BANGLA_RE.search(prompt):
+            normal_order = self._ordered_providers(task, force_local=False)
+            # Build preferred list: available Bangla-preferred providers first,
+            # then the normal scored order (deduplicated) as the full fallback chain.
+            seen: set = set()
+            bangla_order: list = []
+            for pid in _BANGLA_PREFERRED:
+                if pid in self.health and self._has_key(pid) and self.health[pid].cb.allow_request():
+                    if pid not in seen:
+                        bangla_order.append(pid)
+                        seen.add(pid)
+            for pid in normal_order:
+                if pid not in seen:
+                    bangla_order.append(pid)
+                    seen.add(pid)
+            logger.info(
+                "bangla_route req_id=%s preferred=%s full_chain=%d",
+                req_id, bangla_order[:3], len(bangla_order),
+                extra={"log": "router.log"},
+            )
+            provider_order = bangla_order
+        else:
+            provider_order = self._ordered_providers(task, force_local)
+
+        for pid in provider_order:
             h = self.health[pid]
             rl = RATELIMITS.get(pid, {})
             sp = rl.get("min_spacing_s", 0)
