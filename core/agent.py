@@ -125,9 +125,17 @@ class AgentLoop:
 
             if "TOOL:" in response:
                 try:
-                    tool_name  = response.split("TOOL:")[1].split()[0].lower()
-                    tool_input = response.split("INPUT:")[1].strip() if "INPUT:" in response else ""
-                    tool       = self.tools.get(tool_name)
+                    # Strip [Step N/M] prefix so it never pollutes tool inputs
+                    import re as _re
+                    clean_resp = _re.sub(r'^\[Step \d+/\d+\]\s*', '', response, flags=_re.MULTILINE)
+                    tool_name  = clean_resp.split("TOOL:")[1].split()[0].lower()
+                    if "INPUT:" in clean_resp:
+                        tool_input = clean_resp.split("INPUT:")[1].split("\n")[0].strip()
+                    else:
+                        # Fallback: grab the rest of the TOOL: line as the query
+                        after_tool = clean_resp.split(f"TOOL:{tool_name}", 1)[1]
+                        tool_input = after_tool.split("\n")[0].strip().lstrip(":- ")
+                    tool = self.tools.get(tool_name)
                     if not _registry.is_healthy(tool_name):
                         obs = f"Tool {tool_name} unavailable (unhealthy)."
                         logger.warning(f"agent_skipped_unhealthy tool={tool_name}")
