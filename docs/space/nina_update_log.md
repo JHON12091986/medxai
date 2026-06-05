@@ -588,18 +588,34 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** git push OK, nina.service active
 
-## Entry 039 — 2026-06-06 · S-82 Jules verification session — all 4 fixes confirmed in main
+---
 
-**Triggered by:** Jules verification session S-82 against F-82 issue batch (4 fixes: Gemini payload, SSRF, Bangla dedup, classify_task delimiters)
+## Entry 039 — 2026-06-06 · D-sync Post-session sync
 
-**Files changed:** None — verification-only session, no PR opened
+**Triggered by:** nina_sync.sh v3 automated run
 
-**Findings:**
-- F-82a (Gemini payload mapping): confirmed live in core/router.py — `gemini_contents` list built correctly with role/parts schema
-- F-82b (SSRF domain resolution): confirmed live in tools/browser.py — `socket.gethostbyname()` present, correct order, no dead code
-- F-82c (Bangla dedup): confirmed live in interfaces/telegram_interface.py — `_BANGLA_RE` and override prepend fully removed
-- F-82d (classify_task delimiters): confirmed live in core/router.py — `<text>` XML tags wrapping user input
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
-**Verification:** All 4 fixes were applied by agy during DEV 5.3 (2026-06-06 00:24, commit 09edabe/79ef01f/bcad202/1942c6e). Jules found nothing to do.
+**Verification:** git push OK, nina.service active
 
-**Rollback:** N/A — no files modified this session.
+## Entry 040 — 2026-06-06 · docs: add agy skill library (8 files) to .agent/skills/
+
+**Triggered by:** Owner request to create and git-track agy skill library in ~/nina/.agent/skills/
+
+**Files changed:**
+- .agent/skills/nina-identity.md — copied from ~/Downloads
+- .agent/skills/nina-ops.md — copied from ~/Downloads
+- .agent/skills/nina-phase1-roadmap.md — copied from ~/Downloads
+- .agent/skills/nina-dev-policy.md — copied from ~/Downloads
+- .agent/skills/owner-context.md — copied from ~/Downloads
+- .agent/skills/nina-git.md — written by agy (git policy + commit conventions)
+- .agent/skills/nina-testing.md — written by agy (guardian pass criteria, definition of done)
+- .agent/skills/nina-tools.md — written by agy (tools layer rules, SSRF, allowlist policy)
+
+**What was fixed before commit:**
+- nina-tools.md: stale O-06 'cat CRITICAL open issue' line corrected to 'confirmed removed by R-48 (closed 2026-06-06)'
+- ~/Downloads copies of 5 skill files deleted — .agent/skills/ is now the canonical source
+
+**Verification:** docs-only, no py_compile needed. All 8 files confirmed in .agent/skills/. Committed as ff50c40.
+
+**Rollback:** git revert ff50c40
