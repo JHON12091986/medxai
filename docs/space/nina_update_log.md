@@ -658,20 +658,15 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** git push OK, nina.service active
 
-## Entry 046 — 2026-06-06 · feat: add model_overrides dict to NinaConfig (S-04)
+---
 
-**Triggered by:** Task ID S-04
+## Entry 046 — 2026-06-06 · D-sync Post-session sync
 
-**Files changed:**
-- `core/config.py`: Added `model_overrides: dict = {}` to `NinaConfig`.
-- `core/router.py`: In `_get_provider_meta`, check `config.model_overrides.get(pid)` and selectively override `meta['model']`.
+**Triggered by:** nina_sync.sh v3 automated run
 
-**What was fixed:**
-- Enabled runtime configuration to override provider models via `NinaConfig` without altering hardcoded tier dicts in `router.py`.
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
 
-**Verification:** Ran `py_compile`, `pyflakes`, restarted `nina.service`, and confirmed `./guardian` ran without BLOCKERs.
-
-**Rollback:** git revert HEAD
+**Verification:** git push OK, nina.service active
 
 ## Entry 047 — 2026-06-06 · chore: reduce mypy advisory findings (DEBT-mypy)
 
