@@ -608,23 +608,15 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** git push OK, nina.service active
 
-## Entry 041 — 2026-06-06 · S-82 Jules verification — all 4 fixes pre-existing, no changes
+---
 
-**Triggered by:** DEV 5.5 — Jules session dispatched to verify F-82a/b/c/d fixes
+## Entry 041 — 2026-06-06 · D-sync Post-session sync
 
-**Files changed:** None — Jules verification-only session, PR closed without merge
+**Triggered by:** nina_sync.sh v3 automated run
 
-**Findings:**
-- F-82a: Gemini `contents` payload mapping already correct in core/router.py — `gemini_contents` list with role/parts schema already live
-- F-82b: SSRF domain resolution already fixed in tools/browser.py — `socket.gethostbyname()` + `ipaddr.ip_address()` already live
-- F-82c: Telegram interface already lacks Bangla override logic — `_BANGLA_RE` and prepend block already removed from interfaces/telegram_interface.py
-- F-82d: XML delimiters already wrap `classify_task` user input in core/router.py — `<text>...</text>` tags already live
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
-**Conclusion:** All 4 fixes were pre-applied by agy during DEV 5.3 (2026-06-06 00:24). Jules found nothing to do. Jules PR closed without merge.
-
-**Verification:** Read-only, no compile needed, service unchanged.
-
-**Rollback:** N/A — no files modified.
+**Verification:** git push OK, nina.service active
 
 ## Entry 042 — 2026-06-06 · fix: restrict guardian signature matching to runtime logs only (G-07)
 
