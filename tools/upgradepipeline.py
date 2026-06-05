@@ -112,7 +112,14 @@ class UpgradePipeline:
                 return f"Patch rejected: domain '{_parsed.hostname}' not in allowlist {_ALLOWED_DOMAINS}."
             async with httpx.AsyncClient(timeout=30, verify=True) as c:
                 r = await c.get(url)
-            return await self.submit(r.text, filename)
+                content_type = r.headers.get("Content-Type", "")
+                if not content_type.startswith("text/") and "application/json" not in content_type:
+                    raise ValueError(f"Remote patch rejected: unexpected Content-Type '{content_type}'")
+                MAX_PATCH_SIZE = 512 * 1024
+                content = r.content
+                if len(content) > MAX_PATCH_SIZE:
+                    raise ValueError(f"Remote patch rejected: response too large ({len(content)} bytes)")
+            return await self.submit(content.decode("utf-8"), filename)
         elif cmd == "generate":
             return await self._generate(arg)
         elif cmd == "rollback":
@@ -183,7 +190,14 @@ class UpgradePipeline:
             fname, url = parts[1].split(None, 1)
             async with httpx.AsyncClient(timeout=30) as c:
                 r = await c.get(url)
-            return await self._shadow_tester.start(r.text, fname)
+                content_type = r.headers.get("Content-Type", "")
+                if not content_type.startswith("text/") and "application/json" not in content_type:
+                    raise ValueError(f"Remote patch rejected: unexpected Content-Type '{content_type}'")
+                MAX_PATCH_SIZE = 512 * 1024
+                content = r.content
+                if len(content) > MAX_PATCH_SIZE:
+                    raise ValueError(f"Remote patch rejected: response too large ({len(content)} bytes)")
+            return await self._shadow_tester.start(content.decode("utf-8"), fname)
         return "Usage: shadow start <file> <url> | shadow status | shadow approve | shadow reject"
 
 
