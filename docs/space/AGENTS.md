@@ -39,3 +39,32 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 
 ## Test Command After Every Change
 cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> && pyflakes <changed_file>
+
+## Mandatory Rules — After Every Code Change (agy)
+
+- Run `python3 -m py_compile <file>` + `pyflakes <file>` on every changed file before committing
+- Use conventional commits: `fix:` | `feat:` | `docs:` | `chore:` | `ops:` followed by `(ID)`
+- One commit per logical fix — never bundle unrelated changes in one commit
+- Stage specific files only — never `git add .`
+
+## Mandatory Rules — After Every Task (agy close)
+
+- Append a log entry to `nina_update_log.md` using **Python only** — never heredoc, never bash echo
+  - Auto-detect the next entry number from the file
+  - Include: entry number, date, title, what changed, what was verified, rollback path
+- Run `cd ~/nina && ./nina_sync.sh` — no exceptions
+
+## High-Risk Files — Never Touch Without Explicit Instruction in the Prompt
+
+- `interfaces/telegram_interface.py`
+- `.env`
+- `core/router.py`
+- `main.py`
+- `guardian_engine.py`
+- `tools/shell.py`
+
+## Never Do
+
+- Write log entries with heredoc (`<< 'EOF'`) or direct `bash echo >>` — always use Python
+- Auto-merge Jules PRs — all Jules PRs require explicit review and approval
+- Bundle multiple unrelated fixes in one commit
