@@ -509,7 +509,7 @@ class HybridRouter:
 
         try:
             raw = await local_fast_fn(f"Split into min({3},{len(cloud)}) independent sub-questions. JSON array only.\n{prompt}")
-            subs = json.loads(raw)
+            subs = json.loads(raw.strip().removeprefix('```json').removesuffix('```').strip())
         except Exception:
             return await self.route(prompt, messages, task)
 
