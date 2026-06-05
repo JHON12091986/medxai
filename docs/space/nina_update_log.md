@@ -598,24 +598,30 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** git push OK, nina.service active
 
-## Entry 040 — 2026-06-06 · docs: add agy skill library (8 files) to .agent/skills/
+---
 
-**Triggered by:** Owner request to create and git-track agy skill library in ~/nina/.agent/skills/
+## Entry 040 — 2026-06-06 · D-sync Post-session sync
 
-**Files changed:**
-- .agent/skills/nina-identity.md — copied from ~/Downloads
-- .agent/skills/nina-ops.md — copied from ~/Downloads
-- .agent/skills/nina-phase1-roadmap.md — copied from ~/Downloads
-- .agent/skills/nina-dev-policy.md — copied from ~/Downloads
-- .agent/skills/owner-context.md — copied from ~/Downloads
-- .agent/skills/nina-git.md — written by agy (git policy + commit conventions)
-- .agent/skills/nina-testing.md — written by agy (guardian pass criteria, definition of done)
-- .agent/skills/nina-tools.md — written by agy (tools layer rules, SSRF, allowlist policy)
+**Triggered by:** nina_sync.sh v3 automated run
 
-**What was fixed before commit:**
-- nina-tools.md: stale O-06 'cat CRITICAL open issue' line corrected to 'confirmed removed by R-48 (closed 2026-06-06)'
-- ~/Downloads copies of 5 skill files deleted — .agent/skills/ is now the canonical source
+**Files changed:** data/discoveredproviders.json,docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
-**Verification:** docs-only, no py_compile needed. All 8 files confirmed in .agent/skills/. Committed as ff50c40.
+**Verification:** git push OK, nina.service active
 
-**Rollback:** git revert ff50c40
+## Entry 041 — 2026-06-06 · S-82 Jules verification — all 4 fixes pre-existing, no changes
+
+**Triggered by:** DEV 5.5 — Jules session dispatched to verify F-82a/b/c/d fixes
+
+**Files changed:** None — Jules verification-only session, PR closed without merge
+
+**Findings:**
+- F-82a: Gemini `contents` payload mapping already correct in core/router.py — `gemini_contents` list with role/parts schema already live
+- F-82b: SSRF domain resolution already fixed in tools/browser.py — `socket.gethostbyname()` + `ipaddr.ip_address()` already live
+- F-82c: Telegram interface already lacks Bangla override logic — `_BANGLA_RE` and prepend block already removed from interfaces/telegram_interface.py
+- F-82d: XML delimiters already wrap `classify_task` user input in core/router.py — `<text>...</text>` tags already live
+
+**Conclusion:** All 4 fixes were pre-applied by agy during DEV 5.3 (2026-06-06 00:24). Jules found nothing to do. Jules PR closed without merge.
+
+**Verification:** Read-only, no compile needed, service unchanged.
+
+**Rollback:** N/A — no files modified.
