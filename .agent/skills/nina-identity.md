@@ -5,6 +5,11 @@ description: Core identity, architecture, tech stack, and long-term vision of NI
 
 # NINA — Identity, Architecture & Vision
 
+## Current State
+- **Version:** v12.2
+- **Last log entry:** 041
+- **Service:** nina.service active (systemd, Restart=always)
+
 ## What NINA Is
 NINA (Neural Intelligence Notification Agent) is a self-hosted, Telegram-based personal AI assistant running 24/7 on the owner's local machine. It is NOT a chatbot — it is a **personal operator**: it monitors, acts, remembers, and pushes alerts without being asked.
 
