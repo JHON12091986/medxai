@@ -663,3 +663,18 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Verification:** Ran `py_compile`, `pyflakes`, and `./guardian`. (Telegram test to be conducted manually).
 
 **Rollback:** git revert HEAD
+
+## Entry 046 — 2026-06-06 · feat: add model_overrides dict to NinaConfig (S-04)
+
+**Triggered by:** Task ID S-04
+
+**Files changed:**
+- `core/config.py`: Added `model_overrides: dict = {}` to `NinaConfig`.
+- `core/router.py`: In `_get_provider_meta`, check `config.model_overrides.get(pid)` and selectively override `meta['model']`.
+
+**What was fixed:**
+- Enabled runtime configuration to override provider models via `NinaConfig` without altering hardcoded tier dicts in `router.py`.
+
+**Verification:** Ran `py_compile`, `pyflakes`, restarted `nina.service`, and confirmed `./guardian` ran without BLOCKERs.
+
+**Rollback:** git revert HEAD

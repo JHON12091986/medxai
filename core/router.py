@@ -370,7 +370,9 @@ class HybridRouter:
             d = r.json()
             return d["message"]["content"], 0, 0, (time.time() - start) * 1000
 
-        meta = (PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3)[pid]
+        meta = (PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3)[pid].copy()
+        if override := self.config.model_overrides.get(pid):
+            meta["model"] = override
         base = meta["base_url"] or getattr(self.config, "onebrain_api_base", "")
         kf = meta.get("key_field")
         key = getattr(self.config, kf, None) if kf else "no-key"

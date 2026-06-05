@@ -81,6 +81,7 @@ class NinaConfig(BaseModel):
     thermal_guard_gpu:    int = 85
     thermal_critical_cpu: int = 95
     thermal_critical_gpu: int = 90
+    model_overrides: dict = {}
 
 def load_config() -> NinaConfig:
     tok = os.getenv("TELEGRAMBOTTOKEN")
