@@ -184,7 +184,7 @@ async def classify_task(text: str, local_fast_fn) -> ClassifiedTask:
     try:
         raw = await local_fast_fn(
             f"Classify into one of {','.join(TASK_TYPES)}. Reply JSON only "
-            f'{{"task_type":"general","estimated_tokens":500}} {text[:500]}'
+            f'{{"task_type":"general","estimated_tokens":500}} User Input: <text>{text[:500]}</text>'
         )
         data = json.loads(raw.strip())
         tt = data.get("task_type", "general")
@@ -376,7 +376,13 @@ class HybridRouter:
         key = getattr(self.config, kf, None) if kf else "no-key"
 
         if pid == "GEMINI":
-            payload = {"contents": [{"parts": [{"text": "\n".join(m.get("content", "") for m in messages)}]}]}
+            gemini_contents = []
+            for m in messages:
+                c = m.get("content", "")
+                if not c: continue
+                role = "user" if m.get("role") in ("user", "system") else "model"
+                gemini_contents.append({"role": role, "parts": [{"text": c}]})
+            payload = {"contents": gemini_contents}
             r = await self.http.post(
                 f"{base}/v1beta/models/{meta['model']}:generateContent?key={key}",
                 headers={"Content-Type": "application/json"},
