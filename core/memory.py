@@ -1,5 +1,5 @@
 # NINA v12 MemorySystem Stage 5
-import asyncio, json, logging, shutil, time
+import asyncio, json, logging, shutil, time, uuid
 from pathlib import Path
 import chromadb
 from chromadb.utils import embedding_functions
@@ -17,6 +17,7 @@ class MemorySystem:
         self.client = None
         self.col    = None
         self.facts: dict = {}
+        self._facts_lock = asyncio.Lock()
 
     async def initialize(self):
         CHROMA_DIR.mkdir(parents=True, exist_ok=True)
@@ -62,7 +63,7 @@ class MemorySystem:
         _pc: dict = self.facts.get("personal_context", {})
 
         prefs, recents = [], []
-        for k, v in self.facts.items():
+        for k, v in list(self.facts.items()):
             if k == "personal_context":
                 continue
             val   = v["value"] if isinstance(v, dict) else str(v)
@@ -90,7 +91,7 @@ class MemorySystem:
 
     async def save_turn(self, role: str, content: str):
         try:
-            uid = f"{role}{int(time.time()*1000)}"
+            uid = f"{role}{int(time.time()*1000)}_{uuid.uuid4().hex[:6]}"
             await asyncio.to_thread(
                 self.col.add,
                 documents=[content],
@@ -104,18 +105,24 @@ class MemorySystem:
         parts = text.split(":", 1)
         key = parts[0].strip()
         val = parts[1].strip() if len(parts) == 2 else text
-        self.facts[key] = {"value": val, "ts": time.time()}
-        await asyncio.to_thread(
-            FACTS_FILE.write_text,
-            json.dumps(self.facts, indent=2, ensure_ascii=False)
-        )
+        async with self._facts_lock:
+            self.facts[key] = {"value": val, "ts": time.time()}
+            tmp = FACTS_FILE.with_suffix(".tmp")
+            await asyncio.to_thread(
+                tmp.write_text,
+                json.dumps(self.facts, indent=2, ensure_ascii=False)
+            )
+            tmp.replace(FACTS_FILE)
 
     async def forget(self, key: str):
-        self.facts.pop(key, None)
-        await asyncio.to_thread(
-            FACTS_FILE.write_text,
-            json.dumps(self.facts, indent=2, ensure_ascii=False)
-        )
+        async with self._facts_lock:
+            self.facts.pop(key, None)
+            tmp = FACTS_FILE.with_suffix(".tmp")
+            await asyncio.to_thread(
+                tmp.write_text,
+                json.dumps(self.facts, indent=2, ensure_ascii=False)
+            )
+            tmp.replace(FACTS_FILE)
 
     async def backup(self) -> str:
         ts   = time.strftime("%Y%m%d%H%M%S")
@@ -127,10 +134,11 @@ class MemorySystem:
         return str(dest)
 
     async def wipe_and_reinitialize(self):
-        shutil.rmtree(CHROMA_DIR, ignore_errors=True)
-        FACTS_FILE.write_text("{}")
-        self.facts = {}
-        await self.initialize()
+        async with self._facts_lock:
+            shutil.rmtree(CHROMA_DIR, ignore_errors=True)
+            FACTS_FILE.write_text("{}")
+            self.facts = {}
+            await self.initialize()
 
     async def close(self):
         pass
