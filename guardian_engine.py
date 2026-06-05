@@ -714,6 +714,22 @@ def match_signatures(log_text, env_keys):
             if "TELEGRAMCHATID" not in env_keys or not env_keys.get("TELEGRAMCHATID", "").strip():
                 matched_evidence.append("[env_check] TELEGRAMCHATID absent or empty in .env (non-blocking)")
 
+        if sig_id == "logger.duplicate_handler" and matched_evidence:
+            try:
+                with open("core/nina.py", "r", encoding="utf-8") as f:
+                    lines = f.readlines()
+                has_unguarded = False
+                for i, line in enumerate(lines):
+                    if "root.addHandler(" in line:
+                        prev = lines[i-1] if i > 0 else ""
+                        if "if " not in line and "if " not in prev:
+                            has_unguarded = True
+                            break
+                if not has_unguarded:
+                    matched_evidence = []
+            except Exception:
+                pass
+
         if matched_evidence:
             # Deduplicate evidence lines
             seen = set()
