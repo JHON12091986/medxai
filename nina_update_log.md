@@ -677,3 +677,18 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 048 — 2026-06-06 — D-06 Create nina_error_register.md
+
+Triggered by DEV 5.6 session — master error register requested
+
+Files changed:
+- docs/space/nina_error_register.md (NEW)
+
+Verification:
+- File written, wc -l confirmed non-empty
+- All guardian signatures and update log IDs captured
+
+Rollback: rm ~/nina/docs/space/nina_error_register.md
