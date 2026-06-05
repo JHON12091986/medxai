@@ -2,7 +2,7 @@
 import asyncio, hashlib, json, logging, re, time, uuid
 from collections import deque
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, cast
 import httpx, psutil
 from core.config import NinaConfig, RATELIMITS
 
@@ -141,11 +141,11 @@ class ProviderHealth:
         return self.cb.state in ("OPEN", "HALF_OPEN")
 
     def is_near_limit(self, pid: str) -> bool:
-        tpd = RATELIMITS.get(pid, {}).get("tpd")
+        tpd = cast(dict, RATELIMITS).get(pid, {}).get("tpd")
         return bool(tpd and (self.tokens_today + self.reserved_tokens) > 0.8 * tpd)
 
     def is_exhausted(self, pid: str) -> bool:
-        tpd = RATELIMITS.get(pid, {}).get("tpd")
+        tpd = cast(dict, RATELIMITS).get(pid, {}).get("tpd")
         return bool(tpd and (self.tokens_today + self.reserved_tokens) >= tpd)
 
     def composite_score(self, pid: str) -> float:
@@ -477,7 +477,7 @@ class HybridRouter:
 
         for pid in provider_order:
             h = self.health[pid]
-            rl = RATELIMITS.get(pid, {})
+            rl = cast(dict, RATELIMITS).get(pid, {})
             sp = rl.get("min_spacing_s", 0)
             if sp:
                 w = sp - (time.time() - h.last_request_ts)

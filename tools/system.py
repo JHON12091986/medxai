@@ -5,8 +5,9 @@ import psutil
 
 logger = logging.getLogger("nina.tools.system")
 
+from typing import Optional, Dict
 async def get_temps() -> dict:
-    temps = {"cpu": None, "gpu": None}
+    temps: Dict[str, Optional[int]] = {"cpu": None, "gpu": None}
     try:
         st = psutil.sensors_temperatures()
         core = st.get("coretemp") or st.get("k10temp") or st.get("cpu_thermal") or []

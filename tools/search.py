@@ -60,9 +60,9 @@ async def search(query: str, max_results: int = 5) -> str:
         ua = random.choice(["Mozilla/5.0 (X11; Linux x86_64) Chrome/124.0", "Mozilla/5.0 (Windows NT 10.0) Firefox/125.0"])
         with DDGS(headers={"User-Agent": ua}, timeout=15) as ddgs:
             # v6+: keywords= is a required named argument
-            results = list(ddgs.text(keywords=query, max_results=max_results))
-        out = "\n".join(f"{r['title']}\n{r['href']}\n{r['body']}" for r in results)
-        logger.info(f"ddg_search query={query!r} results={len(results)}", extra={"log": "tools.log"})
+            ddg_results = list(ddgs.text(keywords=query, max_results=max_results))
+        out = "\n".join(f"{r['title']}\n{r['href']}\n{r['body']}" for r in ddg_results)
+        logger.info(f"ddg_search query={query!r} results={len(ddg_results)}", extra={"log": "tools.log"})
         return out or "No results."
     except Exception as e:
         logger.warning(f"ddg_failed {e}")
