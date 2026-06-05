@@ -374,35 +374,30 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 ---
 
-## Entry 021 — 2026-06-05 · R-76 & R-77 & D-01 Guardian/Router Forensic Correctness
+## Entry 021 — 2026-06-05 · D-sync Post-session sync
 
-**Triggered by:** Open issue R-76 (guardian NameError/false blockers) and R-77 (router AttributeError).
+**Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:**
-- guardian_engine.py
-- core/router.py
-- .gitignore
-- AGENTS.md
-- docs/space/nina_context.md
-- docs/space/nina_dev_policy.md
-- nina_context.md (deleted)
-- nina_dev_policy.md (deleted)
-- nina_phase1_roadmap.md (deleted)
-- nina_problem_log.md (deleted)
-- nina_update_log.md (deleted)
-- nina_v12_blueprint.md (deleted)
+**Files changed:** docs/space/nina_update_log.md,upgrades/
 
-**R-76-A** Patched `guardian_engine.py` to define `suppressed_findings` early, preventing `NameError` on report generation.
+**Verification:** git push OK, nina.service active
 
-**R-76-B** Modified `guardian_engine.py` to parse healthcheck JSON output, matching signatures only against `BLOCKER`/`WARN`/`DEBT` failures, avoiding false positives on passed healthchecks.
+---
 
-**R-76-C** Restricted `collect_downloads_clues()` candidates to `.log`, `.txt`, `.json` files to ignore raw code files in `~/Downloads`.
+## Entry 001 — 2026-06-05 · D-sync Post-session sync
 
-**R-77** Corrected `self.config.ramguardgb` typo to `self.config.ram_guard_gb` in `core/router.py` to fix runtime AttributeErrors.
+**Triggered by:** nina_sync.sh v3 automated run
 
-**D-01** Removed duplicate root-level markdown files, corrected duplicate `logs/` entry in `.gitignore`, and documented current dev stack (Claude Sonnet 4.6, Antigravity CLI, NotebookLM) in agent context and policies.
+**Files changed:** docs/space/nina_context.md,docs/space/AGENTS.md,nina_context.md,nina_v12_blueprint.md,upgrades/
 
-**Verification:** `py_compile` and `pyflakes` clean, `./guardian` run confirms health score increased from 6.0/10 to 8.2/10, all spurious blockers cleared.
+**Verification:** git push OK, nina.service active
 
-**Rollback:** `git revert 34c0711` (R-76), `git revert 3dadddd` (R-77), `git revert 5e7db35` (D-01)
+---
 
+## Entry 023 — 2026-06-05 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_phase1_roadmap.md,docs/space/AGENTS.md,nina_context.md,nina_dev_policy.md,nina_phase1_roadmap.md,nina_problem_log.md,nina_update_log.md,nina_v12_blueprint.md,upgrades/
+
+**Verification:** git push OK, nina.service active
