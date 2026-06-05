@@ -558,17 +558,33 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** git push OK, nina.service active
 
-## Entry 036 — 2026-06-06 · O-03 + O-06 closed, B-3 F-03 confirmed done
+---
 
-**Triggered by:** DEV 5.4 verification read of tools/shell.py and tools/browser.py
+## Entry 036 — 2026-06-06 · D-sync Post-session sync
 
-**Files changed:** None — read-only verification session
+**Triggered by:** nina_sync.sh v3 automated run
 
-**Findings:**
-- O-06: `cat` is NOT in `ALLOWED_BASES` in tools/shell.py — closed by R-48. ✅
-- O-03: `socket.gethostbyname()` is live in `_is_internal()` in tools/browser.py — closed by R-64 + F-82b. ✅
-- B-3 F-03: Tone calibration + duplicate 'Available tools' line removal confirmed shipped 2026-06-05. ✅
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
-**Verification:** Read-only, no compile needed, service unchanged.
+**Verification:** git push OK, nina.service active
 
-**Rollback:** N/A — no files modified.
+## Entry 037 — 2026-06-06 · docs: expand AGENTS.md with mandatory agy task rules
+
+**Triggered by:** DEV 5.4 — owner request to codify mandatory agy workflow rules in AGENTS.md
+
+**Files changed:**
+- AGENTS.md — added 4 new sections: Mandatory Rules (code change), Mandatory Rules (task close), High-Risk Files, Never Do
+- docs/space/AGENTS.md — mirrored from root
+
+**What was added:**
+- py_compile + pyflakes required before every commit
+- Conventional commit format enforced: fix:|feat:|docs:|chore:|ops: + (ID)
+- One commit per logical fix rule
+- Python-only log append rule (no heredoc, no bash echo)
+- nina_sync.sh mandatory at end of every task
+- High-risk file list: telegram_interface.py, .env, router.py, main.py, guardian_engine.py, shell.py
+- Never Do list: heredoc logs, auto-merge Jules PRs, bundled commits
+
+**Verification:** docs-only change, no py_compile needed. Committed as `docs: expand AGENTS.md with mandatory agy task rules`
+
+**Rollback:** git revert 649d064
