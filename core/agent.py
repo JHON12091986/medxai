@@ -70,9 +70,6 @@ class AgentLoop:
     )
 
     async def _inner(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
-        # Prepend language override before any routing if message is in Bangla
-        if self._is_bangla(goal):
-            goal = self._BANGLA_OVERRIDE + goal
 
         ram = await system.get_ram_used_gb()
         if ram >= self.config.ram_guard_gb:
@@ -106,7 +103,11 @@ class AgentLoop:
             "FINAL:answer when done.\n"
             "RULE: live data/prices/news — MUST use TOOL:web first."
         )
-        msgs = [{"role": "user", "content": system_frame}] + session_history.copy()
+        # F-03d: inject Bangla override as a system-role message so providers treat it
+        # as a system instruction, not user content (fixes F-03c goal-prepend approach)
+        bangla_sys = ([{"role": "system", "content": self._BANGLA_OVERRIDE.strip()}]
+                      if self._is_bangla(goal) else [])
+        msgs = bangla_sys + [{"role": "user", "content": system_frame}] + session_history.copy()
         scratchpad = []
 
         for step in range(1, max_steps + 1):
