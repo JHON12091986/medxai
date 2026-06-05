@@ -632,6 +632,7 @@ def collect_downloads_clues():
             if f.is_file()
             and DOWNLOADS_RELEVANT_PATTERNS.search(f.name)
             and not CREDENTIAL_PATTERNS.search(f.name)
+            and f.suffix.lower() in (".log", ".txt", ".json")
         ]
         for f in sorted(candidates, key=lambda x: x.stat().st_mtime, reverse=True)[:10]:
             snippet = read_file_safe(f, max_bytes=3_000)
@@ -1512,16 +1513,33 @@ def run_engine(args):
 
     # ── Signature matching ────────────────────────────────────────────────────
     section("Signature Matching")
+
+    # Filter healthcheck JSON output to avoid false positives on PASS/INFO checks
+    healthcheck_text_to_match = ""
+    if healthcheck_out.strip():
+        try:
+            hc_data = json.loads(healthcheck_out)
+            hc_failures = []
+            for item in hc_data.get("results", []):
+                if item.get("level") in ("BLOCKER", "WARN", "DEBT"):
+                    hc_failures.append(
+                        f"[HEALTHCHECK {item.get('level')}] {item.get('check_id')}: {item.get('title')} - {item.get('detail')} - {item.get('fix')}"
+                    )
+            healthcheck_text_to_match = "\n".join(hc_failures)
+        except Exception:
+            healthcheck_text_to_match = healthcheck_out
+
     all_log_text = (
         journal_recent + "\n" + journal_errors + "\n" + journal_15min
         + "\n" + service_status
         + "\n".join(nina_logs.values())
         + "\n".join(snip for _, snip in downloads_clues)
-        + healthcheck_out
+        + healthcheck_text_to_match
     )
 
     findings = match_signatures(all_log_text, env_keys, py_file_texts)
     findings = resolve_root_cause(findings)
+    suppressed_findings = []
 
     blockers = [f for f in findings if f["severity"] == "BLOCKER"]
     warns    = [f for f in findings if f["severity"] == "WARN"]
@@ -1674,6 +1692,8 @@ def run_engine(args):
             {k: v for k, v in f.items() if k != "_match_count"}
             for f in findings
         ],
+        "suppressed_findings": suppressed_findings,
+        "suppressed_count": len(suppressed_findings),
         "timeline": timeline,
         "evidence": evidence_list,
         "likely_files": root_cause["likely_files"] + baseline_drift.get("changed_files", []),
@@ -1730,8 +1750,6 @@ def run_engine(args):
 
     # ── Return structured result for bash ────────────────────────────────────
     # Write a small handoff file for the bash layer to read
-    suppressed_findings = []
-
     handoff = {
         "overall_status": overall_status,
         "deploy_blocked": deploy_blocked,
