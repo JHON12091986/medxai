@@ -411,3 +411,31 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Files changed:** docs/space/nina_update_log.md,upgrades/
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 025 — 2026-06-05 · D-04 Archive Relocation + D-05 Sync Direction Audit
+
+**IDs:** D-04, D-05
+
+**D-04 — Archive Relocation:**
+- Created `~/nina/upgrades/backups/archive/`
+- Relocated 47 files from `~/Downloads/nina_archive/` to `~/nina/upgrades/backups/archive/`
+- Files include: blueprints, policy docs, context files, historical backup .md files, nina_sync.sh copy
+- Directory tracked in git via `.gitkeep` (upgrades/backups/ is gitignored)
+- Commit: `ops(D-04): create upgrades/backups/archive — relocate 47 files`
+
+**D-05 — Sync Direction Audit:**
+- Verified `nina_sync.sh` syncs FROM `logs/nina_update_log.md` TO `~/nina/` root — direction is correct
+- `[1/7]` Downloads → nina root ✓
+- `[2/7]` nina root → docs/space ✓
+- `logs/` → nina root (end of step 2) ✓ — never reversed
+- `bash -n nina_sync.sh` → OK (no syntax errors)
+- `--dry-run` verified all paths correct
+- No code change required; audit confirms design intent
+
+**Guardian:** Pre-check WARN/8.2 (deploy not blocked) · Post-check WARN/8.2 (stable)
+
+**Verification:** py_compile + pyflakes not applicable (shell script); bash -n OK; --dry-run OK
+
