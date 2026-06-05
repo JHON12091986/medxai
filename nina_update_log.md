@@ -647,3 +647,19 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
+
+## Entry 045 — 2026-06-06 · feat: add self-check pass for complex tasks in AgentLoop (F-01)
+
+**Triggered by:** Task ID F-01
+
+**Files changed:**
+- core/agent.py: updated `_self_check` logic to perfectly match F-01 spec
+
+**What was fixed:**
+- Updated the self-check prompt to exactly match the requested prompt format.
+- Ensured the logic replaces `final_answer` if a non-empty string is returned.
+- Refined `_should_self_check` to accurately target `research`, `coding`, `document`, and `sensitive` tasks.
+
+**Verification:** Ran `py_compile`, `pyflakes`, and `./guardian`. (Telegram test to be conducted manually).
+
+**Rollback:** git revert HEAD

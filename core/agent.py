@@ -18,17 +18,16 @@ class AgentLoop:
 
     def _should_self_check(self, task: ClassifiedTask) -> bool:
         return (getattr(task, "task_type", "") or "").lower() in {
-            "coding", "research", "sensitive", "analysis", "document", "math"
+            "research", "coding", "document", "sensitive"
         }
 
     async def _self_check(self, goal: str, draft: str, task: ClassifiedTask, force_local: bool = False) -> str:
         if not draft or not self._should_self_check(task):
             return draft
         review_prompt = (
-            "Review this draft before it is sent to the user.\n"
-            "If the draft is already good, reply exactly: OK\n"
-            "Otherwise return a revised final answer only — more correct, complete, safe, and concise.\n\n"
-            f"Goal:\n{goal}\n\nDraft:\n{draft}\n"
+            "Review this answer for completeness and accuracy relative to the original question. "
+            "If it is complete and accurate, return it unchanged. If not, return a corrected version. "
+            f"Original question: {goal}\n\nAnswer: {draft}"
         )
         try:
             reviewed = await self.router.route(
@@ -38,9 +37,9 @@ class AgentLoop:
                 force_local=True,
             )
             reviewed = (reviewed or "").strip()
-            if not reviewed or reviewed.upper() == "OK":
-                return draft
-            return reviewed
+            if reviewed:
+                return reviewed
+            return draft
         except Exception as e:
             logger.warning(f"selfcheck_failed: {e}", extra={"log": "agent.log"})
             return draft
