@@ -70,6 +70,7 @@ class AgentLoop:
     )
 
     async def _inner(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
+        session_history = list(session_history)
 
         ram = await system.get_ram_used_gb()
         if ram >= self.config.ram_guard_gb:
