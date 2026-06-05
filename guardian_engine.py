@@ -681,7 +681,7 @@ def collect_all_log_text():
 
 # ── Signature matcher ─────────────────────────────────────────────────────────
 
-def match_signatures(log_text, env_keys, py_file_texts):
+def match_signatures(log_text, env_keys):
     """
     Match signatures using runtime/log evidence only.
     Do not match broad signatures against source code text, because that creates
@@ -1537,7 +1537,7 @@ def run_engine(args):
         + healthcheck_text_to_match
     )
 
-    findings = match_signatures(all_log_text, env_keys, py_file_texts)
+    findings = match_signatures(all_log_text, env_keys)
     findings = resolve_root_cause(findings)
     suppressed_findings = []
 
