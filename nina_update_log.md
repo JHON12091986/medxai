@@ -637,3 +637,18 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 **Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
+
+## Entry 044 — 2026-06-06 · ops: reset guardian baseline to clear stale health score (G-42)
+
+**Triggered by:** Task ID G-42
+
+**Files changed:**
+- (None - verified absence of stale `guardian_baseline.json`)
+
+**What was fixed:**
+- Verified `guardian_baseline.json` was already clear, avoiding stale BLOCKER health scores.
+- Recorded new score via `./guardian`: **9.2/10**.
+
+**Verification:** Ran `./guardian` which confirmed baseline absence and current score.
+
+**Rollback:** (N/A)
