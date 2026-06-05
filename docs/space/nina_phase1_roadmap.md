@@ -46,24 +46,17 @@ These are breaking issues. Nothing else matters until these are resolved.
 - **ID:** R-77
 - **File:** `core/router.py`
 - **Change:** `self.config.ramguardgb` → `self.config.ram_guard_gb`
-- **Why now:** Every complex task (research, coding) that tries to fan out crashes silently at runtime. This is the highest-priority single-line fix in the codebase.
-- **Proof:** Send a research-class task via Telegram, confirm no TypeError in logs.
 
 #### A-2 · Delete `core/logger.py`
 - **ID:** D-01
 - **File:** `core/logger.py`
 - **Change:** Delete file. Confirm no other module imports it.
-- **Why now:** Self-annotated as deprecated. Guardian flags it. Every restart risks duplicate log handlers.
-- **Proof:** Restart NINA, check `journalctl -u nina -n 50` for duplicate handler warnings.
 
 #### A-3 · Fix tool grammar fragility (minimum viable guard)
 - **ID:** R-78
 - **File:** `core/agent.py`
 - **Change:** Wrap `TOOL:` / `FINAL:` parsing in a fallback: if neither marker found after all steps, return a graceful "I couldn't complete this" message rather than crashing or silently returning empty string.
-- **Why now:** Text-split tool parsing breaks whenever any provider reformats output. This makes NINA feel broken to you even when the model responded correctly.
-- **Proof:** Send a task where the model is likely to produce a direct answer without markers. Confirm NINA replies gracefully instead of hanging or crashing.
 
----
 
 ### Stage B — Make NINA Smarter (Core Priority, ~2–3 sessions)
 
@@ -73,24 +66,17 @@ NINA feels dumb because she doesn't understand *you*. Better reasoning quality c
 - **ID:** F-01
 - **File:** `core/agent.py`
 - **Change:** After the final answer is formed for task types `research`, `coding`, `sensitive`, `document` — run one additional local model pass asking: "Is this answer complete, accurate and relevant to the original question? If not, revise it." Return the revised answer.
-- **Why now:** This is the single highest-leverage change to make NINA's answers feel considered rather than generated. Uses LOCAL_FAST so no extra cost.
-- **Proof:** Ask NINA a multi-part banking question. Compare answer quality before and after.
 
 #### B-2 · Personal context injection into every prompt
 - **ID:** F-02
 - **File:** `core/memory.py`, `core/nina.py`
 - **Change:** Add a dedicated `personal_context` section to `facts.json` with structured keys: `occupation`, `employer`, `priorities`, `working_hours`, `personal_habits`, `current_goals`. Inject this as a fixed top section in `build_context()` before semantic recall results — so every single NINA response is grounded in who you are.
-- **Why now:** This directly addresses "she doesn't understand me." It is free (no new dependency), effective immediately, and requires no model change.
-- **Proof:** Ask NINA something personal like "what should I focus on today?" and confirm she references your role/context in the reply.
 
 #### B-3 · Response tone calibration in system prompt
 - **ID:** F-03
 - **File:** `core/nina.py` (SYSTEM_PROMPT_TEMPLATE)
 - **Change:** Remove the duplicate `Available tools:` section. Add explicit tone calibration: direct, peer-level, not overly formal, proactively flags risk, uses Bangla or English based on your register.
-- **Why now:** A clean, calibrated system prompt directly improves every single response NINA gives.
-- **Proof:** Send a casual question in Bangla. Confirm NINA matches tone and language naturally.
 
----
 
 ### Stage C — New Capabilities (High Value, ~3–5 sessions)
 
@@ -100,54 +86,27 @@ Only build capabilities that serve the five real-world targets. Everything else 
 - **ID:** F-04
 - **File:** `tools/finance.py` (new)
 - **Change:** A simple local tool that can:
-  - Accept spend entries via Telegram (`spent 500 lunch`, `spent 2000 groceries`)
-  - Store to `data/expenses.json` with date, amount, category
-  - Summarize on request (`my spending this week`)
-  - Alert if a weekly threshold is exceeded
-- **Why now:** T-1. This is something Gemini literally cannot do with your personal data. It requires no external service, no API, runs fully local, and gives NINA immediate practical value in your daily life.
-- **Proof:** Log three expenses via Telegram. Ask for weekly summary. Confirm correct totals.
 
 #### C-2 · Share market monitor (DSE/CSE alerts)
 - **ID:** F-05
 - **File:** `tools/market.py` (new) + `crons/manager.py`
 - **Change:**
-  - A `market.py` tool that fetches DSE/CSE index data via web search or public API on demand and on schedule
-  - A cron job that checks every 2 hours during market hours (10:00–14:30 Dhaka)
-  - Telegram alert when index moves >1% in either direction, or when any watchlist stock crosses a threshold you define
-- **Why now:** T-3. This is the "monitor and alert" behavior that defines an operator versus a chatbot. Gemini cannot push alerts to your Telegram.
-- **Proof:** Set a test threshold. Confirm alert fires on next cron run with a real market value.
 
 #### C-3 · Proactive reminder engine
 - **ID:** F-06
 - **File:** `core/nina.py` + `data/reminders.json`
 - **Change:**
-  - Accept reminders via Telegram (`remind me tomorrow 9am to check LC status`)
-  - Store to `data/reminders.json`
-  - Existing cron heartbeat checks pending reminders every 15 minutes and fires Telegram nudge when due
-- **Why now:** T-4. This requires no new infrastructure — the heartbeat cron already exists. It is low effort, high daily value, and directly differentiates NINA from a passive chatbot.
-- **Proof:** Set a reminder 5 minutes ahead. Confirm Telegram push at the right time.
 
 #### C-4 · Email triage improvement
 - **ID:** F-07
 - **File:** `tools/office_mail.py`
 - **Change:**
-  - Email fetch already works. Improve the output format: return structured list of `{sender, subject, received_time, urgency_flag}` rather than a raw dump
-  - Add a simple urgency heuristic: flag emails containing keywords like `LC`, `SWIFT`, `MT103`, `urgent`, `deadline`, `Bangladesh Bank`
-  - Morning report uses this structured output
-- **Why now:** T-2. You said subject + sender is often enough. This gives you exactly that in a clean, scannable format without over-reasoning.
-- **Proof:** Trigger email fetch manually. Confirm structured output with urgency flags visible in Telegram.
 
 #### C-5 · Personal knowledge base (`/remember` and `/recall`)
 - **ID:** F-08
 - **File:** `core/memory.py` + Telegram command handler
 - **Change:**
-  - `/remember [key] [value]` stores a personal fact to `facts.json`
-  - `/recall [key or topic]` retrieves it
-  - NINA automatically injects relevant recalled facts into responses based on the current conversation topic
-- **Why now:** T-5. Personal context memory is what separates a personal operator from a generic AI. This builds NINA's understanding of your habits, routines, and priorities over time.
-- **Proof:** Store a personal fact. Ask a related question. Confirm NINA references it without being prompted.
 
----
 
 ### Stage D — Stability Hardening (Ongoing, parallel with C)
 
@@ -215,4 +174,3 @@ This is a guide, not a contract. If something blocks you, skip it and move to th
 - She remembers personal facts you teach her
 
 None of these are things you can get from Gemini on your phone. All of them run on your laptop in Dhaka.
-

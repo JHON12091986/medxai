@@ -217,28 +217,20 @@ cp nina/upgrades/backups/core-cleanup-memory.py.bak nina/core/memory.py
 - Baseline will reset to PASS once a clean run clears the incident history
 - mypy 22 advisory findings are non-blocking — core/config.py NinaConfig kwargs, tools/system.py
 
-## Development Policy Summary
+## Development Policy Summary (see nina_dev_policy.md for full rules)
 
-**Dev Stack:** Perplexity (Sonnet 4.6), agy CLI, Jules agent, NotebookLM. (No Gemini CLI).
-
-**The 12 Rules:**
-1. Every change has an ID — no anonymous fixes. Types: R-XX (bug/reliability), F-XX (feature), S-XX (security), D-XX (debt).
-2. One purpose per patch — never bundle unrelated changes.
-3. Guardian runs before AND after every change to core, tools, interfaces, main.py, .env, or service files.
-4. Every risky change must be recoverable — guardian snapshot, git commit, or manual backup first.
-5. Runtime proof required — nina.service active, Telegram responding, target behaviour confirmed.
-6. Logs updated same day — nina_update_log.md + nina_problem_log.md.
-7. Production fixes beat cleanup priority.
-8. No blind AI patching — read target files, confirm paths are real, confirm names match current code.
-9. Protect interfaces and secrets — interfaces/telegraminterface.py, .env, router are high-risk.
-10. Warnings must be managed — ACCEPTED-NOW / FIX-NEXT / BLOCK-RELEASE.
-11. Small changes win — prefer one-line fixes over rewrites.
-12. Done = ID assigned, one purpose, guardian ran, runtime verified, rollback exists, logs updated.
-
-**Log Append Rule (Non-Negotiable):**
-- NEVER use heredoc (`cat >> file << 'EOF'`) for log appends — backticks break UI renderers.
-- ALWAYS use Python for all log appends.
-- Use PYEOF as heredoc terminator for the Python script block.
+1. Every change has an ID — no anonymous fixes
+2. One purpose per patch — never bundle unrelated changes
+3. Guardian runs before AND after every change to core, tools, interfaces, main.py, .env, or service files
+4. Every risky change must be recoverable — guardian snapshot, git commit, or manual backup first
+5. Runtime proof required — nina.service active, Telegram responding, target behaviour confirmed
+6. Logs updated same day — nina_update_log.md + nina_problem_log.md
+7. Production fixes beat cleanup priority
+8. No blind AI patching — read target files, confirm paths are real, confirm names match current code
+9. Protect interfaces and secrets — interfaces/telegraminterface.py, .env, router are high-risk
+10. Warnings must be managed — ACCEPTED-NOW / FIX-NEXT / BLOCK-RELEASE
+11. Small changes win — prefer one-line fixes over rewrites
+12. Done = ID assigned, one purpose, guardian ran, runtime verified, rollback exists, logs updated
 
 ## Phase 1 Status
 

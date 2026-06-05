@@ -668,20 +668,27 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** git push OK, nina.service active
 
-## Entry 047 — 2026-06-06 · chore: reduce mypy advisory findings (DEBT-mypy)
+---
 
-**Triggered by:** Task ID DEBT-mypy
+## Entry 047 — 2026-06-06 · D-sync Post-session sync
 
-**Files changed:**
-- `core/router.py`
-- `core/config.py`
-- `interfaces/telegram_interface.py`
+**Triggered by:** nina_sync.sh v3 automated run
 
-**What was fixed:**
-- Added missing type annotations to `last_exc`, `avail`, `degraded`, and `messages` in `core/router.py`.
-- Added `# type: ignore` to kwargs construction in `NinaConfig` (`core/config.py`).
-- Verified mypy finding count dropped significantly from 58 to 45.
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
 
-**Verification:** Ran `py_compile`, `pyflakes`, restarted `nina.service`, and confirmed `./guardian`.
+**Verification:** git push OK, nina.service active
 
-**Rollback:** git revert HEAD
+---
+
+## Entry 048 — 2026-06-06 — D-06 Create nina_error_register.md
+
+Triggered by DEV 5.6 session — master error register requested
+
+Files changed:
+- docs/space/nina_error_register.md (NEW)
+
+Verification:
+- File written, wc -l confirmed non-empty
+- All guardian signatures and update log IDs captured
+
+Rollback: rm ~/nina/docs/space/nina_error_register.md

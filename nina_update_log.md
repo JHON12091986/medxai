@@ -692,3 +692,13 @@ Verification:
 - All guardian signatures and update log IDs captured
 
 Rollback: rm ~/nina/docs/space/nina_error_register.md
+
+---
+
+## Entry 049 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_phase1_roadmap.md,docs/space/nina_update_log.md,nina_context.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,shrink_roadmap.py,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
