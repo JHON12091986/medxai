@@ -745,17 +745,10 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 054 — 2026-06-06 · Fix mypy type advisories
+## Entry 054 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** Manual/Agent intervention
+**Triggered by:** nina_sync.sh v3 automated run
 
-**What changed:** 
-- `tools/system.py`: Annotated `temps` variable with `Dict[str, Optional[int]]` to fix assignment type checking.
-- `tools/search.py`: Changed intermediate variable name from `results` to `ddg_results` to prevent `list` reassignment over an implicitly inferred `str` type and adjusted logging reference.
-- `core/router.py`: Cast `RATELIMITS` to `dict` during `get()` calls in `is_near_limit` and `is_exhausted` functions to resolve untyped object attribute errors. (R-89)
+**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
-**Verification:** 
-- `python3 -m py_compile`, `pyflakes`, and `mypy --ignore-missing-imports` ran successfully and all 5 specific lines were cleared from the advisory list.
-
-**Rollback path:** 
-- Revert commit R-89 via `git revert`.
+**Verification:** git push OK, nina.service active
