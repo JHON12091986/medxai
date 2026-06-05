@@ -5,7 +5,7 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 
 ## Dev Environment Stack
 - **AI Tooling:** Perplexity Enterprise Pro with Claude Sonnet 4.6
-- **Developer CLI:** Antigravity CLI agy v1.0.5
+- **Developer CLI + Local Build Agent (Claude Sonnet 4.6 Thinking):** Antigravity CLI agy v1.0.5
 - **Primary Developer Agent:** Jules at jules.google
 - **Reference & Search:** NotebookLM
 - **Note:** Gemini CLI was removed on June 5, 2026.

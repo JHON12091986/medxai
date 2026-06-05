@@ -9,7 +9,7 @@ updated: 2026-06-05
 
 ## Dev Environment Stack
 - **AI Tooling:** Perplexity Enterprise Pro with Claude Sonnet 4.6
-- **Developer CLI + Local Build Agent (Claude Sonnet 4.6 Thinking — interactive, filesystem access, real-time debugging):** Antigravity CLI agy v1.0.5
+- **Developer CLI:** Antigravity CLI agy v1.0.5
 - **Primary Developer Agent:** Jules at jules.google
 - **Reference & Search:** NotebookLM
 - **Note:** Gemini CLI was removed on June 5, 2026.
@@ -39,9 +39,6 @@ updated: 2026-06-05
 
     # Dry-run preview (optional)
     cd ~/nina && ./nina_sync.sh --dry-run
-
-    # LOCAL-BUILD path (scoped single-module tasks)
-    # Use agy directly instead of filing a Jules issue
 
 ## Change ID System
 - `R-XX` — bug fix / reliability
