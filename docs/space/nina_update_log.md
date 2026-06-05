@@ -725,15 +725,25 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 052 — 2026-06-06 · Suppress duplicate_handler false positive
+## Entry 052 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 053 — 2026-06-06 · Security Guard for Remote Patches
 
 **Triggered by:** Manual/Agent intervention
 
 **What changed:** 
-- `guardian_engine.py`: Added a source_check condition to the `logger.duplicate_handler` signature. It now verifies that `root.addHandler` actually appears outside a guard in `core/nina.py` source code before emitting the WARN. This suppresses false positives from old journal lines when the source is already guarded (R-87).
+- `tools/upgradepipeline.py`: Added strict Content-Type checking (`text/` and `application/json`) and a maximum file size limit (512KB) before processing any remote patch payloads fetched via `httpx`. (R-88)
 
 **Verification:** 
-- `python3 -m py_compile` ran successfully on `guardian_engine.py`.
+- Compiled and linted `tools/upgradepipeline.py` with `python3 -m py_compile` and `pyflakes`. Both passed.
 
 **Rollback path:** 
-- Revert commit R-87 via `git revert`.
+- Revert commit R-88 via `git revert`.
