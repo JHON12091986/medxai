@@ -13,9 +13,8 @@ SPACE_FILES=(
   AGENTS.md
   nina_context.md
   nina_problem_log.md
-  nina_dev_policy.md
+  nina_error_register.md
   nina_phase1_roadmap.md
-  nina_v12_blueprint.md
   nina_update_log.md
 )
 
@@ -174,10 +173,9 @@ else
   rm -rf "$HOME/Downloads/nina_space_upload"
   mkdir -p "$HOME/Downloads/nina_space_upload"
   cp "$NINA/docs/space/nina_context.md" "$HOME/Downloads/nina_space_upload/"
-  cp "$NINA/docs/space/nina_dev_policy.md" "$HOME/Downloads/nina_space_upload/"
+  cp "$NINA/docs/space/nina_error_register.md" "$HOME/Downloads/nina_space_upload/"
   cp "$NINA/docs/space/nina_update_log.md" "$HOME/Downloads/nina_space_upload/"
   cp "$NINA/docs/space/nina_phase1_roadmap.md" "$HOME/Downloads/nina_space_upload/"
-  cp "$NINA/docs/space/nina_v12_blueprint.md" "$HOME/Downloads/nina_space_upload/"
   cp "$NINA/AGENTS.md" "$HOME/Downloads/nina_space_upload/"
   LATEST_BACKUP=$(ls -t "$HOME/Downloads"/nina_backup_*.md 2>/dev/null | head -n 1)
   if [ -n "$LATEST_BACKUP" ]; then
