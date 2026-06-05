@@ -1,4 +1,4 @@
-import logging
+import logging, socket
 from playwright.async_api import async_playwright
 import ipaddress as ipaddr
 from urllib.parse import urlparse as urlparse
@@ -12,7 +12,12 @@ def _is_internal(url: str) -> bool:
         addr = ipaddr.ip_address(host)
         return addr.is_private or addr.is_loopback or addr.is_link_local or addr.is_reserved
     except ValueError:
-        return host.lower() in ("localhost",)
+        try:
+            resolved = socket.gethostbyname(host)
+            addr = ipaddr.ip_address(resolved)
+            return addr.is_private or addr.is_loopback or addr.is_link_local or addr.is_reserved
+        except socket.gaierror:
+            return True
 
 
 async def fetch(url: str) -> str:
