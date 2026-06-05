@@ -439,3 +439,41 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Verification:** py_compile + pyflakes not applicable (shell script); bash -n OK; --dry-run OK
 
+
+---
+
+## Entry 026 — 2026-06-05 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 027 — 2026-06-05 · F-03 System Prompt Tone Calibration
+
+**ID:** F-03  
+**File:** `core/nina.py`  
+**Type:** Feature — system prompt refinement
+
+**Changes made:**
+1. **Removed duplicate `Available tools` line** — first occurrence (DuckDuckGo-only, less complete) deleted; kept the complete `Tavily+Serper+DDG` version.
+2. **Added `## TONE & REGISTER` block** to `SYSTEM_PROMPT_TEMPLATE`:
+   - Peer-level, direct — no honorifics or sycophantic openers
+   - Proactively flag risks/conflicts/edge cases
+   - Language mirroring: Bangla if user writes Bangla, English if English
+   - Zero-filler rule: ban on "Certainly!", "Of course!", "Sure!", "Great question!"
+   - Ambiguous tasks → one sharp clarifying question, no hedging
+
+**Verification:**
+- `python3 -m py_compile core/nina.py` → OK
+- `pyflakes core/nina.py` → OK
+- Guardian post-edit: WARN/8.2 (deploy not blocked, stable)
+- `sudo systemctl restart nina.service` → active
+- Bangla Telegram test: tone matched (peer-level, Bangla response, no filler)
+
+**Commit:** `feat: calibrate system prompt tone, remove duplicate tools block F-03`
+
