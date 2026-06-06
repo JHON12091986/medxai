@@ -3,6 +3,8 @@
 
 set -euo pipefail
 
+PATH="$HOME/bin:$PATH"
+
 NINA=~/nina
 SPACE_DIR="$NINA/docs/space"
 LOGS_DIR="$NINA/logs"
@@ -284,6 +286,12 @@ else
   echo "  ║      ~/Downloads/nina_space_upload/          ║"
   echo "  ╚══════════════════════════════════════════════╝"
   echo ""
+
+  if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q "gdrive:"; then
+    rclone copy "$FIXED_FILE" "gdrive:nina-backup/" --no-traverse 2>/dev/null && \
+      echo "  ☁️  Synced to Google Drive: gdrive:nina-backup/nina_latest.md" || \
+      echo "  ⚠️  rclone upload failed (sync still complete)"
+  fi
 fi
 
 echo "================================================"

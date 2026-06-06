@@ -1347,3 +1347,37 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 100 — 2026-06-06 · rclone Google Drive auto-upload wired into nina_sync.sh Step 8
+
+**Triggered by:** User request to integrate rclone Google Drive automated backup uploading.
+
+**Files changed:**
+- `nina_sync.sh`
+
+**What changed:**
+- Installed `rclone v1.74.3` locally in `~/bin/rclone` to bypass sudo password prompt block.
+- Configured a Google Drive remote `gdrive` using headless auth flow.
+- Created `nina-backup` folder on Google Drive and verified connection.
+- Tested and verified manual upload of `nina_latest.md` (509,041 bytes) successfully.
+- Added `PATH` extension in `nina_sync.sh` to include `~/bin/`.
+- Integrated `rclone copy` logic inside Step 8 block of `nina_sync.sh` to automatically push `nina_latest.md` to `gdrive:nina-backup/`.
+
+**What was verified:**
+- Bash syntax validation passed successfully (`bash -n`).
+- Google Drive upload and connection verified.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md`
+
+---
+
+## Entry 101 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
