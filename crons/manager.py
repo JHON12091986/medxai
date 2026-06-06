@@ -39,6 +39,7 @@ class TaskScheduler:
         add(n.run_thermal_health,    IntervalTrigger(minutes=5),                             id="thermal_health")
         add(functools.partial(run_memory_backup, n), CronTrigger(hour=2, minute=30, timezone="Asia/Dhaka"), id="memory_backup")
         add(functools.partial(run_py_backup, n),     CronTrigger(hour=3, minute=0,  timezone="Asia/Dhaka"), id="py_backup")
+        add(n.run_reminder_check,    IntervalTrigger(minutes=15),                            id="reminder_check")
 
         add(n.pipeline._expire_pending,            IntervalTrigger(minutes=15), id="expire_pending")
         self._sched.start()
