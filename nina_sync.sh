@@ -165,8 +165,8 @@ Service: $SVC_STATUS"
   fi
 fi
 
-echo "[7/8] MD coverage scan..."
-echo "  ── All .md files in ~/nina (excl. venv/.git/backups) ──"
+echo "[7/8] Doc/config coverage scan..."
+echo "  ── All .md/.txt/.json files in ~/nina (excl. venv/.git/exports/backups) ──"
 
 COVERED_BASES=()
 for f in "${SPACE_FILES[@]}"; do
@@ -175,8 +175,9 @@ done
 
 ALL_MD=$(find "$NINA" \
   \( -path "*/venv/*" -o -path "*/.git/*" -o -path "*/node_modules/*" \
-     -o -path "*/upgrades/backups/*" \) -prune \
-  -o -name "*.md" -print | sort)
+     -o -path "*/upgrades/backups/*" -o -path "*/exports/*" \
+     -o -path "*/__pycache__/*" \) -prune \
+  -o \( -name "*.md" -o -name "*.txt" -o -name "*.json" \) -print | sort)
 
 TOTAL=0; COVERED=0; UNCOVERED=0
 UNCOVERED_LIST=""
@@ -224,7 +225,7 @@ if [ "$DRY_RUN" = true ]; then
   echo "  (dry-run: skipping)"
 else
   bash "$NINA/nina_docs_export.sh"
-  LATEST_DOCS=$(ls -t "$NINA/exports/nina_docs_backup_"*.md 2>/dev/null | head -n 1)
+  LATEST_DOCS=$(ls -t "$NINA/exports/nina_docs_backup"*.md 2>/dev/null | head -n 1)
   if [ -n "$LATEST_DOCS" ]; then
     echo "  ✅ Upload this to Perplexity Space: $(basename $LATEST_DOCS)"
     echo "     Path: $LATEST_DOCS"

@@ -1031,3 +1031,35 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 078 — 2026-06-06 · D-12 Fix LATEST_DOCS glob and expand Step 7 scan
+
+**Triggered by:** User request to fix Step 8 glob pattern and expand Step 7 scan in nina_sync.sh.
+
+**Files changed:**
+- `nina_sync.sh`
+
+**What changed:**
+- Fixed the `LATEST_DOCS` glob pattern in Step 8 to look for `nina_docs_backup*.md` instead of `nina_docs_backup_*.md`.
+- Expanded the Step 7 scan to cover `*.md`, `*.txt`, and `*.json` files.
+- Added directories `exports/` and `__pycache__/` to the prune list in the find command for Step 7.
+- Updated the header and labels for Step 7 to reflect doc/config coverage scan.
+
+**What was verified:**
+- Bash syntax validation passed successfully (`bash -n`).
+- Verification via grep for `ALL_MD` and `LATEST_DOCS` completed successfully.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md`
+
+---
+
+## Entry 079 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
