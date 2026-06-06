@@ -502,3 +502,35 @@
 **Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,nina_update_log.md,tools/compact_exporter.py,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 126 — 2026-06-06 · docs:(D-19) revalidate open blocker board against live code and guardian evidence
+
+**Triggered by:** User request to revalidate open blocker board against live code and guardian evidence.
+
+**What changed:**
+- Revalidated 26 items on the blocker board in `docs/space/nina_error_register.md` against the live source code and `guardian` runtime checks.
+- Marked 22 stale/fixed items as `✅ FIXED` (including router attribute trio, startup error block, SSRF ipaddress checks, hot-reload environment defaults, conflicting job IDs, and ghost instance safeguards).
+- Retained genuinely unresolved warning items (`logger.duplicate_handler` and Telegram interface issues) as `OPEN`.
+- Updated the canonical state document `docs/space/nina_state.md` with an `Action Board Confidence` summary.
+- Modified `guardian` to remove the deleted `core.logger` module from the import validation list.
+- Updated `tools/compact_exporter.py` to parse and export the refreshed Action Board Confidence section to the backup snapshot.
+
+**What was verified:**
+- Verified bash syntax of `nina_sync.sh` (`bash -n nina_sync.sh`).
+- Verified python syntax and compile/lint on changed file `tools/compact_exporter.py` (`py_compile` and `pyflakes` passed 100% cleanly).
+- Ran `./guardian --skip-deploy` and verified it reports `All checks passed — NINA is healthy 🎉` with health score 9.8/10.
+
+**Rollback path:**
+- `git checkout HEAD -- docs/space/nina_error_register.md docs/space/nina_state.md guardian tools/compact_exporter.py nina_update_log.md`
+
+---
+
+## Entry 038 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
