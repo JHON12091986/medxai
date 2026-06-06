@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# nina_sync.sh v3 — Full-featured post-session sync
+# nina_sync.sh v4 — Full post-session sync + built-in MD scan (Step 7)
 
 set -euo pipefail
 
@@ -12,10 +12,10 @@ DRY_RUN=false
 SPACE_FILES=(
   AGENTS.md
   nina_context.md
-  nina_problem_log.md
-  docs/space/nina_error_register.md
-  nina_phase1_roadmap.md
   nina_update_log.md
+  nina_phase1_roadmap.md
+  docs/space/nina_error_register.md
+  docs/space/nina_problem_log.md
 )
 
 TS=$(date '+%Y-%m-%d %H:%M')
@@ -120,7 +120,7 @@ lines = [
     "",
     "## Entry $NEXT_NUM — $DATE · D-sync Post-session sync",
     "",
-    "**Triggered by:** nina_sync.sh v3 automated run",
+    "**Triggered by:** nina_sync.sh v4 automated run",
     "",
     "**Files changed:** $CHANGED_FILES",
     "",
@@ -165,33 +165,60 @@ Service: $SVC_STATUS"
   fi
 fi
 
-echo "[7/7] Preparing space upload..."
-if [ "$DRY_RUN" = true ]; then
-  echo "  (dry-run: skipping space upload preparation)"
-else
-  bash nina_export.sh
-  rm -rf "$HOME/Downloads/nina_space_upload"
-  mkdir -p "$HOME/Downloads/nina_space_upload"
-  LATESTDOCS=$(ls -t ~/nina/exports/nina_docs_backup*.md 2>/dev/null | head -n 1)
-  if [ -n "$LATESTDOCS" ]; then
-      cp "$LATESTDOCS" ~/Downloads/nina_space_upload/
-      echo "✅ docs backup included: $(basename $LATESTDOCS)"
-  else
-      echo "⚠️  No docs backup found in ~/nina/exports/ — run ./nina_docs_export.sh first"
-  fi
-  cp "$NINA/docs/space/nina_context.md" "$HOME/Downloads/nina_space_upload/"
-  cp "$NINA/docs/space/nina_error_register.md" "$HOME/Downloads/nina_space_upload/"
-  cp "$NINA/docs/space/nina_update_log.md" "$HOME/Downloads/nina_space_upload/"
-  cp "$NINA/docs/space/nina_phase1_roadmap.md" "$HOME/Downloads/nina_space_upload/"
-  cp "$NINA/AGENTS.md" "$HOME/Downloads/nina_space_upload/"
-  LATEST_BACKUP=$(ls -t "$HOME/Downloads"/nina_code_backup_*.md 2>/dev/null | head -n 1)
-  if [ -n "$LATEST_BACKUP" ]; then
-    cp "$LATEST_BACKUP" "$HOME/Downloads/nina_space_upload/"
-  else
-    echo "  ✗ Error: No backup file found in ~/Downloads"
-    exit 1
-  fi
-  echo "📁 7 files ready at ~/Downloads/nina_space_upload/"
-fi
+echo "[7/7] MD coverage scan..."
+echo "  ── All .md files in ~/nina (excl. venv/.git/backups) ──"
 
-echo "════════════ SYNC COMPLETE ════════════"
+COVERED_BASES=()
+for f in "${SPACE_FILES[@]}"; do
+  COVERED_BASES+=("$(basename "$f")")
+done
+
+ALL_MD=$(find "$NINA" \
+  \( -path "*/venv/*" -o -path "*/.git/*" -o -path "*/node_modules/*" \
+     -o -path "*/upgrades/backups/*" \) -prune \
+  -o -name "*.md" -print | sort)
+
+TOTAL=0; COVERED=0; UNCOVERED=0
+UNCOVERED_LIST=""
+
+while IFS= read -r filepath; do
+  [ -z "$filepath" ] && continue
+  rel="${filepath#$NINA/}"
+  base=$(basename "$filepath")
+  lines=$(wc -l < "$filepath" 2>/dev/null || echo "?")
+  mtime=$(stat -c "%y" "$filepath" 2>/dev/null | cut -d'.' -f1 || echo "?")
+  TOTAL=$((TOTAL+1))
+
+  IN_SPACE=false
+  if [ -f "$SPACE_DIR/$base" ]; then
+    IN_SPACE=true
+  fi
+  for cb in "${COVERED_BASES[@]}"; do
+    [ "$cb" = "$base" ] && IN_SPACE=true
+  done
+
+  if [ "$IN_SPACE" = true ]; then
+    echo "  ✅  $rel  ($lines lines, $mtime)"
+    COVERED=$((COVERED+1))
+  else
+    echo "  ⚠️   $rel  ($lines lines, $mtime)  ← NOT in docs/space or SPACE_FILES"
+    UNCOVERED=$((UNCOVERED+1))
+    UNCOVERED_LIST="$UNCOVERED_LIST\n  • $rel"
+  fi
+done <<< "$ALL_MD"
+
+echo ""
+echo "  ── Summary ──"
+echo "  Total .md files : $TOTAL"
+echo "  Covered         : $COVERED"
+echo "  NOT covered     : $UNCOVERED"
+if [ "$UNCOVERED" -gt 0 ]; then
+  echo ""
+  echo "  ⚠️  Files not in docs/space (not uploaded to Perplexity):"
+  echo -e "$UNCOVERED_LIST"
+  echo ""
+  echo "  → Add them to SPACE_FILES array in nina_sync.sh if needed."
+fi
+echo "================================================"
+echo " SYNC COMPLETE  $TS"
+echo "================================================"
