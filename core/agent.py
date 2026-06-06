@@ -1,7 +1,7 @@
 """NINA v12 — AgentLoop (Stage 5)
 THINK -> PLAN -> ACT -> OBSERVE -> ADAPT. Variable step budget + global timeout + thermal preflight.
 """
-import asyncio, logging
+import asyncio, logging, re
 from core.router import HybridRouter, ClassifiedTask, STEP_BUDGETS, DEFAULT_MAX_STEPS
 from tools import system
 from core.capabilities import CapabilityRegistry
@@ -57,10 +57,11 @@ class AgentLoop:
 
     # F-03c: Bangla language override — injected before routing
     _BANGLA_RANGE = range(0x0980, 0x0A00)
+    _BANGLA_RE = re.compile(r"[\u0980-\u09FF]")
 
-    @staticmethod
-    def _is_bangla(text: str) -> bool:
-        return any(0x0980 <= ord(ch) <= 0x09FF for ch in text)
+    @classmethod
+    def _is_bangla(cls, text: str) -> bool:
+        return bool(cls._BANGLA_RE.search(text))
 
     _BANGLA_OVERRIDE = (
         "[LANGUAGE OVERRIDE: User wrote in Bangla. "
