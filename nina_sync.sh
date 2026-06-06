@@ -16,6 +16,9 @@ SPACE_FILES=(
   nina_phase1_roadmap.md
   docs/space/nina_error_register.md
   docs/space/nina_problem_log.md
+  requirements.txt
+  data/capabilities.json
+  data/memory/facts.json
 )
 
 TS=$(date '+%Y-%m-%d %H:%M')

@@ -1053,3 +1053,32 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Rollback path:**
 - `git checkout HEAD -- nina_sync.sh nina_update_log.md`
+
+---
+
+## Entry 079 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 080 — 2026-06-06 · D-13 Add requirements, capabilities, and facts to SPACE_FILES
+
+**Triggered by:** User request to add requirements.txt, data/capabilities.json, and data/memory/facts.json to SPACE_FILES.
+
+**Files changed:**
+- `nina_sync.sh`
+
+**What changed:**
+- Added `requirements.txt`, `data/capabilities.json`, and `data/memory/facts.json` to the `SPACE_FILES` array in `nina_sync.sh`.
+- Checked and verified bash syntax with `bash -n`.
+
+**What was verified:**
+- Bash syntax validation passed successfully (`bash -n`).
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md`
