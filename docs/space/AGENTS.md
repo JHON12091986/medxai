@@ -132,3 +132,58 @@ The following files must default to **agy** or manual local handling unless expl
 - **Lock Race:** Starting work without checking the active lock state in `jules_lock.txt`.
 - **Bundled Changes:** Stacking unrelated modifications in a single commit.
 - **Restore Confusion:** Treating the backup snapshot (`nina_latest.md`) as a repository recovery mechanism.
+
+---
+
+## Parallel Workflow — Synergic Model
+
+### Core principle
+- True parallel work is allowed only through separate git branches and separate git worktrees.
+- `main` is the production-truth desk and must stay clean.
+- agy and Jules must never edit the same file at the same time.
+- File territory is mandatory, not advisory.
+
+### Branch lanes
+- `main` → production truth, review, merge, sync only
+- `agy/<task-id>-<slug>` → local docs, shell, single-file hotfixes, policy work
+- `jules/<task-id>-<slug>` → multi-file features, refactors, async PR builds
+- Optional `review/<id>` → isolated test/review/merge prep
+
+### Worktree rules
+- Every active agy or Jules task gets its own worktree.
+- Recommended folder pattern:
+  - `~/nina` → main
+  - `~/nina/.worktrees/agy-<task-id>`
+  - `~/nina/.worktrees/jules-<task-id>`
+- Never run parallel agent tasks from the same working directory.
+
+### Territory rules
+- agy default territory: `docs/space/*.md`, `AGENTS.md`, `nina_context.md`, `*.sh`, and single-file hotfixes on files not claimed by Jules.
+- Jules default territory: multi-file work in `core/*.py`, `tools/*.py`, `interfaces/*.py`, `tests/*.py`.
+- Shared but sequential only: `requirements.txt`, `data/*.json`.
+- Forbidden parallel territory: `.env`, secrets, lock-sensitive runtime files.
+
+### Concurrency & Environment Refinements
+- **Virtual Environment Sharing:** All worktrees must use the primary venv located at `~/nina/venv/bin/activate`. Never create separate virtual environments in worktree folders.
+- **Centralized Lock Truth:** `jules_lock.txt` must always be read from and updated at the main worktree path: `~/nina/jules_lock.txt`. Do not rely on local worktree branch lock states.
+- **Local State Verification:** Divergent worktree state files (e.g. `data/memory/facts.json`) must be sequentially verified and merged on integration.
+
+### Session start checklist
+1. Start from clean `main` in `~/nina`.
+2. Run `./nina_sync.sh`.
+3. Create branch + worktree for each task.
+4. Record claimed files in the centralized `~/nina/jules_lock.txt`.
+5. Launch agy and Jules only after territories are confirmed non-overlapping.
+
+### Session close checklist
+1. agy commits only its branch/worktree.
+2. Jules opens PR only from its branch/worktree.
+3. Review and merge one stream at a time into `main`.
+4. Pull updated `main` into remaining worktrees before further edits.
+5. Run `./nina_sync.sh` from `main`.
+6. Remove finished worktrees.
+
+### Stop conditions
+- If either tool needs a file already claimed by the other, stop and re-plan.
+- If merge conflict risk appears, pause parallelism and integrate first.
+- Never bypass review by pushing direct overlapping edits into `main`.

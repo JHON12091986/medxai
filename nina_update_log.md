@@ -615,3 +615,25 @@
 **Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 128 — 2026-06-07 · Parallel worktree workflow policy integrated
+
+**Triggered by:** Policy updates and task calibration session
+
+**Files changed:**
+- `AGENTS.md`
+- `docs/space/AGENTS.md`
+
+**What changed:**
+- Formally integrated the NINA Parallel Workflow Plan (Synergic Model) into `AGENTS.md` and `docs/space/AGENTS.md`.
+- Documented branch lanes, worktree folder patterns, territory ownership matrices, session checklists, and stop conditions.
+- Added explicit rules for centralized locks (`jules_lock.txt` in main worktree), virtual environment sharing (`~/nina/venv`), and local state data conflict resolution.
+
+**What was verified:**
+- Verified `./guardian --skip-deploy` completes successfully with a perfect health score of `10.0/10`.
+
+**Rollback path:**
+- `git checkout HEAD -- AGENTS.md docs/space/AGENTS.md nina_update_log.md`
