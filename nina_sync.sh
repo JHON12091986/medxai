@@ -245,7 +245,7 @@ else
 
     echo ""; echo "## SECTION: PYTHON CODE"
     find "$NINA" \
-      \( -path "*/venv/*" -o -path "*/.git/*" -o -path "*/__pycache__/*" \
+      \( -path "*/venv/*" -o -path "*/.venv/*" -o -path "*/.git/*" -o -path "*/__pycache__/*" \
          -o -path "*/exports/*" -o -path "*/upgrades/backups/*" \) -prune \
       -o -name "*.py" -print | sort | while read -r pyf; do
         rel="${pyf#$NINA/}"
