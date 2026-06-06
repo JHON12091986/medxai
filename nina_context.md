@@ -154,7 +154,7 @@ logs/                     8 rotating log files, 7-day retention
 guardian.sh               Shell verification script — run after EVERY patch
 ```
 
-> **Note:** `core/logger.py` is DEPRECATED — logging now initialised in `core/nina.py`. Safe to delete.
+> **Note:** `core/logger.py` DELETED in R-101 (DEV 5.8, 2026-06-06).
 
 ## Telegram Commands
 
@@ -274,9 +274,9 @@ and urgency nudge all activate. Zero code required.
 
 ## Next Steps — Priority Order
 
-1. B-3 F-03 — System prompt rewrite, remove duplicate "Available tools" line, add tone calibration
+1. F-03 DONE (Entry 027)
 2. Set EWS_PASSWORD in .env — activate email features, zero code, instant unlock
-3. Verify O-06 (cat/shell) and O-03 (SSRF) are actually closed by R-48 and R-64
+3. O-06 DONE (R-97), O-03 DONE (R-98), both confirmed in R-90–R-101 PR
 4. C-1 F-04 — finance.py expenditure tracker (Stage C start)
 5. Submit Anthropic Claude $1,200 OSS grant application
 

@@ -883,3 +883,33 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 067 — 2026-06-06 · D-08 nina_context.md stale items cleared
+
+**Triggered by:** Manual clean up of stale items in nina_context.md.
+
+**Files changed:** nina_context.md, docs/space/nina_context.md
+
+**What changed:**
+- Updated "Next Steps — Priority Order" in nina_context.md to mark B-3 F-03 as DONE (F-03 DONE (Entry 027)).
+- Marked verification of O-06 and O-03 as DONE.
+- Replaced the deprecated logger.py note with a deletion note (core/logger.py DELETED in R-101 (DEV 5.8, 2026-06-06)).
+
+**What was verified:**
+- Grepped both nina_context.md files to confirm new text is present and old text is cleared.
+
+**Rollback path:**
+`git checkout HEAD -- nina_context.md docs/space/nina_context.md logs/nina_update_log.md`
+
+---
+
+## Entry 068 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
