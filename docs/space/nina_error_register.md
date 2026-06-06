@@ -26,7 +26,7 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 | startup.syntaxError | 🔴 BLOCKER | startup | SyntaxError in Python source file | ✅ FIXED | unassigned | v12.2.0 | main.py |
 | startup.typeError | 🔴 BLOCKER | startup | TypeError at startup/import | ✅ FIXED | unassigned | v12.2.0 | main.py |
 | hotreload.deleted_key_revert | 🟠 WARN | core.hotreload | Hot-reload silently ignores deleted .env keys | ✅ FIXED | unassigned | R-44 | core/hotreload.py |
-| logger.duplicate_handler | 🟠 WARN | core.nina | Duplicate log handler added on every restart | OPEN | unassigned | — | core/nina.py |
+| logger.duplicate_handler | 🟠 WARN | core.nina | Duplicate log handler added on every restart | ✅ FIXED | unassigned | D-21 | core/nina.py |
 | memory.blocking_io_in_async | 🟠 WARN | core.memory | Blocking IO inside async memory methods | ✅ FIXED | unassigned | R-34 | core/memory.py |
 | queue.path_mismatch | 🟠 WARN | core.nina | Idle queue path mismatch: idlequeue.json vs idle_queue.json | ✅ FIXED | unassigned | R-61 | core/nina.py, tools/upgradepipeline.py |
 | router.cache.dict_mutation | 🟠 WARN | core.router | ResponseCache purge_expired mutates dict during iteration | ✅ FIXED | unassigned | R-58 | core/router.py |

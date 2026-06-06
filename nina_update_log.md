@@ -575,3 +575,28 @@
 **Files changed:** jules_lock.txt,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 128 — 2026-06-06 · D-21 Guard log handler additions
+
+**Triggered by:** Manual local build via agy for Task D-21
+
+**Files changed:**
+- `core/nina.py`
+- `docs/space/nina_error_register.md`
+- `docs/space/nina_state.md`
+
+**What changed:**
+- Guarded the root logger StreamHandler registration in `core/nina.py` with `if not root.handlers` to ensure it is only added once, avoiding duplicate console/systemd output handlers on restart.
+- Updated `docs/space/nina_error_register.md` to mark `logger.duplicate_handler` as FIXED in `D-21`.
+- Updated `docs/space/nina_state.md` to mark `logger.duplicate_handler` as resolved under genuinely unresolved items.
+
+**What was verified:**
+- Verified `core/nina.py` compiles successfully and passes `pyflakes`.
+- Verified `healthcheck.py` startup safety assertions pass, specifically recording PASS on `logger.duplicate_handler` (Log handler guard — OK).
+- Verified `guardian --skip-deploy` passes successfully.
+
+**Rollback path:**
+- `git checkout HEAD -- core/nina.py docs/space/nina_error_register.md docs/space/nina_state.md nina_update_log.md`

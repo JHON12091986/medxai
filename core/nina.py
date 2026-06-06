@@ -71,9 +71,8 @@ class NinaOS:
         ch = logging.StreamHandler()
         ch.setLevel(getattr(logging, self.config.log_level, logging.INFO))
         ch.setFormatter(logging.Formatter("%(levelname)s:%(name)s:%(message)s"))
-        if not _has_handler(root, stream=True):
-            if not any(isinstance(h, type(ch)) for h in root.handlers):
-                root.addHandler(ch)
+        if not root.handlers:
+            root.addHandler(ch)
 
         file_map = {
             "nina": ("nina.log", logging.DEBUG),

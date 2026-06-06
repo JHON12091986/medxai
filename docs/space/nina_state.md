@@ -65,8 +65,9 @@ _Last updated: 2026-06-06_
   - Env variables (`apisecretkey`, `authorizeduserid`, `telegrambottoken`) are populated and loaded properly at runtime.
   - Conflicting scheduler ID issues (`cron.conflictingid`) are resolved.
   - Telegram interface issues (`telegram.document.handler_order` via dedicated handler, `telegram.key.echoed_in_chat` via centralized mask helper, and `telegram.parsemode.badrequest` via safe defaults) are resolved.
+  - Logging handler duplication check (`logger.duplicate_handler`) is resolved via a root.handlers guard.
 - **Genuinely Unresolved Items (Confirmed OPEN):**
-  - `logger.duplicate_handler` remains open (the log handler guard check warns about root handler additions).
+  - None (all warning items from the register are resolved).
 - **Refreshed Board Priority:** Action priority must now follow the refreshed error register board.
 
 ## Capabilities
