@@ -1432,3 +1432,32 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,nina_update_log.md,tests/__init__.py,tests/test_smoke.py,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 106 — 2026-06-06 · D-13 REVERTED — nina_sync.sh hard block removed, D-12 soft warning retained
+
+**Triggered by:** Manual policy reversion request.
+
+**What changed:**
+- Inspected `nina_sync.sh` to confirm the status of the D-13 hard block (which blocks runs if open Jules PR branches exist).
+- Verified that the D-13 hard block is absent from `nina_sync.sh` and that the file passes shell syntax check.
+- Confirmed that the D-12 soft warning block (which skips git push and warns the user when Jules PR branches are open) is retained intact in the `[6/8] Committing and pushing...` stage.
+
+**What was verified:**
+- `bash -n nina_sync.sh`: PASS
+- `grep "exit 1" nina_sync.sh`: Returned nothing (no hard block present)
+- `grep "JULES_BRANCHES" nina_sync.sh`: Returned the expected D-12 soft warning lines
+
+**Rollback path:**
+- `git checkout HEAD -- nina_update_log.md`
+
+---
+
+## Entry 107 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
