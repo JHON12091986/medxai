@@ -1082,3 +1082,13 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Rollback path:**
 - `git checkout HEAD -- nina_sync.sh nina_update_log.md`
+
+---
+
+## Entry 081 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/capabilities.json,docs/space/facts.json,docs/space/requirements.txt,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
