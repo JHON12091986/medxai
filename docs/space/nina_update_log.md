@@ -775,20 +775,32 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 057 — 2026-06-06 · docs: quota routing strategy added to AGENTS.md and nina_context.md (D-02)
+## Entry 057 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** D-02 Quota strategy update
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/AGENTS.md,docs/space/nina_context.md,docs/space/nina_update_log.md,nina_context.md,nina_update_log.md,append_log.py,append_log_d02.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 058 — 2026-06-06 · ops: rename code backup prefix + add nina_docs_export.sh (D-03)
+
+**Triggered by:** D-03 rename backup prefix and create docs export script
 
 **Files changed:**
-- `AGENTS.md`
-- `nina_context.md`
+- `nina_sync.sh`
+- `nina_docs_export.sh` (new)
 
 **Changes:**
-- Added quota strategy to nina_context.md
-- Added new top-level rules for Jules in AGENTS.md
+- Renamed nina_backup_ to nina_code_backup_ in nina_sync.sh
+- Created nina_docs_export.sh to export Space docs
 
 **Verification:**
-- Visual inspection
+- bash -n nina_sync.sh
+- bash -n nina_docs_export.sh
+- test run nina_docs_export.sh
 
 **Rollback:**
-- Revert commit.
+- revert rename in nina_sync.sh + delete nina_docs_export.sh

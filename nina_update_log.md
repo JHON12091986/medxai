@@ -785,22 +785,10 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 058 — 2026-06-06 · ops: rename code backup prefix + add nina_docs_export.sh (D-03)
+## Entry 058 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** D-03 rename backup prefix and create docs export script
+**Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:**
-- `nina_sync.sh`
-- `nina_docs_export.sh` (new)
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
-**Changes:**
-- Renamed nina_backup_ to nina_code_backup_ in nina_sync.sh
-- Created nina_docs_export.sh to export Space docs
-
-**Verification:**
-- bash -n nina_sync.sh
-- bash -n nina_docs_export.sh
-- test run nina_docs_export.sh
-
-**Rollback:**
-- revert rename in nina_sync.sh + delete nina_docs_export.sh
+**Verification:** git push OK, nina.service active
