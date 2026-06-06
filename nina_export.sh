@@ -1,7 +1,7 @@
 #!/bin/bash
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 DATETIME=$(date +"%Y-%m-%d %H:%M:%S")
-OUTPUT=~/Downloads/nina_backup_${TIMESTAMP}.md
+OUTPUT=~/Downloads/nina_code_backup_${TIMESTAMP}.md
 NINA_DIR=~/nina
 
 echo "# NINA Codebase Backup" > "$OUTPUT"
