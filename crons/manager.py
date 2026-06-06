@@ -9,6 +9,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
+# Hard constraint (cron.lambda_coroutine_drop): Do not use lambda wrappers for async job callables.
+# Lambda wrappers drop coroutine execution. Use functools.partial or pass the coroutine directly.
+
 logger = logging.getLogger("nina.scheduler")
 
 async def _cache_purge_job(nina_os):
