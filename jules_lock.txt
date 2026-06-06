@@ -2,9 +2,9 @@
 # When Jules is running a task, list the files it is touching here (one per line).
 # agy must NOT edit files listed here while Jules is active.
 # Clear this file after Jules PR is merged.
-# Last updated: (leave blank — agy will fill this)
+# Last updated: 2026-06-07T00:14:00Z
 
-LOCKED_FILES=interfaces/telegram_interface.py,core/nina.py,core/capabilities.py,crons/manager.py
-JULES_TASK=
+LOCKED_FILES=
+JULES_TASK=overnight-10-tasks
 JULES_PR=
-LOCKED_SINCE=2026-06-06T23:38:00Z
+LOCKED_SINCE=2026-06-07T00:14:00Z
