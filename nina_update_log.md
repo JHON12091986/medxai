@@ -1541,3 +1541,30 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 114 — 2026-06-06 · D-15 Learn Jules Tools Reference and Examples
+
+**Triggered by:** User request to learn Jules CLI documentation.
+
+**What changed:**
+- Read and learned the command line reference for Jules CLI (`jules`).
+- Read and learned the practical scripting examples for Jules CLI.
+
+**What was verified:**
+- Completed viewing and understanding of Jules CLI reference docs and scripting examples.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_update_log.md`
+
+---
+
+## Entry 115 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
