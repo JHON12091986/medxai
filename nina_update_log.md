@@ -606,24 +606,12 @@
 
 **Verification:** git push OK, nina.service active
 
-
 ---
 
-## Entry 128 — 2026-06-06 · B-3 Response tone calibration and state doc cleanup
+## Entry 045 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** Manual local build via agy for Task B-3
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- `core/nina.py`
-- `docs/space/nina_state.md`
+**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
-**What changed:**
-- Calibrated the NINA system prompt (`core/nina.py` SYSTEM_PROMPT_TEMPLATE) with explicit guidelines on addressing the owner directly as a peer ("Baizid"), matching language selection (English/Bangla mirroring), and enforcing zero fluff.
-- Cleaned up the `docs/space/nina_state.md` milestones list by moving all Stage S stability and security milestones (S-01 through S-05) to the Completed Milestones section.
-
-**What was verified:**
-- Verified `core/nina.py` compiles successfully and passes `pyflakes` 100% cleanly.
-- Verified `./guardian --skip-deploy` completes successfully with a perfect health score of `10.0/10`.
-
-**Rollback path:**
-- `git checkout HEAD -- core/nina.py docs/space/nina_state.md nina_update_log.md`
+**Verification:** git push OK, nina.service active
