@@ -38,7 +38,7 @@ _tg_notify() {
   fi
 }
 
-echo "[0/7] Health check..."
+echo "[0/8] Health check..."
 BAD_FILES=$(find "$NINA" -maxdepth 1 \( -name "*-*.md" -o -name "*-*.sh" \) 2>/dev/null || true)
 if [ -n "$BAD_FILES" ]; then
   echo "  ⚠  Hyphenated filenames — auto-renaming to snake_case:"
@@ -58,7 +58,7 @@ git fetch origin --quiet 2>/dev/null || true
 BEHIND=$(git rev-list --count HEAD..origin/main 2>/dev/null || echo "0")
 [ "$BEHIND" -gt 0 ] && echo "  ⚠  $BEHIND commit(s) behind origin/main" || echo "  ✓ In sync with origin/main"
 
-echo "[1/7] Auto-fetch from Downloads..."
+echo "[1/8] Auto-fetch from Downloads..."
 FETCHED=0
 for f in "${SPACE_FILES[@]}"; do
   SRC="$HOME/Downloads/$(basename "$f")"; DST="$NINA/$f"
@@ -74,7 +74,7 @@ for f in "${SPACE_FILES[@]}"; do
 done
 [ "$FETCHED" -eq 0 ] && echo "  (no new Downloads files)"
 
-echo "[2/7] Mirror to docs/space/..."
+echo "[2/8] Mirror to docs/space/..."
 [ "$DRY_RUN" = false ] && mkdir -p "$SPACE_DIR"
 for f in "${SPACE_FILES[@]}"; do
   SRC="$NINA/$f"; DST="$SPACE_DIR/$(basename "$f")"
@@ -93,7 +93,7 @@ for lf in nina_update_log.md nina_problem_log.md; do
   fi
 done
 
-echo "[3/7] Backup cleanup..."
+echo "[3/8] Backup cleanup..."
 OLD_FILES=$(find "$NINA/upgrades/backups" -maxdepth 3 \
   \( -name "*.bak" -o -name "*.fix" -o -name "*.save" \) -mtime +30 2>/dev/null || true)
 if [ -n "$OLD_FILES" ]; then
@@ -108,7 +108,7 @@ else
   echo "  ✓ No stale backup files"
 fi
 
-echo "[4/7] Update log entry..."
+echo "[4/8] Update log entry..."
 LAST_ENTRY=$(grep -c "^## Entry" "$NINA/nina_update_log.md" 2>/dev/null || echo "0")
 NEXT_NUM=$(printf '%03d' $((LAST_ENTRY + 1)))
 CHANGED_FILES=$(git status --porcelain 2>/dev/null | awk '{print $2}' | tr '\n' ',' | sed 's/,$//' || echo "none")
@@ -139,13 +139,13 @@ else
   echo "  = No changes to log"
 fi
 
-echo "[5/7] Staging..."
+echo "[5/8] Staging..."
 if [ "$DRY_RUN" = false ]; then
   git add docs/space/ "${SPACE_FILES[@]}" nina_sync.sh 2>/dev/null || true
   git add -u 2>/dev/null || true
 fi
 
-echo "[6/7] Committing..."
+echo "[6/8] Committing..."
 if [ "$DRY_RUN" = true ]; then
   echo "  (dry-run: skipping commit)"
 else
@@ -165,7 +165,7 @@ Service: $SVC_STATUS"
   fi
 fi
 
-echo "[7/7] MD coverage scan..."
+echo "[7/8] MD coverage scan..."
 echo "  ── All .md files in ~/nina (excl. venv/.git/backups) ──"
 
 COVERED_BASES=()
@@ -219,6 +219,20 @@ if [ "$UNCOVERED" -gt 0 ]; then
   echo ""
   echo "  → Add them to SPACE_FILES array in nina_sync.sh if needed."
 fi
+echo "[8/8] Docs export for Perplexity Space..."
+if [ "$DRY_RUN" = true ]; then
+  echo "  (dry-run: skipping)"
+else
+  bash "$NINA/nina_docs_export.sh"
+  LATEST_DOCS=$(ls -t "$NINA/exports/nina_docs_backup_"*.md 2>/dev/null | head -n 1)
+  if [ -n "$LATEST_DOCS" ]; then
+    echo "  ✅ Upload this to Perplexity Space: $(basename $LATEST_DOCS)"
+    echo "     Path: $LATEST_DOCS"
+  else
+    echo "  ⚠️  Docs export produced no file — check nina_docs_export.sh"
+  fi
+fi
+
 echo "================================================"
 echo " SYNC COMPLETE  $TS"
 echo "================================================"

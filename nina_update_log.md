@@ -991,3 +991,33 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 075 — 2026-06-06 · D-11 Add Docs Export Step 8 to nina_sync.sh
+
+**Triggered by:** User request to add Step 8 (Docs export) to nina_sync.sh.
+
+**Files changed:**
+- `nina_sync.sh`
+
+**What changed:**
+- Added Step 8 to run `nina_docs_export.sh` and list the exported file.
+- Updated all step denominators from 7 to 8.
+- Verified syntax with `bash -n ~/nina/nina_sync.sh` returning `SYNTAX OK`.
+
+**What was verified:**
+- Bash syntax validation passed successfully.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md`
+
+---
+
+## Entry 076 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
