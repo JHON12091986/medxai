@@ -596,25 +596,12 @@
 
 **Verification:** git push OK, nina.service active
 
-
 ---
 
-## Entry 128 — 2026-06-06 · D-23 Hardened cron job callables
+## Entry 044 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** Manual local build via agy for Task D-23
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- `crons/manager.py`
-- `docs/space/nina_error_register.md`
+**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
-**What changed:**
-- Hardened `crons/manager.py` by adding explicit comments and hard constraints against using unsafe lambda wrappers that cause coroutine dropping.
-- Verified that all registered task jobs correctly pass functions directly or use the safe `functools.partial` pattern.
-- Updated `docs/space/nina_error_register.md` to register `cron.lambda_coroutine_drop` as `✅ FIXED` in `D-23`.
-
-**What was verified:**
-- Verified `crons/manager.py` compiles successfully and passes `pyflakes` 100% cleanly.
-- Verified `./guardian --skip-deploy` completes successfully with a perfect health score of `10.0/10`.
-
-**Rollback path:**
-- `git checkout HEAD -- crons/manager.py docs/space/nina_error_register.md nina_update_log.md`
+**Verification:** git push OK, nina.service active
