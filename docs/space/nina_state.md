@@ -50,11 +50,12 @@ _Last updated: 2026-06-06_
 - **C-3 F-06**: Proactive reminder engine (`core/nina.py` + `data/reminders.json`)
 - **C-4 F-07**: Email triage improvement (`tools/office_mail.py`)
 - **C-5 F-08**: Personal knowledge base (`core/memory.py` + Telegram command handler)
-- **S-01**: Fix SSRF substring → `ipaddress` module (`tools/browser.py`)
-- **S-02**: Wrap memory file I/O in `asyncio.to_thread` (`core/memory.py`)
-- **S-03**: Fix `ResponseCache.purge_expired` dict mutation (`core/router.py`)
-- **S-04**: Add model version override dict to `NinaConfig` (`core/config.py`)
-- **S-05**: Add `if not root.handlers` guard in logger setup (`core/nina.py`)
+## Completed Milestones
+- **S-01**: Fix SSRF substring → `ipaddress` module (`tools/browser.py`) (DONE)
+- **S-02**: Wrap memory file I/O in `asyncio.to_thread` (`core/memory.py`) (DONE)
+- **S-03**: Fix `ResponseCache.purge_expired` dict mutation (`core/router.py`) (DONE)
+- **S-04**: Add model version override dict to `NinaConfig` (`core/config.py`) (DONE)
+- **S-05**: Add `if not root.handlers` guard in logger setup (`core/nina.py`) (DONE)
 
 ## Action Board Confidence
 - **Revalidation Pass:** Conducted on 2026-06-06 against live code and guardian evidence.
