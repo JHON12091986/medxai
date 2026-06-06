@@ -803,23 +803,12 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Verification:** git push OK, nina.service active
 
-
 ---
 
-## Entry 060 — 2026-06-06 · fix double underscore in docs export filename, add docs backup to ninasync space upload step
+## Entry 060 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** Manual request to fix double underscore in export filename and add docs backup to sync.
+**Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** nina_docs_export.sh, nina_sync.sh
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
-**What changed:**
-- Changed `nina_docs_export.sh` filename template from `nina_docs_backup_${TIMESTAMP}.md` to `nina_docs_backup${TIMESTAMP}.md` to remove double underscore.
-- Added block in `nina_sync.sh` to find latest docs backup and copy it to `~/Downloads/nina_space_upload/`.
-
-**What was verified:**
-- Syntax checked scripts with `bash -n`.
-- Ran `./nina_docs_export.sh` and confirmed output file has single underscore.
-- Ran `./nina_sync.sh` and confirmed the docs backup is copied to `~/Downloads/nina_space_upload/`.
-
-**Rollback path:**
-`git checkout HEAD -- nina_docs_export.sh nina_sync.sh nina_update_log.md`
+**Verification:** git push OK, nina.service active
