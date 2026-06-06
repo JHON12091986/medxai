@@ -1306,3 +1306,34 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,nina_sync.sh,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 097 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 098 — 2026-06-06 · nina_sync.sh Step 8 — full master export (docs+code+shell+json) into nina_latest.md
+
+**Triggered by:** User request to perform a full master export in Step 8.
+
+**Files changed:**
+- `nina_sync.sh`
+
+**What changed:**
+- Rewrote the Step 8 export block inside `nina_sync.sh` to generate a comprehensive backup (DOCS, PYTHON CODE, SHELL SCRIPTS, and JSON/CONFIG) in one consolidated file: `~/Downloads/nina_space_upload/nina_latest.md`.
+- Corrected the find pattern to prune the virtual environment folder `.venv/` (preventing massive library file leakage and reducing backup size from 94MB to ~506KB).
+- Verified the generated file size is 506,307 bytes.
+
+**What was verified:**
+- Bash syntax validation passed successfully (`bash -n`).
+- Executed successfully and produced `nina_latest.md` with size 506,307 bytes.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md`
