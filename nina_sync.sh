@@ -177,7 +177,7 @@ else
   cp "$NINA/docs/space/nina_update_log.md" "$HOME/Downloads/nina_space_upload/"
   cp "$NINA/docs/space/nina_phase1_roadmap.md" "$HOME/Downloads/nina_space_upload/"
   cp "$NINA/AGENTS.md" "$HOME/Downloads/nina_space_upload/"
-  LATEST_BACKUP=$(ls -t "$HOME/Downloads"/nina_backup_*.md 2>/dev/null | head -n 1)
+  LATEST_BACKUP=$(ls -t "$HOME/Downloads"/nina_code_backup_*.md 2>/dev/null | head -n 1)
   if [ -n "$LATEST_BACKUP" ]; then
     cp "$LATEST_BACKUP" "$HOME/Downloads/nina_space_upload/"
   else
