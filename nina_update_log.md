@@ -635,3 +635,13 @@
 **Files changed:** jules_lock.txt,.jules_tasks/,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+## Entry 128 — 2026-06-06
+**Title:** Implement F-05 Market Monitor
+**What changed:**
+- Created `tools/market.py` to evaluate dummy market prices against a watchlist with thresholds.
+- Exported `market` in `tools/__init__.py`.
+- Scheduled `run_market_monitor` job in `crons/manager.py` (APScheduler) for DSE/CSE polling.
+- Marked C-2 F-05 as DONE in `docs/space/nina_context.md`.
+**What was verified:** Ran `pyflakes` and `python3 -m py_compile` on modified files. `healthcheck.py` passes all blocker checks.
+**Rollback path:** Revert changes to `crons/manager.py` and delete `tools/market.py`.
