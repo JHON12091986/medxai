@@ -1120,3 +1120,32 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Rollback path:**
 - N/A (No changes made)
+
+---
+
+## Entry 084 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 085 — 2026-06-06 · D-15 Copy latest docs backup to Downloads in nina_sync.sh
+
+**Triggered by:** User request to copy latest docs backup to Downloads folder during sync.
+
+**Files changed:**
+- `nina_sync.sh`
+
+**What changed:**
+- Added a `cp` command to copy the generated backup file from `exports/` to `~/Downloads/`.
+- Added a confirmation print statement indicating it was copied.
+
+**What was verified:**
+- Bash syntax validation passed successfully (`bash -n`).
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md`

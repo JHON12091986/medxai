@@ -232,6 +232,8 @@ else
   if [ -n "$LATEST_DOCS" ]; then
     echo "  ✅ Upload this to Perplexity Space: $(basename $LATEST_DOCS)"
     echo "     Path: $LATEST_DOCS"
+    cp "$LATEST_DOCS" "$HOME/Downloads/"
+    echo "  📁 Also copied to ~/Downloads/ for easy upload"
   else
     echo "  ⚠️  Docs export produced no file — check nina_docs_export.sh"
   fi
