@@ -1,4 +1,4 @@
-"""Jules REST API tool for NINA. Dispatches tasks to Jules and polls PR status via Telegram commands."""
+"""Jules REST API tool for NINA. Dispatches tasks and polls PR status via Telegram."""
 
 import os
 import logging
@@ -6,7 +6,7 @@ import asyncio
 import json
 import requests
 
-logger = logging.getLogger("nina.tools.jules")
+logger = logging.getLogger("nina.tools")
 
 def get_api_key() -> str:
     """Read JULES_API_KEY from environment variables. Fail at call time only."""
@@ -38,7 +38,7 @@ async def run(cmd: str) -> str:
         if not action:
             return (
                 "Usage:\n"
-                "/jules dispatch <task description>\n"
+                "/jules dispatch <task>\n"
                 "/jules status\n"
                 "/jules status <session_id>\n"
                 "/jules sources"
@@ -78,7 +78,7 @@ async def run(cmd: str) -> str:
             
             session_id = data.get("id") or (data.get("name", "").split("/")[-1] if data.get("name") else "unknown")
             res_title = data.get("title", title)
-            return f"Jules task started ✅\nSession: {session_id}\nTitle: {res_title}"
+            return f"Jules task started\nSession: {session_id}\nTitle: {res_title}"
 
         elif action == "status":
             if arg:

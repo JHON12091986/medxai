@@ -5,6 +5,8 @@ from dataclasses import dataclass, field
 from typing import Optional, cast
 import httpx, psutil
 from core.config import NinaConfig, RATELIMITS
+from tools import jules_api
+_ = jules_api
 
 logger = logging.getLogger("nina.router")
 

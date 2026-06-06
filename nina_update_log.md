@@ -1391,3 +1391,26 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 103 — 2026-06-06 · Jules API Tool
+
+**Triggered by:** User request to integrate Jules REST API and register it in core/router.py.
+
+**Files changed:**
+- `tools/jules_api.py` (NEW/UPDATED)
+- `core/router.py` (UPDATED)
+- `core/nina.py` (UPDATED)
+
+**What changed:**
+- Created/updated `tools/jules_api.py` with exact docstring, custom commands, and logging.getLogger("nina.tools").
+- Registered `jules_api` in `core/nina.py` (within self.tools) and imported it in `core/router.py` to support tool command mapping.
+- Handled Telegram commands /jules dispatch, /jules status, and /jules sources.
+
+**What was verified:**
+- Verified syntax cleanly via py_compile and pyflakes on all changed files.
+- Verified clean module imports.
+
+**Rollback path:**
+- `git checkout HEAD -- core/router.py core/nina.py nina_update_log.md && rm -f tools/jules_api.py`

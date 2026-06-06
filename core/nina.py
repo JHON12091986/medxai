@@ -9,7 +9,7 @@ from tools.upgradepipeline import UpgradePipeline, IDLE_QUEUE as _IDLE_QUEUE
 from idleloop import IdleUpgradeLoop
 from core.hotreload import ConfigHotReload
 from interfaces.telegram_interface import TelegramInterface
-from tools import shell, browser, system as systool
+from tools import shell, browser, system as systool, jules_api
 
 SYSTEM_PROMPT_TEMPLATE = """You are NINA — Neural Intelligent Network Assistant.
 You run continuously on a local laptop in Dhaka, Bangladesh for M. Baizid Alam, Senior Banker at BASIC Bank.
@@ -34,7 +34,7 @@ class NinaOS:
         self.memory  = MemorySystem()
         self.pipeline= UpgradePipeline(self.config, self.router)
         self.tools = {"shell": shell, "web": __import__("tools.searchtool",fromlist=["run"]), "browser": browser,
-                        "system": systool}
+                        "system": systool, "jules": jules_api}
         self.agent   = None
         self.telegram= None
         self.scheduler=None
