@@ -441,3 +441,33 @@
 **Files changed:** docs/space/capabilities.json,docs/space/facts.json,docs/space/nina_context.md,docs/space/nina_error_register.md,docs/space/nina_phase1_roadmap.md,docs/space/nina_problem_log.md,docs/space/nina_update_log.md,docs/space/nina_v12_blueprint.md,docs/space/requirements.txt,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,docs/space/nina_state.md,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 124 — 2026-06-06 · docs:(D-17) optimize ninalatest context export for size and signal
+
+**Triggered by:** User request to optimize Step 8 backup export for Perplexity Space.
+
+**What changed:**
+- Created a dedicated Python script `tools/compact_exporter.py` to generate `nina_latest.md` as a compact operational snapshot.
+- Refactored Step 8 of `nina_sync.sh` to call `tools/compact_exporter.py` instead of the raw inline bash find-and-dump block.
+- Standardized snapshot structure to feature only: Header, Executive Snapshot, Current Action Board (open issues only), Phase/Roadmap, Recent Meaningful Changes (skipping D-sync spam), Key Rules, Targeted Code Context (summarized class/method signatures for large files, full codes for short/critical files), and Appendix Pointers.
+
+**What was verified:**
+- Verified bash syntax of `nina_sync.sh` (`bash -n nina_sync.sh`).
+- Verified python syntax and execution of `tools/compact_exporter.py` (`python3 -m py_compile tools/compact_exporter.py && tools/compact_exporter.py`).
+- Reduced `nina_latest.md` size from ~392KB to ~63KB.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md && rm tools/compact_exporter.py`
+
+---
+
+## Entry 034 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** nina_sync.sh,nina_update_log.md,tools/compact_exporter.py,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active

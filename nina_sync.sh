@@ -238,54 +238,9 @@ echo "[8/8] Full master export for Perplexity Space..."
 if [ "$DRY_RUN" = true ]; then
   echo "  (dry-run: skipping)"
 else
-  UPLOAD_DIR="$HOME/Downloads/nina_space_upload"
-  FIXED_FILE="$UPLOAD_DIR/nina_latest.md"
-  mkdir -p "$UPLOAD_DIR"
-  EXPORT_TS=$(date '+%Y%m%d_%H%M%S')
-
-  {
-    echo "# NINA Master Backup — $EXPORT_TS"
-    echo "# ONE FILE — upload this to Perplexity NINA DEV Space"
-    echo ""
-
-    echo "## SECTION: DOCS"
-    for f in docs/space/*.md AGENTS.md nina_context.md nina_update_log.md nina_phase1_roadmap.md nina_problem_log.md nina_v12_blueprint.md; do
-      [ -f "$NINA/$f" ] || continue
-      echo ""; echo "=== FILE: $f ==="; cat "$NINA/$f"; echo ""; echo "=== END: $f ==="
-    done
-
-    echo ""; echo "## SECTION: PYTHON CODE"
-    find "$NINA" \
-      \( -path "*/venv/*" -o -path "*/.venv/*" -o -path "*/.git/*" -o -path "*/__pycache__/*" \
-         -o -path "*/exports/*" -o -path "*/upgrades/backups/*" \) -prune \
-      -o -name "*.py" -print | sort | while read -r pyf; do
-        rel="${pyf#$NINA/}"
-        echo ""; echo "=== FILE: $rel ==="; cat "$pyf"; echo ""; echo "=== END: $rel ==="
-    done
-
-    echo ""; echo "## SECTION: SHELL SCRIPTS"
-    for f in "$NINA"/*.sh; do
-      [ -f "$f" ] || continue
-      rel=$(basename "$f")
-      echo ""; echo "=== FILE: $rel ==="; cat "$f"; echo ""; echo "=== END: $rel ==="
-    done
-
-    echo ""; echo "## SECTION: JSON & CONFIG"
-    for f in data/memory/facts.json data/capabilities.json upgrades/guardian_baseline.json requirements.txt .env.example; do
-      [ -f "$NINA/$f" ] || continue
-      echo ""; echo "=== FILE: $f ==="; cat "$NINA/$f"; echo ""; echo "=== END: $f ==="
-    done
-
-    echo ""; echo "## SECTION: SUMMARY"
-    echo "Exported: $EXPORT_TS"
-    echo "Git log (last 10):"
-    git -C "$NINA" log --oneline -10 2>/dev/null || echo "N/A"
-    echo "Service: $(systemctl is-active nina 2>/dev/null || echo unknown)"
-
-  } > "$FIXED_FILE"
-
-  # Clean up old timestamped files from upload dir
-  find "$UPLOAD_DIR" -name "nina_docs_backup*.md" -delete 2>/dev/null || true
+  # Step 8: Call the compact exporter Python script
+  python3 "$NINA/tools/compact_exporter.py"
+  FIXED_FILE="$HOME/Downloads/nina_space_upload/nina_latest.md"
 
   SIZE=$(wc -c < "$FIXED_FILE" | tr -d ' ')
   echo ""
