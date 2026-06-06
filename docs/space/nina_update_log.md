@@ -1622,3 +1622,32 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Rollback path:**
 - `git checkout HEAD -- nina_update_log.md`
+
+---
+
+## Entry 120 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 121 — 2026-06-06 · D-18 Fix nina_sync.sh Jules PR branch push check logic
+
+**Triggered by:** User request to fix nina_sync.sh push check.
+
+**What changed:**
+- Modified `nina_sync.sh` to check for open pull requests using `gh pr list --state open` instead of checking for existing remote branches via `git ls-remote`.
+- Added jq filtering for branch patterns `jules-*`, `nina-j*`, `feat/*`, and `pr-*`.
+- Ensured graceful fallback to `0` if `gh` or `jq` queries fail.
+
+**What was verified:**
+- Verified bash syntax of `nina_sync.sh` (`bash -n nina_sync.sh`).
+- Verified jq and gh pipeline locally to ensure it correctly returns 0 when no open PRs exist.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md`

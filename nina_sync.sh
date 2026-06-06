@@ -163,7 +163,7 @@ else
     # D-12: Check for open Jules PR branches before pushing to main
     # This prevents nina_sync.sh from moving main ahead of Jules branches
     # and causing merge conflicts on all open Jules PRs.
-    JULES_BRANCHES=$(git ls-remote --heads origin 'jules-*' 'nina-j*' 'feat/*' 'pr-*' 2>/dev/null | grep -v 'HEAD' | wc -l | tr -d ' ' || echo "0")
+    JULES_BRANCHES=$(gh pr list --state open --json headRefName --limit 100 2>/dev/null | jq '[.[] | select(.headRefName | (startswith("jules-") or startswith("nina-j") or startswith("feat/") or startswith("pr-")))] | length' 2>/dev/null || echo "0")
     if [ "$JULES_BRANCHES" -gt 0 ]; then
       echo ""
       echo "  ⚠️  PUSH SKIPPED — $JULES_BRANCHES open Jules PR branch(es) detected on origin."
