@@ -14,14 +14,8 @@ DRY_RUN=false
 
 SPACE_FILES=(
   AGENTS.md
-  nina_context.md
-  nina_update_log.md
-  nina_phase1_roadmap.md
   docs/space/nina_error_register.md
-  docs/space/nina_problem_log.md
-  requirements.txt
-  data/capabilities.json
-  data/memory/facts.json
+  docs/space/nina_state.md
 )
 
 TS=$(date '+%Y-%m-%d %H:%M')

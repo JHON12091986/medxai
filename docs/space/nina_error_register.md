@@ -9,173 +9,44 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 ## Legend
 🔴 BLOCKER | 🟠 WARN | 🟡 DEBT | 🔵 OPEN/PENDING | ✅ FIXED
 
-| ID | Severity | Component | Issue (short) | Status | Fixed In | File(s) |
-|----|----------|-----------|---------------|--------|----------|---------|
-| O-06 | 🔴 BLOCKER | - | cat in ALLOWED_BASES — path traversal risk | ✅ FIXED | R-90–R-101 PR | tools/shell.py |
-| config.missing_env.apisecretkey | 🔴 BLOCKER | core.config | APISECRETKEY missing or empty in .env | OPEN | — | .env, core/config.py |
-| config.missing_env.authorizeduserid | 🔴 BLOCKER | core.config | AUTHORIZEDUSERID missing from .env | OPEN | — | .env, core/config.py |
-| config.missing_env.telegrambottoken | 🔴 BLOCKER | core.config | TELEGRAMBOTTOKEN missing from .env | OPEN | — | .env, core/config.py |
-| cron.conflicting_id | 🔴 BLOCKER | crons.manager | APScheduler ConflictingIdError — duplicate job ID | OPEN | — | crons/manager.py |
-| process.ghost_instance | 🔴 BLOCKER | process | Ghost NINA process still running | OPEN | — | data/nina.pid, main.py |
-| process.lock_conflict | 🔴 BLOCKER | process | BlockingIOError on nina.lock — concurrent process conflict | OPEN | — | data/nina.lock, main.py |
-| router.attr.forcelocal | 🔴 BLOCKER | core.router | NameError: forcelocal not defined (should be force_local) | OPEN | — | core/router.py, core/agent.py |
-| router.attr.orderedproviders | 🔴 BLOCKER | core.router | HybridRouter AttributeError: ordered_providers vs _ordere... | OPEN | — | core/router.py |
-| router.attr.self_http | 🔴 BLOCKER | core.router | HybridRouter AttributeError: self._http vs self.http | OPEN | — | core/router.py |
-| startup.attributeError | 🔴 BLOCKER | startup | AttributeError at startup/import | OPEN | — | main.py |
-| startup.importError | 🔴 BLOCKER | startup | ImportError or ModuleNotFoundError at startup | OPEN | — | main.py |
-| startup.nameError | 🔴 BLOCKER | startup | NameError at startup/import | OPEN | — | main.py |
-| startup.syntaxError | 🔴 BLOCKER | startup | SyntaxError in Python source file | OPEN | — | main.py |
-| startup.typeError | 🔴 BLOCKER | startup | TypeError at startup/import | OPEN | — | main.py |
-| capabilities.race_condition | 🟠 WARN | core.capabilities | Race condition on capabilities.json writes | ✅ FIXED | R-90–R-101 PR | core/capabilities.py |
-| cron.lambda_coroutine_drop | 🟠 WARN | crons.manager | APScheduler lambda returning coroutine without await | ✅ FIXED | R-90–R-101 PR | crons/manager.py |
-| hotreload.deleted_key_revert | 🟠 WARN | core.hotreload | Hot-reload silently ignores deleted .env keys | OPEN | — | core/hotreload.py |
-| logger.duplicate_handler | 🟠 WARN | core.nina | Duplicate log handler added on every restart | OPEN | — | core/nina.py |
-| memory.blocking_io_in_async | 🟠 WARN | core.memory | Blocking IO inside async memory methods | OPEN | — | core/memory.py |
-| queue.path_mismatch | 🟠 WARN | core.nina | Idle queue path mismatch: idlequeue.json vs idle_queue.json | OPEN | — | core/nina.py, tools/upgradepipeline.py |
-| router.cache.dict_mutation | 🟠 WARN | core.router | ResponseCache purge_expired mutates dict during iteration | OPEN | — | core/router.py |
-| router.fallback.no_user_safe_reply | 🟠 WARN | core.router | Router raises RuntimeError instead of user-safe fallback ... | OPEN | — | core/router.py |
-| telegram.document.handler_order | 🟠 WARN | interfaces.telegram | Document uploads silently dropped — handler order bug | OPEN | — | interfaces/telegram_interface.py |
-| telegram.key.echoed_in_chat | 🟠 WARN | interfaces.telegram | API key echoed in Telegram chat without masking | OPEN | — | interfaces/telegram_interface.py |
-| telegram.parsemode.badrequest | 🟠 WARN | interfaces.telegram | Telegram BadRequest caused by parse_mode=Markdown | OPEN | — | interfaces/telegram_interface.py |
-| O-02 | 🟡 DEBT | - | Duplicate "Available tools" line in prompt | ✅ FIXED | R-90–R-101 PR | core/nina.py |
-| O-03 | 🟡 DEBT | - | SSRF substring guard — verify R-64 closed this | ✅ FIXED | R-90–R-101 PR | tools/browser.py |
-| browser.ssrf.guard_regression | 🟡 DEBT | tools.browser | SSRF guard uses substring matching instead of ipaddress m... | OPEN | — | tools/browser.py |
-| mypy.advisory_findings | 🟡 DEBT | type_hygiene | mypy type-checking advisory findings present | ✅ FIXED | R-90–R-101 PR | core/router.py, core/config.py, interfaces/telegram_interface.py |
-| pipeline.eval_regex_weak | 🟡 DEBT | tools.upgradepipeline | Weak eval/exec/compile regex in upgrade scanner | OPEN | — | tools/upgradepipeline.py |
-| pipeline.no_content_type_guard | 🟡 DEBT | tools.upgradepipeline | Remote patch fetch missing Content-Type and size guard | OPEN | — | tools/upgradepipeline.py |
-| shell.allowlist.regression | 🟡 DEBT | tools.shell | Shell allowlist regression — dangerous command re-added | ✅ FIXED | R-97 (R-90–R-101 PR) | tools/shell.py |
-| D-01 | 🔵 OPEN/PENDING | - | A-2 · Delete `core/logger.py` | ✅ FIXED | R-90–R-101 PR | core/logger.py |
-| F-01 | 🔵 OPEN/PENDING | - | B-1 · Self-check pass for complex tasks | OPEN | — | core/agent.py |
-| F-04 | 🔵 OPEN/PENDING | - | C-1 · Expenditure tracker tool | OPEN | — | tools/finance.py |
-| F-05 | 🔵 OPEN/PENDING | - | C-2 · Share market monitor (DSE/CSE alerts) | OPEN | — | tools/market.py |
-| F-06 | 🔵 OPEN/PENDING | - | C-3 · Proactive reminder engine | OPEN | — | core/nina.py |
-| F-07 | 🔵 OPEN/PENDING | - | C-4 · Email triage improvement | OPEN | — | tools/office_mail.py |
-| F-08 | 🔵 OPEN/PENDING | - | C-5 · Personal knowledge base (`/remember` and `/recall`) | OPEN | — | core/memory.py |
-| R-77 | 🔵 OPEN/PENDING | - | A-1 · Fix `parallel_route` RAM guard crash | OPEN | — | core/router.py |
-| R-78 | 🔵 OPEN/PENDING | - | A-3 · Fix tool grammar fragility (minimum viable guard) | OPEN | — | core/agent.py |
-| config.missing_env.telegramchatid | 🔵 OPEN/PENDING | core.config | TELEGRAMCHATID missing from .env (non-blocking) | OPEN | — | .env |
-| feature.ews_blocked | 🔵 OPEN/PENDING | tools.officemail | EWS email feature blocked (open issue O-02) | OPEN | — | tools/officemail.py |
-| feature.playwright_blocked | 🔵 OPEN/PENDING | tools.browser | Playwright browser tool blocked (open issue O-01) | OPEN | — | tools/browser.py |
-| D-04 | ✅ FIXED | - | -
+| ID | Severity | Component | Issue (short) | Status | Assignee | Fixed In | File(s) |
+|----|----------|-----------|---------------|--------|----------|----------|---------|
+| config.missing_env.apisecretkey | 🔴 BLOCKER | core.config | APISECRETKEY missing or empty in .env | OPEN | unassigned | — | .env, core/config.py |
+| config.missing_env.authorizeduserid | 🔴 BLOCKER | core.config | AUTHORIZEDUSERID missing from .env | OPEN | unassigned | — | .env, core/config.py |
+| config.missing_env.telegrambottoken | 🔴 BLOCKER | core.config | TELEGRAMBOTTOKEN missing from .env | OPEN | unassigned | — | .env, core/config.py |
+| cron.conflicting_id | 🔴 BLOCKER | crons.manager | APScheduler ConflictingIdError — duplicate job ID | OPEN | unassigned | — | crons/manager.py |
+| process.ghost_instance | 🔴 BLOCKER | process | Ghost NINA process still running | OPEN | unassigned | — | data/nina.pid, main.py |
+| process.lock_conflict | 🔴 BLOCKER | process | BlockingIOError on nina.lock — concurrent process conflict | OPEN | unassigned | — | data/nina.lock, main.py |
+| router.attr.forcelocal | 🔴 BLOCKER | core.router | NameError: forcelocal not defined (should be force_local) | OPEN | unassigned | — | core/router.py, core/agent.py |
+| router.attr.orderedproviders | 🔴 BLOCKER | core.router | HybridRouter AttributeError: ordered_providers vs _ordere... | OPEN | unassigned | — | core/router.py |
+| router.attr.self_http | 🔴 BLOCKER | core.router | HybridRouter AttributeError: self._http vs self.http | OPEN | unassigned | — | core/router.py |
+| startup.attributeError | 🔴 BLOCKER | startup | AttributeError at startup/import | OPEN | unassigned | — | main.py |
+| startup.importError | 🔴 BLOCKER | startup | ImportError or ModuleNotFoundError at startup | OPEN | unassigned | — | main.py |
+| startup.nameError | 🔴 BLOCKER | startup | NameError at startup/import | OPEN | unassigned | — | main.py |
+| startup.syntaxError | 🔴 BLOCKER | startup | SyntaxError in Python source file | OPEN | unassigned | — | main.py |
+| startup.typeError | 🔴 BLOCKER | startup | TypeError at startup/import | OPEN | unassigned | — | main.py |
+| hotreload.deleted_key_revert | 🟠 WARN | core.hotreload | Hot-reload silently ignores deleted .env keys | OPEN | unassigned | — | core/hotreload.py |
+| logger.duplicate_handler | 🟠 WARN | core.nina | Duplicate log handler added on every restart | OPEN | unassigned | — | core/nina.py |
+| memory.blocking_io_in_async | 🟠 WARN | core.memory | Blocking IO inside async memory methods | OPEN | unassigned | — | core/memory.py |
+| queue.path_mismatch | 🟠 WARN | core.nina | Idle queue path mismatch: idlequeue.json vs idle_queue.json | OPEN | unassigned | — | core/nina.py, tools/upgradepipeline.py |
+| router.cache.dict_mutation | 🟠 WARN | core.router | ResponseCache purge_expired mutates dict during iteration | OPEN | unassigned | — | core/router.py |
+| router.fallback.no_user_safe_reply | 🟠 WARN | core.router | Router raises RuntimeError instead of user-safe fallback ... | OPEN | unassigned | — | core/router.py |
+| telegram.document.handler_order | 🟠 WARN | interfaces.telegram | Document uploads silently dropped — handler order bug | OPEN | unassigned | — | interfaces/telegram_interface.py |
+| telegram.key.echoed_in_chat | 🟠 WARN | interfaces.telegram | API key echoed in Telegram chat without masking | OPEN | unassigned | — | interfaces/telegram_interface.py |
+| telegram.parsemode.badrequest | 🟠 WARN | interfaces.telegram | Telegram BadRequest caused by parse_mode=Markdown | OPEN | unassigned | — | interfaces/telegram_interface.py |
+| browser.ssrf.guard_regression | 🟡 DEBT | tools.browser | SSRF guard uses substring matching instead of ipaddress m... | OPEN | unassigned | — | tools/browser.py |
+| pipeline.eval_regex_weak | 🟡 DEBT | tools.upgradepipeline | Weak eval/exec/compile regex in upgrade scanner | OPEN | unassigned | — | tools/upgradepipeline.py |
+| pipeline.no_content_type_guard | 🟡 DEBT | tools.upgradepipeline | Remote patch fetch missing Content-Type and size guard | OPEN | unassigned | — | tools/upgradepipeline.py |
+| F-01 | 🔵 OPEN/PENDING | - | B-1 · Self-check pass for complex tasks | OPEN | unassigned | — | core/agent.py |
+| F-04 | 🔵 OPEN/PENDING | - | C-1 · Expenditure tracker tool | OPEN | unassigned | — | tools/finance.py |
+| F-05 | 🔵 OPEN/PENDING | - | C-2 · Share market monitor (DSE/CSE alerts) | OPEN | unassigned | — | tools/market.py |
+| F-06 | 🔵 OPEN/PENDING | - | C-3 · Proactive reminder engine | OPEN | unassigned | — | core/nina.py |
+| F-07 | 🔵 OPEN/PENDING | - | C-4 · Email triage improvement | OPEN | unassigned | — | tools/office_mail.py |
+| F-08 | 🔵 OPEN/PENDING | - | C-5 · Personal knowledge base (`/remember` and `/recall`) | OPEN | unassigned | — | core/memory.py |
+| R-77 | 🔵 OPEN/PENDING | - | A-1 · Fix `parallel_route` RAM guard crash | OPEN | unassigned | — | core/router.py |
+| R-78 | 🔵 OPEN/PENDING | - | A-3 · Fix tool grammar fragility (minimum viable guard) | OPEN | unassigned | — | core/agent.py |
+| config.missing_env.telegramchatid | 🔵 OPEN/PENDING | core.config | TELEGRAMCHATID missing from .env (non-blocking) | OPEN | unassigned | — | .env |
+| feature.ews_blocked | 🔵 OPEN/PENDING | tools.officemail | EWS email feature blocked (open issue O-02) | OPEN | unassigned | — | tools/officemail.py |
+| feature.playwright_blocked | 🔵 OPEN/PENDING | tools.browser | Playwright browser tool blocked (open issue O-01) | OPEN | unassigned | — | tools/browser.py |
 
-## Entry 025 — 2026-06-05 · D-04 Archive Relocation + D-0 | FIXED | Entry 025 | - |
-| D-05 | ✅ FIXED | - | -
-
-## Entry 025 — 2026-06-05 · D-04 Archive Relocation + D-0 | FIXED | Entry 025 | - |
-| F-02 | ✅ FIXED | - | B-2 · Personal context injection into every prompt | FIXED | Entry 015 | core/memory.py |
-| F-03 | ✅ FIXED | - | B-3 · Response tone calibration in system prompt | FIXED | Entry 027 | core/nina.py |
-| G-01 | ✅ FIXED | - | Fixed in update log | FIXED | Entry 013 | - |
-| G-02 | ✅ FIXED | - | Fixed in update log | FIXED | Entry 013 | - |
-| G-03 | ✅ FIXED | - | Fixed in update log | FIXED | Entry 013 | - |
-| G-04 | ✅ FIXED | - | - G-04 confirmed live `guardian_engine.py` uses `findings` f | FIXED | Entry 013 | - |
-| G-05 | ✅ FIXED | - | - G-05 confirmed prior `effective_findings` substitution was | FIXED | Entry 013 | - |
-| G-06 | ✅ FIXED | - | - G-06 identified orphaned handoff/report field referencing  | FIXED | Entry 013 | - |
-| G-07 | ✅ FIXED | - | - G-07 reclassified the guardian issue as a forensic-report  | FIXED | Entry 013 | - |
-| R-01 | ✅ FIXED | - | -
-
-## Entry 001 — 2026-05-22 · R-01–R-04 Initial Bootstrap | FIXED | Entry 001 | - |
-| R-04 | ✅ FIXED | - | -
-
-## Entry 001 — 2026-05-22 · R-01–R-04 Initial Bootstrap | FIXED | Entry 001 | - |
-| R-05 | ✅ FIXED | - | -
-
-## Entry 002 — 2026-05-22 · R-05–R-09 Service & venv Boot | FIXED | Entry 002 | - |
-| R-09 | ✅ FIXED | - | -
-
-## Entry 002 — 2026-05-22 · R-05–R-09 Service & venv Boot | FIXED | Entry 002 | - |
-| R-10 | ✅ FIXED | - | -
-
-## Entry 003 — 2026-05-22 · R-10–R-14 Config & PTB Fixes | FIXED | Entry 003 | - |
-| R-14 | ✅ FIXED | - | -
-
-## Entry 003 — 2026-05-22 · R-10–R-14 Config & PTB Fixes | FIXED | Entry 003 | - |
-| R-15 | ✅ FIXED | - | -
-
-## Entry 004 — 2026-05-22 · R-15–R-21 Logging & Streaming | FIXED | Entry 004 | - |
-| R-21 | ✅ FIXED | - | -
-
-## Entry 004 — 2026-05-22 · R-15–R-21 Logging & Streaming | FIXED | Entry 004 | - |
-| R-22 | ✅ FIXED | - | -
-
-## Entry 005 — 2026-05-22 · R-22–R-28 Class & Registratio | FIXED | Entry 005 | - |
-| R-28 | ✅ FIXED | - | -
-
-## Entry 005 — 2026-05-22 · R-22–R-28 Class & Registratio | FIXED | Entry 005 | - |
-| R-29 | ✅ FIXED | - | -
-
-## Entry 006 — 2026-05-22 · R-29–R-32 Idle Loop Wiring | FIXED | Entry 006 | - |
-| R-30 | ✅ FIXED | - | - R-30: Scanner rejection path fixed | FIXED | Entry 006 | - |
-| R-31 | ✅ FIXED | - | - R-31: WRITABLE scope aligned between idleloop and pipeline | FIXED | Entry 006 | - |
-| R-32 | ✅ FIXED | - | -
-
-## Entry 006 — 2026-05-22 · R-29–R-32 Idle Loop Wiring | FIXED | Entry 006 | - |
-| R-33 | ✅ FIXED | - | -
-
-## Entry 007 — 2026-05-22 · R-33–R-38 Concurrency & Conte | FIXED | Entry 007 | - |
-| R-34 | ✅ FIXED | - | - R-34: Blocking IO in async memory methods offloaded to to_ | FIXED | Entry 007 | - |
-| R-35 | ✅ FIXED | - | - R-35: KeyError on missing env vars replaced with descripti | FIXED | Entry 007 | - |
-| R-36 | ✅ FIXED | - | - R-36: Hot-reload deleted key revert fixed | FIXED | Entry 007 | - |
-| R-37 | ✅ FIXED | - | - R-37: capabilities.json race condition fixed with asyncio. | FIXED | Entry 007 | - |
-| R-38 | ✅ FIXED | - | -
-
-## Entry 007 — 2026-05-22 · R-33–R-38 Concurrency & Conte | FIXED | Entry 007 | - |
-| R-39 | ✅ FIXED | - | -
-
-## Entry 008 — 2026-05-22 · R-39–R-45 Async & Memory Fixe | FIXED | Entry 008 | - |
-| R-40 | ✅ FIXED | - | - R-40: shell.py injection + deprecated API fixes | FIXED | Entry 008 | - |
-| R-41 | ✅ FIXED | - | - R-41: Orphaned SyntaxError line removed from core/config.p | FIXED | Entry 008 | - |
-| R-42 | ✅ FIXED | - | - R-42: Real file tree injected into idle proposal prompts | FIXED | Entry 008 | - |
-| R-43 | ✅ FIXED | - | - R-43: config.LOGDIR NameError fixed in core/logger.py | FIXED | Entry 008 | - |
-| R-44 | ✅ FIXED | - | - R-44: RELOADABLE key mismatch fixed (18 keys corrected) | FIXED | Entry 008 | - |
-| R-45 | ✅ FIXED | - | -
-
-## Entry 008 — 2026-05-22 · R-39–R-45 Async & Memory Fixe | FIXED | Entry 008 | - |
-| R-46 | ✅ FIXED | - | -
-
-## Entry 009 — 2026-05-22 · R-46–R-52 Stability Pass | FIXED | Entry 009 | - |
-| R-47 | ✅ FIXED | - | - R-47: Duplicate `import os` removed from core/nina.py | FIXED | Entry 009 | - |
-| R-48 | ✅ FIXED | - | - R-48: `cat` removed from shell allowlist | FIXED | Entry 009 | - |
-| R-49 | ✅ FIXED | - | - R-49: SSL verification restored on EWS connections | FIXED | Entry 009 | - |
-| R-50 | ✅ FIXED | - | - R-50: patch command restricted to HTTPS domain allowlist | FIXED | Entry 009 | - |
-| R-51 | ✅ FIXED | - | - R-51: Grounded prompt now passed to router in idleloop | FIXED | Entry 009 | - |
-| R-52 | ✅ FIXED | - | -
-
-## Entry 009 — 2026-05-22 · R-46–R-52 Stability Pass | FIXED | Entry 009 | - |
-| R-53 | ✅ FIXED | - | -
-
-## Entry 010 — 2026-05-22 · R-53–R-57 Security & Reliabil | FIXED | Entry 010 | - |
-| R-54 | ✅ FIXED | - | - R-54: Weak eval/exec/compile regex replaced with `\b` word | FIXED | Entry 010 | - |
-| R-55 | ✅ FIXED | - | - R-55: pkill replaced with PID-file targeted SIGTERM | FIXED | Entry 010 | - |
-| R-56 | ✅ FIXED | - | - R-56: SSRF blocklist expanded (IPv6, link-local, cloud met | FIXED | Entry 010 | - |
-| R-57 | ✅ FIXED | - | -
-
-## Entry 010 — 2026-05-22 · R-53–R-57 Security & Reliabil | FIXED | Entry 010 | - |
-| R-58 | ✅ FIXED | - | purge_expired dict mutation fixed | FIXED | Entry 011 | core/router.py |
-| R-59 | ✅ FIXED | - | route() safe fallback on total provider failure | FIXED | Entry 011 | core/router.py |
-| R-60 | ✅ FIXED | - | freshness-ranked build_context | FIXED | Entry 011 | core/memory.py |
-| R-61 | ✅ FIXED | - | idle queue canonical path | FIXED | Entry 011 | core/nina.py |
-| R-62 | ✅ FIXED | - | async backup jobs actually run | FIXED | Entry 011 | crons/manager.py |
-| R-63 | ✅ FIXED | - | remote patch content guard | FIXED | Entry 011 | tools/upgradepipeline.py |
-| R-64 | ✅ FIXED | - | proper IP-range SSRF guard | FIXED | Entry 011 | tools/browser.py |
-| R-65 | ✅ FIXED | - | duplicate log handler guard | FIXED | Entry 011 | core/nina.py |
-| R-66 | ✅ FIXED | - | document upload no longer silently dropped | FIXED | Entry 011 | interfaces/telegram_interface.py |
-| R-67 | ✅ FIXED | - | API key security hardening | FIXED | Entry 011 | interfaces/telegram_interface.py |
-| R-68 | ✅ FIXED | - | -
-
-### Entry 012 — 2026-05-23 — R-68–R-72 Router/Telegram Na | FIXED | Entry 001 | - |
-| R-69 | ✅ FIXED | - | - **R-69** `core/router.py` — Fixed `ordered_providers` → `_ | FIXED | Entry 001 | - |
-| R-70 | ✅ FIXED | - | - **R-70** `core/router.py` — Fixed `forcelocal` → `force_lo | FIXED | Entry 001 | - |
-| R-71 | ✅ FIXED | - | - **R-71** `core/agent.py`, `core/router.py` — Fixed camelCa | FIXED | Entry 001 | - |
-| R-72 | ✅ FIXED | - | -
-
-### Entry 012 — 2026-05-23 — R-68–R-72 Router/Telegram Na | FIXED | Entry 001 | - |
-
-| R-90, R-91, R-92 | 🟡 DEBT | core.router | core/router.py mypy casts + http None-guard | ✅ FIXED | R-90–R-101 PR | core/router.py |
-| R-93, R-94 | 🟡 DEBT | tools.search | tools/search.py ddg_results typing | ✅ FIXED | R-90–R-101 PR | tools/search.py |
-| R-95 | 🟡 DEBT | tools.system | tools/system.py float typing | ✅ FIXED | R-90–R-101 PR | tools/system.py |
-| R-96 | 🟡 DEBT | core.nina | no duplicate tools line found in core/nina.py | ✅ FIXED | R-90–R-101 PR | core/nina.py |
-| R-97 | 🟡 DEBT | tools.shell | cat absent in tools/shell.py | ✅ FIXED | R-90–R-101 PR | tools/shell.py |
-| R-98 | 🟡 DEBT | tools.browser | ipaddress module confirmed in tools/browser.py | ✅ FIXED | R-90–R-101 PR | tools/browser.py |
-| R-99 | 🟡 DEBT | core.capabilities | lock scope correct in core/capabilities.py | ✅ FIXED | R-90–R-101 PR | core/capabilities.py |
-| R-100 | 🟡 DEBT | crons.manager | async wrapper _cache_purge_job in crons/manager.py | ✅ FIXED | R-90–R-101 PR | crons/manager.py |
-| R-101 | 🟡 DEBT | core.logger | core/logger.py deleted | ✅ FIXED | R-90–R-101 PR | core/logger.py |
+Archived FIXED entries → exports/nina_error_register_archive.md
