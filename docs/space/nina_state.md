@@ -56,6 +56,19 @@ _Last updated: 2026-06-06_
 - **S-04**: Add model version override dict to `NinaConfig` (`core/config.py`)
 - **S-05**: Add `if not root.handlers` guard in logger setup (`core/nina.py`)
 
+## Action Board Confidence
+- **Revalidation Pass:** Conducted on 2026-06-06 against live code and guardian evidence.
+- **Historical Blocker Signatures (Confirmed Stale/FIXED):**
+  - Router attribute issues (`router.attr.forcelocal`, `router.attr.orderedproviders`, `router.attr.selfhttp`) are verified as resolved.
+  - Startup issues (`startup.nameError`, `startup.syntaxError`, etc.) are resolved; `guardian` now returns `Status: PASS` cleanly.
+  - Hot-reload environment reverts (`hotreload.deletedkeyrevert`) and SSRF guard regressions (`browser.ssrf.guardregression`) are fixed in live source code.
+  - Env variables (`apisecretkey`, `authorizeduserid`, `telegrambottoken`) are populated and loaded properly at runtime.
+  - Conflicting scheduler ID issues (`cron.conflictingid`) are resolved.
+- **Genuinely Unresolved Items (Confirmed OPEN):**
+  - `logger.duplicate_handler` remains open (the log handler guard check warns about root handler additions).
+  - Telegram interface issues (`telegram.document.handler_order`, `telegram.key.echoed_in_chat`, `telegram.parsemode.badrequest`) are pending changes on interface files.
+- **Refreshed Board Priority:** Action priority must now follow the refreshed error register board.
+
 ## Capabilities
 - **shell**: loaded=true, healthy=true
 - **web**: loaded=true, healthy=true

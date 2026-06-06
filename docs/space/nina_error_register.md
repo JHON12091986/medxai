@@ -11,32 +11,32 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 
 | ID | Severity | Component | Issue (short) | Status | Assignee | Fixed In | File(s) |
 |----|----------|-----------|---------------|--------|----------|----------|---------|
-| config.missing_env.apisecretkey | 🔴 BLOCKER | core.config | APISECRETKEY missing or empty in .env | OPEN | unassigned | — | .env, core/config.py |
-| config.missing_env.authorizeduserid | 🔴 BLOCKER | core.config | AUTHORIZEDUSERID missing from .env | OPEN | unassigned | — | .env, core/config.py |
-| config.missing_env.telegrambottoken | 🔴 BLOCKER | core.config | TELEGRAMBOTTOKEN missing from .env | OPEN | unassigned | — | .env, core/config.py |
-| cron.conflicting_id | 🔴 BLOCKER | crons.manager | APScheduler ConflictingIdError — duplicate job ID | OPEN | unassigned | — | crons/manager.py |
-| process.ghost_instance | 🔴 BLOCKER | process | Ghost NINA process still running | OPEN | unassigned | — | data/nina.pid, main.py |
-| process.lock_conflict | 🔴 BLOCKER | process | BlockingIOError on nina.lock — concurrent process conflict | OPEN | unassigned | — | data/nina.lock, main.py |
-| router.attr.forcelocal | 🔴 BLOCKER | core.router | NameError: forcelocal not defined (should be force_local) | OPEN | unassigned | — | core/router.py, core/agent.py |
-| router.attr.orderedproviders | 🔴 BLOCKER | core.router | HybridRouter AttributeError: ordered_providers vs _ordere... | OPEN | unassigned | — | core/router.py |
-| router.attr.self_http | 🔴 BLOCKER | core.router | HybridRouter AttributeError: self._http vs self.http | OPEN | unassigned | — | core/router.py |
-| startup.attributeError | 🔴 BLOCKER | startup | AttributeError at startup/import | OPEN | unassigned | — | main.py |
-| startup.importError | 🔴 BLOCKER | startup | ImportError or ModuleNotFoundError at startup | OPEN | unassigned | — | main.py |
-| startup.nameError | 🔴 BLOCKER | startup | NameError at startup/import | OPEN | unassigned | — | main.py |
-| startup.syntaxError | 🔴 BLOCKER | startup | SyntaxError in Python source file | OPEN | unassigned | — | main.py |
-| startup.typeError | 🔴 BLOCKER | startup | TypeError at startup/import | OPEN | unassigned | — | main.py |
-| hotreload.deleted_key_revert | 🟠 WARN | core.hotreload | Hot-reload silently ignores deleted .env keys | OPEN | unassigned | — | core/hotreload.py |
+| config.missing_env.apisecretkey | 🔴 BLOCKER | core.config | APISECRETKEY missing or empty in .env | ✅ FIXED | unassigned | v12.2.0 | .env, core/config.py |
+| config.missing_env.authorizeduserid | 🔴 BLOCKER | core.config | AUTHORIZEDUSERID missing from .env | ✅ FIXED | unassigned | v12.2.0 | .env, core/config.py |
+| config.missing_env.telegrambottoken | 🔴 BLOCKER | core.config | TELEGRAMBOTTOKEN missing from .env | ✅ FIXED | unassigned | v12.2.0 | .env, core/config.py |
+| cron.conflicting_id | 🔴 BLOCKER | crons.manager | APScheduler ConflictingIdError — duplicate job ID | ✅ FIXED | unassigned | R-23 | crons/manager.py |
+| process.ghost_instance | 🔴 BLOCKER | process | Ghost NINA process still running | ✅ FIXED | unassigned | v12.0.0 | data/nina.pid, main.py |
+| process.lock_conflict | 🔴 BLOCKER | process | BlockingIOError on nina.lock — concurrent process conflict | ✅ FIXED | unassigned | v12.0.0 | data/nina.lock, main.py |
+| router.attr.forcelocal | 🔴 BLOCKER | core.router | NameError: forcelocal not defined (should be force_local) | ✅ FIXED | unassigned | R-70 | core/router.py, core/agent.py |
+| router.attr.orderedproviders | 🔴 BLOCKER | core.router | HybridRouter AttributeError: ordered_providers vs _ordere... | ✅ FIXED | unassigned | R-69 | core/router.py |
+| router.attr.self_http | 🔴 BLOCKER | core.router | HybridRouter AttributeError: self._http vs self.http | ✅ FIXED | unassigned | R-72 | core/router.py |
+| startup.attributeError | 🔴 BLOCKER | startup | AttributeError at startup/import | ✅ FIXED | unassigned | v12.2.0 | main.py |
+| startup.importError | 🔴 BLOCKER | startup | ImportError or ModuleNotFoundError at startup | ✅ FIXED | unassigned | v12.2.0 | main.py |
+| startup.nameError | 🔴 BLOCKER | startup | NameError at startup/import | ✅ FIXED | unassigned | v12.2.0 | main.py |
+| startup.syntaxError | 🔴 BLOCKER | startup | SyntaxError in Python source file | ✅ FIXED | unassigned | v12.2.0 | main.py |
+| startup.typeError | 🔴 BLOCKER | startup | TypeError at startup/import | ✅ FIXED | unassigned | v12.2.0 | main.py |
+| hotreload.deleted_key_revert | 🟠 WARN | core.hotreload | Hot-reload silently ignores deleted .env keys | ✅ FIXED | unassigned | R-44 | core/hotreload.py |
 | logger.duplicate_handler | 🟠 WARN | core.nina | Duplicate log handler added on every restart | OPEN | unassigned | — | core/nina.py |
-| memory.blocking_io_in_async | 🟠 WARN | core.memory | Blocking IO inside async memory methods | OPEN | unassigned | — | core/memory.py |
-| queue.path_mismatch | 🟠 WARN | core.nina | Idle queue path mismatch: idlequeue.json vs idle_queue.json | OPEN | unassigned | — | core/nina.py, tools/upgradepipeline.py |
-| router.cache.dict_mutation | 🟠 WARN | core.router | ResponseCache purge_expired mutates dict during iteration | OPEN | unassigned | — | core/router.py |
-| router.fallback.no_user_safe_reply | 🟠 WARN | core.router | Router raises RuntimeError instead of user-safe fallback ... | OPEN | unassigned | — | core/router.py |
+| memory.blocking_io_in_async | 🟠 WARN | core.memory | Blocking IO inside async memory methods | ✅ FIXED | unassigned | R-34 | core/memory.py |
+| queue.path_mismatch | 🟠 WARN | core.nina | Idle queue path mismatch: idlequeue.json vs idle_queue.json | ✅ FIXED | unassigned | R-61 | core/nina.py, tools/upgradepipeline.py |
+| router.cache.dict_mutation | 🟠 WARN | core.router | ResponseCache purge_expired mutates dict during iteration | ✅ FIXED | unassigned | R-58 | core/router.py |
+| router.fallback.no_user_safe_reply | 🟠 WARN | core.router | Router raises RuntimeError instead of user-safe fallback ... | ✅ FIXED | unassigned | R-59 | core/router.py |
 | telegram.document.handler_order | 🟠 WARN | interfaces.telegram | Document uploads silently dropped — handler order bug | OPEN | unassigned | — | interfaces/telegram_interface.py |
 | telegram.key.echoed_in_chat | 🟠 WARN | interfaces.telegram | API key echoed in Telegram chat without masking | OPEN | unassigned | — | interfaces/telegram_interface.py |
 | telegram.parsemode.badrequest | 🟠 WARN | interfaces.telegram | Telegram BadRequest caused by parse_mode=Markdown | OPEN | unassigned | — | interfaces/telegram_interface.py |
-| browser.ssrf.guard_regression | 🟡 DEBT | tools.browser | SSRF guard uses substring matching instead of ipaddress m... | OPEN | unassigned | — | tools/browser.py |
-| pipeline.eval_regex_weak | 🟡 DEBT | tools.upgradepipeline | Weak eval/exec/compile regex in upgrade scanner | OPEN | unassigned | — | tools/upgradepipeline.py |
-| pipeline.no_content_type_guard | 🟡 DEBT | tools.upgradepipeline | Remote patch fetch missing Content-Type and size guard | OPEN | unassigned | — | tools/upgradepipeline.py |
+| browser.ssrf.guard_regression | 🟡 DEBT | tools.browser | SSRF guard uses substring matching instead of ipaddress m... | ✅ FIXED | unassigned | R-64 | tools/browser.py |
+| pipeline.eval_regex_weak | 🟡 DEBT | tools.upgradepipeline | Weak eval/exec/compile regex in upgrade scanner | ✅ FIXED | unassigned | R-54 | tools/upgradepipeline.py |
+| pipeline.no_content_type_guard | 🟡 DEBT | tools.upgradepipeline | Remote patch fetch missing Content-Type and size guard | ✅ FIXED | unassigned | R-63 | tools/upgradepipeline.py |
 | F-01 | 🔵 OPEN/PENDING | - | B-1 · Self-check pass for complex tasks | OPEN | unassigned | — | core/agent.py |
 | F-04 | 🔵 OPEN/PENDING | - | C-1 · Expenditure tracker tool | OPEN | unassigned | — | tools/finance.py |
 | F-05 | 🔵 OPEN/PENDING | - | C-2 · Share market monitor (DSE/CSE alerts) | OPEN | unassigned | — | tools/market.py |

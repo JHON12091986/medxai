@@ -150,6 +150,7 @@ def get_action_board():
 def get_roadmap():
     phase = get_state_section("Current Phase & Next Task")
     milestones = get_state_section("Open Milestones")
+    confidence = get_state_section("Action Board Confidence")
     
     content = f"""## Current Phase & Roadmap
 
@@ -158,6 +159,9 @@ def get_roadmap():
 
 ### Open Milestones
 {milestones}
+
+### Action Board Confidence
+{confidence}
 """
     return content
 

@@ -261,7 +261,6 @@ IMPORT_CHECK_OUT=$(cd "$NINA_DIR" && "$PYTHON" -c "
 import sys, traceback
 modules = [
     'core.config',
-    'core.logger',
     'core.capabilities',
     'core.memory',
     'core.router',
