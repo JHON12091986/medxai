@@ -1558,3 +1558,30 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Rollback path:**
 - `git checkout HEAD -- nina_update_log.md`
+
+---
+
+## Entry 115 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 116 — 2026-06-06 · D-16 Pushed main to origin after PR status verification
+
+**Triggered by:** User request to close open PRs and push main.
+
+**What changed:**
+- Checked for open pull requests on `aibony/nina` (found 0 open PRs; all 7 existing PRs were already closed).
+- Pushed main branch to origin (`git push origin main` succeeded, updating origin main to `c427dc6`).
+
+**What was verified:**
+- Verified `git log --oneline -3` matches the latest post-session sync.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_update_log.md`
