@@ -1217,3 +1217,40 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 091 — 2026-06-06 · nina_master_export.sh created — unified single-file backup
+
+**Triggered by:** User request to create a unified master codebase backup script.
+
+**Files changed:**
+- `nina_master_export.sh` (NEW)
+
+**What changed:**
+- Created `~/nina/nina_master_export.sh` to generate a single unified backup document containing all key files in the codebase.
+- The script exports the following sections:
+  - **SECTION 1 — DOCS:** all `.md` files under `docs/space/`
+  - **SECTION 2 — PYTHON CODE:** all `.py` files under `core/`, `tools/`, `interfaces/`, `crons/`, and root level
+  - **SECTION 3 — SHELL SCRIPTS:** all `.sh` files directly in root level
+  - **SECTION 4 — JSON:** facts.json, capabilities.json, guardian_baseline.json, and other data `.json` files
+  - **SECTION 5 — CONFIG/TXT:** requirements.txt, .env.example, AGENTS.md
+  - **SECTION 6 — SUMMARY:** total file count, total line count, and last 10 git commits
+- Made script executable and verified it runs correctly.
+
+**What was verified:**
+- Verified successful run of `./nina_master_export.sh` producing the backup markdown file inside `exports/`.
+
+**Rollback path:**
+- `rm -f ~/nina/nina_master_export.sh`
+- `git checkout HEAD -- nina_update_log.md`
+
+---
+
+## Entry 092 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
