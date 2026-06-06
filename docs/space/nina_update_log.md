@@ -752,3 +752,29 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 056 — 2026-06-06 — R-90–R-101 Hardening Sprint
+
+Triggered by DEV 5.7 session — grand Jules task, fixes only, no new features.
+
+Files changed:
+- core/router.py (R-90: dict cast on r.json(); R-91: self.http None-guard; R-92: meta dict cast)
+- tools/search.py (R-93, R-94: ddg_results typed as list[dict[str,str]])
+- tools/system.py (R-95: get_temps return typed as float not None)
+- core/nina.py (R-96: no duplicate tools line confirmed)
+- tools/shell.py (R-97: cat verified absent, O-06 closed)
+- tools/browser.py (R-98: ipaddress guard confirmed, O-03 closed)
+- core/capabilities.py (R-99: lock scope verified correct)
+- crons/manager.py (R-100: _cache_purge_job async wrapper added)
+- core/logger.py (R-101: deleted — deprecated, no active imports, D-01 closed)
+- nina_error_register.md (Batch 10: 11 rows marked FIXED)
+- nina_update_log.md (this entry)
+
+Verification:
+- mypy: 16 findings → 0
+- pyflakes: all files clean
+- Guardian expected: 10/10
+
+Rollback: git revert HEAD

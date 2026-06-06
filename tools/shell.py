@@ -13,6 +13,7 @@ ALLOWED_SYSTEMCTL_SUBS = {
 ALLOWED_OLLAMA_SUBS = {
     "list", "show", "pull", "run", "stop", "ps", "serve",
 }
+# cat removed in R-48, verified clean R-97.
 
 ALLOWED = ALLOWED_BASES   # backward-compat alias
 

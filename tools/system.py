@@ -7,12 +7,12 @@ logger = logging.getLogger("nina.tools.system")
 
 from typing import Optional, Dict
 async def get_temps() -> dict:
-    temps: Dict[str, Optional[int]] = {"cpu": None, "gpu": None}
+    temps: Dict[str, Optional[float]] = {"cpu": None, "gpu": None}
     try:
         st = psutil.sensors_temperatures()
         core = st.get("coretemp") or st.get("k10temp") or st.get("cpu_thermal") or []
         if core:
-            temps["cpu"] = max(s.current for s in core)
+            temps["cpu"] = int(max(s.current for s in core))
     except Exception:
         pass
     try:

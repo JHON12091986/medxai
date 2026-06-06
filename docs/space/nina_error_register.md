@@ -11,7 +11,7 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 
 | ID | Severity | Component | Issue (short) | Status | Fixed In | File(s) |
 |----|----------|-----------|---------------|--------|----------|---------|
-| O-06 | 🔴 BLOCKER | - | cat in ALLOWED_BASES — path traversal risk | OPEN | — | tools/shell.py |
+| O-06 | 🔴 BLOCKER | - | cat in ALLOWED_BASES — path traversal risk | ✅ FIXED | R-90–R-101 PR | tools/shell.py |
 | config.missing_env.apisecretkey | 🔴 BLOCKER | core.config | APISECRETKEY missing or empty in .env | OPEN | — | .env, core/config.py |
 | config.missing_env.authorizeduserid | 🔴 BLOCKER | core.config | AUTHORIZEDUSERID missing from .env | OPEN | — | .env, core/config.py |
 | config.missing_env.telegrambottoken | 🔴 BLOCKER | core.config | TELEGRAMBOTTOKEN missing from .env | OPEN | — | .env, core/config.py |
@@ -26,8 +26,8 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 | startup.nameError | 🔴 BLOCKER | startup | NameError at startup/import | OPEN | — | main.py |
 | startup.syntaxError | 🔴 BLOCKER | startup | SyntaxError in Python source file | OPEN | — | main.py |
 | startup.typeError | 🔴 BLOCKER | startup | TypeError at startup/import | OPEN | — | main.py |
-| capabilities.race_condition | 🟠 WARN | core.capabilities | Race condition on capabilities.json writes | OPEN | — | core/capabilities.py |
-| cron.lambda_coroutine_drop | 🟠 WARN | crons.manager | APScheduler lambda returning coroutine without await | OPEN | — | crons/manager.py |
+| capabilities.race_condition | 🟠 WARN | core.capabilities | Race condition on capabilities.json writes | ✅ FIXED | R-90–R-101 PR | core/capabilities.py |
+| cron.lambda_coroutine_drop | 🟠 WARN | crons.manager | APScheduler lambda returning coroutine without await | ✅ FIXED | R-90–R-101 PR | crons/manager.py |
 | hotreload.deleted_key_revert | 🟠 WARN | core.hotreload | Hot-reload silently ignores deleted .env keys | OPEN | — | core/hotreload.py |
 | logger.duplicate_handler | 🟠 WARN | core.nina | Duplicate log handler added on every restart | OPEN | — | core/nina.py |
 | memory.blocking_io_in_async | 🟠 WARN | core.memory | Blocking IO inside async memory methods | OPEN | — | core/memory.py |
@@ -37,14 +37,14 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 | telegram.document.handler_order | 🟠 WARN | interfaces.telegram | Document uploads silently dropped — handler order bug | OPEN | — | interfaces/telegram_interface.py |
 | telegram.key.echoed_in_chat | 🟠 WARN | interfaces.telegram | API key echoed in Telegram chat without masking | OPEN | — | interfaces/telegram_interface.py |
 | telegram.parsemode.badrequest | 🟠 WARN | interfaces.telegram | Telegram BadRequest caused by parse_mode=Markdown | OPEN | — | interfaces/telegram_interface.py |
-| O-02 | 🟡 DEBT | - | Duplicate "Available tools" line in prompt | OPEN | — | core/nina.py |
-| O-03 | 🟡 DEBT | - | SSRF substring guard — verify R-64 closed this | OPEN | — | tools/browser.py |
+| O-02 | 🟡 DEBT | - | Duplicate "Available tools" line in prompt | ✅ FIXED | R-90–R-101 PR | core/nina.py |
+| O-03 | 🟡 DEBT | - | SSRF substring guard — verify R-64 closed this | ✅ FIXED | R-90–R-101 PR | tools/browser.py |
 | browser.ssrf.guard_regression | 🟡 DEBT | tools.browser | SSRF guard uses substring matching instead of ipaddress m... | OPEN | — | tools/browser.py |
-| mypy.advisory_findings | 🟡 DEBT | type_hygiene | mypy type-checking advisory findings present | OPEN | — | core/router.py, core/config.py, interfaces/telegram_interface.py |
+| mypy.advisory_findings | 🟡 DEBT | type_hygiene | mypy type-checking advisory findings present | ✅ FIXED | R-90–R-101 PR | core/router.py, core/config.py, interfaces/telegram_interface.py |
 | pipeline.eval_regex_weak | 🟡 DEBT | tools.upgradepipeline | Weak eval/exec/compile regex in upgrade scanner | OPEN | — | tools/upgradepipeline.py |
 | pipeline.no_content_type_guard | 🟡 DEBT | tools.upgradepipeline | Remote patch fetch missing Content-Type and size guard | OPEN | — | tools/upgradepipeline.py |
 | shell.allowlist.regression | 🟡 DEBT | tools.shell | Shell allowlist regression — dangerous command re-added | OPEN | — | tools/shell.py |
-| D-01 | 🔵 OPEN/PENDING | - | A-2 · Delete `core/logger.py` | OPEN | — | core/logger.py |
+| D-01 | 🔵 OPEN/PENDING | - | A-2 · Delete `core/logger.py` | ✅ FIXED | R-90–R-101 PR | core/logger.py |
 | F-01 | 🔵 OPEN/PENDING | - | B-1 · Self-check pass for complex tasks | OPEN | — | core/agent.py |
 | F-04 | 🔵 OPEN/PENDING | - | C-1 · Expenditure tracker tool | OPEN | — | tools/finance.py |
 | F-05 | 🔵 OPEN/PENDING | - | C-2 · Share market monitor (DSE/CSE alerts) | OPEN | — | tools/market.py |
@@ -169,3 +169,13 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 | R-72 | ✅ FIXED | - | -
 
 ### Entry 012 — 2026-05-23 — R-68–R-72 Router/Telegram Na | FIXED | Entry 001 | - |
+
+| R-90, R-91, R-92 | 🟡 DEBT | core.router | core/router.py mypy casts + http None-guard | ✅ FIXED | R-90–R-101 PR | core/router.py |
+| R-93, R-94 | 🟡 DEBT | tools.search | tools/search.py ddg_results typing | ✅ FIXED | R-90–R-101 PR | tools/search.py |
+| R-95 | 🟡 DEBT | tools.system | tools/system.py float typing | ✅ FIXED | R-90–R-101 PR | tools/system.py |
+| R-96 | 🟡 DEBT | core.nina | no duplicate tools line found in core/nina.py | ✅ FIXED | R-90–R-101 PR | core/nina.py |
+| R-97 | 🟡 DEBT | tools.shell | cat absent in tools/shell.py | ✅ FIXED | R-90–R-101 PR | tools/shell.py |
+| R-98 | 🟡 DEBT | tools.browser | ipaddress module confirmed in tools/browser.py | ✅ FIXED | R-90–R-101 PR | tools/browser.py |
+| R-99 | 🟡 DEBT | core.capabilities | lock scope correct in core/capabilities.py | ✅ FIXED | R-90–R-101 PR | core/capabilities.py |
+| R-100 | 🟡 DEBT | crons.manager | async wrapper _cache_purge_job in crons/manager.py | ✅ FIXED | R-90–R-101 PR | crons/manager.py |
+| R-101 | 🟡 DEBT | core.logger | core/logger.py deleted | ✅ FIXED | R-90–R-101 PR | core/logger.py |

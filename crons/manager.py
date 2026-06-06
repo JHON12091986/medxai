@@ -11,6 +11,9 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 logger = logging.getLogger("nina.scheduler")
 
+async def _cache_purge_job(nina_os):
+    nina_os.router.cache.purge_expired()
+
 class TaskScheduler:
     def __init__(self, nina_os):
         self.nina = nina_os
@@ -22,7 +25,7 @@ class TaskScheduler:
 
         add(n.run_morning_report,    CronTrigger(hour=9,  minute=0,  timezone="Asia/Dhaka"), id="morning_report")
         add(n.run_heartbeat,         IntervalTrigger(hours=1),                               id="heartbeat")
-        add(n.router.cache.purge_expired, CronTrigger(hour=3, minute=5, timezone="Asia/Dhaka"), id="cache_purge")
+        add(functools.partial(_cache_purge_job, n), CronTrigger(hour=3, minute=5, timezone="Asia/Dhaka"), id="cache_purge")
         add(n.run_cost_report,       CronTrigger(hour=23, minute=0,  timezone="Asia/Dhaka"), id="cost_report")
         add(n.router.reset_daily_counters, CronTrigger(hour=0, minute=1, second=0,
                                            timezone="UTC"),                                  id="rate_limit_reset")
