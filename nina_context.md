@@ -251,6 +251,9 @@ R-01 to R-78: 65 issues resolved, crashes stopped.
 
 - C-1 F-04 tools/finance.py — SQLite ledger, NLP entry, weekly summary, threshold alert
 - C-2 F-05 tools/market.py — DONE (cron DSE/CSE, polling during daytime Dhaka, 1% threshold alert, JSON logging)
+
+- C-1 F-04 tools/finance.py — DONE (expenditure tracker tool handling CSV/text, categorizes and sums expenses)
+- C-2 F-05 tools/market.py — cron DSE/CSE, 2h polling 10:00-14:30 Dhaka, 1% threshold Telegram alert
 - C-3 F-06 Reminder engine — data/reminders.json, heartbeat cron checks every 15min
 - C-4 F-07 Email triage — structured sender/subject/received/urgency/flag output, keywords: LC, SWIFT, MT103, urgent, deadline, Bangladesh Bank
 - C-5 F-08 remember/recall — auto-inject recalled facts by topic
@@ -277,7 +280,7 @@ and urgency nudge all activate. Zero code required.
 1. F-03 DONE (Entry 027)
 2. Set EWS_PASSWORD in .env — activate email features, zero code, instant unlock
 3. O-06 DONE (R-97), O-03 DONE (R-98), both confirmed in R-90–R-101 PR
-4. C-1 F-04 — finance.py expenditure tracker (Stage C start)
+4. C-1 F-04 — DONE (finance.py expenditure tracker)
 5. Submit Anthropic Claude $1,200 OSS grant application
 
 ## Version History

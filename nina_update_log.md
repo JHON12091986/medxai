@@ -645,3 +645,15 @@
 - Marked C-2 F-05 as DONE in `docs/space/nina_context.md`.
 **What was verified:** Ran `pyflakes` and `python3 -m py_compile` on modified files. `healthcheck.py` passes all blocker checks.
 **Rollback path:** Revert changes to `crons/manager.py` and delete `tools/market.py`.
+
+### Entry 001 - 2026-06-06
+**Title:** Implement F-04 Expenditure Tracker
+**Changes:**
+- Added `tools/finance.py` with `run_expenditure_report` to process CSV/text expenses.
+- Registered finance tool in `tools/__init__.py` and `core/capabilities.py`.
+- Added unit tests in `tests/test_finance.py`.
+- Updated `nina_context.md` status.
+**Verification:**
+- Ran `python3 -m py_compile` and `pyflakes` on all changed files successfully.
+- Ran tests in `tests/test_finance.py`.
+**Rollback:** git checkout previous commit
