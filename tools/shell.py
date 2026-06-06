@@ -26,7 +26,7 @@ async def run(cmd: str) -> str:
     base  = parts[0] if parts else ""
 
     if base not in ALLOWED_BASES:
-        logger.warning(f"shell:blocked cmd={cmd!r}", extra={"log": "tools.log"})
+        logger.warning(f"shell:blocked cmd={cmd!r}", extra={"log": "tools.log", "tool_name": "shell"})
         return f"Blocked: {base!r} not in allowlist."
 
     # FIX: compare only parts[1] (the subcommand token), not the joined tail
@@ -42,7 +42,7 @@ async def run(cmd: str) -> str:
 
     for evil in (";", "&&", "||", "|", "`", "$("):
         if evil in cmd:
-            logger.warning(f"shell_injection_blocked cmd={cmd!r}", extra={"log": "tools.log"})
+            logger.warning(f"shell_injection_blocked cmd={cmd!r}", extra={"log": "tools.log", "tool_name": "shell"})
             return "Blocked: shell operators not allowed in command."
 
     try:
@@ -59,10 +59,10 @@ async def run(cmd: str) -> str:
         if r.returncode != 0:
             logger.warning(
                 f"shell_nonzero cmd={cmd!r} rc={r.returncode} err={r.stderr[:80]!r}",
-                extra={"log": "tools.log"})
+                extra={"log": "tools.log", "tool_name": "shell"})
             return f"Exit {r.returncode}: {out or '(no output)'}"
 
-        logger.info(f"shell_ok cmd={cmd!r} out={out[:80]!r}", extra={"log": "tools.log"})
+        logger.info(f"shell_ok cmd={cmd!r} out={out[:80]!r}", extra={"log": "tools.log", "tool_name": "shell"})
         return out or "(no output)"
 
     except asyncio.TimeoutError:

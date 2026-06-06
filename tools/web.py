@@ -27,15 +27,15 @@ async def search(query: str, max_results: int = 5) -> str:
             # Validate each result has required fields
             valid = [r for r in results if r.get("title") and r.get("href") and r.get("body")]
             if not valid:
-                logger.warning(f"web_search_empty query={query!r}", extra={"log":"tools.log"})
+                logger.warning(f"web_search_empty query={query!r}", extra={"log":"tools.log", "tool_name": "web"})
                 return "No results found."
             out = "\n\n".join(
                 f"**{r['title']}**\n{r['href']}\n{r['body']}" for r in valid
             )
-            logger.info(f"web_search query={query!r} results={len(valid)}", extra={"log":"tools.log"})
+            logger.info(f"web_search query={query!r} results={len(valid)}", extra={"log":"tools.log", "tool_name": "web"})
             return out
         except asyncio.TimeoutError:
-            logger.warning(f"web_search_timeout attempt={attempt+1} query={query!r}", extra={"log":"tools.log"})
+            logger.warning(f"web_search_timeout attempt={attempt+1} query={query!r}", extra={"log":"tools.log", "tool_name": "web"})
             if attempt < 2:
                 await asyncio.sleep(2 ** attempt)
             else:
@@ -44,5 +44,5 @@ async def search(query: str, max_results: int = 5) -> str:
             if attempt < 2:
                 await asyncio.sleep(2 ** attempt)
             else:
-                logger.warning(f"web_search_failed query={query!r} err={e}", extra={"log":"tools.log"})
+                logger.warning(f"web_search_failed query={query!r} err={e}", extra={"log":"tools.log", "tool_name": "web"})
                 return f"Search failed: {e}"

@@ -42,7 +42,7 @@ class TaskScheduler:
 
         add(n.pipeline._expire_pending,            IntervalTrigger(minutes=15), id="expire_pending")
         self._sched.start()
-        logger.info(f"Scheduler started — {len(self._sched.get_jobs())} jobs")
+        logger.info(f"Scheduler started — {len(self._sched.get_jobs())} jobs", extra={"module": "cron", "job_id": "manager"})
 
     def shutdown(self, wait=False):
         self._sched.shutdown(wait=wait)

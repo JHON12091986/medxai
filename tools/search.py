@@ -34,7 +34,7 @@ async def search(query: str, max_results: int = 5) -> str:
                 answer = d.get("answer", "")
                 results = "\n".join(f"{x['title']}\n{x['url']}\n{x.get('content','')[:300]}" for x in d.get("results", []))
                 out = f"Answer: {answer}\n\n{results}" if answer else results
-                logger.info(f"tavily_search query={query!r} results={len(d.get('results',[]))}", extra={"log": "tools.log"})
+                logger.info(f"tavily_search query={query!r} results={len(d.get('results',[]))}", extra={"log": "tools.log", "tool_name": "search"})
                 return out
         except Exception as e:
             logger.warning(f"tavily_failed {e}")
@@ -49,7 +49,7 @@ async def search(query: str, max_results: int = 5) -> str:
                 d = r.json()
                 items = d.get("organic", [])
                 out = "\n".join(f"{x['title']}\n{x['link']}\n{x.get('snippet','')}" for x in items)
-                logger.info(f"serper_search query={query!r} results={len(items)}", extra={"log": "tools.log"})
+                logger.info(f"serper_search query={query!r} results={len(items)}", extra={"log": "tools.log", "tool_name": "search"})
                 return out or "No results."
         except Exception as e:
             logger.warning(f"serper_failed {e}")
@@ -62,7 +62,7 @@ async def search(query: str, max_results: int = 5) -> str:
             # v6+: keywords= is a required named argument
             ddg_results: list[dict[str, str]] = list(ddgs.text(keywords=query, max_results=max_results))
         out = "\n".join(f"{r['title']}\n{r['href']}\n{r['body']}" for r in ddg_results)
-        logger.info(f"ddg_search query={query!r} results={len(ddg_results)}", extra={"log": "tools.log"})
+        logger.info(f"ddg_search query={query!r} results={len(ddg_results)}", extra={"log": "tools.log", "tool_name": "search"})
         return out or "No results."
     except Exception as e:
         logger.warning(f"ddg_failed {e}")

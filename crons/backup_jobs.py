@@ -1,6 +1,6 @@
 
 """NINA v12 — Backup jobs"""
-import logging, shutil, time, zipfile
+import logging, time, zipfile
 from pathlib import Path
 
 logger = logging.getLogger("nina.scheduler")
@@ -10,9 +10,9 @@ BACKUP_ROOT = Path("upgrades/backups")
 async def run_memory_backup(nina_os):
     try:
         path = await nina_os.memory.backup()
-        logger.info(f"memory_backup_ok dest={path}")
+        logger.info(f"memory_backup_ok dest={path}", extra={"module": "cron", "job_id": "memory_backup"})
     except Exception as e:
-        logger.warning(f"memory_backup_failed {e}")
+        logger.warning(f"memory_backup_failed {e}", extra={"module": "cron", "job_id": "memory_backup"})
 
 async def run_py_backup(nina_os):
     try:
@@ -24,6 +24,6 @@ async def run_py_backup(nina_os):
             for f in root.rglob("*.py"):
                 if not any(x in f.parts for x in (".venv", "venv", "backups")):
                     zf.write(f)
-        logger.info(f"py_backup_ok dest={dest}")
+        logger.info(f"py_backup_ok dest={dest}", extra={"module": "cron", "job_id": "py_backup"})
     except Exception as e:
-        logger.warning(f"py_backup_failed {e}")
+        logger.warning(f"py_backup_failed {e}", extra={"module": "cron", "job_id": "py_backup"})

@@ -21,5 +21,5 @@ async def tune() -> str:
     cfg = {"localfast_layers": fast_layers, "localheavy_layers": heavy_layers, "free_vram_mb": free_mb}
     GPU_CONFIG.write_text(json.dumps(cfg, indent=2))
     logger.info(f"gputuner fast={fast_layers} heavy={heavy_layers} free_vram={free_mb}MB",
-                extra={"log":"tools.log"})
+                extra={"log":"tools.log", "tool_name": "gputuner"})
     return f"GPU tuned — LOCALFAST: {fast_layers} layers, LOCALHEAVY: {heavy_layers} layers ({free_mb}MB free VRAM)"

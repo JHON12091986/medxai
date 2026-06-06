@@ -40,7 +40,7 @@ class UpgradePipeline:
         IDLE_QUEUE.parent.mkdir(parents=True, exist_ok=True)
 
     async def initialize(self):
-        logger.info("UpgradePipeline ready")
+        logger.info("UpgradePipeline ready", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
 
     def _scan(self, code: str) -> list[str]:
         hits = []
@@ -75,7 +75,7 @@ class UpgradePipeline:
         hits = self._scan(code)
         if hits:
             for h in hits:
-                logger.warning(h, extra={"log":"upgrade.log"})
+                logger.warning(h, extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
             return "\n".join(hits)
 
         # Syntax check
@@ -141,7 +141,7 @@ class UpgradePipeline:
 
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(code)
-        logger.info(f"upgrade_deployed file={fn}", extra={"log":"upgrade.log"})
+        logger.info(f"upgrade_deployed file={fn}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
         self._pending = None
         return f"✅ Deployed: `{fn}`"
 
@@ -152,7 +152,7 @@ class UpgradePipeline:
             return f"No backups found for {filename}."
         latest = backups[0]
         shutil.copy2(latest, filename)
-        logger.info(f"rollback file={filename} from={latest}", extra={"log":"upgrade.log"})
+        logger.info(f"rollback file={filename} from={latest}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
         return f"✅ Rolled back `{filename}` from `{latest.name}`"
 
     async def _generate(self, arg: str) -> str:
@@ -174,7 +174,7 @@ class UpgradePipeline:
             q.append({**self._pending, "state": "expired_pending_review",
                       "expired_at": time.strftime("%Y-%m-%dT%H:%M:%S+0600")})
             IDLE_QUEUE.write_text(json.dumps(q, indent=2))
-            logger.info(f"upgrade_expired_to_idle file={self._pending['filename']}")
+            logger.info(f"upgrade_expired_to_idle file={self._pending['filename']}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
             self._pending = None
 
     async def _handle_shadow(self, arg: str) -> str:
