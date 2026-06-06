@@ -772,3 +772,23 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/AGENTS.md,docs/space/nina_update_log.md,nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 057 — 2026-06-06 · docs: quota routing strategy added to AGENTS.md and nina_context.md (D-02)
+
+**Triggered by:** D-02 Quota strategy update
+
+**Files changed:**
+- `AGENTS.md`
+- `nina_context.md`
+
+**Changes:**
+- Added quota strategy to nina_context.md
+- Added new top-level rules for Jules in AGENTS.md
+
+**Verification:**
+- Visual inspection
+
+**Rollback:**
+- Revert commit.
