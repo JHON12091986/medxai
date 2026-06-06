@@ -172,6 +172,13 @@ else
   bash nina_export.sh
   rm -rf "$HOME/Downloads/nina_space_upload"
   mkdir -p "$HOME/Downloads/nina_space_upload"
+  LATESTDOCS=$(ls -t ~/nina/exports/nina_docs_backup*.md 2>/dev/null | head -n 1)
+  if [ -n "$LATESTDOCS" ]; then
+      cp "$LATESTDOCS" ~/Downloads/nina_space_upload/
+      echo "✅ docs backup included: $(basename $LATESTDOCS)"
+  else
+      echo "⚠️  No docs backup found in ~/nina/exports/ — run ./nina_docs_export.sh first"
+  fi
   cp "$NINA/docs/space/nina_context.md" "$HOME/Downloads/nina_space_upload/"
   cp "$NINA/docs/space/nina_error_register.md" "$HOME/Downloads/nina_space_upload/"
   cp "$NINA/docs/space/nina_update_log.md" "$HOME/Downloads/nina_space_upload/"

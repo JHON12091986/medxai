@@ -8,7 +8,7 @@ set -e
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 EXPORT_DIR="$HOME/nina/exports"
-OUTPUT="$EXPORT_DIR/nina_docs_backup_${TIMESTAMP}.md"
+OUTPUT="$EXPORT_DIR/nina_docs_backup${TIMESTAMP}.md"
 SPACE_DIR="$HOME/nina/docs/space"
 AGENTS_FILE="$HOME/nina/AGENTS.md"
 
