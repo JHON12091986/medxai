@@ -91,16 +91,44 @@ git push origin main
 
 **Priority:** Free first → Groq → Gemini → Cerebras → DeepSeek → Mistral → Together → Cohere → Fireworks → Perplexity → SambaNova → OpenRouter → xAI → OpenAI (paid, last resort)
 
-| Tier | Providers |
-|------|-----------|
-| TIER 1 (keyless) | POLLINATIONS, CHUTES, HFPUBLIC |
-| TIER 2 (keyed) | CEREBRAS, GROQ, GEMINI, MISTRAL, DEEPSEEK, TOGETHER, COHERE, FIREWORKS, XAI, PERPLEXITY, SAMBANOVA, HYPERBOLIC, NOVITA, OPENAI (gpt-4o-mini), ONEBRAIN |
-| TIER 3 | OPENROUTER |
-| LOCAL | LOCALFAST (qwen2.5:1.5b), LOCALHEAVY (qwen2.5:7b) |
+### Provider Registry and Cost Profiles
 
-- **Routing score:** `success_rate×0.4 + (1−latency/5000)×0.4 + not_near_limit×0.2`
-- **CircuitBreaker:** CLOSED → OPEN (3 failures/5min) → HALF-OPEN (probe after 1800s)
-- **Sensitive tasks:** LOCAL only, no exceptions
+| Tier | Provider | Cost Profile | Typical Use Case | Sensitivity Rule |
+|------|----------|--------------|------------------|------------------|
+| TIER 1 | POLLINATIONS | Free (Keyless) | General fast tasks, fallback | Public data only |
+| TIER 1 | CHUTES | Free (Keyless) | Reason-heavy (DeepSeek R1) | Public data only |
+| TIER 1 | HFPUBLIC | Free (Keyless) | Miscellaneous small tasks | Public data only |
+| TIER 2 | CEREBRAS | Free tier / Keyed | Fast general execution | Public data only |
+| TIER 2 | GROQ | Free tier / Keyed | Ultra-fast execution | Public data only |
+| TIER 2 | GEMINI | Free tier / Keyed | Multilingual (Bangla), Vision | Public data only |
+| TIER 2 | MISTRAL | Paid / Keyed | Complex logic, reasoning | Public data only |
+| TIER 2 | DEEPSEEK | Paid / Keyed | Coding, deep reasoning | Public data only |
+| TIER 2 | TOGETHER | Paid / Keyed | Heavy inference (Llama 405B) | Public data only |
+| TIER 2 | COHERE | Paid / Keyed | Document heavy, command | Public data only |
+| TIER 2 | FIREWORKS | Paid / Keyed | Heavy inference (Llama 405B) | Public data only |
+| TIER 2 | XAI | Paid / Keyed | General coding, fallback | Public data only |
+| TIER 2 | PERPLEXITY | Paid / Keyed | Research, search-heavy | Public data only |
+| TIER 2 | SAMBANOVA | Free tier / Keyed | Heavy inference | Public data only |
+| TIER 2 | HYPERBOLIC | Free tier / Keyed | Heavy inference | Public data only |
+| TIER 2 | NOVITA | Paid / Keyed | Fast inference | Public data only |
+| TIER 2 | OPENAI | Paid / Keyed | Reliable fallback, formatting | Public data only |
+| TIER 2 | ONEBRAIN | Custom / Keyed | Custom local/remote proxy | Public data only |
+| TIER 3 | OPENROUTER | Paid / Keyed | Universal fallback | Public data only |
+| LOCAL | LOCALFAST | Free (Local) | Quick commands, sensor checks | Sensitive / Private |
+| LOCAL | LOCALHEAVY | Free (Local) | Local coding, sensitive docs | Sensitive / Private |
+
+### Routing and Circuit Breaker Behavior
+
+- **Task Classification:** Tasks are mapped to types (`sensitive`, `coding`, `research`, `math`, `multilingual`, `document`, `vision`, `quick`, `general`).
+- **Sensitive Routing:** If a task is flagged as `sensitive` (e.g. banking info, private mail, personal data), it completely bypasses the cloud tiers. **It is strictly routed to LOCALFAST or LOCALHEAVY. No exceptions.**
+- **Bangla Routing:** Queries containing Bangla text (`U+0980–U+09FF`) prioritize specific multilingual providers (GEMINI, OPENAI, MISTRAL, CEREBRAS, GROQ, PERPLEXITY) first.
+- **Dynamic Scoring:** For cloud tasks, providers are scored via `composite_score`:
+  `success_rate×0.4 + (1−latency/5000)×0.4 + not_near_limit×0.2`.
+  Higher score wins.
+- **Circuit Breaker:**
+  - **CLOSED:** Normal operation.
+  - **OPEN:** After 3 consecutive failures within 5 minutes (120s rolling window). Traffic is hard-blocked to this provider.
+  - **HALF-OPEN:** After a 60s cooldown, exactly one probe request is allowed to test recovery. If it succeeds, the breaker closes; if it fails, it re-opens and waits again.
 
 ## Thermal Guard
 
