@@ -852,3 +852,34 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 065 — 2026-06-06 · D-07 AGENTS.md dedup Jules rules + add idempotency rule
+
+**Triggered by:** Manual request to clean up duplicate Jules rules and enforce idempotency.
+
+**Files changed:** AGENTS.md
+
+**What changed:**
+- Removed duplicate confirmation rules in the Rules for Jules section of AGENTS.md.
+- Added a new bullet in the Mandatory Rules — After Every Task section to grep target files for existing content before insertion.
+
+**What was verified:**
+- Confirmed line count of AGENTS.md reduced from 75 to 73.
+- Confirmed only one instance of the confirmation rule remains.
+- Confirmed new idempotency rule is present.
+
+**Rollback path:**
+`git checkout HEAD -- AGENTS.md logs/nina_update_log.md`
+
+---
+
+## Entry 066 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
