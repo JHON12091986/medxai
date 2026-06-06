@@ -81,3 +81,15 @@ _Last updated: 2026-06-06_
 - **Systemd Service:** `/etc/systemd/system/nina.service`
 - **Rotating Logs Directory:** `/home/aibony/nina/logs/`
 - **Exports Directory:** `/home/aibony/nina/exports/`
+
+## NINA Tool Routing Policy v2
+- **Principle:** Perplexity plans, agy stabilizes, Jules builds.
+- **Tool Mapping:**
+  - **Perplexity:** THINK / diagnosis / architecture / spec writing / review.
+  - **agy (LOCAL):** LOCAL-BUILD / urgent fixes / single-file or high-risk edits.
+  - **Jules:** BUILD / async multi-file implementation / PR backlog.
+- **Key Rules:**
+  - Check `jules_lock.txt` lock state before starting any task.
+  - High-risk files (`main.py`, `router.py`, `telegram_interface.py`, `guardian_engine.py`, `shell.py`, `.env`) default to agy/local.
+  - Perplexity requires exact source attachments for code edits; `nina_latest.md` is for snapshot awareness only.
+  - Sensitive paths remain LOCAL only.

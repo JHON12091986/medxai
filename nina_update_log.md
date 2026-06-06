@@ -471,3 +471,34 @@
 **Files changed:** nina_sync.sh,nina_update_log.md,tools/compact_exporter.py,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 125 — 2026-06-06 · docs:(D-18) add NINA Tool Routing Policy v2 for Perplexity agy Jules
+
+**Triggered by:** User request to write and integrate NINA Tool Routing Policy v2.
+
+**What changed:**
+- Created a concise `NINA Tool Routing Policy v2` detailing the operating model ("Perplexity plans, agy stabilizes, Jules builds"), a task routing matrix, hard routing rules, context model rules, session workflow, high-risk default routing, and common failure modes to avoid.
+- Integrated the long version of the policy into `AGENTS.md` and mirrored it to `docs/space/AGENTS.md`.
+- Integrated a summary version of the policy into `docs/space/nina_state.md`.
+- Adjusted `tools/compact_exporter.py` to extract and export this routing policy summary cleanly into the backup snapshot.
+
+**What was verified:**
+- Verified bash syntax of `nina_sync.sh` (`bash -n nina_sync.sh`).
+- Verified python syntax of `tools/compact_exporter.py` (`python3 -m py_compile tools/compact_exporter.py`).
+- Executed `tools/compact_exporter.py` and confirmed `nina_latest.md` includes the routing policy summary.
+
+**Rollback path:**
+- `git checkout HEAD -- AGENTS.md docs/space/AGENTS.md docs/space/nina_state.md tools/compact_exporter.py nina_update_log.md`
+
+---
+
+## Entry 036 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,nina_update_log.md,tools/compact_exporter.py,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active

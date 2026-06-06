@@ -73,3 +73,62 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
 - Write log entries with heredoc (`<< 'EOF'`) or direct `bash echo >>` — always use Python
 - Auto-merge Jules PRs — all Jules PRs require explicit review and approval
 - Bundle multiple unrelated fixes in one commit
+
+---
+
+## NINA Tool Routing Policy v2
+
+**Principle:** _Perplexity plans, agy stabilizes, Jules builds._
+
+### 1. Three-Tool Operating Model
+- **Perplexity Enterprise Pro (THINK):** Diagnosis, root-cause analysis, architecture design, prompt-spec writing, and code review.
+- **Antigravity CLI (agy) (LOCAL-BUILD):** Scoped single-file or tightly bounded runtime-safe edits, urgent fixes, and deployment.
+- **Google Jules (BUILD):** Async multi-file implementation, broad refactors, and PR-based backlog work.
+
+### 2. Task Routing Matrix
+| Task / Scenario | Default Tool | Rationale | What NOT to Use |
+|:---|:---:|:---|:---|
+| Unclear bug / root-cause analysis | **Perplexity** | Deep context synthesis and cross-reference. | agy or Jules (prone to blind code edits). |
+| Blocker in high-risk runtime file | **agy** | Immediate local safety checking and execution. | Jules (PR delay and merge conflict risk). |
+| Single-file local fix | **agy** | Fast local cycle, zero branch overhead. | Jules (too heavy for a quick patch). |
+| Multi-file feature work | **Jules** | Syncs edits across multiple files via PRs. | agy (risk of staging broad uncoordinated diffs). |
+| Large refactor | **Jules** | Manages PR review process for high impact. | agy (context limits on local CLI). |
+| Post-change review | **Perplexity** | Objective validation against baseline design. | agy or Jules. |
+| Production-sensitive patch | **agy** | Keeps secrets and banking parameters local. | Cloud providers or Jules. |
+
+### 3. Hard Routing Rules
+- **Diagnosis First:** Perplexity must be used to draft specs when a bug or requirement is unclear. Do not code blindly.
+- **High-Risk Priority:** agy is the default route for high-risk files and urgent runtime fixes.
+- **Backlog & PR Only:** Jules must only be used for async, multi-module PR-based backlog work.
+- **Concurrency Locks:** Never let Jules touch locked files. Never let agy proceed if `jules_lock.txt` indicates a file is locked.
+- **Grounded Advice:** Perplexity must not suggest concrete edits unless target source code is directly attached or included in the current thread context.
+- **Sensitive Paths:** All banking-sensitive paths must route through LOCAL execution only.
+
+### 4. Context Model
+- **`nina_latest.md`:** Bird's-eye operational snapshot only. Used for system awareness, not full raw code recovery.
+- **Source Attachments:** Attach exact source file contents when asking Perplexity for code-level suggestions.
+- **Local Truth:** The local repository remains the single source of truth for full code implementation.
+
+### 5. Session Workflow
+1. **Perplexity** diagnoses the issue and creates the task brief.
+2. **agy** (local) or **Jules** (PR-based) executes the implementation.
+3. Local **Verification** (compile/linter/smoke tests) runs.
+4. **Perplexity** reviews the resulting diff.
+5. **sync/export** runs to commit, push, and close the session.
+
+### 6. High-Risk Default Route
+The following files must default to **agy** or manual local handling unless explicitly authorized:
+- `main.py`
+- `core/router.py`
+- `interfaces/telegram_interface.py`
+- `guardian_engine.py`
+- `tools/shell.py`
+- `.env`
+
+### 7. Failure Modes to Avoid
+- **Blind Editing:** Treating Perplexity as a blind code editor without in-context file attachments.
+- **Slow Pipeline:** Routing urgent runtime fixes through Jules' PR pipeline.
+- **Staging Spam:** Using agy for broad, unstructured multi-file refactors.
+- **Lock Race:** Starting work without checking the active lock state in `jules_lock.txt`.
+- **Bundled Changes:** Stacking unrelated modifications in a single commit.
+- **Restore Confusion:** Treating the backup snapshot (`nina_latest.md`) as a repository recovery mechanism.
