@@ -223,20 +223,36 @@ if [ "$UNCOVERED" -gt 0 ]; then
   echo ""
   echo "  → Add them to SPACE_FILES array in nina_sync.sh if needed."
 fi
-echo "[8/8] Docs export for Perplexity Space..."
+echo "[8/8] Perplexity Space export..."
 if [ "$DRY_RUN" = true ]; then
   echo "  (dry-run: skipping)"
 else
-  bash "$NINA/nina_docs_export.sh"
-  LATEST_DOCS=$(ls -t "$NINA/exports/nina_docs_backup"*.md 2>/dev/null | head -n 1)
-  if [ -n "$LATEST_DOCS" ]; then
-    echo "  ✅ Upload this to Perplexity Space: $(basename $LATEST_DOCS)"
-    echo "     Path: $LATEST_DOCS"
-    mkdir -p "$HOME/Downloads/nina_space_upload"
-    cp "$LATEST_DOCS" "$HOME/Downloads/nina_space_upload/"
-    echo "  📁 Copied to ~/Downloads/nina_space_upload/ for easy upload"
+  UPLOAD_DIR="$HOME/Downloads/nina_space_upload"
+  FIXED_FILE="$UPLOAD_DIR/nina_latest.md"
+  mkdir -p "$UPLOAD_DIR"
+  mkdir -p "$NINA/exports"
+
+  # Run docs export silently
+  bash "$NINA/nina_docs_export.sh" > /dev/null 2>&1 || true
+
+  # Find the latest export produced
+  LATEST=$(ls -t "$NINA/exports/nina_docs_backup"*.md 2>/dev/null | head -n 1)
+
+  if [ -n "$LATEST" ]; then
+    # Always overwrite the fixed file — no timestamps, no accumulation
+    cp "$LATEST" "$FIXED_FILE"
+    SIZE=$(wc -c < "$FIXED_FILE" | tr -d ' ')
+    echo ""
+    echo "  ╔══════════════════════════════════════════════╗"
+    echo "  ║  ✅  UPLOAD TO PERPLEXITY SPACE:             ║"
+    echo "  ║      nina_latest.md  (${SIZE} bytes)         ║"
+    echo "  ║      ~/Downloads/nina_space_upload/          ║"
+    echo "  ╚══════════════════════════════════════════════╝"
+    echo ""
+    # Clean up old timestamped files from upload dir (keep only nina_latest.md)
+    find "$UPLOAD_DIR" -name "nina_docs_backup*.md" -delete 2>/dev/null || true
   else
-    echo "  ⚠️  Docs export produced no file — check nina_docs_export.sh"
+    echo "  ⚠️  Export failed — nina_docs_export.sh produced no file"
   fi
 fi
 

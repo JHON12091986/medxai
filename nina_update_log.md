@@ -1264,3 +1264,35 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 094 — 2026-06-06 · nina_sync.sh Step 8 rewritten — single fixed output nina_latest.md
+
+**Triggered by:** User request to rewrite Step 8 of nina_sync.sh to output to a single fixed file and clear accumulated backups.
+
+**Files changed:**
+- `nina_sync.sh`
+
+**What changed:**
+- Rewrote the Step 8 docs export block to output to a single fixed path: `~/Downloads/nina_space_upload/nina_latest.md`.
+- Added logic to run `nina_docs_export.sh` silently.
+- Added logic to automatically remove old timestamped `nina_docs_backup*.md` files in `~/Downloads/nina_space_upload/` after copying the latest.
+- Cleaned up old `nina_docs_backup*.md` files manually from the target directory during deployment.
+
+**What was verified:**
+- Bash syntax validation passed successfully (`bash -n`).
+- Extraneous files cleared from `~/Downloads/nina_space_upload/`.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md`
+
+---
+
+## Entry 095 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
