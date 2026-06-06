@@ -25,6 +25,7 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 - One purpose per patch, assign an ID (R-xx or G-xx)
 - Never touch .env or hardcode secrets
 - All fixes must be recoverable (git commit before changing)
+- Before starting any agy task, check ~/nina/jules_lock.txt. If the file you need to edit is listed under LOCKED_FILES, stop and report: Jules is currently modifying that file. Do not proceed.
 
 ## Guardian Gate (Mandatory)
 - Every patch must pass: `python3 -m py_compile <file>` + `pyflakes <file>`
@@ -56,6 +57,7 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
   - Include: entry number, date, title, what changed, what was verified, rollback path
 - Run `cd ~/nina && ./nina_sync.sh` — no exceptions
 - Before inserting any content into a file, grep the target file to confirm that content does not already exist. If it does, skip the insertion.
+- After completing a task that touches .py files, update ~/nina/jules_lock.txt LOCKED_FILES= with the files you just changed, so Jules avoids overwriting them.
 
 ## High-Risk Files — Never Touch Without Explicit Instruction in the Prompt
 
