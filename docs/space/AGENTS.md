@@ -18,6 +18,8 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 - guardian.sh + guardian_engine.py — forensic health check
 
 ## Rules for Jules
+- Do NOT pause for confirmation at any point. Complete all batches sequentially without asking for feedback. Open the PR when done.
+- Proceed immediately to the next batch without waiting for approval.
 - Never use `git add .` — stage specific files only
 - Run `python3 -m py_compile <file>` before any commit
 - One purpose per patch, assign an ID (R-xx or G-xx)

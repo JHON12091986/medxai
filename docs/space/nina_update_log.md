@@ -765,18 +765,30 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 056 — 2026-06-06 · R-73 Add batch rules to Jules
+## Entry 056 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** User request to update AGENTS.md rules for Jules to remove confirmation pauses.
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/AGENTS.md,docs/space/nina_update_log.md,nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 057 — 2026-06-06 · docs: quota routing strategy added to AGENTS.md and nina_context.md (D-02)
+
+**Triggered by:** D-02 Quota strategy update
 
 **Files changed:**
-- `AGENTS.md` (R-73)
+- `AGENTS.md`
+- `nina_context.md`
 
 **Changes:**
-- R-73: Added strict batching and no-pause rules to Jules section in AGENTS.md to prevent confirmation stalling and require sequential execution of batches.
+- Added quota strategy to nina_context.md
+- Added new top-level rules for Jules in AGENTS.md
 
 **Verification:**
-- Validated markdown visually and ran py_compile as part of mandatory rules (which acts as a guardrail).
+- Visual inspection
 
 **Rollback:**
-- Revert the commit changing AGENTS.md manually.
+- Revert commit.

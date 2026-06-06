@@ -102,25 +102,6 @@ git push origin main
 - **CircuitBreaker:** CLOSED → OPEN (3 failures/5min) → HALF-OPEN (probe after 1800s)
 - **Sensitive tasks:** LOCAL only, no exceptions
 
-## Antigravity & Jules Quota Strategy (2026-06-06)
-
-### Reset Cycles
-| Tool | Model | Reset | Status |
-|------|-------|-------|--------|
-| agy | Gemini 3.5 Flash Medium | ~5h rolling | Default |
-| agy | Gemini 3.5 Flash High | ~5h rolling | Available |
-| agy | Gemini 3.1 Pro High | ~5h rolling | Available |
-| agy | Claude Sonnet 4.6 Thinking | Weekly ~7 days | Use sparingly |
-| agy | Claude Opus 4.6 Thinking | Weekly ~7 days | Same pool as Sonnet |
-| Jules | Gemini 3.1 Pro (built-in) | Rolling 24h | 100 tasks/day |
-
-### Routing Rules
-- agy default model → Gemini 3.5 Flash Medium
-- Multi-file / async PRs → Jules (100 tasks/day, resets every 24h)
-- Claude in Antigravity → reserve only when Gemini fails
-- One heavy agentic session burns the full Claude weekly budget
-- Jules is always the safest resource — most generous quota
-
 ## Thermal Guard
 
 | Tier | CPU | GPU | Action |
