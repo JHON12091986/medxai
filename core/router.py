@@ -332,7 +332,7 @@ class HybridRouter:
     def _has_key(self, pid: str) -> bool:
         if pid in LOCAL_PROVIDERS or pid in PROVIDERS_TIER1:
             return True
-        meta = (PROVIDERS_TIER2 | PROVIDERS_TIER3).get(pid, {})
+        meta = cast(dict, (PROVIDERS_TIER2 | PROVIDERS_TIER3).get(pid, {}))
         kf = meta.get("key_field")
         key = getattr(self.config, kf, None) if kf else None
         return bool(key and str(key).strip())
@@ -360,6 +360,8 @@ class HybridRouter:
         return ordered + ["LOCALFAST", "LOCALHEAVY"]
 
     async def _call_provider(self, pid: str, messages: list, task: ClassifiedTask):
+        if self.http is None:
+            raise RuntimeError('router_not_initialized')
         start = time.time()
         if pid in LOCAL_PROVIDERS:
             r = await self.http.post(
@@ -368,10 +370,10 @@ class HybridRouter:
                 timeout=60,
             )
             r.raise_for_status()
-            d = r.json()
+            d = cast(dict, r.json())
             return d["message"]["content"], 0, 0, (time.time() - start) * 1000
 
-        meta = (PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3)[pid].copy()
+        meta = cast(dict, (PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3)[pid]).copy()
         if override := self.config.model_overrides.get(pid):
             meta["model"] = override
         base = meta["base_url"] or getattr(self.config, "onebrain_api_base", "")
@@ -397,7 +399,7 @@ class HybridRouter:
                 self.health[pid].cb.set_cooldown(retry_after)
                 raise httpx.HTTPStatusError(f"429 rate-limited retry-after={retry_after}s", request=r.request, response=r)
             r.raise_for_status()
-            d = r.json()
+            d = cast(dict, r.json())
             text = "".join(p.get("text", "") for p in d.get("candidates", [{}])[0].get("content", {}).get("parts", []))
             usage = d.get("usageMetadata", {})
             return text, int(usage.get("promptTokenCount", 0) or 0), int(usage.get("candidatesTokenCount", 0) or 0), (time.time() - start) * 1000
@@ -413,7 +415,7 @@ class HybridRouter:
             self.health[pid].cb.set_cooldown(retry_after)
             raise httpx.HTTPStatusError(f"429 rate-limited retry-after={retry_after}s", request=r.request, response=r)
         r.raise_for_status()
-        d = r.json()
+        d = cast(dict, r.json())
         u = d.get("usage", {})
         return d["choices"][0]["message"]["content"], u.get("prompt_tokens", 0), u.get("completion_tokens", 0), (time.time() - start) * 1000
 
@@ -598,7 +600,7 @@ class HybridRouter:
                 logger.warning("idle_monitor_error %s", e)
 
     async def activate_key(self, provider: str, key: str) -> str:
-        meta = (PROVIDERS_TIER2 | PROVIDERS_TIER3).get(provider)
+        meta = cast(dict, (PROVIDERS_TIER2 | PROVIDERS_TIER3).get(provider) or {})
         if not meta:
             return f"Unknown provider {provider}"
         kf = meta.get("key_field")

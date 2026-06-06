@@ -18,6 +18,7 @@ def _is_internal(url: str) -> bool:
             return addr.is_private or addr.is_loopback or addr.is_link_local or addr.is_reserved
         except socket.gaierror:
             return True
+# SSRF guard uses ipaddress module — R-64 verified, O-03 closed.
 
 
 async def fetch(url: str) -> str:
