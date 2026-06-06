@@ -585,3 +585,26 @@
 **Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+
+---
+
+## Entry 128 — 2026-06-06 · D-22 Harden capabilities registry writes
+
+**Triggered by:** Manual local build via agy for Task D-22
+
+**Files changed:**
+- `core/capabilities.py`
+- `docs/space/nina_error_register.md`
+
+**What changed:**
+- Hardened `core/capabilities.py` by implementing a class-level `_lock` variable shared across all `CapabilityRegistry` instances to prevent potential race conditions when writing to `capabilities.json`.
+- Ensured all concurrent updates and persistence writes are correctly protected under this lock and executed non-blockingly using `asyncio.to_thread`.
+- Added the `capabilities.race_condition` item to `docs/space/nina_error_register.md` as `✅ FIXED` in `D-22`.
+
+**What was verified:**
+- Verified `core/capabilities.py` compiles successfully and passes `pyflakes` 100% cleanly.
+- Verified `./guardian --skip-deploy` completes successfully with a perfect health score of `10.0/10`.
+
+**Rollback path:**
+- `git checkout HEAD -- core/capabilities.py docs/space/nina_error_register.md nina_update_log.md`

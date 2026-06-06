@@ -4,7 +4,7 @@
 # Clear this file after Jules PR is merged.
 # Last updated: (leave blank — agy will fill this)
 
-LOCKED_FILES=interfaces/telegram_interface.py,core/nina.py
+LOCKED_FILES=interfaces/telegram_interface.py,core/nina.py,core/capabilities.py
 JULES_TASK=
 JULES_PR=
 LOCKED_SINCE=2026-06-06T23:38:00Z

@@ -16,8 +16,12 @@ DEFAULT_CAPS = {
 }
 
 class CapabilityRegistry:
+    _lock: asyncio.Lock = None
+
     def __init__(self):
-        self._lock = asyncio.Lock()
+        if CapabilityRegistry._lock is None:
+            CapabilityRegistry._lock = asyncio.Lock()
+        self._lock = CapabilityRegistry._lock
         CAP_FILE.parent.mkdir(parents=True, exist_ok=True)
         if not CAP_FILE.exists():
             CAP_FILE.write_text(json.dumps(DEFAULT_CAPS, indent=2))
