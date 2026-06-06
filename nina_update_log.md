@@ -314,21 +314,11 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 ---
 
-## Entry 015 — 2026-06-05 · D-sync Post-session sync
-
-**Triggered by:** nina_sync.sh v3 automated run
-
-**Files changed:** nina_sync.sh,upgrades/
-
-**Verification:** git push OK, nina.service active
-
----
-
 ## Entry 016 — 2026-06-05 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,upgrades/
+**Files changed:** nina_sync.sh,upgrades/
 
 **Verification:** git push OK, nina.service active
 
@@ -348,7 +338,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_context.md,docs/space/nina_dev_policy.md,docs/space/nina_update_log.md,nina_context.md,nina_dev_policy.md,upgrades/
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,upgrades/
 
 **Verification:** git push OK, nina.service active
 
@@ -358,7 +348,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_context.md,docs/space/nina_update_log.md,docs/space/nina_v12_blueprint.md,nina_context.md,nina_v12_blueprint.md,upgrades/
+**Files changed:** docs/space/nina_context.md,docs/space/nina_dev_policy.md,docs/space/nina_update_log.md,nina_context.md,nina_dev_policy.md,upgrades/
 
 **Verification:** git push OK, nina.service active
 
@@ -368,7 +358,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,upgrades/
+**Files changed:** docs/space/nina_context.md,docs/space/nina_update_log.md,docs/space/nina_v12_blueprint.md,nina_context.md,nina_v12_blueprint.md,upgrades/
 
 **Verification:** git push OK, nina.service active
 
@@ -384,11 +374,11 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 ---
 
-## Entry 001 — 2026-06-05 · D-sync Post-session sync
+## Entry 022 — 2026-06-05 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_context.md,docs/space/AGENTS.md,nina_context.md,nina_v12_blueprint.md,upgrades/
+**Files changed:** docs/space/nina_update_log.md,upgrades/
 
 **Verification:** git push OK, nina.service active
 
@@ -398,13 +388,23 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_phase1_roadmap.md,docs/space/AGENTS.md,nina_context.md,nina_dev_policy.md,nina_phase1_roadmap.md,nina_problem_log.md,nina_update_log.md,nina_v12_blueprint.md,upgrades/
+**Files changed:** docs/space/nina_context.md,docs/space/AGENTS.md,nina_context.md,nina_v12_blueprint.md,upgrades/
 
 **Verification:** git push OK, nina.service active
 
 ---
 
 ## Entry 024 — 2026-06-05 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_phase1_roadmap.md,docs/space/AGENTS.md,nina_context.md,nina_dev_policy.md,nina_phase1_roadmap.md,nina_problem_log.md,nina_update_log.md,nina_v12_blueprint.md,upgrades/
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 025 — 2026-06-05 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -415,7 +415,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 ---
 
-## Entry 025 — 2026-06-05 · D-04 Archive Relocation + D-05 Sync Direction Audit
+## Entry 026 — 2026-06-05 · D-04 Archive Relocation + D-05 Sync Direction Audit
 
 **IDs:** D-04, D-05
 
@@ -442,7 +442,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 ---
 
-## Entry 026 — 2026-06-05 · D-sync Post-session sync
+## Entry 027 — 2026-06-05 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -453,7 +453,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 ---
 
-## Entry 027 — 2026-06-05 · F-03 System Prompt Tone Calibration
+## Entry 028 — 2026-06-05 · F-03 System Prompt Tone Calibration
 
 **ID:** F-03  
 **File:** `core/nina.py`  
@@ -480,21 +480,11 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 ---
 
-## Entry 028 — 2026-06-05 · D-sync Post-session sync
-
-**Triggered by:** nina_sync.sh v3 automated run
-
-**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
-
-**Verification:** git push OK, nina.service active
-
----
-
 ## Entry 029 — 2026-06-05 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
 
@@ -504,17 +494,17 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/AGENTS.md,docs/space/nina_dev_policy.md,docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
+**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
 
 ---
 
-## Entry 031 — 2026-06-06 · D-sync Post-session sync
+## Entry 031 — 2026-06-05 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
+**Files changed:** docs/space/AGENTS.md,docs/space/nina_dev_policy.md,docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
 
@@ -604,7 +594,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** data/discoveredproviders.json,docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
 
@@ -614,7 +604,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
+**Files changed:** data/discoveredproviders.json,docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
 
@@ -624,7 +614,7 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
+**Files changed:** docs/space/nina_update_log.md,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
 
@@ -680,7 +670,17 @@ echo "Appended logs to: $BACKUP_MD" || echo "No nina_export_*.md file found in ~
 
 ---
 
-## Entry 048 — 2026-06-06 — D-06 Create nina_error_register.md
+## Entry 048 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,upgrades/.guardian_handoff.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 049 — 2026-06-06 — D-06 Create nina_error_register.md
 
 Triggered by DEV 5.6 session — master error register requested
 
@@ -695,7 +695,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 049 — 2026-06-06 · D-sync Post-session sync
+## Entry 050 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -705,7 +705,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 050 — 2026-06-06 · D-sync Post-session sync
+## Entry 051 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -715,7 +715,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 051 — 2026-06-06 · D-sync Post-session sync
+## Entry 052 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -725,21 +725,11 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 052 — 2026-06-06 · D-sync Post-session sync
-
-**Triggered by:** nina_sync.sh v3 automated run
-
-**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json
-
-**Verification:** git push OK, nina.service active
-
----
-
 ## Entry 053 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json
 
 **Verification:** git push OK, nina.service active
 
@@ -769,7 +759,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/AGENTS.md,docs/space/nina_update_log.md,nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -779,7 +769,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/AGENTS.md,docs/space/nina_context.md,docs/space/nina_update_log.md,nina_context.md,nina_update_log.md,append_log.py,append_log_d02.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/AGENTS.md,docs/space/nina_update_log.md,nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -789,7 +779,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/AGENTS.md,docs/space/nina_context.md,docs/space/nina_update_log.md,nina_context.md,nina_update_log.md,append_log.py,append_log_d02.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -799,7 +789,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -809,7 +799,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -819,7 +809,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -839,7 +829,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Triggered by:** nina_sync.sh v3 automated run
 
-**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/space/nina_v12_blueprint.md,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -853,10 +843,20 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Verification:** git push OK, nina.service active
 
+---
+
+## Entry 065 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
 
 ---
 
-## Entry 065 — 2026-06-06 · D-07 AGENTS.md dedup Jules rules + add idempotency rule
+## Entry 066 — 2026-06-06 · D-07 AGENTS.md dedup Jules rules + add idempotency rule
 
 **Triggered by:** Manual request to clean up duplicate Jules rules and enforce idempotency.
 
@@ -876,7 +876,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 066 — 2026-06-06 · D-sync Post-session sync
+## Entry 067 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -887,7 +887,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 067 — 2026-06-06 · D-08 nina_context.md stale items cleared
+## Entry 068 — 2026-06-06 · D-08 nina_context.md stale items cleared
 
 **Triggered by:** Manual clean up of stale items in nina_context.md.
 
@@ -906,7 +906,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 068 — 2026-06-06 · D-sync Post-session sync
+## Entry 069 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -916,7 +916,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 069 — 2026-06-06 · D-sync Post-session sync
+## Entry 070 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -927,7 +927,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 070 — 2026-06-06 · D-09 nina_error_register.md shell.allowlist.regression closed R-97
+## Entry 071 — 2026-06-06 · D-09 nina_error_register.md shell.allowlist.regression closed R-97
 
 **Triggered by:** Manual resolution of shell.allowlist.regression error register row.
 
@@ -945,7 +945,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 071 — 2026-06-06 · D-sync Post-session sync
+## Entry 072 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -955,7 +955,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 072 — 2026-06-06 · D-sync Post-session sync
+## Entry 073 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v3 automated run
 
@@ -965,7 +965,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 073 — 2026-06-06 · D-10 Overwrite nina_sync.sh with v4
+## Entry 074 — 2026-06-06 · D-10 Overwrite nina_sync.sh with v4
 
 **Triggered by:** User request to overwrite nina_sync.sh with v4 content.
 
@@ -984,7 +984,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 074 — 2026-06-06 · D-sync Post-session sync
+## Entry 075 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -994,7 +994,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 075 — 2026-06-06 · D-11 Add Docs Export Step 8 to nina_sync.sh
+## Entry 076 — 2026-06-06 · D-11 Add Docs Export Step 8 to nina_sync.sh
 
 **Triggered by:** User request to add Step 8 (Docs export) to nina_sync.sh.
 
@@ -1014,7 +1014,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 076 — 2026-06-06 · D-sync Post-session sync
+## Entry 077 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1024,7 +1024,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 077 — 2026-06-06 · D-sync Post-session sync
+## Entry 078 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1034,7 +1034,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 078 — 2026-06-06 · D-12 Fix LATEST_DOCS glob and expand Step 7 scan
+## Entry 079 — 2026-06-06 · D-12 Fix LATEST_DOCS glob and expand Step 7 scan
 
 **Triggered by:** User request to fix Step 8 glob pattern and expand Step 7 scan in nina_sync.sh.
 
@@ -1056,7 +1056,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 079 — 2026-06-06 · D-sync Post-session sync
+## Entry 080 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1066,7 +1066,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 080 — 2026-06-06 · D-13 Add requirements, capabilities, and facts to SPACE_FILES
+## Entry 081 — 2026-06-06 · D-13 Add requirements, capabilities, and facts to SPACE_FILES
 
 **Triggered by:** User request to add requirements.txt, data/capabilities.json, and data/memory/facts.json to SPACE_FILES.
 
@@ -1085,7 +1085,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 081 — 2026-06-06 · D-sync Post-session sync
+## Entry 082 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1095,7 +1095,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 082 — 2026-06-06 · D-sync Post-session sync
+## Entry 083 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1105,7 +1105,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 083 — 2026-06-06 · D-14 Diagnostics scan of Downloads and exports
+## Entry 084 — 2026-06-06 · D-14 Diagnostics scan of Downloads and exports
 
 **Triggered by:** User request to check Downloads and exports directories for diagnostics.
 
@@ -1123,7 +1123,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 084 — 2026-06-06 · D-sync Post-session sync
+## Entry 085 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1133,7 +1133,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 085 — 2026-06-06 · D-15 Copy latest docs backup to Downloads in nina_sync.sh
+## Entry 086 — 2026-06-06 · D-15 Copy latest docs backup to Downloads in nina_sync.sh
 
 **Triggered by:** User request to copy latest docs backup to Downloads folder during sync.
 
@@ -1152,7 +1152,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 086 — 2026-06-06 · D-sync Post-session sync
+## Entry 087 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1162,7 +1162,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 087 — 2026-06-06 · D-16 Copy backup to nina_space_upload subdirectory in nina_sync.sh
+## Entry 088 — 2026-06-06 · D-16 Copy backup to nina_space_upload subdirectory in nina_sync.sh
 
 **Triggered by:** User request to copy docs backup file to a dedicated nina_space_upload folder in Downloads.
 
@@ -1181,7 +1181,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 088 — 2026-06-06 · D-sync Post-session sync
+## Entry 089 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1191,7 +1191,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 089 — 2026-06-06 · D-17 Audit nina_sync.sh copy commands and clean downloads upload folder
+## Entry 090 — 2026-06-06 · D-17 Audit nina_sync.sh copy commands and clean downloads upload folder
 
 **Triggered by:** User request to remove extra copy commands to Downloads and clean up the nina_space_upload directory.
 
@@ -1210,7 +1210,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 090 — 2026-06-06 · D-sync Post-session sync
+## Entry 091 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1220,7 +1220,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 091 — 2026-06-06 · nina_master_export.sh created — unified single-file backup
+## Entry 092 — 2026-06-06 · nina_master_export.sh created — unified single-file backup
 
 **Triggered by:** User request to create a unified master codebase backup script.
 
@@ -1247,7 +1247,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 092 — 2026-06-06 · D-sync Post-session sync
+## Entry 093 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1257,7 +1257,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 093 — 2026-06-06 · D-sync Post-session sync
+## Entry 094 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1267,7 +1267,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 094 — 2026-06-06 · nina_sync.sh Step 8 rewritten — single fixed output nina_latest.md
+## Entry 095 — 2026-06-06 · nina_sync.sh Step 8 rewritten — single fixed output nina_latest.md
 
 **Triggered by:** User request to rewrite Step 8 of nina_sync.sh to output to a single fixed file and clear accumulated backups.
 
@@ -1289,21 +1289,11 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 095 — 2026-06-06 · D-sync Post-session sync
-
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
-
 ## Entry 096 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -1319,7 +1309,17 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 098 — 2026-06-06 · nina_sync.sh Step 8 — full master export (docs+code+shell+json) into nina_latest.md
+## Entry 098 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 099 — 2026-06-06 · nina_sync.sh Step 8 — full master export (docs+code+shell+json) into nina_latest.md
 
 **Triggered by:** User request to perform a full master export in Step 8.
 
@@ -1340,7 +1340,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 099 — 2026-06-06 · D-sync Post-session sync
+## Entry 100 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1350,7 +1350,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 100 — 2026-06-06 · rclone Google Drive auto-upload wired into nina_sync.sh Step 8
+## Entry 101 — 2026-06-06 · rclone Google Drive auto-upload wired into nina_sync.sh Step 8
 
 **Triggered by:** User request to integrate rclone Google Drive automated backup uploading.
 
@@ -1374,21 +1374,11 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 101 — 2026-06-06 · D-sync Post-session sync
-
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
-
 ## Entry 102 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -1404,7 +1394,17 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 104 — 2026-06-06 · DEV 5.9 — All Jules PRs superseded by live sync, pyflakes pre-existing advisory warnings noted, runtime verified
+## Entry 104 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 105 — 2026-06-06 · DEV 5.9 — All Jules PRs superseded by live sync, pyflakes pre-existing advisory warnings noted, runtime verified
 
 **Triggered by:** Live sync post-session verification
 
@@ -1425,7 +1425,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 105 — 2026-06-06 · D-sync Post-session sync
+## Entry 106 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v4 automated run
 
@@ -1435,7 +1435,7 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 106 — 2026-06-06 · D-13 REVERTED — nina_sync.sh hard block removed, D-12 soft warning retained
+## Entry 107 — 2026-06-06 · D-13 REVERTED — nina_sync.sh hard block removed, D-12 soft warning retained
 
 **Triggered by:** Manual policy reversion request.
 
@@ -1454,7 +1454,39 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 ---
 
-## Entry 107 — 2026-06-06 · D-sync Post-session sync
+## Entry 108 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 109 — 2026-06-06 · D-07/D-08/D-09/D-10 MD file audit fixes — AGENTS dedup, nina_context stale items, error_register shell.allowlist closed, update_log renumbered
+
+**Triggered by:** Manual MD files audit and cleanup request.
+
+**What changed:**
+- **FIX 1 (D-07):** Inspected `AGENTS.md` and confirmed Jules rules deduplication. Verified that grep count for "Do NOT pause for confirmation" is 1.
+- **FIX 2 (D-08):** Inspected `docs/space/nina_context.md` and `nina_context.md`. Confirmed EWS/F-03/SSRF/cat-allowed items are in sync and updated. Verified that `core/logger.py` is marked as deleted in R-101.
+- **FIX 3 (D-09):** Checked `docs/space/nina_error_register.md`. Verified that `shell.allowlist.regression` status is FIXED and mapped to R-97.
+- **FIX 4 (D-10):** Created a backup of `logs/nina_update_log.md` and executed a Python script to dynamically renumber all entries after the first sequence break (from Entry 015 onwards) to be sequentially ascending. Verified line count is identical and head -40 is sequential.
+
+**What was verified:**
+- `grep -c "Do NOT pause for confirmation" AGENTS.md`: 1
+- `grep "DELETED in R-101" docs/space/nina_context.md`: Verified
+- `grep "shell.allowlist.regression" docs/space/nina_error_register.md`: Shows FIXED in R-97
+- `wc -l logs/nina_update_log.md`: Identical before and after (1463 lines)
+- `grep "^## Entry\|^--- Entry" logs/nina_update_log.md | head -40`: sequential numbers
+
+**Rollback path:**
+- `git checkout HEAD -- AGENTS.md nina_context.md docs/space/nina_context.md docs/space/nina_error_register.md && cp upgrades/backups/nina_update_log.bak.* logs/nina_update_log.md`
+
+---
+
+## Entry 109 — 2026-06-06 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v5 automated run
 
