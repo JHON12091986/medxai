@@ -43,7 +43,7 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 | mypy.advisory_findings | 🟡 DEBT | type_hygiene | mypy type-checking advisory findings present | ✅ FIXED | R-90–R-101 PR | core/router.py, core/config.py, interfaces/telegram_interface.py |
 | pipeline.eval_regex_weak | 🟡 DEBT | tools.upgradepipeline | Weak eval/exec/compile regex in upgrade scanner | OPEN | — | tools/upgradepipeline.py |
 | pipeline.no_content_type_guard | 🟡 DEBT | tools.upgradepipeline | Remote patch fetch missing Content-Type and size guard | OPEN | — | tools/upgradepipeline.py |
-| shell.allowlist.regression | 🟡 DEBT | tools.shell | Shell allowlist regression — dangerous command re-added | OPEN | — | tools/shell.py |
+| shell.allowlist.regression | 🟡 DEBT | tools.shell | Shell allowlist regression — dangerous command re-added | ✅ FIXED | R-97 (R-90–R-101 PR) | tools/shell.py |
 | D-01 | 🔵 OPEN/PENDING | - | A-2 · Delete `core/logger.py` | ✅ FIXED | R-90–R-101 PR | core/logger.py |
 | F-01 | 🔵 OPEN/PENDING | - | B-1 · Self-check pass for complex tasks | OPEN | — | core/agent.py |
 | F-04 | 🔵 OPEN/PENDING | - | C-1 · Expenditure tracker tool | OPEN | — | tools/finance.py |
