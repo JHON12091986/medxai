@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# nina_sync.sh v4 — Full post-session sync + built-in MD scan (Step 7)
+# nina_sync.sh v5 — Full post-session sync + built-in MD scan (Step 7)
+# D-12: skip git push when Jules PR branches are open to prevent merge conflicts
 
 set -euo pipefail
 
@@ -125,7 +126,7 @@ lines = [
     "",
     "## Entry $NEXT_NUM — $DATE · D-sync Post-session sync",
     "",
-    "**Triggered by:** nina_sync.sh v4 automated run",
+    "**Triggered by:** nina_sync.sh v5 automated run",
     "",
     "**Files changed:** $CHANGED_FILES",
     "",
@@ -150,7 +151,7 @@ if [ "$DRY_RUN" = false ]; then
   git add -u 2>/dev/null || true
 fi
 
-echo "[6/8] Committing..."
+echo "[6/8] Committing and pushing..."
 if [ "$DRY_RUN" = true ]; then
   echo "  (dry-run: skipping commit)"
 else
@@ -158,12 +159,26 @@ else
   if [ -n "$STAGED" ]; then
     echo "  Changed files:"; echo "$STAGED" | sed 's/^/     /'
     git commit -m "docs: post-session sync $TS"
-    git push origin main
-    STAT=$(git show --stat HEAD | tail -1)
-    echo "  ✓ Pushed — $STAT"
-    _tg_notify "✅ NINA sync [$TS]
+
+    # D-12: Check for open Jules PR branches before pushing to main
+    # This prevents nina_sync.sh from moving main ahead of Jules branches
+    # and causing merge conflicts on all open Jules PRs.
+    JULES_BRANCHES=$(git ls-remote --heads origin 'jules-*' 'nina-j*' 'feat/*' 'pr-*' 2>/dev/null | grep -v 'HEAD' | wc -l | tr -d ' ' || echo "0")
+    if [ "$JULES_BRANCHES" -gt 0 ]; then
+      echo ""
+      echo "  ⚠️  PUSH SKIPPED — $JULES_BRANCHES open Jules PR branch(es) detected on origin."
+      echo "     Pushing now would cause merge conflicts on open Jules PRs."
+      echo "     → Merge or close all Jules PRs first, then run: cd ~/nina && git push origin main"
+      echo ""
+      _tg_notify "⚠️ NINA sync [$TS] — Push SKIPPED: $JULES_BRANCHES Jules PR branch(es) open. Merge/close PRs first, then push manually."
+    else
+      git push origin main
+      STAT=$(git show --stat HEAD | tail -1)
+      echo "  ✓ Pushed — $STAT"
+      _tg_notify "✅ NINA sync [$TS]
 $STAT
 Service: $SVC_STATUS"
+    fi
   else
     echo "  Nothing to commit"
     _tg_notify "ℹ️ NINA sync [$TS] — nothing to commit. Service: $SVC_STATUS"
