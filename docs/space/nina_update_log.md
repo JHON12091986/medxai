@@ -752,3 +752,31 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 055 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v3 automated run
+
+**Files changed:** docs/space/nina_update_log.md,append_log.py,docs/space/nina_v12_blueprint.md,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 056 — 2026-06-06 · R-73 Add batch rules to Jules
+
+**Triggered by:** User request to update AGENTS.md rules for Jules to remove confirmation pauses.
+
+**Files changed:**
+- `AGENTS.md` (R-73)
+
+**Changes:**
+- R-73: Added strict batching and no-pause rules to Jules section in AGENTS.md to prevent confirmation stalling and require sequential execution of batches.
+
+**Verification:**
+- Validated markdown visually and ran py_compile as part of mandatory rules (which acts as a guardrail).
+
+**Rollback:**
+- Revert the commit changing AGENTS.md manually.

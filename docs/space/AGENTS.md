@@ -23,6 +23,8 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 - One purpose per patch, assign an ID (R-xx or G-xx)
 - Never touch .env or hardcode secrets
 - All fixes must be recoverable (git commit before changing)
+- Do NOT pause for confirmation at any point. Complete all batches sequentially without asking for feedback. Open the PR when done.
+- After each batch, proceed immediately to the next batch without waiting for approval.
 
 ## Guardian Gate (Mandatory)
 - Every patch must pass: `python3 -m py_compile <file>` + `pyflakes <file>`
