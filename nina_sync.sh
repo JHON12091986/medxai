@@ -13,7 +13,7 @@ SPACE_FILES=(
   AGENTS.md
   nina_context.md
   nina_problem_log.md
-  nina_error_register.md
+  docs/space/nina_error_register.md
   nina_phase1_roadmap.md
   nina_update_log.md
 )
@@ -61,7 +61,7 @@ BEHIND=$(git rev-list --count HEAD..origin/main 2>/dev/null || echo "0")
 echo "[1/7] Auto-fetch from Downloads..."
 FETCHED=0
 for f in "${SPACE_FILES[@]}"; do
-  SRC="$HOME/Downloads/$f"; DST="$NINA/$f"
+  SRC="$HOME/Downloads/$(basename "$f")"; DST="$NINA/$f"
   if [ -f "$SRC" ]; then
     if ! diff -q "$SRC" "$DST" > /dev/null 2>&1; then
       echo "  ↓ $f (updated from Downloads)"
@@ -77,7 +77,7 @@ done
 echo "[2/7] Mirror to docs/space/..."
 [ "$DRY_RUN" = false ] && mkdir -p "$SPACE_DIR"
 for f in "${SPACE_FILES[@]}"; do
-  SRC="$NINA/$f"; DST="$SPACE_DIR/$f"
+  SRC="$NINA/$f"; DST="$SPACE_DIR/$(basename "$f")"
   if [ ! -f "$SRC" ]; then echo "  ✗ MISSING: $f"; continue; fi
   if [ ! -f "$DST" ] || ! diff -q "$SRC" "$DST" > /dev/null 2>&1; then
     echo "  ✓ $f (updated)"; [ "$DRY_RUN" = false ] && cp "$SRC" "$DST"
