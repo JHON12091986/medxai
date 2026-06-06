@@ -1178,3 +1178,32 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 
 **Rollback path:**
 - `git checkout HEAD -- nina_sync.sh nina_update_log.md`
+
+---
+
+## Entry 088 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v4 automated run
+
+**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 089 — 2026-06-06 · D-17 Audit nina_sync.sh copy commands and clean downloads upload folder
+
+**Triggered by:** User request to remove extra copy commands to Downloads and clean up the nina_space_upload directory.
+
+**Files changed:** None (audited `nina_sync.sh` and confirmed no other copy commands exist).
+
+**What changed:**
+- Checked `nina_sync.sh` for extra copy commands writing to Downloads or nina_space_upload outside of Step 8; verified none exist.
+- Cleaned up old/unwanted files in `~/Downloads/nina_space_upload/` via `rm -f`.
+
+**What was verified:**
+- Verified no extra copy commands in `nina_sync.sh`.
+- Cleared target directory successfully.
+
+**Rollback path:**
+- N/A
