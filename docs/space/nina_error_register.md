@@ -31,9 +31,9 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 | queue.path_mismatch | 🟠 WARN | core.nina | Idle queue path mismatch: idlequeue.json vs idle_queue.json | ✅ FIXED | unassigned | R-61 | core/nina.py, tools/upgradepipeline.py |
 | router.cache.dict_mutation | 🟠 WARN | core.router | ResponseCache purge_expired mutates dict during iteration | ✅ FIXED | unassigned | R-58 | core/router.py |
 | router.fallback.no_user_safe_reply | 🟠 WARN | core.router | Router raises RuntimeError instead of user-safe fallback ... | ✅ FIXED | unassigned | R-59 | core/router.py |
-| telegram.document.handler_order | 🟠 WARN | interfaces.telegram | Document uploads silently dropped — handler order bug | OPEN | unassigned | — | interfaces/telegram_interface.py |
-| telegram.key.echoed_in_chat | 🟠 WARN | interfaces.telegram | API key echoed in Telegram chat without masking | OPEN | unassigned | — | interfaces/telegram_interface.py |
-| telegram.parsemode.badrequest | 🟠 WARN | interfaces.telegram | Telegram BadRequest caused by parse_mode=Markdown | OPEN | unassigned | — | interfaces/telegram_interface.py |
+| telegram.document.handler_order | 🟠 WARN | interfaces.telegram | Document uploads silently dropped — handler order bug | ✅ FIXED | unassigned | D-20 | interfaces/telegram_interface.py |
+| telegram.key.echoed_in_chat | 🟠 WARN | interfaces.telegram | API key echoed in Telegram chat without masking | ✅ FIXED | unassigned | D-20 | interfaces/telegram_interface.py |
+| telegram.parsemode.badrequest | 🟠 WARN | interfaces.telegram | Telegram BadRequest caused by parse_mode=Markdown | ✅ FIXED | unassigned | D-20 | interfaces/telegram_interface.py |
 | browser.ssrf.guard_regression | 🟡 DEBT | tools.browser | SSRF guard uses substring matching instead of ipaddress m... | ✅ FIXED | unassigned | R-64 | tools/browser.py |
 | pipeline.eval_regex_weak | 🟡 DEBT | tools.upgradepipeline | Weak eval/exec/compile regex in upgrade scanner | ✅ FIXED | unassigned | R-54 | tools/upgradepipeline.py |
 | pipeline.no_content_type_guard | 🟡 DEBT | tools.upgradepipeline | Remote patch fetch missing Content-Type and size guard | ✅ FIXED | unassigned | R-63 | tools/upgradepipeline.py |

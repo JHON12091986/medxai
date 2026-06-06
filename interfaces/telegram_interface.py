@@ -62,6 +62,8 @@ class TelegramInterface:
 
     async def start(self):
         self._app = Application.builder().token(self.config.telegram_bot_token).build()
+        # Register document handler first to prevent catch-all swallowing
+        self._app.add_handler(MessageHandler(filters.Document.ALL, self._handle_document_update))
         self._app.add_handler(MessageHandler(filters.ALL, self._handle_update))
         await self._app.initialize()
         await self._app.start()
@@ -74,7 +76,12 @@ class TelegramInterface:
             await self._app.stop()
             await self._app.shutdown()
 
+    # Centrally defined last-mile parse_mode constants to prevent BadRequest crashes
+    PARSE_MODE_DEFAULT = None
+    PARSE_MODE_MARKDOWN_V2 = "MarkdownV2"
+
     def _mask_secrets(self, text: str) -> str:
+        # Last-mile secret masking helper to prevent API keys and credentials leaking
         if not isinstance(text, str):
             return text
         for k, v in self.config.dict().items():
@@ -85,11 +92,47 @@ class TelegramInterface:
         return text
 
     async def _reply(self, update, text: str, **kwargs):
+        # Mask secrets and reply to a message using safe parse_mode defaults
         text = self._mask_secrets(str(text))
-        return await self._reply(update, text, **kwargs)
+        if 'parse_mode' not in kwargs:
+            kwargs['parse_mode'] = self.PARSE_MODE_DEFAULT
+        # Call update.message.reply_text (resolving recursive infinite loop)
+        return await update.message.reply_text(text, **kwargs)
+
+    async def _edit_message(self, message, text: str, **kwargs):
+        # Mask secrets and edit an existing message using safe parse_mode defaults
+        text = self._mask_secrets(str(text))
+        if 'parse_mode' not in kwargs:
+            kwargs['parse_mode'] = self.PARSE_MODE_DEFAULT
+        return await message.edit_text(text, **kwargs)
 
 
     # ---- Security gate -------------------------------------------------------
+
+    # ---- Document Handler ----------------------------------------------------
+    async def _handle_document_update(self, update: Update, ctx: ContextTypes.DEFAULT_TYPE):
+        # Dedicated handler to ensure documents are processed first and never dropped
+        if not update.message or not update.message.document:
+            return
+        uid = str(update.message.from_user.id)
+        if uid != str(self.config.authorized_user_id):
+            sec_log.warning(f"unauthorized_access uid={uid}", extra={"log": "security.log"})
+            return
+
+        doc = update.message.document
+        if doc.file_name and doc.file_name.endswith(".py"):
+            size = doc.file_size or 0
+            if size > 100_000:
+                await self._reply(update, "File too large. Max 100KB.")
+                return
+            await self._reply(update, "Routing to upgrade pipeline...")
+            try:
+                await update.message.delete()
+            except Exception:
+                pass
+            asyncio.create_task(self._handle_upgrade_file(update, ctx))
+        else:
+            await self._reply(update, "Unsupported document format. Only .py files are allowed.")
 
     async def _handle_update(self, update: Update, ctx: ContextTypes.DEFAULT_TYPE):
         if not update.message:
@@ -100,17 +143,8 @@ class TelegramInterface:
             sec_log.warning(f"unauthorized_access uid={uid}", extra={"log": "security.log"})
             return
 
+        # Document updates are handled by the registered document handler; only text falls through
         text = (update.message.text or "").strip()
-        if update.message.document and update.message.document.file_name.endswith(".py"):
-            size = update.message.document.file_size or 0
-            if size > 100_000:
-                await self._reply(update, "File too large. Max 100KB.")
-                return
-            await self._reply(update, "Routing to upgrade pipeline...")
-            await update.message.delete()
-            asyncio.create_task(self._handle_upgrade_file(update, ctx))
-            return
-
         if not text:
             return
 
@@ -144,7 +178,7 @@ class TelegramInterface:
         router: HybridRouter = self.nina.router
 
         if cmd == "help":
-            await self._reply(update, HELP_TEXT, parse_mode=None)
+            await self._reply(update, HELP_TEXT, parse_mode=self.PARSE_MODE_DEFAULT)
 
         elif cmd == "status":
             reply = await self.nina.get_status()
@@ -291,7 +325,7 @@ class TelegramInterface:
             final = result[:4096]
             if final != "...":
                 try:
-                    await sent.edit_text(final)
+                    await self._edit_message(sent, final)
                 except Exception:
                     pass
             if len(result) > 4096:
@@ -301,13 +335,13 @@ class TelegramInterface:
             self.session_history.append({"role": "assistant", "content": result})
 
         except asyncio.CancelledError:
-            await sent.edit_text("Task aborted.")
+            await self._edit_message(sent, "Task aborted.")
         except Exception as e:
             logger.exception("stream_reply_error")
-            await sent.edit_text(
+            await self._edit_message(sent,
                 f"Error {type(e).__name__}: {str(e)[:200]}\n"
                 "Try /ask for a simpler route, or /status to check providers.",
-                parse_mode=None)
+                parse_mode=self.PARSE_MODE_DEFAULT)
 
     # ---- Reset UX ------------------------------------------------------------
 
@@ -321,7 +355,7 @@ class TelegramInterface:
             self.session_history.clear()
             await self._reply(update, 
                 f"Reset complete. Memory and cache cleared. Backup at: {backup_path}",
-                parse_mode=None)
+                parse_mode=self.PARSE_MODE_DEFAULT)
         except Exception as e:
             await self._reply(update, f"Reset failed: {e} -- untouched.")
 
@@ -333,7 +367,7 @@ class TelegramInterface:
             return
         parts = arg.split(None, 1)
         if len(parts) != 2:
-            await self._reply(update, "Usage: addkey PROVIDER key", parse_mode=None)
+            await self._reply(update, "Usage: addkey PROVIDER key", parse_mode=self.PARSE_MODE_DEFAULT)
             return
         provider, key = parts
         result = await self.nina.router.activate_key(provider.upper(), key)
@@ -380,11 +414,12 @@ class TelegramInterface:
             await self._app.bot.send_message(
                 chat_id=self.config.authorized_user_id,
                 text=esc(text)[:4096],
-                parse_mode="MarkdownV2")
+                parse_mode=self.PARSE_MODE_MARKDOWN_V2)
         except Exception:
             try:
                 await self._app.bot.send_message(
                     chat_id=self.config.authorized_user_id,
-                    text=text[:4096])
+                    text=text[:4096],
+                    parse_mode=self.PARSE_MODE_DEFAULT)
             except Exception as e:
                 logger.warning(f"send_message_failed err={e}")

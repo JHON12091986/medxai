@@ -534,3 +534,24 @@
 **Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 127 — 2026-06-06 · fix:(D-20) harden Telegram interface masking handler order parse_mode
+
+**Triggered by:** User request to harden the Telegram interface to mask secrets, separate document uploads, and handle parse_mode safely.
+
+**What changed:**
+- Masked all outgoing Telegram message paths (`_reply` and `_edit_message`) by wrapping them to pass all text through the centralized `_mask_secrets` helper before sending.
+- Fixed the recursive infinite loop bug inside `_reply` by redirecting it to call `update.message.reply_text` correctly.
+- Centralized `parse_mode` defaults to `None` (`PARSE_MODE_DEFAULT`) and `"MarkdownV2"` (`PARSE_MODE_MARKDOWN_V2`) inside `TelegramInterface` to prevent BadRequest parse errors, and updated all send paths to respect this centralization.
+- Gated and prioritized document updates by registering a dedicated `MessageHandler` filtering for all documents (`filters.Document.ALL`) before the catch-all `filters.ALL` generic message handler.
+- Cleaned up `docs/space/nina_error_register.md` and `docs/space/nina_state.md` to document the fixes for Telegram warnings.
+
+**What was verified:**
+- Compiled and linted `interfaces/telegram_interface.py` successfully (`py_compile` and `pyflakes` passed 100% cleanly).
+- Verified `guardian --skip-deploy` completed with status `PASS` and a perfect health score of `9.8/10`.
+- Verified no new blocker errors were introduced.
+
+**Rollback path:**
+- `git checkout HEAD -- interfaces/telegram_interface.py docs/space/nina_error_register.md docs/space/nina_state.md nina_update_log.md`
