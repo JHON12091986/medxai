@@ -1493,3 +1493,31 @@ Rollback: rm ~/nina/docs/space/nina_error_register.md
 **Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 110 — 2026-06-06 · D-14 jules_lock.txt created — agy/Jules file territory system
+
+**Triggered by:** User request to introduce a file territory coordination system.
+
+**What changed:**
+- Created the new file `jules_lock.txt` to track files locked/modified by Jules.
+- Added a check rule for `agy` to the Jules rules section in `AGENTS.md`.
+- Added an update rule for `agy` to the agy rules section in `AGENTS.md`.
+
+**What was verified:**
+- `cat jules_lock.txt`: verified exact template content
+- `grep "jules_lock" AGENTS.md`: verified the two added rules in the Jules and agy sections
+
+**Rollback path:**
+- `rm jules_lock.txt && git checkout HEAD -- AGENTS.md`
+
+---
+
+## Entry 111 — 2026-06-06 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,jules_lock.txt,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
