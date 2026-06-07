@@ -102,7 +102,7 @@ NINA is a personal autonomous AI agent — NOT a chatbot. She acts, she does not
 
 ## NINA Tool Routing Policy v2 Summary
 
-**Principle:** Perplexity plans, agy stabilizes, Jules builds — running IN PARALLEL.
+**Principle:** Perplexity plans, the local executor stabilizes, Jules builds — running IN PARALLEL.
 
 ### Four-Tool Parallel Model
 
@@ -110,26 +110,26 @@ NINA is a personal autonomous AI agent — NOT a chatbot. She acts, she does not
 |------|------|---------------|
 | Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
-| Antigravity CLI (agy) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+| Local Executor (agy, Cursor, Claude Code, Cline, aider) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
 | aider-chat (./nina-aider.sh) | INTERACTIVE LOCAL CODER — interactive multi-file editing with full repo context via OpenRouter. Use when iterating live with direct file edits and needing conversational pair-programming. Requires terminal presence. | Interactive sync |
 
 ### The Full Parallel Loop
 1. Perplexity diagnoses + writes precise spec
 2. Jules receives spec → builds in cloud async (no interaction after submit)
-3. agy handles any urgent local fixes in parallel on its own worktree
+3. The local executor handles any urgent local fixes in parallel on its own worktree
 4. Jules opens PR when done
-5. agy reviews Jules PR diff, runs lint/compile checks, merges to main
-6. agy runs `./nina_sync.sh` to deploy and export
+5. The local executor reviews Jules PR diff, runs lint/compile checks, merges to main
+6. The local executor runs `./nina_sync.sh` to deploy and export
 7. Perplexity reviews result (attach `nina_latest.md` to new thread)
 
-### agy as Merge Executor (Mandatory)
-- agy performs ALL Jules PR merges — never auto-merge via GitHub UI
+### Local Executor as Merge Executor (Mandatory)
+- The local executor performs ALL Jules PR merges — never auto-merge via GitHub UI
 - Before merge: `python3 -m py_compile` + `pyflakes` on changed files, check `jules_lock.txt`
 - After merge: `./nina_sync.sh` — no exceptions
 - Merge conflict → stop, escalate to Perplexity for re-spec
 
 ### Key Rules
 - Check `jules_lock.txt` before starting any task.
-- High-risk files (`main.py`, `router.py`, `telegram_interface.py`, `guardian_engine.py`, `shell.py`, `.env`) default to agy/local only.
+- High-risk files (`main.py`, `router.py`, `telegram_interface.py`, `guardian_engine.py`, `shell.py`, `.env`) default to local executor / manual local only.
 - Perplexity requires exact source attachments for code edits; `nina_latest.md` is for snapshot awareness only.
 - Sensitive paths remain LOCAL only — never cloud.

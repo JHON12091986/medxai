@@ -1,5 +1,14 @@
 # NINA Agent Context
 
+## YOU ARE THE LOCAL EXECUTOR
+
+This file is read by whichever local coding tool is active: agy, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
+- Read only the required context files first.
+- Do not scan the whole repo before you know the task.
+- Check juleslock.txt before editing.
+- Follow the verify → log → sync workflow.
+- Treat AGENTS.md as the shared operating law, not as agy-specific instructions.
+
 ## NINA Identity Directive — Agentic, Not a Chatbot
 
 NINA is a personal autonomous agent. She is NOT a chatbot.
@@ -40,7 +49,7 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 - One purpose per patch, assign an ID (R-xx or G-xx)
 - Never touch .env or hardcode secrets
 - All fixes must be recoverable (git commit before changing)
-- Before starting any agy task, check ~/nina/jules_lock.txt. If the file you need to edit is listed under LOCKED_FILES, stop and report: Jules is currently modifying that file. Do not proceed.
+- Before starting any local executor task, check ~/nina/jules_lock.txt. If the file you need to edit is listed under LOCKED_FILES, stop and report: Jules is currently modifying that file. Do not proceed.
 
 ## Guardian Gate (Mandatory)
 - Every patch must pass: `python3 -m py_compile <file>` + `pyflakes <file>`
@@ -58,14 +67,14 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 ## Test Command After Every Change
 cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> && pyflakes <changed_file>
 
-## Mandatory Rules — After Every Code Change (agy)
+## Mandatory Rules — After Every Code Change (Local Executor)
 
 - Run `python3 -m py_compile <file>` + `pyflakes <file>` on every changed file before committing
 - Use conventional commits: `fix:` | `feat:` | `docs:` | `chore:` | `ops:` followed by `(ID)`
 - One commit per logical fix — never bundle unrelated changes in one commit
 - Stage specific files only — never `git add .`
 
-## Mandatory Rules — After Every Task (agy close)
+## Mandatory Rules — After Every Task (Local Sync & Export)
 
 - Append a log entry to `nina_update_log.md` using **Python only** — never heredoc, never bash echo
   - Auto-detect the next entry number from the file
@@ -93,7 +102,7 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
 
 ## NINA Tool Routing Policy v2
 
-**Principle:** _Perplexity plans, agy stabilizes, Jules builds._
+**Principle:** _Perplexity plans, the local executor stabilizes, Jules builds._
 
 ### 1. Four-Tool Operating Model — Parallel Execution
 
@@ -103,38 +112,38 @@ NINA uses three tools running IN PARALLEL as the standard operating mode:
 |------|------|---------------|
 | Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
-| Antigravity CLI (agy) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+| Local Executor (agy, Cursor, Claude Code, Cline, aider) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
 | aider-chat (./nina-aider.sh) | INTERACTIVE LOCAL CODER — interactive multi-file editing with full repo context via OpenRouter. Use when iterating live with direct file edits and needing conversational pair-programming. Requires terminal presence. | Interactive sync |
 
 THE FULL PARALLEL LOOP:
 1. Perplexity diagnoses + writes precise spec
 2. Jules receives spec → builds in cloud async (no interaction after submit)
-3. agy handles any urgent local fixes in parallel on its own worktree
+3. The local executor handles any urgent local fixes in parallel on its own worktree
 4. Jules opens PR when done
-5. agy reviews Jules PR diff, runs lint/compile checks, merges to main
-6. agy runs ./nina_sync.sh to deploy and export
+5. The local executor reviews Jules PR diff, runs lint/compile checks, merges to main
+6. The local executor runs ./nina_sync.sh to deploy and export
 7. Perplexity reviews result (attach nina_latest.md to new thread)
 
-KEY DISTINCTION: agy is NOT just a fixer — it is the local merge and deploy executor.
-Jules does NOT merge its own PRs — agy always performs the merge after review.
+KEY DISTINCTION: The local executor is NOT just a fixer — it is the local merge and deploy executor.
+Jules does NOT merge its own PRs — the local executor always performs the merge after review.
 Perplexity is NOT idle during coding — it remains available for unblocking and mid-task review.
 
 ### 2. Task Routing Matrix
 | Task / Scenario | Default Tool | Rationale | What NOT to Use |
 |:---|:---:|:---|:---|
-| Unclear bug / root-cause analysis | **Perplexity** | Deep context synthesis and cross-reference. | agy or Jules (prone to blind code edits). |
-| Blocker in high-risk runtime file | **agy** | Immediate local safety checking and execution. | Jules (PR delay and merge conflict risk). |
-| Single-file local fix | **agy** | Fast local cycle, zero branch overhead. | Jules (too heavy for a quick patch). |
-| Multi-file feature work | **Jules** | Syncs edits across multiple files via PRs. | agy (risk of staging broad uncoordinated diffs). |
-| Large refactor | **Jules** | Manages PR review process for high impact. | agy (context limits on local CLI). |
-| Post-change review | **Perplexity** | Objective validation against baseline design. | agy or Jules. |
-| Production-sensitive patch | **agy** | Keeps secrets and banking parameters local. | Cloud providers or Jules. |
+| Unclear bug / root-cause analysis | **Perplexity** | Deep context synthesis and cross-reference. | local executor or Jules (prone to blind code edits). |
+| Blocker in high-risk runtime file | **local executor** | Immediate local safety checking and execution. | Jules (PR delay and merge conflict risk). |
+| Single-file local fix | **local executor** | Fast local cycle, zero branch overhead. | Jules (too heavy for a quick patch). |
+| Multi-file feature work | **Jules** | Syncs edits across multiple files via PRs. | local executor (risk of staging broad uncoordinated diffs). |
+| Large refactor | **Jules** | Manages PR review process for high impact. | local executor (context limits on local CLI). |
+| Post-change review | **Perplexity** | Objective validation against baseline design. | local executor or Jules. |
+| Production-sensitive patch | **local executor** | Keeps secrets and banking parameters local. | Cloud providers or Jules. |
 
 ### 3. Hard Routing Rules
 - **Diagnosis First:** Perplexity must be used to draft specs when a bug or requirement is unclear. Do not code blindly.
-- **High-Risk Priority:** agy is the default route for high-risk files and urgent runtime fixes.
+- **High-Risk Priority:** The local executor is the default route for high-risk files and urgent runtime fixes.
 - **Backlog & PR Only:** Jules must only be used for async, multi-module PR-based backlog work.
-- **Concurrency Locks:** Never let Jules touch locked files. Never let agy proceed if `jules_lock.txt` indicates a file is locked.
+- **Concurrency Locks:** Never let Jules touch locked files. Never let the local executor proceed if `jules_lock.txt` indicates a file is locked.
 - **Grounded Advice:** Perplexity must not suggest concrete edits unless target source code is directly attached or included in the current thread context.
 - **Sensitive Paths:** All banking-sensitive paths must route through LOCAL execution only.
 - Use aider-chat for interactive pair-programming sessions (live multi-file edits, iterative idea exploration). Launch via ./nina-aider.sh from ~/nina.
@@ -149,13 +158,13 @@ Perplexity is NOT idle during coding — it remains available for unblocking and
 
 ### 5. Session Workflow
 1. **Perplexity** diagnoses the issue and creates the task brief.
-2. **agy** (local) or **Jules** (PR-based) executes the implementation.
+2. **Local executor** (local) or **Jules** (PR-based) executes the implementation.
 3. Local **Verification** (compile/linter/smoke tests) runs.
 4. **Perplexity** reviews the resulting diff.
 5. **sync/export** runs to commit, push, and close the session.
 
 ### 6. High-Risk Default Route
-The following files must default to **agy** or manual local handling unless explicitly authorized:
+The following files must default to **local executor** or manual local handling unless explicitly authorized:
 - `main.py`
 - `core/router.py`
 - `interfaces/telegram_interface.py`
@@ -166,13 +175,13 @@ The following files must default to **agy** or manual local handling unless expl
 ### 7. Failure Modes to Avoid
 - **Blind Editing:** Treating Perplexity as a blind code editor without in-context file attachments.
 - **Slow Pipeline:** Routing urgent runtime fixes through Jules' PR pipeline.
-- **Staging Spam:** Using agy for broad, unstructured multi-file refactors.
+- **Staging Spam:** Using the local executor for broad, unstructured multi-file refactors.
 - **Lock Race:** Starting work without checking the active lock state in `jules_lock.txt`.
 - **Bundled Changes:** Stacking unrelated modifications in a single commit.
 - **Restore Confusion:** Treating the backup snapshot (`nina_latest.md`) as a repository recovery mechanism.
 
-### 8. agy as Merge Executor (Mandatory)
-- agy is responsible for ALL Jules PR merges — never auto-merge Jules PRs via GitHub UI
+### 8. Local Executor as Merge Executor (Mandatory)
+- The local executor is responsible for ALL Jules PR merges — never auto-merge Jules PRs via GitHub UI
 - Before merging: run `python3 -m py_compile` on changed files, run `pyflakes`, check `jules_lock.txt`
 - After merging: run `./nina_sync.sh` — no exceptions
 - If merge conflict: stop, report to Perplexity for re-spec, do not attempt blind resolution
@@ -184,25 +193,25 @@ The following files must default to **agy** or manual local handling unless expl
 ### Core principle
 - True parallel work is allowed only through separate git branches and separate git worktrees.
 - `main` is the production-truth desk and must stay clean.
-- agy and Jules must never edit the same file at the same time.
+- The local executor and Jules must never edit the same file at the same time.
 - File territory is mandatory, not advisory.
 
 ### Branch lanes
 - `main` → production truth, review, merge, sync only
-- `agy/<task-id>-<slug>` → local docs, shell, single-file hotfixes, policy work
+- `local/<task-id>-<slug>` (or `agy/` / `aider/`) → local docs, shell, single-file hotfixes, policy work
 - `jules/<task-id>-<slug>` → multi-file features, refactors, async PR builds
 - Optional `review/<id>` → isolated test/review/merge prep
 
 ### Worktree rules
-- Every active agy or Jules task gets its own worktree.
+- Every active local executor or Jules task gets its own worktree.
 - Recommended folder pattern:
   - `~/nina` → main
-  - `~/nina/.worktrees/agy-<task-id>`
+  - `~/nina/.worktrees/local-<task-id>`
   - `~/nina/.worktrees/jules-<task-id>`
 - Never run parallel agent tasks from the same working directory.
 
 ### Territory rules
-- agy default territory: `docs/space/*.md`, `AGENTS.md`, `nina_context.md`, `*.sh`, and single-file hotfixes on files not claimed by Jules.
+- Local executor default territory: `docs/space/*.md`, `AGENTS.md`, `nina_context.md`, `*.sh`, and single-file hotfixes on files not claimed by Jules.
 - Jules default territory: multi-file work in `core/*.py`, `tools/*.py`, `interfaces/*.py`, `tests/*.py`.
 - Shared but sequential only: `requirements.txt`, `data/*.json`.
 - Forbidden parallel territory: `.env`, secrets, lock-sensitive runtime files.
@@ -217,10 +226,10 @@ The following files must default to **agy** or manual local handling unless expl
 2. Run `./nina_sync.sh`.
 3. Create branch + worktree for each task.
 4. Record claimed files in the centralized `~/nina/jules_lock.txt`.
-5. Launch agy and Jules only after territories are confirmed non-overlapping.
+5. Launch local executor and Jules only after territories are confirmed non-overlapping.
 
 ### Session close checklist
-1. agy commits only its branch/worktree.
+1. The local executor commits only its branch/worktree.
 2. Jules opens PR only from its branch/worktree.
 3. Review and merge one stream at a time into `main`.
 4. Pull updated `main` into remaining worktrees before further edits.

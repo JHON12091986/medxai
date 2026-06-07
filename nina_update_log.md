@@ -918,3 +918,31 @@
 **Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service activating
+## Entry 073 — 2026-06-07 · docs(policy): G-03 — make AGENTS.md tool-agnostic for IDE switching and update routing policy to four-tool
+
+**Triggered by:** User request.
+
+**Files changed:**
+- `AGENTS.md`
+- `docs/space/nina_state.md`
+
+**What changed:**
+- Added a tool-agnostic local executor header to the top of `AGENTS.md`. Revised all agy-specific terminology to reference `local executor` / `the local executor` to support seamless switching between IDEs (agy, Cursor, Claude Code, Cline, aider). Updated the summary model and loop in `docs/space/nina_state.md` to reflect the tool-agnostic four-tool model.
+
+**What was verified:**
+- Verified with grep and git diff. No Python files were changed.
+
+**Rollback path:**
+- git checkout HEAD -- AGENTS.md docs/space/nina_state.md nina_update_log.md
+
+---
+
+---
+
+## Entry 074 — 2026-06-07 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,jules_lock.txt,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service activating
