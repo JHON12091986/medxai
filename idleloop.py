@@ -2,7 +2,7 @@
 Proposal-only mode: Nina analyses, logs a markdown brief, pings Telegram.
 No code generation. No pipeline. Human reviews via Perplexity, injects patch manually.
 """
-import asyncio, logging, time
+import asyncio, logging, time, re
 from pathlib import Path
 from datetime import datetime
 
@@ -93,21 +93,39 @@ class IdleProposalLoop:
             real_files = sorted(str(p.relative_to(Path("."))) for p in Path(".").rglob("*.py")
                 if not any(x in str(p) for x in ["venv", ".venv", "__pycache__", "archive"]))
             file_list = "\n".join(real_files[:40])
-            grounded_prompt = f"{prompt}\n\nIMPORTANT: NINA's actual Python files are:\n{file_list}\nOnly reference files from this list."
+            format_instructions = (
+                "FORMAT REQUIREMENT:\n"
+                "1) First line must be exactly 'IMPACT: High', 'IMPACT: Medium', or 'IMPACT: Low'.\n"
+                "2) Followed by a short bullet list of candidate improvements.\n"
+                "Keep it concise and do not include code."
+            )
+            grounded_prompt = f"{prompt}\n\nIMPORTANT: NINA's actual Python files are:\n{file_list}\nOnly reference files from this list.\n\n{format_instructions}"
             task = ClassifiedTask("research", 400, False, False)
             msgs = [{"role": "user", "content": grounded_prompt}]
             analysis = await self.router.route(grounded_prompt, msgs, task)
+
+            impact = "Unknown"
+            clean_analysis = analysis.strip()
+
+            # Extract and remove impact line if present
+            match = re.search(r"^IMPACT:\s*(High|Medium|Low)", clean_analysis, re.IGNORECASE | re.MULTILINE)
+            if match:
+                impact = match.group(1).title()
+                clean_analysis = re.sub(r"(?i)^IMPACT:\s*(High|Medium|Low)\s*\n+", "", clean_analysis).strip()
 
             # Append to single rolling daily file
             today = datetime.now().strftime("%Y-%m-%d")
             out   = PROPOSALS_DIR / f"{today}_proposals.md"
             ts    = datetime.now().strftime("%H:%M:%S")
+            category = topic.replace('_', ' ').title()
+
             entry = f"""
 ---
 
-## [{ts}] {topic.replace('_', ' ').title()}
+## [{ts}] {category} | Impact: {impact}
 
-{analysis.strip()}
+**Candidate Improvements:**
+{clean_analysis}
 
 **Status:** pending
 """

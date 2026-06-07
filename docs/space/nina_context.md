@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ---
 title: NINA Context
 version: 12.2
@@ -319,3 +320,8 @@ and urgency nudge all activate. Zero code required.
 ---
 
 *Last updated: 2026-06-05 — Blueprint updated, Space Instructions rewritten (snake_case enforcement, nina_sync.sh correction)*
+
+---
+
+## Idle Proposal Upgrades
+The idle proposal loop produces rich markdown briefs without auto-deploying code. Each proposal is formatted with a header (including timestamp, topic, and estimated impact) and a structured list of candidate improvements. This approach ensures humans review proposals before taking action.
