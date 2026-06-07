@@ -778,20 +778,10 @@
 
 ---
 
-## Entry 062 — 2026-06-07 · ops: submit batch of tasks to Jules, update trackers
+## Entry 062 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** agy task submission sweep
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** docs/space/jules_backlog.md, docs/space/jules_task_tracker.md, nina_update_log.md
+**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
-**What changed:**
-- Submitted B-002, B-003, B-004, B-007, B-013, B-014, and B-015 as parallel async tasks to Jules using `jules new`.
-- Updated statuses for these tasks to `IN_PROGRESS` in `jules_backlog.md`.
-- Appended `⏳ QUEUED` task records with remote session URLs and IDs to `jules_task_tracker.md`.
-
-**What was verified:**
-- Verified Jules session creation URLs and IDs.
-- Validated markdown formatting of updated trackers.
-
-**Rollback path:**
-- `git checkout HEAD -- docs/space/jules_backlog.md docs/space/jules_task_tracker.md`
+**Verification:** git push OK, nina.service active
