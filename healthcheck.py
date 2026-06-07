@@ -9,7 +9,6 @@ Exit 1 = at least one BLOCKER check failed — deploy must be halted.
 """
 
 import ast
-import hashlib
 import importlib
 import importlib.util
 import json
@@ -26,6 +25,7 @@ VENV_DIR    = NINA_DIR / "venv"
 
 # ── Output mode ───────────────────────────────────────────────────────────────
 JSON_MODE = "--json" in sys.argv
+METRICS_MODE = "--metrics" in sys.argv
 
 # ── Result accumulator ────────────────────────────────────────────────────────
 results = []
@@ -430,7 +430,6 @@ def check_idle_queue_path():
         return
 
     nina_src     = nina_path.read_text(errors="replace")
-    pipeline_src = pipeline_path.read_text(errors="replace")
 
     # R-61: idlequeue.json is the wrong path
     if re.search(r"idlequeue\.json", nina_src) and not re.search(r"IDLE_QUEUE", nina_src):
@@ -600,33 +599,38 @@ def check_ollama():
         )
 
 # ── Run all checks ────────────────────────────────────────────────────────────
-if not JSON_MODE:
+if METRICS_MODE:
+    # Do not print standard outputs, jump straight to the server block later.
+    pass
+elif not JSON_MODE:
     print("\n  NINA Guardian 2.0 — Startup Safety Assertions")
     print("  " + "─" * 52)
 
-check_python_version()
-check_env_file()
-env_data = load_env()
-check_env_keys(env_data)
-check_packages()
-check_syntax()
-check_core_imports()
-check_router_regressions()
-check_shell_allowlist()
-check_ssrf_guard()
-check_cron_ids()
-check_idle_queue_path()
-check_duplicate_log_handler()
-check_pipeline_security()
-check_data_dir()
-check_log_dir()
-check_ollama()
-
+if not METRICS_MODE:
+    check_python_version()
+    check_env_file()
+    env_data = load_env()
+    check_env_keys(env_data)
+    check_packages()
+    check_syntax()
+    check_core_imports()
+    check_router_regressions()
+    check_shell_allowlist()
+    check_ssrf_guard()
+    check_cron_ids()
+    check_idle_queue_path()
+    check_duplicate_log_handler()
+    check_pipeline_security()
+    check_data_dir()
+    check_log_dir()
+    check_ollama()
 # ── Final report ──────────────────────────────────────────────────────────────
 total  = len(results)
 passed = sum(1 for r in results if r["level"] == "PASS")
 
-if JSON_MODE:
+if METRICS_MODE:
+    pass
+elif JSON_MODE:
     output = {
         "healthcheck_version": "2.0",
         "timestamp": __import__("datetime").datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
@@ -649,7 +653,7 @@ else:
     print("  " + "─" * 52)
 
     if blocker_count == 0:
-        print(f"  ✔  PASS — all BLOCKER checks clear")
+        print("  ✔  PASS — all BLOCKER checks clear")
     else:
         print(f"  ✖  FAIL — {blocker_count} BLOCKER(s) must be resolved before deploy")
         print("")
@@ -660,7 +664,88 @@ else:
 
     print("")
 
+# ── Metrics server ────────────────────────────────────────────────────────────
+def get_prometheus_metrics():
+    """Generates Prometheus-style plain-text metrics."""
+    lines = []
+
+    # 1. nina_service_active
+    pid_file = NINA_DIR / "data" / "nina.pid"
+    service_active = 0
+    if pid_file.exists():
+        try:
+            pid = int(pid_file.read_text(errors="replace").strip())
+            if os.path.exists(f"/proc/{pid}"):
+                service_active = 1
+        except (ValueError, OSError):
+            pass
+    lines.append("# HELP nina_service_active NINA main service running status")
+    lines.append("# TYPE nina_service_active gauge")
+    lines.append(f"nina_service_active {service_active}")
+
+    # 2. nina_provider_health
+    prov_file = NINA_DIR / "data" / "discoveredproviders.json"
+    if prov_file.exists():
+        try:
+            providers = json.loads(prov_file.read_text(errors="replace"))
+            lines.append("# HELP nina_provider_health Health status of AI providers")
+            lines.append("# TYPE nina_provider_health gauge")
+            for p in providers:
+                pid_str = p.get("id", "UNKNOWN")
+                healthy = 1 if p.get("healthy") else 0
+                lines.append(f'nina_provider_health{{provider="{pid_str}"}} {healthy}')
+        except Exception:
+            pass
+
+    # 3. cron job status
+    mgr_path = NINA_DIR / "crons" / "manager.py"
+    if mgr_path.exists():
+        try:
+            source = mgr_path.read_text(errors="replace")
+            ids_found = re.findall(r"id\s*=\s*['\"]([^'\"]+)['\"]", source)
+            lines.append("# HELP nina_cron_job_status Count of defined cron jobs")
+            lines.append("# TYPE nina_cron_job_status gauge")
+            lines.append(f'nina_cron_job_status{{status="defined"}} {len(ids_found)}')
+        except Exception:
+            pass
+
+    return "\n".join(lines) + "\n"
+
+def run_metrics_server(port=8000):
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+
+    class MetricsHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            if self.path == '/metrics':
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/plain; version=0.0.4')
+                self.end_headers()
+                metrics = get_prometheus_metrics()
+                self.wfile.write(metrics.encode('utf-8'))
+            else:
+                self.send_response(404)
+                self.end_headers()
+                self.wfile.write(b"Not Found")
+
+        def log_message(self, format, *args):
+            # Suppress default HTTP logging to keep stdout clean
+            pass
+
+    server = HTTPServer(('0.0.0.0', port), MetricsHandler)
+    print(f"Serving Prometheus metrics on port {port}...")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    server.server_close()
+
+# ── Run Metrics Server ────────────────────────────────────────────────────────
+if METRICS_MODE:
+    run_metrics_server()
+    sys.exit(0)
+
 # ── Exit code ─────────────────────────────────────────────────────────────────
 # Exit 0 = BLOCKER-free (warnings/advisory do not block)
 # Exit 1 = at least one BLOCKER present
-sys.exit(0 if blocker_count == 0 else 1)
+if not METRICS_MODE:
+    sys.exit(0 if blocker_count == 0 else 1)
