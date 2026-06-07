@@ -62,7 +62,7 @@ def get_executive_snapshot():
     identity = get_state_section("Identity")
     arch = get_state_section("Architecture & Stack")
     providers = get_state_section("AI Providers & Quota")
-    policy = get_state_section("NINA Tool Routing Policy v2")
+    policy = get_state_section("NINA Tool Routing Policy v2 Summary")
     svc_status = get_service_status()
     
     snapshot = f"""## Executive Snapshot
