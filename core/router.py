@@ -26,7 +26,7 @@ PROVIDERS_TIER2 = {
     "GROQ": {"base_url": "https://api.groq.com/openai/v1", "model": "llama-3.3-70b-versatile", "key_field": "groq_api_key"},
     "MISTRAL": {"base_url": "https://api.mistral.ai/v1", "model": "mistral-large-latest", "key_field": "mistral_api_key"},
     "DEEPSEEK": {"base_url": "https://api.deepseek.com/v1", "model": "deepseek-chat", "key_field": "deepseek_api_key"},
-    "GEMINI": {"base_url": "https://generativelanguage.googleapis.com", "model": "gemini-2.0-flash", "key_field": "gemini_api_key"},
+    "GEMINI": {"base_url": "https://generativelanguage.googleapis.com", "model": "gemini-2.5-flash", "key_field": "gemini_api_key"},
     "TOGETHER": {"base_url": "https://api.together.xyz/v1", "model": "llama-3.1-405b", "key_field": "together_api_key"},
     "COHERE": {"base_url": "https://api.cohere.ai/v2", "model": "command-r-plus", "key_field": "cohere_api_key"},
     "FIREWORKS": {"base_url": "https://api.fireworks.ai/inference/v1", "model": "llama-v3p1-405b", "key_field": "fireworks_api_key"},
