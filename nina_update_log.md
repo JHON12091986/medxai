@@ -890,3 +890,31 @@
 **Files changed:** .aider.conf.yml,nina_aider.sh,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service activating
+## Entry 071 — 2026-06-07 · docs(policy): G-02 — register aider-chat in four-tool routing policy
+
+**Triggered by:** User request.
+
+**Files changed:**
+- `AGENTS.md`
+- `docs/space/nina_state.md`
+
+**What changed:**
+- Added aider-chat row to routing policy table. Updated Three-Tool to Four-Tool. Added Hard Routing Rules for aider sessions.
+
+**What was verified:**
+- grep confirmed aider not previously present before edit.
+
+**Rollback path:**
+- git checkout HEAD -- AGENTS.md docs/space/nina_state.md nina_update_log.md
+
+---
+
+---
+
+## Entry 072 — 2026-06-07 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service activating

@@ -95,7 +95,7 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
 
 **Principle:** _Perplexity plans, agy stabilizes, Jules builds._
 
-### 1. Three-Tool Operating Model — Parallel Execution
+### 1. Four-Tool Operating Model — Parallel Execution
 
 NINA uses three tools running IN PARALLEL as the standard operating mode:
 
@@ -104,6 +104,7 @@ NINA uses three tools running IN PARALLEL as the standard operating mode:
 | Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
 | Antigravity CLI (agy) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+| aider-chat (./nina-aider.sh) | INTERACTIVE LOCAL CODER — interactive multi-file editing with full repo context via OpenRouter. Use when iterating live with direct file edits and needing conversational pair-programming. Requires terminal presence. | Interactive sync |
 
 THE FULL PARALLEL LOOP:
 1. Perplexity diagnoses + writes precise spec
@@ -136,6 +137,10 @@ Perplexity is NOT idle during coding — it remains available for unblocking and
 - **Concurrency Locks:** Never let Jules touch locked files. Never let agy proceed if `jules_lock.txt` indicates a file is locked.
 - **Grounded Advice:** Perplexity must not suggest concrete edits unless target source code is directly attached or included in the current thread context.
 - **Sensitive Paths:** All banking-sensitive paths must route through LOCAL execution only.
+- Use aider-chat for interactive pair-programming sessions (live multi-file edits, iterative idea exploration). Launch via ./nina-aider.sh from ~/nina.
+- Do NOT use aider for async fire-and-forget tasks — use Jules for those.
+- aider must never touch .env, juleslock.txt, or high-risk runtime files without explicit instruction.
+- aider sessions must be followed by ./nina_sync.sh — no exceptions.
 
 ### 4. Context Model
 - **`nina_latest.md`:** Bird's-eye operational snapshot only. Used for system awareness, not full raw code recovery.

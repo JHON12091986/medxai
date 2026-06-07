@@ -104,13 +104,14 @@ NINA is a personal autonomous AI agent — NOT a chatbot. She acts, she does not
 
 **Principle:** Perplexity plans, agy stabilizes, Jules builds — running IN PARALLEL.
 
-### Three-Tool Parallel Model
+### Four-Tool Parallel Model
 
 | Tool | Role | Execution Mode |
 |------|------|---------------|
 | Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
 | Antigravity CLI (agy) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+| aider-chat (./nina-aider.sh) | INTERACTIVE LOCAL CODER — interactive multi-file editing with full repo context via OpenRouter. Use when iterating live with direct file edits and needing conversational pair-programming. Requires terminal presence. | Interactive sync |
 
 ### The Full Parallel Loop
 1. Perplexity diagnoses + writes precise spec
