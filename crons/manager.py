@@ -17,6 +17,7 @@ logger = logging.getLogger("nina.scheduler")
 
 
 import asyncio
+import signal
 
 async def _model_discovery_job(nina_os):
     # Wait 30s before the first run. The IntervalTrigger doesn't run immediately on start usually,
@@ -59,6 +60,22 @@ class TaskScheduler:
         add(n.pipeline._expire_pending,            IntervalTrigger(minutes=15), id="expire_pending")
         self._sched.start()
         logger.info(f"Scheduler started — {len(self._sched.get_jobs())} jobs", extra={"cron_module": "cron", "job_id": "manager"})
+        self._setup_signal_handlers()
+
+    def _setup_signal_handlers(self):
+        try:
+            loop = asyncio.get_running_loop()
+            for sig in (signal.SIGINT, signal.SIGTERM):
+                loop.add_signal_handler(sig, self._handle_shutdown_signal, sig)
+        except (NotImplementedError, RuntimeError) as e:
+            logger.warning(f"Could not setup signal handlers: {e}", extra={"cron_module": "cron", "job_id": "manager"})
+
+    def _handle_shutdown_signal(self, sig):
+        logger.info(f"Received signal {sig}, initiating graceful shutdown...", extra={"cron_module": "cron", "job_id": "manager"})
+        self.shutdown(wait=False)
+        # Cancel all running tasks to release locks and terminate the event loop
+        for task in asyncio.all_tasks():
+            task.cancel()
 
     def shutdown(self, wait=False):
         self._sched.shutdown(wait=wait)
