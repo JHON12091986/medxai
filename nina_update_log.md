@@ -695,3 +695,22 @@
 **Files changed:** WORKFLOW.md,docs/space/WORKFLOW.md,docs/space/nina_exporter_contract.md,exports/nina_latest.md,nina_sync.sh,nina_update_log.md,tools/compact_exporter.py
 
 **Verification:** git push OK, nina.service active
+
+
+## Entry 054 — 2026-06-07 · docs: add master backup reference doc, wire into SPACEFILES
+
+**Triggered by:** User request to add the downloaded master backup doc to NINA's docs/space/ directory and wire it into the Space export pipeline.
+
+**Files changed:**
+- `docs/space/nina_master_backup.md`
+- `nina_sync.sh`
+
+**What changed:**
+- Copied `~/Downloads/nina_master_backup_2026-06-07.md` to `~/nina/docs/space/nina_master_backup.md`.
+- Wired `docs/space/nina_master_backup.md` into the `SPACE_FILES` array in `nina_sync.sh`.
+
+**What was verified:**
+- Verified bash syntax validation passed successfully (`bash -n nina_sync.sh`).
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md && rm docs/space/nina_master_backup.md`

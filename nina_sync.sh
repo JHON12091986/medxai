@@ -17,6 +17,7 @@ SPACE_FILES=(
   WORKFLOW.md
   docs/space/nina_error_register.md
   docs/space/nina_exporter_contract.md
+  docs/space/nina_master_backup.md
   docs/space/nina_state.md
 )
 
