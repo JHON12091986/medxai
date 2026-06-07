@@ -63,7 +63,7 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `READY` | tools/model_discovery.py, core/router.py, crons/manager.py | B-002 | Full spec written by Perplexity — see session 2026-06-07 |
+| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `IN_PR` | tools/model_discovery.py, core/router.py, crons/manager.py | B-002 | Full spec written by Perplexity — see session 2026-06-07 |
 | B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `BLOCKED` | core/router.py | B-005 | Cannot start until B-005 PR merged |
 | B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `BLOCKED` | data/model_cache.json | B-005 | |
 | B-008 | Add circuit breaker state persistence to data/circuit_state.json | `READY` | core/router.py, data/ | — | Currently in-memory only — lost on restart |
@@ -89,7 +89,7 @@ Perplexity reads backlog each session
 | B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `READY` | healthcheck.py | — | Enables external monitoring |
 | B-022 | tools/compact_exporter.py: add progress logging for long exports | `READY` | tools/compact_exporter.py | — | Silent during long runs |
 | B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `READY` | AGENTS.md | — | Jules needs instructions to update jules_task_tracker.md after each run |
-| B-024 | Add AGENTS.md section: backlog update protocol | `READY` | AGENTS.md | — | Jules needs to mark B-IDs as DONE after successful PR merge |
+| B-024 | Add AGENTS.md section: backlog update protocol | `DONE` | AGENTS.md | — | Jules needs to mark B-IDs as DONE after successful PR merge |
 | B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `READY` | crons/manager.py | — | Currently no clean shutdown on systemd stop |
 | B-026 | Add retry logic to provider API calls with exponential backoff | `READY` | core/router.py | — | Current retry is basic — no backoff |
 | B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `READY` | tools/gputuner.py | — | Crashes on non-GPU systems |
@@ -135,6 +135,7 @@ Perplexity reads backlog each session
 | B-001 | Sentinel: shell=True fix in guardian_engine.py | E-057 | #60 | 2026-06-07 |
 | SCHED-ALL | 15 daily scheduled tasks defined | E-059 | — | 2026-06-07 |
 | TRACK-ALL | jules_task_tracker.md + agy_task_tracker.md created | E-059 | — | 2026-06-07 |
+| B-024 | Add AGENTS.md section: backlog update protocol | E-060 | — | 2026-06-07 |
 
 ---
 

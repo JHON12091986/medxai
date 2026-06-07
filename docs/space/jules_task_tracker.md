@@ -38,4 +38,4 @@
 | ID | Title | Status | Submitted | PR | Entry | Notes |
 |----|-------|--------|-----------|-----|-------|-------|
 | ASYNC-01 | Sentinel shell=True fix | ✅ MERGED | 2026-06-07 | PR #60 | E-057 | guardian_engine.py |
-| ASYNC-02 | F-09 ModelDiscoveryService | 🔄 PENDING | — | — | — | Spec ready, not submitted |
+| ASYNC-02 | F-09 ModelDiscoveryService | 🔄 IN PR | 2026-06-07 | PR #25 | — | Spec ready, submitted to Jules |
