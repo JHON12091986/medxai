@@ -4,7 +4,7 @@
 # Clear this file after Jules PR is merged.
 # Last updated: 2026-06-07T14:48:00Z
 
-LOCKED_FILES=AGENTS.md,docs/space/nina_state.md
+LOCKED_FILES=AGENTS.md,docs/space/nina_state.md,tools/compact_exporter.py
 JULES_TASK=
 JULES_PR=
-LOCKED_SINCE=2026-06-07T21:23:00Z
+LOCKED_SINCE=2026-06-07T21:24:00Z
