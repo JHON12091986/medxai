@@ -15,6 +15,18 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 logger = logging.getLogger("nina.scheduler")
 
+
+import asyncio
+
+async def _model_discovery_job(nina_os):
+    # Wait 30s before the first run. The IntervalTrigger doesn't run immediately on start usually,
+    # or if we schedule it now it might, but doing an asyncio.sleep(30) in the job itself is one way.
+    # Actually, the requirement specifically says "startup delay via asyncio.sleep(30)".
+    # Let's add a sleep if it's not the first run? No, just sleep(30) then discover_all() inside the job?
+    # Wait, if we sleep 30s on every interval run, that's fine. It's just a background job.
+    await asyncio.sleep(30)
+    await nina_os.router._model_discovery.discover_all()
+
 async def _cache_purge_job(nina_os):
     nina_os.router.cache.purge_expired()
 
@@ -43,6 +55,7 @@ class TaskScheduler:
         add(n.run_reminder_check,    IntervalTrigger(minutes=15),                            id="reminder_check")
         add(functools.partial(run_market_monitor, n), CronTrigger(hour="10-14", minute="*/30", timezone="Asia/Dhaka"), id="market_monitor")
 
+        add(functools.partial(_model_discovery_job, n), IntervalTrigger(hours=24), id="model_discovery")
         add(n.pipeline._expire_pending,            IntervalTrigger(minutes=15), id="expire_pending")
         self._sched.start()
         logger.info(f"Scheduler started — {len(self._sched.get_jobs())} jobs", extra={"module": "cron", "job_id": "manager"})

@@ -6,6 +6,7 @@ from typing import Optional, cast
 import httpx, psutil
 from core.config import NinaConfig, RATELIMITS
 from tools import jules_api
+from tools.model_discovery import ModelDiscoveryService
 _ = jules_api
 
 logger = logging.getLogger("nina.router")
@@ -281,6 +282,7 @@ class CostTracker:
 class HybridRouter:
     def __init__(self, config: NinaConfig):
         self.config = config
+        self._model_discovery = ModelDiscoveryService(config)
         self.health: dict[str, ProviderHealth] = {}
         self.cache = ResponseCache()
         self.cost = CostTracker()
@@ -376,8 +378,12 @@ class HybridRouter:
             return d["message"]["content"], 0, 0, (time.time() - start) * 1000
 
         meta = cast(dict, (PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3)[pid]).copy()
-        if override := self.config.model_overrides.get(pid):
-            meta["model"] = override
+
+        discovered_model = await self._model_discovery.get_model(pid)
+        fallback = meta.get("model", "default")
+
+        final_model = self.config.model_overrides.get(pid) or discovered_model or fallback
+        meta["model"] = final_model
         base = meta["base_url"] or getattr(self.config, "onebrain_api_base", "")
         kf = meta.get("key_field")
         key = getattr(self.config, kf, None) if kf else "no-key"
