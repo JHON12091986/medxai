@@ -15,6 +15,8 @@ DRY_RUN=false
 SPACE_FILES=(
   AGENTS.md
   WORKFLOW.md
+  docs/space/agy_task_tracker.md
+  docs/space/jules_task_tracker.md
   docs/space/nina_error_register.md
   docs/space/nina_exporter_contract.md
   docs/space/nina_master_backup.md

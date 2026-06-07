@@ -745,3 +745,23 @@
 **Files changed:** jules_lock.txt
 
 **Verification:** git push OK, nina.service active
+
+
+## Entry 059 — 2026-06-07 · feat(docs): create jules_task_tracker.md and agy_task_tracker.md (SCHED+AGY)
+
+**Triggered by:** User request to create jules_task_tracker.md and agy_task_tracker.md in docs/space/ and wire them into the sync script.
+
+**Files changed:**
+- `docs/space/jules_task_tracker.md`
+- `docs/space/agy_task_tracker.md`
+- `nina_sync.sh`
+
+**What changed:**
+- Created `docs/space/jules_task_tracker.md` and `docs/space/agy_task_tracker.md`.
+- Wired both files into the `SPACE_FILES` array in `nina_sync.sh`.
+
+**What was verified:**
+- Verified bash syntax validation passed successfully (`bash -n nina_sync.sh`).
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh nina_update_log.md && rm docs/space/jules_task_tracker.md docs/space/agy_task_tracker.md`
