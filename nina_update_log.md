@@ -726,19 +726,12 @@
 
 **Verification:** git push OK, nina.service active
 
+---
 
-## Entry 057 — 2026-06-07 · chore: upgrade Gemini model string to gemini-2.5-flash
+## Entry 057 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** User request to upgrade the Gemini model string to the best available free model.
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- `core/router.py`
+**Files changed:** nina_update_log.md
 
-**What changed:**
-- Updated the Gemini model definition in `core/router.py` from `"gemini-2.0-flash"` to `"gemini-2.5-flash"`.
-
-**What was verified:**
-- Verified syntax check (`py_compile`) and lint (`pyflakes`) passed cleanly on `core/router.py`.
-
-**Rollback path:**
-- `git checkout HEAD -- core/router.py nina_update_log.md`
+**Verification:** git push OK, nina.service active
