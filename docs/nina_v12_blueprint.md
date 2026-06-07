@@ -170,6 +170,7 @@ Guardian must pass before any deployment. See `NINA-Development-Policy.md` for r
 | T-3 | DSE/CSE share market alerts | 📋 Planned |
 | T-4 | Proactive reminder engine | 📋 Planned |
 | T-5 | Personal context memory | 🔨 In progress |
+| T-6 | Personal knowledge base remember and recall | ✅ DONE |
 
 ---
 
