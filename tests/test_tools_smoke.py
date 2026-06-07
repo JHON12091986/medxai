@@ -137,8 +137,14 @@ async def test_gputuner_smoke(tmp_path):
     from tools import gputuner
 
     with patch("tools.gputuner.GPU_CONFIG", tmp_path / "gpu_config.json"):
-        with patch("tools.gputuner.subprocess.run") as mock_run:
-            mock_run.return_value.stdout = "8000" # 8000 MB free
+        with patch("tools.gputuner.asyncio.create_subprocess_exec") as mock_create_subprocess, \
+             patch("tools.gputuner.asyncio.wait_for") as mock_wait_for:
+
+            mock_proc = MagicMock()
+            mock_create_subprocess.return_value = mock_proc
+
+            # stdout, stderr tuple return
+            mock_wait_for.return_value = (b"8000\n", b"")
 
             result = await gputuner.tune() if __import__('inspect').iscoroutinefunction(gputuner.tune) else gputuner.tune()
             assert "GPU tuned" in result

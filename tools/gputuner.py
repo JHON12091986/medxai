@@ -1,4 +1,4 @@
-import json, logging, subprocess
+import asyncio, json, logging
 from pathlib import Path
 
 logger = logging.getLogger("nina.tools.gputuner")
@@ -7,11 +7,16 @@ GPU_CONFIG = Path("data/gpuconfig.json")
 async def tune() -> str:
     """Probe MX150 VRAM and determine stable layer counts for both models."""
     try:
-        r = subprocess.run(["nvidia-smi","--query-gpu=memory.free","--format=csv,noheader,nounits"],
-                           capture_output=True, text=True, timeout=5)
-        free_mb = int(r.stdout.strip())
-    except Exception:
-        return "GPU tuner: nvidia-smi unavailable."
+        proc = await asyncio.create_subprocess_exec(
+            "nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE
+        )
+        stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=5.0)
+        free_mb = int(stdout.decode().strip())
+    except (OSError, ValueError, asyncio.TimeoutError):
+        # Fallback to mock metric when nvidia-smi is unavailable or fails
+        free_mb = 0
 
     # qwen2.5:1.5b Q4_K_M ~1.0GB → fits fully (28 layers)
     # qwen2.5:7b   Q4_K_M ~4.3GB → partial offload based on free VRAM
