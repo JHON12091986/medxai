@@ -745,3 +745,15 @@
 **Files changed:** jules_lock.txt
 
 **Verification:** git push OK, nina.service active
+
+### Entry 059 - F-09
+**Title:** F-09 ModelDiscoveryService — auto-discover best model per provider
+**Changes:**
+- Added `tools/model_discovery.py` to auto-discover models for various LLM providers.
+- Updated `crons/manager.py` to schedule model discovery running daily with a startup delay.
+- Modified `core/router.py` to integrate model discovery into `HybridRouter`.
+- Generated `data/model_cache.json` with initial fallback defaults.
+**Verification:**
+- Validated logic with simple test script and code review.
+- Checked pre-commit steps.
+**Rollback:** git checkout previous commit

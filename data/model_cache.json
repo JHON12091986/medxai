@@ -1,0 +1,18 @@
+{
+  "GROQ": "llama-3.3-70b-versatile",
+  "GEMINI": "gemini-2.5-flash",
+  "CEREBRAS": "llama-3.3-70b",
+  "MISTRAL": "mistral-small-latest",
+  "DEEPSEEK": "deepseek-chat",
+  "TOGETHER": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+  "COHERE": "command-r-plus",
+  "XAI": "grok-3-mini",
+  "SAMBANOVA": "Meta-Llama-3.3-70B-Instruct",
+  "OPENAI": "gpt-4o-mini",
+  "PERPLEXITY": "llama-3.1-sonar-small-128k-online",
+  "FIREWORKS": "accounts/fireworks/models/llama-v3p3-70b-instruct",
+  "HYPERBOLIC": "meta-llama/Llama-3.3-70B-Instruct",
+  "NOVITA": "meta-llama/llama-3.3-70b-instruct",
+  "ONEBRAIN": "llama-3.3-70b-versatile",
+  "OPENROUTER": "meta-llama/llama-3.3-70b-instruct"
+}
