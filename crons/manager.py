@@ -58,7 +58,7 @@ class TaskScheduler:
         add(functools.partial(_model_discovery_job, n), IntervalTrigger(hours=24), id="model_discovery")
         add(n.pipeline._expire_pending,            IntervalTrigger(minutes=15), id="expire_pending")
         self._sched.start()
-        logger.info(f"Scheduler started — {len(self._sched.get_jobs())} jobs", extra={"module": "cron", "job_id": "manager"})
+        logger.info(f"Scheduler started — {len(self._sched.get_jobs())} jobs", extra={"cron_module": "cron", "job_id": "manager"})
 
     def shutdown(self, wait=False):
         self._sched.shutdown(wait=wait)
