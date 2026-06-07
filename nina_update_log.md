@@ -696,21 +696,12 @@
 
 **Verification:** git push OK, nina.service active
 
+---
 
-## Entry 054 — 2026-06-07 · docs: add master backup reference doc, wire into SPACEFILES
+## Entry 054 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** User request to add the downloaded master backup doc to NINA's docs/space/ directory and wire it into the Space export pipeline.
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- `docs/space/nina_master_backup.md`
-- `nina_sync.sh`
+**Files changed:** nina_update_log.md
 
-**What changed:**
-- Copied `~/Downloads/nina_master_backup_2026-06-07.md` to `~/nina/docs/space/nina_master_backup.md`.
-- Wired `docs/space/nina_master_backup.md` into the `SPACE_FILES` array in `nina_sync.sh`.
-
-**What was verified:**
-- Verified bash syntax validation passed successfully (`bash -n nina_sync.sh`).
-
-**Rollback path:**
-- `git checkout HEAD -- nina_sync.sh nina_update_log.md && rm docs/space/nina_master_backup.md`
+**Verification:** git push OK, nina.service active
