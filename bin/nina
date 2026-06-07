@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+source ~/nina/venv/bin/activate
+cd ~/nina
+python -m interfaces.cli_interface "$@"

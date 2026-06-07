@@ -824,3 +824,31 @@
 **Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+## Entry 066 — 2026-06-07 · feat(cli): G-01 — add interfaces/cli_interface.py and bin/nina
+
+**Triggered by:** User request.
+
+**Files changed:**
+- `interfaces/cli_interface.py`
+- `bin/nina`
+
+**What changed:**
+- Created CLI interface. Accepts task from argv or stdin. Builds NinaConfig directly from dotenv (bypasses load_config Telegram guard). Instantiates HybridRouter, MemorySystem, AgentLoop with correct signatures. Created bin/nina shell wrapper. Did NOT touch main.py.
+
+**What was verified:**
+- py_compile + pyflakes passed. Smoke test ran.
+
+**Rollback path:**
+- rm interfaces/cli_interface.py bin/nina && git checkout HEAD -- nina_update_log.md
+
+---
+
+---
+
+## Entry 067 — 2026-06-07 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** bin/nina,data/model_cache.json,interfaces/cli_interface.py,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
