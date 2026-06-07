@@ -33,8 +33,8 @@ async def fetch(url: str) -> str:
             text = await page.inner_text("body")
             await browser.close()
             out = text[:5000]
-            logger.info(f"browser_fetch url={url!r} chars={len(out)}", extra={"log": "tools.log"})
+            logger.info(f"browser_fetch url={url!r} chars={len(out)}", extra={"log": "tools.log", "tool_name": "browser"})
             return out
     except Exception as e:
-        logger.warning(f"browser_fetch_failed url={url!r} err={e}", extra={"log": "tools.log"})
+        logger.warning(f"browser_fetch_failed url={url!r} err={e}", extra={"log": "tools.log", "tool_name": "browser"})
         return f"Browser error: {e}"

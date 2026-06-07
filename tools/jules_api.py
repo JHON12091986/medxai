@@ -174,10 +174,10 @@ async def run(cmd: str) -> str:
             return f"Unknown action: {action}. Supported: dispatch, status, sources"
 
     except requests.exceptions.RequestException as e:
-        logger.error(f"jules_api_request_failed cmd={cmd!r} err={e}", extra={"log": "error.log"})
+        logger.error(f"jules_api_request_failed cmd={cmd!r} err={e}", extra={"log": "error.log", "tool_name": "jules_api"})
         return f"Jules API request failed: {e}"
     except Exception as e:
-        logger.error(f"jules_api_failed cmd={cmd!r} err={e}", extra={"log": "error.log"})
+        logger.error(f"jules_api_failed cmd={cmd!r} err={e}", extra={"log": "error.log", "tool_name": "jules_api"})
         return f"Jules API error: {e}"
 
 class JulesAPI:

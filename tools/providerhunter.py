@@ -25,4 +25,4 @@ async def hunt(router, config):
             results.append({**p, "healthy": healthy, "checked_at": time.strftime("%Y-%m-%dT%H:%M:%S+0600")})
 
     DISCOVERED.write_text(json.dumps(results, indent=2))
-    logger.info(f"provider_hunter found={len(results)}", extra={"log":"scheduler.log"})
+    logger.info(f"provider_hunter found={len(results)}", extra={"log":"scheduler.log", "tool_name": "providerhunter"})

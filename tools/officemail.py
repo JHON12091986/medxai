@@ -26,6 +26,6 @@ async def fetch(config) -> str:
                 results.append(f"  • {i.subject} | {i.sender.email_address if i.sender else 'unknown'}")
         except Exception as e:
             logger.error(f"morning_report_ews_fetch_failed mailbox={email_addr} err={e}",
-                         extra={"log":"error.log"})
+                         extra={"log":"error.log", "tool_name": "officemail"})
             results.append(f"**{label}** — Unavailable (EWS unreachable, retry at next report)")
     return "\n".join(results)

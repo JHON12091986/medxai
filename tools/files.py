@@ -23,7 +23,7 @@ async def read(path: str) -> str:
     if not p.exists(): return f"File not found: {path}"
     data = p.read_bytes()
     if len(data) > MAX_READ: return f"File too large (>{MAX_READ//1024}KB)."
-    logger.info(f"file_read path={path!r}", extra={"log":"tools.log"})
+    logger.info(f"file_read path={path!r}", extra={"log":"tools.log", "tool_name": "files"})
     return data.decode(errors="replace")
 
 async def write(path: str, content: str, config) -> str:
@@ -32,5 +32,5 @@ async def write(path: str, content: str, config) -> str:
     if len(content.encode()) > MAX_WRITE: return f"Content too large (>{MAX_WRITE//1024//1024}MB)."
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(content)
-    logger.info(f"file_write path={path!r} bytes={len(content)}", extra={"log":"tools.log"})
+    logger.info(f"file_write path={path!r} bytes={len(content)}", extra={"log":"tools.log", "tool_name": "files"})
     return f"Written: {path}"
