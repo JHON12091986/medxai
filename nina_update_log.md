@@ -658,40 +658,10 @@
 
 ---
 
-## Entry 050 — 2026-06-07 · docs: Parallel 3-tool model documentation
+## Entry 050 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** agy task — document parallel 3-tool model + agy-as-merge-executor
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- AGENTS.md: Replaced Section 1 with parallel execution model table + full loop; added Section 8 agy as Merge Executor
-- docs/space/nina_state.md: Mirrored parallel model summary with table, loop steps, merge executor rule
-- WORKFLOW.md: Created new 60-line human-readable workflow guide
-- nina_sync.sh: Added WORKFLOW.md to SPACE_FILES array
+**Files changed:** docs/space/AGENTS.md,nina_update_log.md,docs/space/WORKFLOW.md
 
-**What was verified:**
-- bash -n nina_sync.sh: syntax OK
-- python3 -m py_compile tools/compact_exporter.py: OK
-- No .py files modified; no py_compile needed for doc changes
-
-**Rollback path:** git revert this commit
-
-
----
-
-## Entry 051 — 2026-06-07 · docs: Parallel 3-tool model documentation
-
-**Triggered by:** agy task — document parallel 3-tool model + agy-as-merge-executor
-
-**Files changed:**
-- AGENTS.md: Replaced Section 1 with parallel execution model table + full loop; added Section 8 agy as Merge Executor
-- docs/space/nina_state.md: Mirrored parallel model summary with table, loop steps, merge executor rule
-- WORKFLOW.md: Created new 60-line human-readable workflow guide
-- nina_sync.sh: Added WORKFLOW.md to SPACE_FILES array
-
-**What was verified:**
-- bash -n nina_sync.sh: syntax OK
-- python3 -m py_compile tools/compact_exporter.py: OK
-- No .py files modified
-
-**Rollback path:** git revert this commit
-
+**Verification:** git push OK, nina.service active
