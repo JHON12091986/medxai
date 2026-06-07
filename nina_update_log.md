@@ -1263,3 +1263,25 @@
 **Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+## Entry 104 — 2026-06-08 · ops: dispatch Batch 1 task specs to Jules
+
+**Triggered by:** Batch 1 specs (Specs 1–7) submission.
+
+**Files changed:**
+- `docs/space/jules_backlog.md`
+- `jules_lock.txt`
+
+**What changed:**
+- Dispatched 7 tasks to Jules API with detailed prompts: B-020 (ModelDiscovery tests), B-023 (tracker update protocol in AGENTS.md), B-007 (seed model_cache.json), B-013 (replace bare except blocks), B-015 (crons metrics), B-022 (exporter progress logging), and E-062 (housekeeping event for B-020).
+- Locked target files for all 7 tasks in `jules_lock.txt`.
+- Promoted all 7 tasks status from `READY` to `IN_PROGRESS` with their corresponding Jules session IDs in `jules_backlog.md`.
+
+**What was verified:**
+- API response from Jules endpoint returned successful session IDs for all 7 dispatches.
+- Backlog updates were verified via python update check.
+- Snapshot compiled correctly with new task details.
+
+**Rollback path:**
+- `git checkout HEAD -- docs/space/jules_backlog.md jules_lock.txt`
+
