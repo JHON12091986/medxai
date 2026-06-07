@@ -12,7 +12,7 @@ description: NINA's strict development policy and workflow rules. Load when help
 3. Guardian runs before AND after every change to core/, tools/, interfaces/, main.py, .env, or service files
 4. Every risky change must be recoverable — guardian snapshot, git commit, or manual backup first
 5. Runtime proof required — nina.service active, Telegram responding, target behavior confirmed
-6. Logs updated same day — nina_update_log.md + nina_problem_log.md
+6. Logs updated same day — nina_update_log.md + docs/space/nina_error_register.md
 7. Production fixes beat cleanup — priority: security > startup failure > service crash > broken user path
 8. No blind AI patching — read target files, confirm paths are real, confirm names match current code
 9. Protect interfaces and secrets — interfaces/telegram_interface.py, .env, router are high-risk
@@ -59,7 +59,7 @@ print("Done")
 PYEOF
 ```
 
-- Same rule applies to nina_problem_log.md and any other markdown file append
+- Same rule applies to docs/space/nina_error_register.md and any other markdown file append
 - PYEOF is the safe heredoc terminator — never use EOF as terminator in Perplexity
 - When entry content contains code fences, build the entry as a list of strings
   joined with newlines — never embed raw backtick blocks inside Python string literals
@@ -69,27 +69,27 @@ PYEOF
 ## Git Commit Style
 
 ```
-fix: wrap tool grammar in fallback guard (R-78)
-feat: add expenditure tracker tool (F-04)
-security: remove .env from tracking
+fix(tool): wrap tool grammar in fallback guard (R-78)
+feat(finance): add expenditure tracker tool (F-04)
+security(config): remove .env from tracking
 ```
 
-Format: `type: short description (ID)`
+Format: `type(scope): description (ID)`
 Types: fix / feat / security / refactor / docs / chore
 
 ---
 
 ## Session Workflow
 
-1. Attach NINA_CONTEXT.md to every new thread
+1. Attach exports/nina_latest.md to every new thread
 2. Check nina_update_log.md for last entry and current version
-3. Check nina_problem_log.md for any BLOCKING open issues
+3. Check docs/space/nina_error_register.md for any BLOCKING open issues
 4. State today's goal before starting
 5. Run ./guardian before touching any code
 6. Make one change, verify, log it
 7. Run ./guardian after the change
-8. Update nina_update_log.md + nina_problem_log.md same session (Python append only)
-9. Upload fresh NINA_CONTEXT.md to Space before closing
+8. Update nina_update_log.md + docs/space/nina_error_register.md same session (Python append only)
+9. Upload fresh exports/nina_latest.md to Space before closing
 
 ---
 
@@ -138,4 +138,4 @@ cp ~/nina/upgrades/backups/core_cleanup/memory.py.bak ~/nina/core/memory.py
 - [ ] Telegram runtime proof obtained
 - [ ] Rollback path documented
 - [ ] nina_update_log.md updated (Python append, not heredoc)
-- [ ] nina_problem_log.md updated if bug fixed or new issue found
+- [ ] docs/space/nina_error_register.md updated if bug fixed or new issue found

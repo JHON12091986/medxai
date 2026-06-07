@@ -13,7 +13,7 @@ Run BEFORE any change to core/, tools/, interfaces/, main.py, .env
 Run AFTER every change — no exceptions
 
 ## Guardian Pass Criteria (all must pass)
-1. venv active, Python 3.11, all required packages present
+1. venv active, Python 3.14, all required packages present
 2. `.env` validation passed (`TELEGRAM_CHAT_ID` warning acceptable)
 3. Syntax check all tracked files OK
 4. pyflakes — no issues
@@ -47,7 +47,7 @@ sudo systemctl status nina.service
 - [ ] Telegram runtime proof obtained
 - [ ] Rollback path documented
 - [ ] nina_update_log.md updated (Python append only)
-- [ ] nina_problem_log.md updated if bug fixed or new issue found
+- [ ] docs/space/nina_error_register.md updated if bug fixed or new issue found
 
 ## Rollback Pattern
 ```bash

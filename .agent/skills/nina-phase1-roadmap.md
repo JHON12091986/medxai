@@ -30,12 +30,13 @@ description: NINA's Phase 1 development roadmap — active priorities, staged ta
 
 ---
 
-## ⏳ Stage C — New Capabilities — NOT STARTED
-- **C-1** `F-04` Expenditure tracker — `tools/finance.py` (SQLite ledger, NLP entry, weekly summary, threshold alert)
-- **C-2** `F-05` Share market monitor — `tools/market.py` + cron (DSE/CSE, 2h polling 1000–1430 Dhaka, 1% threshold Telegram alert)
-- **C-3** `F-06` Proactive reminder engine — `data/reminders.json` + heartbeat cron checks every 15min
-- **C-4** `F-07` Email triage improvement — structured `sender/subject/received/urgency_flag` output (keywords: LC, SWIFT, MT103, urgent, deadline, Bangladesh Bank)
-- **C-5** `F-08` Personal knowledge base — `remember key value` / `recall` commands → `core/memory.py`
+## ⏳ Stage C — New Capabilities — COMPLETED
+- **C-1** `F-04` Expenditure tracker — `tools/finance.py` — MERGED - active in production
+- **C-2** `F-05` Share market monitor — `tools/market.py` — MERGED - dummy prices (real DSE/CSE API pending)
+- **C-3** `F-06` Proactive reminder engine — `data/reminders.json` — MERGED - active
+- **C-4** `F-07` Email triage improvement — `tools/officemail.py` — MERGED - EWS blocked (O-02 open)
+- **C-5** `F-08` Personal knowledge base — `core/memory.py` — MERGED - Telegram /remember /recall commands pending
+- **R-79** IdleProposalLoop — `idleloop.py` — MERGED - IMPACT briefs active
 
 ---
 

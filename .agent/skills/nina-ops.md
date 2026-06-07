@@ -27,7 +27,7 @@ sudo systemctl status nina
 journalctl -u nina -f              # Live logs
 journalctl -u nina -n 50           # Last 50 lines
 cat ~/nina/nina_update_log.md      # Change history
-cat ~/nina/nina_problem_log.md     # Bug/fix history
+cat ~/nina/docs/space/nina_error_register.md  # Bug/fix history
 ```
 
 ### Guardian Health Check
@@ -40,7 +40,7 @@ cd ~/nina && ./guardian
 ## Environment
 ```bash
 cd ~/nina
-source venv/bin/activate           # Python 3.11
+source venv/bin/activate           # Python 3.14
 
 # Key paths (all gitignored)
 ~/nina/.env                        # Secrets — NEVER commit
@@ -75,7 +75,7 @@ API_SECRET_KEY=
 - `nomic-embed-text` → embeddings for memory
 
 ## Guardian Pass Criteria
-1. venv active, Python 3.11, all required packages present
+1. venv active, Python 3.14, all required packages present
 2. `.env` validation passed (`TELEGRAM_CHAT_ID` warning acceptable)
 3. Syntax check all tracked files OK
 4. pyflakes — no issues
@@ -110,7 +110,7 @@ API_SECRET_KEY=
 cd ~/nina
 git status
 git add <specific files>           # NEVER git add .
-git commit -m "type: description (ID)"
+git commit -m "type(scope): description (ID)"
 git push origin main
 ```
 **Never commit:** `.env`, `data/memory/`, `logs/`, `*.bak*`, `*.save*`, `*.fix*`, `*.selfcheck*`

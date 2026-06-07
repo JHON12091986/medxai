@@ -13,7 +13,7 @@ description: Git rules and commit conventions for the NINA repo. Load this for a
 
 ## Commit Format
 ```
-type: short description (ID)
+type(scope): description (ID)
 ```
 Types: `fix` | `feat` | `security` | `refactor` | `docs` | `chore`
 Examples:
@@ -26,7 +26,7 @@ Examples:
 cd ~/nina
 git status
 git add <specific files only>
-git commit -m "type: description (ID)"
+git commit -m "type(scope): description (ID)"
 git push origin main
 ```
 
