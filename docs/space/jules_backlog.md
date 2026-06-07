@@ -53,9 +53,9 @@ Perplexity reads backlog each session
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
 | B-001 | Sentinel: remove shell=True from run_cmd in guardian_engine.py | `DONE` | guardian_engine.py | — | E-057, PR #60 merged |
-| B-002 | Wire model_overrides dict to .env hot-reload in router.py | `READY` | core/router.py, core/config.py | — | model_overrides exists in NinaConfig but not wired |
-| B-003 | Add timeout to all subprocess calls in compact_exporter.py | `READY` | tools/compact_exporter.py | — | No timeout = potential hang, DoS risk |
-| B-004 | Validate TELEGRAM_CHAT_ID exists before any send attempt | `READY` | interfaces/telegram_interface.py | — | Silent failure if env var missing |
+| B-002 | Wire model_overrides dict to .env hot-reload in router.py | `IN_PROGRESS` | core/router.py, core/config.py | — | model_overrides exists in NinaConfig but not wired |
+| B-003 | Add timeout to all subprocess calls in compact_exporter.py | `IN_PROGRESS` | tools/compact_exporter.py | — | No timeout = potential hang, DoS risk |
+| B-004 | Validate TELEGRAM_CHAT_ID exists before any send attempt | `IN_PROGRESS` | interfaces/telegram_interface.py | — | Silent failure if env var missing |
 
 ---
 
@@ -63,17 +63,17 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `READY` | tools/model_discovery.py, core/router.py, crons/manager.py | B-002 | Full spec written by Perplexity — see session 2026-06-07 |
-| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `BLOCKED` | core/router.py | B-005 | Cannot start until B-005 PR merged |
-| B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `BLOCKED` | data/model_cache.json | B-005 | |
+| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `DONE` | tools/model_discovery.py, core/router.py, crons/manager.py | B-002 | Full spec written by Perplexity — see session 2026-06-07 |
+| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `READY` | core/router.py | B-005 | Cannot start until B-005 PR merged |
+| B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `IN_PROGRESS` | data/model_cache.json | B-005 | |
 | B-008 | Add circuit breaker state persistence to data/circuit_state.json | `READY` | core/router.py, data/ | — | Currently in-memory only — lost on restart |
 | B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegram_interface.py | — | No rate limit = potential spam/DoS from authorized user fat-finger |
 | B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegram_interface.py | — | Commands with no length limit are DoS risk |
 | B-011 | Guardian engine: add file integrity check on startup | `READY` | guardian_engine.py | — | SIGNATURES dict exists but startup check is passive |
 | B-012 | Add structured JSON logging to router.py for provider selection events | `READY` | core/router.py | — | Currently plain text — hard to parse for metrics |
-| B-013 | healthcheck.py: replace bare except with typed exception handling | `READY` | healthcheck.py | — | Bare except swallows real errors |
-| B-014 | Add startup banner to main.py showing active providers + model strings | `READY` | main.py | B-002 | Needs model_overrides wired first for accurate display |
-| B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | `READY` | crons/manager.py | — | No visibility into cron job health |
+| B-013 | healthcheck.py: replace bare except with typed exception handling | `IN_PROGRESS` | healthcheck.py | — | Bare except swallows real errors |
+| B-014 | Add startup banner to main.py showing active providers + model strings | `IN_PROGRESS` | main.py | B-002 | Needs model_overrides wired first for accurate display |
+| B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | `IN_PROGRESS` | crons/manager.py | — | No visibility into cron job health |
 
 ---
 
@@ -89,7 +89,7 @@ Perplexity reads backlog each session
 | B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `READY` | healthcheck.py | — | Enables external monitoring |
 | B-022 | tools/compact_exporter.py: add progress logging for long exports | `READY` | tools/compact_exporter.py | — | Silent during long runs |
 | B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `READY` | AGENTS.md | — | Jules needs instructions to update jules_task_tracker.md after each run |
-| B-024 | Add AGENTS.md section: backlog update protocol | `READY` | AGENTS.md | — | Jules needs to mark B-IDs as DONE after successful PR merge |
+| B-024 | Add AGENTS.md section: backlog update protocol | `DONE` | AGENTS.md | — | Jules needs to mark B-IDs as DONE after successful PR merge |
 | B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `READY` | crons/manager.py | — | Currently no clean shutdown on systemd stop |
 | B-026 | Add retry logic to provider API calls with exponential backoff | `READY` | core/router.py | — | Current retry is basic — no backoff |
 | B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `READY` | tools/gputuner.py | — | Crashes on non-GPU systems |
@@ -135,6 +135,8 @@ Perplexity reads backlog each session
 | B-001 | Sentinel: shell=True fix in guardian_engine.py | E-057 | #60 | 2026-06-07 |
 | SCHED-ALL | 15 daily scheduled tasks defined | E-059 | — | 2026-06-07 |
 | TRACK-ALL | jules_task_tracker.md + agy_task_tracker.md created | E-059 | — | 2026-06-07 |
+| B-024 | Add AGENTS.md section: backlog update protocol | E-060 | — | 2026-06-07 |
+| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | E-061 | #25 | 2026-06-07 |
 
 ---
 

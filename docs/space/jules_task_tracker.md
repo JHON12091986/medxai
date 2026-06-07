@@ -39,3 +39,11 @@
 |----|-------|--------|-----------|-----|-------|-------|
 | ASYNC-01 | Sentinel shell=True fix | ✅ MERGED | 2026-06-07 | PR #60 | E-057 | guardian_engine.py |
 | ASYNC-02 | F-09 ModelDiscoveryService | ✅ MERGED | 2026-06-07 | PR #25 | E-061 | Spec ready, submitted and merged |
+
+| ASYNC-03 | B-002: Wire model_overrides dict to .env hot-reload in router.py | ⏳ QUEUED | 2026-06-07 | — | — | Session: [13876164946786086522](https://jules.google.com/session/13876164946786086522) |
+| ASYNC-04 | B-003: Add timeout to all subprocess calls in compact_exporter.py | ⏳ QUEUED | 2026-06-07 | — | — | Session: [890874151317558069](https://jules.google.com/session/890874151317558069) |
+| ASYNC-05 | B-004: Validate TELEGRAM_CHAT_ID exists before any send attempt | ⏳ QUEUED | 2026-06-07 | — | — | Session: [3544127208157451730](https://jules.google.com/session/3544127208157451730) |
+| ASYNC-06 | B-007: F-09 Part 3 — seed data/model_cache.json with all 16 providers | ⏳ QUEUED | 2026-06-07 | — | — | Session: [4718778617163535359](https://jules.google.com/session/4718778617163535359) |
+| ASYNC-07 | B-013: healthcheck.py: replace bare except with typed exception handling | ⏳ QUEUED | 2026-06-07 | — | — | Session: [10635814989193465007](https://jules.google.com/session/10635814989193465007) |
+| ASYNC-08 | B-014: Add startup banner to main.py showing active providers + model strings | ⏳ QUEUED | 2026-06-07 | — | — | Session: [16604506654173776295](https://jules.google.com/session/16604506654173776295) |
+| ASYNC-09 | B-015: crons/manager.py: add job execution metrics (duration, last_success, fail_count) | ⏳ QUEUED | 2026-06-07 | — | — | Session: [6671558330966465193](https://jules.google.com/session/6671558330966465193) |
