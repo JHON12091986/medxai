@@ -2,12 +2,12 @@
 
 ## YOU ARE THE LOCAL EXECUTOR
 
-This file is read by whichever local coding tool is active: agy, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
+This file is read by whichever local coding tool is active: agynina, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
 - Read only the required context files first.
 - Do not scan the whole repo before you know the task.
 - Check juleslock.txt before editing.
 - Follow the verify → log → sync workflow.
-- Treat AGENTS.md as the shared operating law, not as agy-specific instructions.
+- Treat AGENTS.md as the shared operating law, not as agynina-specific instructions.
 
 ## NINA Identity Directive — Agentic, Not a Chatbot
 
@@ -29,7 +29,7 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 
 ## Dev Environment Stack
 - **AI Tooling:** Perplexity Enterprise Pro with Claude Sonnet 4.6
-- **Developer CLI + Local Build Agent (Claude Sonnet 4.6 Thinking):** Antigravity CLI agy v1.0.5
+- **Developer CLI + Local Build Agent (Claude Sonnet 4.6 Thinking):** Antigravity CLI agynina v1.0.5
 - **Primary Developer Agent:** Jules at jules.google
 - **Reference & Search:** NotebookLM
 - **Note:** Gemini CLI was removed on June 5, 2026.
@@ -112,7 +112,7 @@ NINA uses three tools running IN PARALLEL as the standard operating mode:
 |------|------|---------------|
 | Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
-| Local Executor (agy, Cursor, Claude Code, Cline, aider) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+| Local Executor (agynina, Cursor, Claude Code, Cline, aider) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
 | aider-chat (./nina-aider.sh) | INTERACTIVE LOCAL CODER — interactive multi-file editing with full repo context via OpenRouter. Use when iterating live with direct file edits and needing conversational pair-programming. Requires terminal presence. | Interactive sync |
 
 THE FULL PARALLEL LOOP:
@@ -186,6 +186,15 @@ The following files must default to **local executor** or manual local handling 
 - After merging: run `./nina_sync.sh` — no exceptions
 - If merge conflict: stop, report to Perplexity for re-spec, do not attempt blind resolution
 
+### 9. Antigravity CLI Toolset (agynina)
+Every local executor should use the automated `agynina` CLI toolset (located at `bin/agynina`) to run standard workflows:
+- **`agynina status`**: Checks active file locks, git workspace, and backlog status.
+- **`agynina pr merge <PR_NUMBER>`**: Automatically runs syntax/linter checks on the PR, merges it, updates the backlog status to `DONE`, clears locks, and triggers the sync script.
+- **`agynina dispatch <TASK_ID>`**: Locks target files in `jules_lock.txt`, sets status to `IN_PROGRESS`, and sends task spec to the Jules API.
+- **`agynina aider <TASK_ID>`**: Launches `aider` preloaded with the task's files in the LLM context.
+- **`agynina doctor`**: Locates and prints the most recent Python traceback from NINA's logs or systemd journal.
+- **`agynina ninaloop`**: Activates the continuous autonomous developer loop.
+
 ---
 
 ## Parallel Workflow — Synergic Model
@@ -198,7 +207,7 @@ The following files must default to **local executor** or manual local handling 
 
 ### Branch lanes
 - `main` → production truth, review, merge, sync only
-- `local/<task-id>-<slug>` (or `agy/` / `aider/`) → local docs, shell, single-file hotfixes, policy work
+- `local/<task-id>-<slug>` (or `agynina/` / `aider/`) → local docs, shell, single-file hotfixes, policy work
 - `jules/<task-id>-<slug>` → multi-file features, refactors, async PR builds
 - Optional `review/<id>` → isolated test/review/merge prep
 

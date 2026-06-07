@@ -1,9 +1,9 @@
 # NINA Jules Backlog — Unified Pipeline
 > **Mission:** NINA is a personal autonomous AI agent — NOT a chatbot. She acts, she does not describe.
 > **Location:** `~/nina/docs/space/jules_backlog.md`
-> **Updated by:** agy (Python append only — never bash echo, never manual edit)
+> **Updated by:** agynina (Python append only — never bash echo, never manual edit)
 > **Read by:** Perplexity via nina_latest.md Google Drive backup every session
-> **Consumed by:** Jules (async PRs) + agy (local merges only)
+> **Consumed by:** Jules (async PRs) + agynina (local merges only)
 > **Last restructured:** 2026-06-07 — Agentic shift adopted. All new features serve the agent mission.
 
 ---
@@ -15,8 +15,8 @@ Perplexity reads backlog each session
   → counts READY items by tier, checks BLOCKED promotions
   → generates Jules task spec for each READY item (up to 15 per batch)
   → you submit spec to Jules UI
-  → agy merges PR when Jules opens it — never auto-merge via GitHub UI
-  → agy updates status: READY → IN_PROGRESS → IN_PR → DONE
+  → agynina merges PR when Jules opens it — never auto-merge via GitHub UI
+  → agynina updates status: READY → IN_PROGRESS → IN_PR → DONE
   → next session: Perplexity picks next READY batch
 ```
 
@@ -41,7 +41,7 @@ Perplexity reads backlog each session
 |--------|---------|
 | `READY` | Fully specced, no blockers — Perplexity submits to Jules immediately |
 | `IN_PROGRESS` | Jules task submitted, PR not yet open |
-| `IN_PR` | PR open, waiting for agy review + merge |
+| `IN_PR` | PR open, waiting for agynina review + merge |
 | `BLOCKED` | Has unresolved dependency — do not pick up |
 | `DONE` | Merged, deployed, verified by Guardian |
 | `DEFERRED` | Valid but deprioritised — revisit next sprint |
@@ -79,18 +79,18 @@ Perplexity reads backlog each session
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
 | B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `DONE` | tools/model_discovery.py, core/router.py, crons/manager.py | — | PR #25 merged 2026-06-07 |
-| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `READY` | core/router.py | B-005 | agy only — high-risk file |
+| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `READY` | core/router.py | B-005 | agynina only — high-risk file |
 | B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `IN_PROGRESS` | data/model_cache.json | B-005 | Jules can do this |
-| B-008 | Add circuit breaker state persistence to data/circuit_state.json | `READY` | core/router.py, data/ | — | Currently in-memory — lost on restart. agy only |
-| B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegraminterface.py | — | agy only — high-risk file |
-| B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegraminterface.py | — | agy only — high-risk file |
-| B-011 | Guardian engine: add file integrity check on startup | `READY` | guardianengine.py | — | SIGNATURES dict exists but startup check is passive. agy only |
-| B-012 | Add structured JSON logging to router.py for provider selection events | `READY` | core/router.py | — | Plain text logs hard to parse for metrics. agy only |
+| B-008 | Add circuit breaker state persistence to data/circuit_state.json | `READY` | core/router.py, data/ | — | Currently in-memory — lost on restart. agynina only |
+| B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegraminterface.py | — | agynina only — high-risk file |
+| B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegraminterface.py | — | agynina only — high-risk file |
+| B-011 | Guardian engine: add file integrity check on startup | `READY` | guardianengine.py | — | SIGNATURES dict exists but startup check is passive. agynina only |
+| B-012 | Add structured JSON logging to router.py for provider selection events | `READY` | core/router.py | — | Plain text logs hard to parse for metrics. agynina only |
 | B-013 | healthcheck.py: replace bare except with typed exception handling | `IN_PROGRESS` | healthcheck.py | — | Bare except swallows real errors |
-| B-014 | Add startup banner to main.py showing active providers + model strings | `IN_PROGRESS` | main.py | B-002 | Needs model_overrides wired first. agy only |
+| B-014 | Add startup banner to main.py showing active providers + model strings | `IN_PROGRESS` | main.py | B-002 | Needs model_overrides wired first. agynina only |
 | B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | `IN_PROGRESS` | crons/manager.py | — | No visibility into cron job health |
-| R-77 | Fix parallel_route RAM guard crash | `READY` | core/router.py | — | A-1 from action board. agy only |
-| R-78 | Fix tool grammar fragility — minimum viable guard | `IN_PROGRESS` | core/agent.py | — | A-3 from action board; Jules session 230224707076942630 |
+| R-77 | Fix parallel_route RAM guard crash | `READY` | core/router.py | — | A-1 from action board. agynina only |
+| R-78 | Fix tool grammar fragility — minimum viable guard | `DONE` | core/agent.py | — | A-3 from action board; Jules session 230224707076942630 |
 
 ---
 
@@ -98,21 +98,21 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-016 | Write tests for tools/shell.py — full blocklist and allowlist coverage | `IN_PROGRESS` | tests/test_shell.py | — | Most critical security tool has zero tests; Jules session 15759165614254551433 |
-| B-017 | Write tests for core/router.py — provider ordering, circuit breaker, fallback | `IN_PROGRESS` | tests/test_router.py | — | Jules session 9354379735932974598 |
-| B-018 | Write tests for tools/browser.py — SSRF guard, URL validation | `IN_PROGRESS` | tests/test_browser.py | — | Jules session 9340521117119167710 |
-| B-019 | Write tests for guardianengine.py — SIGNATURES check, run_cmd | `IN_PROGRESS` | tests/test_guardian.py | — | High-risk file needs test coverage; Jules session 13016195312630697079 |
+| B-016 | Write tests for tools/shell.py — full blocklist and allowlist coverage | `DONE` | tests/test_shell.py | — | Most critical security tool has zero tests; Jules session 15759165614254551433 |
+| B-017 | Write tests for core/router.py — provider ordering, circuit breaker, fallback | `DONE` | tests/test_router.py | — | Jules session 9354379735932974598 |
+| B-018 | Write tests for tools/browser.py — SSRF guard, URL validation | `DONE` | tests/test_browser.py | — | Jules session 9340521117119167710 |
+| B-019 | Write tests for guardianengine.py — SIGNATURES check, run_cmd | `DONE` | tests/test_guardian.py | — | High-risk file needs test coverage; Jules session 13016195312630697079 |
 | B-020 | Write tests for tools/model_discovery.py | `BLOCKED` | tests/test_model_discovery.py | B-005 | Unblock now — B-005 is DONE |
-| B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `IN_PROGRESS` | healthcheck.py | — | Enables external monitoring; Jules session 4745946253740770652 |
+| B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `DONE` | healthcheck.py | — | Enables external monitoring; Jules session 4745946253740770652 |
 | B-022 | tools/compact_exporter.py: add progress logging for long exports | `IN_PROGRESS` | tools/compact_exporter.py | — | Silent during long runs; Jules session 7514279750845525195 |
 | B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `READY` | AGENTS.md | — | Jules needs instructions to update task tracker after each run |
 | B-024 | Add AGENTS.md section: backlog update protocol | `DONE` | AGENTS.md | — | 2026-06-07 |
-| B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `IN_PROGRESS` | crons/manager.py | — | No clean shutdown on systemd stop; Jules session 5406292542431629720 |
-| B-026 | Add retry with exponential backoff to provider API calls | `READY` | core/router.py | — | Current retry is basic — no backoff. agy only |
-| B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `IN_PROGRESS` | tools/gputuner.py | — | Crashes on non-GPU systems; Jules session 18284106294453230200 |
-| B-028 | Add .env validation on startup — warn on missing required keys | `READY` | main.py, core/config.py | — | Silent failure on missing env vars. main.py → agy only |
-| B-029 | Write integration test: full request through router → provider → response | `IN_PROGRESS` | tests/test_integration.py | — | No end-to-end test exists; Jules session 7992182378283234865 |
-| B-030 | Add request ID to all log lines for traceability | `READY` | core/router.py, main.py | — | Hard to trace multi-step requests. agy only |
+| B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `DONE` | crons/manager.py | — | No clean shutdown on systemd stop; Jules session 5406292542431629720 |
+| B-026 | Add retry with exponential backoff to provider API calls | `READY` | core/router.py | — | Current retry is basic — no backoff. agynina only |
+| B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `DONE` | tools/gputuner.py | — | Crashes on non-GPU systems; Jules session 18284106294453230200 |
+| B-028 | Add .env validation on startup — warn on missing required keys | `READY` | main.py, core/config.py | — | Silent failure on missing env vars. main.py → agynina only |
+| B-029 | Write integration test: full request through router → provider → response | `DONE` | tests/test_integration.py | — | No end-to-end test exists; Jules session 7992182378283234865 |
+| B-030 | Add request ID to all log lines for traceability | `READY` | core/router.py, main.py | — | Hard to trace multi-step requests. agynina only |
 
 ---
 
@@ -120,16 +120,16 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-031 | Add provider latency histogram to router metrics | `READY` | core/router.py | B-012 | Needs structured logging first. agy only |
-| B-032 | tools/compact_exporter.py: add --dry-run flag | `IN_PROGRESS` | tools/compact_exporter.py | — | Jules session 16016744403096643329 |
-| B-033 | Telegram: /status command — shows provider health summary | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agy only |
-| B-034 | Telegram: /models command — shows current model per provider | `NEEDS_SPEC` | interfaces/telegraminterface.py | B-005 | agy only |
-| B-035 | Telegram: /backlog command — shows top 5 READY items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agy only |
-| B-036 | Telegram: /errors command — shows open error register items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agy only |
-| B-037 | docs/space: add nina_architecture_diagram.md with ASCII diagrams | `IN_PROGRESS` | docs/space/nina_architecture_diagram.md | — | No visual architecture reference exists; Jules session 2468954092544028080 |
-| B-038 | Add per-provider cost tracking to router.py | `NEEDS_SPEC` | core/router.py | B-012 | agy only |
-| B-039 | Add response caching layer for identical prompts (TTL 60s) | `NEEDS_SPEC` | core/router.py | — | agy only |
-| B-040 | Write CONTRIBUTING.md | `IN_PROGRESS` | CONTRIBUTING.md | — | Jules session 1218304308318697501 |
+| B-031 | Add provider latency histogram to router metrics | `READY` | core/router.py | B-012 | Needs structured logging first. agynina only |
+| B-032 | tools/compact_exporter.py: add --dry-run flag | `DONE` | tools/compact_exporter.py | — | Jules session 16016744403096643329 |
+| B-033 | Telegram: /status command — shows provider health summary | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agynina only |
+| B-034 | Telegram: /models command — shows current model per provider | `NEEDS_SPEC` | interfaces/telegraminterface.py | B-005 | agynina only |
+| B-035 | Telegram: /backlog command — shows top 5 READY items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agynina only |
+| B-036 | Telegram: /errors command — shows open error register items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agynina only |
+| B-037 | docs/space: add nina_architecture_diagram.md with ASCII diagrams | `DONE` | docs/space/nina_architecture_diagram.md | — | No visual architecture reference exists; Jules session 2468954092544028080 |
+| B-038 | Add per-provider cost tracking to router.py | `NEEDS_SPEC` | core/router.py | B-012 | agynina only |
+| B-039 | Add response caching layer for identical prompts (TTL 60s) | `NEEDS_SPEC` | core/router.py | — | agynina only |
+| B-040 | Write CONTRIBUTING.md | `DONE` | CONTRIBUTING.md | — | Jules session 1218304308318697501 |
 
 ---
 
@@ -156,8 +156,8 @@ Perplexity reads backlog each session
 # Rule: ALL AG items are NEEDS_SPEC until Perplexity writes a full Jules spec.
 # Rule: AG1 must be fully merged + Guardian stable before AG2 begins.
 # Rule: High-risk files (main.py, router.py, telegraminterface.py,
-#        guardianengine.py, shell.py, .env) — agy only, never Jules.
-# Rule: After every Jules AG merge, agy runs ./nina_sync.sh — no exceptions.
+#        guardianengine.py, shell.py, .env) — agynina only, never Jules.
+# Rule: After every Jules AG merge, agynina runs ./nina_sync.sh — no exceptions.
 # Rule: Check juleslock.txt before starting any AG task.
 #
 # Perplexity: when all P0+P1 items are DONE, promote AG-A and AG-B
@@ -396,9 +396,18 @@ AG3 Phase 3 (parallel with AG2):
 |----|-------|-------|----|------|
 | B-001 | Sentinel: shell=True fix in guardianengine.py | E-057 | #60 | 2026-06-07 |
 | SCHED-ALL | 15 daily scheduled tasks defined | E-059 | — | 2026-06-07 |
-| TRACK-ALL | jules_task_tracker.md + agy_task_tracker.md created | E-059 | — | 2026-06-07 |
+| TRACK-ALL | jules_task_tracker.md + agynina_task_tracker.md created | E-059 | — | 2026-06-07 |
 | B-024 | AGENTS.md: backlog update protocol | E-060 | — | 2026-06-07 |
 | B-005 | F-09 ModelDiscoveryService — tools/model_discovery.py | E-061 | #25 | 2026-06-07 |
+| B-037 | docs/space: add nina_architecture_diagram.md with ASCII diagrams | E-sync | #26 | 2026-06-07 |
+| B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | E-sync | #27 | 2026-06-07 |
+| B-029 | Write integration test: full request through router → provider → response | E-sync | #28 | 2026-06-08 |
+| B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | E-sync | #29 | 2026-06-08 |
+| B-017 | Write tests for core/router.py — provider ordering, circuit breaker, fallback | E-sync | #30 | 2026-06-08 |
+| B-019 | Write tests for guardianengine.py — SIGNATURES check, run_cmd | E-sync | #33 | 2026-06-08 |
+| R-78 | Fix tool grammar fragility — minimum viable guard | E-sync | #35 | 2026-06-08 |
+| B-040 | Write CONTRIBUTING.md | E-sync | #36 | 2026-06-08 |
+| B-021 | Add prometheus-style metrics endpoint to healthcheck.py | E-sync | #38 | 2026-06-08 |
 
 ---
 
@@ -408,7 +417,7 @@ At the start of every session where this file is attached, Perplexity will:
 
 1. **Count READY items by tier** — "P0: N, P1: N, P2: N, AG1: N needs-spec"
 2. **Unblock promotions** — any BLOCKED item whose dependency is now DONE → promote to READY
-3. **Scan IN_PROGRESS / IN_PR** — report what is pending agy merge
+3. **Scan IN_PROGRESS / IN_PR** — report what is pending agynina merge
 4. **Recommend next batch** — up to 15 non-overlapping READY tasks for Jules
 5. **Generate Jules specs** — full paste-ready prompts for each recommended task
 6. **Territory check** — confirm no two tasks in batch touch the same file
@@ -416,9 +425,9 @@ At the start of every session where this file is attached, Perplexity will:
 
 ---
 
-## ██ agy Backlog Update Protocol
+## ██ agynina Backlog Update Protocol
 
-After every Jules PR merge, agy updates status using Python — never bash echo:
+After every Jules PR merge, agynina updates status using Python — never bash echo:
 
 ```python
 from pathlib import Path
@@ -439,8 +448,8 @@ backlog_path.write_text(content)
 | Route | Files |
 |-------|-------|
 | **Jules** | `core/*.py` (not router.py), `tools/*.py` (not shell.py), `tests/*.py`, `data/`, `docs/` |
-| **agy only** | `main.py`, `core/router.py`, `interfaces/telegraminterface.py`, `guardianengine.py`, `tools/shell.py`, `.env` |
-| **agy = merge executor** | All Jules PRs — never auto-merge via GitHub UI |
+| **agynina only** | `main.py`, `core/router.py`, `interfaces/telegraminterface.py`, `guardianengine.py`, `tools/shell.py`, `.env` |
+| **agynina = merge executor** | All Jules PRs — never auto-merge via GitHub UI |
 | **After every merge** | `./nina_sync.sh` — no exceptions |
 | **Before any task** | `cat juleslock.txt` — do not proceed if target file is locked |
 
@@ -452,7 +461,7 @@ backlog_path.write_text(content)
 |--------|--------|
 | Scheduled tasks (auto) | 15/day |
 | Feature tasks submitted to Jules | 10–15/day |
-| PRs merged by agy | 10–15/day |
+| PRs merged by agynina | 10–15/day |
 | B-series backlog cleared | ~3–4 days at full pace |
 | AG1 Phase 1 | ~1 week |
 | AG2 Phase 2 | ~2 weeks |

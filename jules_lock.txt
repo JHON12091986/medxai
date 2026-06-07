@@ -1,10 +1,10 @@
 # Jules Lock File
 # When Jules is running a task, list the files it is touching here (one per line).
-# agy must NOT edit files listed here while Jules is active.
+# agynina must NOT edit files listed here while Jules is active.
 # Clear this file after Jules PR is merged.
 # Last updated: 2026-06-07T14:48:00Z
 
-LOCKED_FILES=AGENTS.md,docs/space/nina_state.md,crons/backup_jobs.py,crons/manager.py
+LOCKED_FILES=
 JULES_TASK=
 JULES_PR=
-LOCKED_SINCE=2026-06-07T21:52:00Z
+LOCKED_SINCE=2026-06-08T00:29:16Z

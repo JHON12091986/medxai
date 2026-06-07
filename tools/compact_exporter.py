@@ -6,11 +6,11 @@ import subprocess
 from datetime import datetime
 
 # Define file paths
-NINA_DIR = "/home/aibony/nina"
+NINA_DIR = os.environ.get("NINA_DIR", "/home/aibony/nina")
 SPACE_DIR = os.path.join(NINA_DIR, "docs/space")
 EXPORTS_DIR = os.path.join(NINA_DIR, "exports")
 LOGS_DIR = os.path.join(NINA_DIR, "logs")
-UPLOAD_DIR = "/home/aibony/Downloads/nina_space_upload"
+UPLOAD_DIR = os.environ.get("NINA_UPLOAD_DIR", "/home/aibony/Downloads/nina_space_upload")
 OUTPUT_FILE = os.path.join(UPLOAD_DIR, "nina_latest.md")
 
 FILES_TO_EXPORT = [
@@ -316,7 +316,9 @@ def get_file_summary(rel_path):
 
 def get_code_context():
     context = "## Targeted Code Context\n\n"
-    for rel in FILES_TO_EXPORT:
+    total_files = len(FILES_TO_EXPORT)
+    for i, rel in enumerate(FILES_TO_EXPORT):
+        print(f"  Scanning file {i+1}/{total_files}: {rel}")
         context += get_file_summary(rel) + "\n---\n\n"
     return context
 
@@ -345,15 +347,41 @@ def main():
 
     os.makedirs(UPLOAD_DIR, exist_ok=True)
 
+    print("Starting compact export...")
+
+    print("Gathering header...")
+    header = get_header()
+
+    print("Gathering executive snapshot...")
+    snapshot = get_executive_snapshot()
+
+    print("Gathering action board...")
+    action_board = get_action_board()
+
+    print("Gathering roadmap...")
+    roadmap = get_roadmap()
+
+    print("Gathering recent changes...")
+    recent_changes = get_recent_changes()
+
+    print("Gathering agents rules...")
+    agents_rules = get_agents_rules()
+
+    print("Gathering code context (this may take a moment)...")
+    code_context = get_code_context()
+
+    print("Gathering appendix...")
+    appendix = get_appendix()
+
     parts = [
-        get_header(),
-        get_executive_snapshot(),
-        get_action_board(),
-        get_roadmap(),
-        get_recent_changes(),
-        get_agents_rules(),
-        get_code_context(),
-        get_appendix()
+        header,
+        snapshot,
+        action_board,
+        roadmap,
+        recent_changes,
+        agents_rules,
+        code_context,
+        appendix
     ]
     
     full_output = "\n\n".join(parts)

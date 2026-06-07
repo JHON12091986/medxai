@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Wrapper script for agynina local executor tool
+
+# Resolve repository root
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$DIR/.." && pwd)"
+
+# Activate virtual environment
+if [ -d "$REPO_ROOT/venv" ]; then
+    source "$REPO_ROOT/venv/bin/activate"
+elif [ -d "$REPO_ROOT/.venv" ]; then
+    source "$REPO_ROOT/.venv/bin/activate"
+fi
+
+# Set PYTHONPATH and execute
+export PYTHONPATH="$REPO_ROOT"
+python3 "$REPO_ROOT/tools/agynina.py" "$@"
