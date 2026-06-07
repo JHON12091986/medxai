@@ -13,7 +13,28 @@ LOGS_DIR = os.path.join(NINA_DIR, "logs")
 UPLOAD_DIR = "/home/aibony/Downloads/nina_space_upload"
 OUTPUT_FILE = os.path.join(UPLOAD_DIR, "nina_latest.md")
 
-os.makedirs(UPLOAD_DIR, exist_ok=True)
+FILES_TO_EXPORT = [
+    "core/router.py",
+    "core/agent.py",
+    "core/nina.py",
+    "core/config.py",
+    "core/memory.py",
+    "core/hotreload.py",
+    "interfaces/telegram_interface.py",
+    "tools/shell.py",
+    "tools/browser.py",
+    "tools/upgradepipeline.py",
+    "tools/finance.py",
+    "tools/market.py",
+    "tools/officemail.py",
+    "crons/manager.py",
+    "guardian_engine.py",
+    "main.py",
+    "nina_sync.sh"
+]
+
+# We must defer makedirs until main so that we can optionally bypass it during a dry run
+# or when imported as a module without side-effects.
 
 def get_state_section(section_title):
     state_path = os.path.join(SPACE_DIR, "nina_state.md")
@@ -294,28 +315,8 @@ def get_file_summary(rel_path):
     return summary
 
 def get_code_context():
-    files_to_export = [
-        "core/router.py",
-        "core/agent.py",
-        "core/nina.py",
-        "core/config.py",
-        "core/memory.py",
-        "core/hotreload.py",
-        "interfaces/telegram_interface.py",
-        "tools/shell.py",
-        "tools/browser.py",
-        "tools/upgradepipeline.py",
-        "tools/finance.py",
-        "tools/market.py",
-        "tools/officemail.py",
-        "crons/manager.py",
-        "guardian_engine.py",
-        "main.py",
-        "nina_sync.sh"
-    ]
-    
     context = "## Targeted Code Context\n\n"
-    for rel in files_to_export:
+    for rel in FILES_TO_EXPORT:
         context += get_file_summary(rel) + "\n---\n\n"
     return context
 
@@ -330,6 +331,20 @@ def get_appendix():
     return appendix
 
 def main():
+    if "--dry-run" in sys.argv:
+        print("DRY RUN: The following files would be scanned and compacted:")
+        print("  - docs/space/nina_state.md")
+        print("  - docs/space/nina_error_register.md")
+        print("  - nina_update_log.md")
+        print("  - AGENTS.md")
+        for f in FILES_TO_EXPORT:
+            print(f"  - {f}")
+        print(f"\nDRY RUN: The resulting snapshot would be written to: {OUTPUT_FILE}")
+        print("DRY RUN: No files have been written or uploaded.")
+        return
+
+    os.makedirs(UPLOAD_DIR, exist_ok=True)
+
     parts = [
         get_header(),
         get_executive_snapshot(),
