@@ -4,7 +4,7 @@
 # Clear this file after Jules PR is merged.
 # Last updated: 2026-06-07T14:48:00Z
 
-LOCKED_FILES=tools/agynina.py,tools/compact_exporter.py
-JULES_TASK=
+LOCKED_FILES=tools/agynina.py,tests/test_model_discovery.py,AGENTS.md,data/model_cache.json,healthcheck.py,crons/manager.py,tools/compact_exporter.py,docs/space/nina_error_register.md
+JULES_TASK=B-020,B-023,B-007,B-013,B-015,B-022,E-062
 JULES_PR=
-LOCKED_SINCE=2026-06-08T01:13:00Z
+LOCKED_SINCE=2026-06-08T01:22:00Z

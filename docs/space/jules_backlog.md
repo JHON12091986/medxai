@@ -105,7 +105,7 @@ Perplexity reads backlog each session
 | B-020 | Write tests for tools/model_discovery.py | `BLOCKED` | tests/test_model_discovery.py | B-005 | Unblock now — B-005 is DONE |
 | B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `DONE` | healthcheck.py | — | Enables external monitoring; Jules session 4745946253740770652 |
 | B-022 | tools/compact_exporter.py: add progress logging for long exports | `IN_PROGRESS` | tools/compact_exporter.py | — | Silent during long runs; Jules session 7514279750845525195 |
-| B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `READY` | AGENTS.md | — | Jules needs instructions to update task tracker after each run |
+| B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `IN_PROGRESS` | AGENTS.md | — | Jules needs instructions to update task tracker after each run; Jules session 15026902744619615986 |
 | B-024 | Add AGENTS.md section: backlog update protocol | `DONE` | AGENTS.md | — | 2026-06-07 |
 | B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `DONE` | crons/manager.py | — | No clean shutdown on systemd stop; Jules session 5406292542431629720 |
 | B-026 | Add retry with exponential backoff to provider API calls | `READY` | core/router.py | — | Current retry is basic — no backoff. agynina only |
