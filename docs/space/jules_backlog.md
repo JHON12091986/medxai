@@ -90,7 +90,7 @@ Perplexity reads backlog each session
 | B-014 | Add startup banner to main.py showing active providers + model strings | `IN_PROGRESS` | main.py | B-002 | Needs model_overrides wired first. agy only |
 | B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | `IN_PROGRESS` | crons/manager.py | — | No visibility into cron job health |
 | R-77 | Fix parallel_route RAM guard crash | `READY` | core/router.py | — | A-1 from action board. agy only |
-| R-78 | Fix tool grammar fragility — minimum viable guard | `READY` | core/agent.py | — | A-3 from action board |
+| R-78 | Fix tool grammar fragility — minimum viable guard | `IN_PROGRESS` | core/agent.py | — | A-3 from action board; Jules session 230224707076942630 |
 
 ---
 
@@ -98,20 +98,20 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-016 | Write tests for tools/shell.py — full blocklist and allowlist coverage | `READY` | tests/test_shell.py | — | Most critical security tool has zero tests |
-| B-017 | Write tests for core/router.py — provider ordering, circuit breaker, fallback | `READY` | tests/test_router.py | — | |
-| B-018 | Write tests for tools/browser.py — SSRF guard, URL validation | `READY` | tests/test_browser.py | — | |
-| B-019 | Write tests for guardianengine.py — SIGNATURES check, run_cmd | `READY` | tests/test_guardian.py | — | High-risk file needs test coverage |
+| B-016 | Write tests for tools/shell.py — full blocklist and allowlist coverage | `IN_PROGRESS` | tests/test_shell.py | — | Most critical security tool has zero tests; Jules session 15759165614254551433 |
+| B-017 | Write tests for core/router.py — provider ordering, circuit breaker, fallback | `IN_PROGRESS` | tests/test_router.py | — | Jules session 9354379735932974598 |
+| B-018 | Write tests for tools/browser.py — SSRF guard, URL validation | `IN_PROGRESS` | tests/test_browser.py | — | Jules session 9340521117119167710 |
+| B-019 | Write tests for guardianengine.py — SIGNATURES check, run_cmd | `IN_PROGRESS` | tests/test_guardian.py | — | High-risk file needs test coverage; Jules session 13016195312630697079 |
 | B-020 | Write tests for tools/model_discovery.py | `BLOCKED` | tests/test_model_discovery.py | B-005 | Unblock now — B-005 is DONE |
-| B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `READY` | healthcheck.py | — | Enables external monitoring |
-| B-022 | tools/compact_exporter.py: add progress logging for long exports | `READY` | tools/compact_exporter.py | — | Silent during long runs |
+| B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `IN_PROGRESS` | healthcheck.py | — | Enables external monitoring; Jules session 4745946253740770652 |
+| B-022 | tools/compact_exporter.py: add progress logging for long exports | `IN_PROGRESS` | tools/compact_exporter.py | — | Silent during long runs; Jules session 7514279750845525195 |
 | B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `READY` | AGENTS.md | — | Jules needs instructions to update task tracker after each run |
 | B-024 | Add AGENTS.md section: backlog update protocol | `DONE` | AGENTS.md | — | 2026-06-07 |
-| B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `READY` | crons/manager.py | — | No clean shutdown on systemd stop |
+| B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `IN_PROGRESS` | crons/manager.py | — | No clean shutdown on systemd stop; Jules session 5406292542431629720 |
 | B-026 | Add retry with exponential backoff to provider API calls | `READY` | core/router.py | — | Current retry is basic — no backoff. agy only |
-| B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `READY` | tools/gputuner.py | — | Crashes on non-GPU systems |
+| B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `IN_PROGRESS` | tools/gputuner.py | — | Crashes on non-GPU systems; Jules session 18284106294453230200 |
 | B-028 | Add .env validation on startup — warn on missing required keys | `READY` | main.py, core/config.py | — | Silent failure on missing env vars. main.py → agy only |
-| B-029 | Write integration test: full request through router → provider → response | `READY` | tests/test_integration.py | — | No end-to-end test exists |
+| B-029 | Write integration test: full request through router → provider → response | `IN_PROGRESS` | tests/test_integration.py | — | No end-to-end test exists; Jules session 7992182378283234865 |
 | B-030 | Add request ID to all log lines for traceability | `READY` | core/router.py, main.py | — | Hard to trace multi-step requests. agy only |
 
 ---
@@ -121,15 +121,15 @@ Perplexity reads backlog each session
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
 | B-031 | Add provider latency histogram to router metrics | `READY` | core/router.py | B-012 | Needs structured logging first. agy only |
-| B-032 | tools/compact_exporter.py: add --dry-run flag | `READY` | tools/compact_exporter.py | — | |
+| B-032 | tools/compact_exporter.py: add --dry-run flag | `IN_PROGRESS` | tools/compact_exporter.py | — | Jules session 16016744403096643329 |
 | B-033 | Telegram: /status command — shows provider health summary | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agy only |
 | B-034 | Telegram: /models command — shows current model per provider | `NEEDS_SPEC` | interfaces/telegraminterface.py | B-005 | agy only |
 | B-035 | Telegram: /backlog command — shows top 5 READY items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agy only |
 | B-036 | Telegram: /errors command — shows open error register items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | agy only |
-| B-037 | docs/space: add nina_architecture_diagram.md with ASCII diagrams | `READY` | docs/space/nina_architecture_diagram.md | — | No visual architecture reference exists |
+| B-037 | docs/space: add nina_architecture_diagram.md with ASCII diagrams | `IN_PROGRESS` | docs/space/nina_architecture_diagram.md | — | No visual architecture reference exists; Jules session 2468954092544028080 |
 | B-038 | Add per-provider cost tracking to router.py | `NEEDS_SPEC` | core/router.py | B-012 | agy only |
 | B-039 | Add response caching layer for identical prompts (TTL 60s) | `NEEDS_SPEC` | core/router.py | — | agy only |
-| B-040 | Write CONTRIBUTING.md | `READY` | CONTRIBUTING.md | — | |
+| B-040 | Write CONTRIBUTING.md | `IN_PROGRESS` | CONTRIBUTING.md | — | Jules session 1218304308318697501 |
 
 ---
 
