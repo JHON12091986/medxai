@@ -706,19 +706,12 @@
 
 **Verification:** git push OK, nina.service active
 
+---
 
-## Entry 055 — 2026-06-07 · chore: remove stale nina_problem_log.md reference from nina_sync.sh
+## Entry 055 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** User request to clean up legacy nina_problem_log.md reference in the sync script.
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- `nina_sync.sh`
+**Files changed:** nina_update_log.md
 
-**What changed:**
-- Removed `nina_problem_log.md` from the logs synchronization loop inside `nina_sync.sh`.
-
-**What was verified:**
-- Verified bash syntax validation passed successfully (`bash -n nina_sync.sh`).
-
-**Rollback path:**
-- `git checkout HEAD -- nina_sync.sh nina_update_log.md`
+**Verification:** git push OK, nina.service active
