@@ -1,10 +1,11 @@
 """
 NINA v12 — TaskScheduler (Stage 5)
-10 core jobs. APScheduler-based.
+11 core jobs. APScheduler-based.
 """
 import functools
 import logging
 from crons.backup_jobs import run_memory_backup, run_py_backup
+from tools.market import run_market_monitor
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
@@ -40,6 +41,7 @@ class TaskScheduler:
         add(functools.partial(run_memory_backup, n), CronTrigger(hour=2, minute=30, timezone="Asia/Dhaka"), id="memory_backup")
         add(functools.partial(run_py_backup, n),     CronTrigger(hour=3, minute=0,  timezone="Asia/Dhaka"), id="py_backup")
         add(n.run_reminder_check,    IntervalTrigger(minutes=15),                            id="reminder_check")
+        add(functools.partial(run_market_monitor, n), CronTrigger(hour="10-14", minute="*/30", timezone="Asia/Dhaka"), id="market_monitor")
 
         add(n.pipeline._expire_pending,            IntervalTrigger(minutes=15), id="expire_pending")
         self._sched.start()
