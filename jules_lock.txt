@@ -4,7 +4,7 @@
 # Clear this file after Jules PR is merged.
 # Last updated: 2026-06-07T14:48:00Z
 
-LOCKED_FILES=core/nina.py,AGENTS.md,docs/space/nina_state.md
+LOCKED_FILES=core/nina.py,AGENTS.md,docs/space/nina_state.md,interfaces/cli_interface.py
 JULES_TASK=
 JULES_PR=
-LOCKED_SINCE=2026-06-07T19:20:00Z
+LOCKED_SINCE=2026-06-07T19:42:00Z
