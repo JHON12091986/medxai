@@ -716,28 +716,12 @@
 
 **Verification:** git push OK, nina.service active
 
+---
 
-## Entry 056 — 2026-06-07 · docs: sync agent skills — Python 3.14, error register path, conventional commits, F-04/05/07/08 status
+## Entry 056 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** User request to update NINA agent skill files in ~/nina/.agent/skills/ to match current production reality.
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- `.agent/skills/nina-ops.md`
-- `.agent/skills/nina-testing.md`
-- `.agent/skills/nina-git.md`
-- `.agent/skills/nina-dev-policy.md`
-- `.agent/skills/nina-tools.md`
-- `.agent/skills/nina-phase1-roadmap.md`
+**Files changed:** nina_update_log.md
 
-**What changed:**
-- Replaced all occurrences of `Python 3.11`/`python3.11` with `Python 3.14`/`python3.14` in the skills files.
-- Replaced all deprecated references to `nina_problem_log.md` with `docs/space/nina_error_register.md` and `NINA_CONTEXT.md` with `exports/nina_latest.md`.
-- Updated legacy commit format patterns to conventional commits format (`type(scope): description (ID)`).
-- Updated roadmap status in `nina-phase1-roadmap.md` to mark `F-04` (active in production), `F-05` (mock prices active), `F-07` (EWS blocked), `F-08` (Telegram commands pending), and `R-79` (IMPACT briefs active) as merged.
-- Updated `nina-tools.md` to add entries for completed tools (`tools/finance.py`, `tools/market.py`, `core/memory.py`, `tools/compact_exporter.py`).
-
-**What was verified:**
-- Verified that grep search for `Python 3.11`, `nina_problem_log`, and `NINA_CONTEXT.md` in `~/nina/.agent/skills/` returns empty.
-
-**Rollback path:**
-- `git checkout HEAD -- .agent/skills/ nina_update_log.md`
+**Verification:** git push OK, nina.service active
