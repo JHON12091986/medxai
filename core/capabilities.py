@@ -13,6 +13,7 @@ DEFAULT_CAPS = {
     "system":  {"loaded": True, "healthy": True},
     "email":   {"loaded": True, "healthy": True},
     "gpu":     {"loaded": True, "healthy": True},
+    "finance": {"loaded": True, "healthy": True},
 }
 
 class CapabilityRegistry:

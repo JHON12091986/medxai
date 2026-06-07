@@ -6,5 +6,8 @@
 
 LOCKED_FILES=
 JULES_TASK=overnight-10-tasks
+
+LOCKED_FILES=interfaces/telegram_interface.py,core/nina.py,core/capabilities.py,crons/manager.py,tools/finance.py,tools/__init__.py,tests/test_finance.py,nina_context.md,nina_update_log.md
+JULES_TASK=
 JULES_PR=
 LOCKED_SINCE=2026-06-07T00:14:00Z
