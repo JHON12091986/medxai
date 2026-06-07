@@ -669,3 +669,22 @@
 
 **Rollback path:** git revert each merge commit individually by PR merge SHA
 
+
+---
+
+## Entry 050 — 2026-06-07 · Security fix(Sentinel/HIGH)
+
+**Triggered by:** agy manual review + merge
+
+**PR merged:** #24 — Sentinel HIGH: Fix shell=True command injection risk in guardian_engine.py run_cmd
+
+**What changed:**
+- Added import shlex to guardian_engine.py
+- run_cmd() now uses shlex.split(cmd) + shell=False by default
+- Removed 2>/dev/null redirects (handled by capture_output=True)
+- use_shell=True kept only for healthcheck wrapper (requires cd && python3 shell chaining)
+
+**What was verified:** py_compile OK, pyflakes pre-existing warnings only (not introduced by this PR), shlex quote-handling confirmed for --since arg.
+
+**Rollback path:** git revert the merge commit for PR #24
+
