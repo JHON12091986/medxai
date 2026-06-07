@@ -9,6 +9,7 @@ logger = logging.getLogger("nina.memory")
 FACTS_FILE = Path("data/memory/facts.json")
 CHROMA_DIR = Path("data/memory/chromadb")
 BACKUP_DIR = Path("upgrades/backups")
+REMINDERS_FILE = Path("data/reminders.json")
 
 PREF_KEYS = {"name", "language", "timezone", "bank", "email", "role", "style"}
 
@@ -18,6 +19,8 @@ class MemorySystem:
         self.col    = None
         self.facts: dict = {}
         self._facts_lock = asyncio.Lock()
+        self.reminders: list = []
+        self._reminders_lock = asyncio.Lock()
 
     async def initialize(self):
         CHROMA_DIR.mkdir(parents=True, exist_ok=True)
@@ -34,7 +37,18 @@ class MemorySystem:
                 self.facts[k] = v
             else:
                 self.facts[k] = {"value": str(v), "ts": 0.0}
-        logger.info(f"MemorySystem ready conversations={self.col.count()} facts={len(self.facts)}")
+
+        REMINDERS_FILE.parent.mkdir(parents=True, exist_ok=True)
+        if REMINDERS_FILE.exists():
+            try:
+                self.reminders = json.loads(REMINDERS_FILE.read_text())
+            except Exception as e:
+                logger.warning(f"Failed to load reminders: {e}")
+                self.reminders = []
+        else:
+            self.reminders = []
+
+        logger.info(f"MemorySystem ready conversations={self.col.count()} facts={len(self.facts)} reminders={len(self.reminders)}")
 
     async def build_context(self, query: str, n: int = 5) -> str:
         try:
@@ -132,6 +146,43 @@ class MemorySystem:
         shutil.copytree(CHROMA_DIR, dest / "chromadb", dirs_exist_ok=True)
         logger.info(f"memory_backup dest={dest}")
         return str(dest)
+
+    async def add_reminder(self, text: str, due_time: float) -> str:
+        rem_id = f"rem_{int(time.time()*1000)}_{uuid.uuid4().hex[:6]}"
+        reminder = {
+            "id": rem_id,
+            "text": text,
+            "due_time": due_time,
+            "status": "pending",
+            "created_at": time.time()
+        }
+        async with self._reminders_lock:
+            self.reminders.append(reminder)
+            await self._save_reminders()
+        return rem_id
+
+    async def get_due_reminders(self, now: float) -> list:
+        async with self._reminders_lock:
+            return [
+                r for r in self.reminders
+                if r.get("status") == "pending" and r.get("due_time", 0) <= now
+            ]
+
+    async def mark_reminder_done(self, rem_id: str):
+        async with self._reminders_lock:
+            for r in self.reminders:
+                if r.get("id") == rem_id:
+                    r["status"] = "done"
+                    break
+            await self._save_reminders()
+
+    async def _save_reminders(self):
+        tmp = REMINDERS_FILE.with_suffix(".tmp")
+        await asyncio.to_thread(
+            tmp.write_text,
+            json.dumps(self.reminders, indent=2, ensure_ascii=False)
+        )
+        tmp.replace(REMINDERS_FILE)
 
     async def wipe_and_reinitialize(self):
         async with self._facts_lock:

@@ -220,3 +220,15 @@ class NinaOS:
             await self.telegram.send_message(f"CPU temp {temps['cpu']}°C approaching limit.")
         if temps["gpu"] and temps["gpu"] >= cfg.thermal_warn_gpu:
             await self.telegram.send_message(f"GPU temp {temps['gpu']}°C approaching limit.")
+
+    async def run_reminder_check(self):
+        logging.getLogger("nina.scheduler").info("reminder_check")
+        import time
+        due = await self.memory.get_due_reminders(time.time())
+        if not due:
+            return
+
+        for r in due:
+            msg = f"Reminder: {r.get('text', 'No text')}"
+            await self.telegram.send_message(msg)
+            await self.memory.mark_reminder_done(r.get("id"))
