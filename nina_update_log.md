@@ -946,3 +946,13 @@
 **Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,jules_lock.txt,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service activating
+
+---
+
+## Entry 075 — 2026-06-07 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** tools/compact_exporter.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active

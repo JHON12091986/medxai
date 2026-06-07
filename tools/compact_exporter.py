@@ -355,7 +355,7 @@ def main():
         "ARCHITECT",
         "ASYNC CLOUD CODER",
         "LOCAL MUSCLE",
-        "agy as Merge Executor",
+        "Local Executor as Merge Executor",
         "The Full Parallel Loop",
         "BLOCKER",
         "Guardian Gate"
