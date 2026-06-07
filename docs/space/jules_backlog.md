@@ -63,9 +63,9 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `IN_PR` | tools/model_discovery.py, core/router.py, crons/manager.py | B-002 | Full spec written by Perplexity — see session 2026-06-07 |
-| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `BLOCKED` | core/router.py | B-005 | Cannot start until B-005 PR merged |
-| B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `BLOCKED` | data/model_cache.json | B-005 | |
+| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `DONE` | tools/model_discovery.py, core/router.py, crons/manager.py | B-002 | Full spec written by Perplexity — see session 2026-06-07 |
+| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `READY` | core/router.py | B-005 | Cannot start until B-005 PR merged |
+| B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `READY` | data/model_cache.json | B-005 | |
 | B-008 | Add circuit breaker state persistence to data/circuit_state.json | `READY` | core/router.py, data/ | — | Currently in-memory only — lost on restart |
 | B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegram_interface.py | — | No rate limit = potential spam/DoS from authorized user fat-finger |
 | B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegram_interface.py | — | Commands with no length limit are DoS risk |
@@ -136,6 +136,7 @@ Perplexity reads backlog each session
 | SCHED-ALL | 15 daily scheduled tasks defined | E-059 | — | 2026-06-07 |
 | TRACK-ALL | jules_task_tracker.md + agy_task_tracker.md created | E-059 | — | 2026-06-07 |
 | B-024 | Add AGENTS.md section: backlog update protocol | E-060 | — | 2026-06-07 |
+| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | E-061 | #25 | 2026-06-07 |
 
 ---
 

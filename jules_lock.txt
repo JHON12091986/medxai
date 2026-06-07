@@ -2,9 +2,9 @@
 # When Jules is running a task, list the files it is touching here (one per line).
 # agy must NOT edit files listed here while Jules is active.
 # Clear this file after Jules PR is merged.
-# Last updated: 2026-06-07T13:11:00Z
+# Last updated: 2026-06-07T14:48:00Z
 
-LOCKED_FILES=tools/compact_exporter.py,core/router.py
+LOCKED_FILES=
 JULES_TASK=
 JULES_PR=
 LOCKED_SINCE=
