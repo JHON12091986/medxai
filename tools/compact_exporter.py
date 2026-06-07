@@ -55,6 +55,16 @@ _Purpose: AI context snapshot for Perplexity Space_
 _Target size: Compact, low-noise context (~200KB-300KB)_
 
 ---
+
+## SESSION START CHECKLIST (Perplexity)
+Before opening a new Perplexity thread:
+1. cd ~/nina && ./nina_sync.sh  (generates fresh nina_latest.md)
+2. Attach: exports/nina_latest.md
+3. Attach: the specific source file(s) to be discussed
+4. State: task type — bug / feature / doc / security / review
+5. Check: cat ~/nina/juleslock.txt — confirm no target files are locked
+
+---
 """
     return header
 
@@ -339,6 +349,20 @@ def main():
     print(f"Compact snapshot created: {OUTPUT_FILE}")
     size = os.path.getsize(OUTPUT_FILE)
     print(f"File size: {size} bytes")
+    
+    # Validation block
+    mandatory_strings = [
+        "ARCHITECT",
+        "ASYNC CLOUD CODER",
+        "LOCAL MUSCLE",
+        "agy as Merge Executor",
+        "The Full Parallel Loop",
+        "BLOCKER",
+        "Guardian Gate"
+    ]
+    for string in mandatory_strings:
+        if string not in full_output:
+            print(f"WARNING: nina_latest.md missing section: \"{string}\"")
 
 if __name__ == "__main__":
     main()

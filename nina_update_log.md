@@ -685,3 +685,13 @@
 **Files changed:** jules_lock.txt
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 053 — 2026-06-07 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** WORKFLOW.md,docs/space/WORKFLOW.md,docs/space/nina_exporter_contract.md,exports/nina_latest.md,nina_sync.sh,nina_update_log.md,tools/compact_exporter.py
+
+**Verification:** git push OK, nina.service active
