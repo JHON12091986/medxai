@@ -755,3 +755,24 @@
 **Files changed:** nina_update_log.md
 
 **Verification:** git push OK, nina.service active
+
+
+## Entry 060 — 2026-06-07 · feat(docs): deploy jules_backlog.md perpetual pipeline (45 items, P0-P3)
+
+**Triggered by:** User request to deploy jules_backlog.md to NINA repo and wire it into the sync pipeline.
+
+**Files changed:**
+- `docs/space/jules_backlog.md`
+- `nina_sync.sh`
+- `AGENTS.md`
+
+**What changed:**
+- Copied `~/Downloads/jules_backlog.md` to `~/nina/docs/space/jules_backlog.md`.
+- Wired `docs/space/jules_backlog.md` into the `SPACE_FILES` array in `nina_sync.sh`.
+- Added a new section `## Backlog Protocol` to `AGENTS.md` specifying the update protocol for Jules PR merges.
+
+**What was verified:**
+- Verified bash syntax validation passed successfully (`bash -n nina_sync.sh`).
+
+**Rollback path:**
+- `git checkout HEAD -- nina_sync.sh AGENTS.md nina_update_log.md && rm docs/space/jules_backlog.md`

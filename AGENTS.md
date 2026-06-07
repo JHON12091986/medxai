@@ -211,3 +211,8 @@ The following files must default to **agy** or manual local handling unless expl
 - If either tool needs a file already claimed by the other, stop and re-plan.
 - If merge conflict risk appears, pause parallelism and integrate first.
 - Never bypass review by pushing direct overlapping edits into `main`.
+
+## Backlog Protocol
+After every successful PR merge, update ~/nina/docs/space/jules_backlog.md:
+change the item's status from READY or IN_PROGRESS to DONE.
+Add PR number and date. Use Python file write — never bash echo.
