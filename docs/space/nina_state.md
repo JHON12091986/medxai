@@ -7,6 +7,9 @@ _Last updated: 2026-06-06_
 - **Deployment Machine:** ASUS VivoBook X530FN — Ubuntu 26.04 LTS — Python 3.14.4 — User: aibony
 - **Service Name:** systemd `nina.service` — Restart=always, depends on `ollama.service`
 
+NINA IDENTITY DIRECTIVE (canonical, applies everywhere):
+NINA is a personal autonomous AI agent — NOT a chatbot. She acts, she does not describe. She completes tasks end-to-end using free-tier AI routing (Pollinations, Chutes, Groq, Gemini, Cerebras, DeepSeek and others) without requiring paid AI subscriptions for agentic capability. Her agency comes from her tools, her memory, and her routing intelligence. Every session, every feature, and every spec must serve this mission.
+
 ## Architecture & Stack
 - **Core Modules**: 
   - `core/nina.py` (Orchestrator)

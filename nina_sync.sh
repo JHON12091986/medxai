@@ -57,7 +57,8 @@ else
   echo "  ✓ Naming convention consistent"
 fi
 
-SVC_STATUS=$(systemctl is-active nina 2>/dev/null || echo "unknown")
+SVC_STATUS=$(systemctl is-active nina 2>/dev/null || true)
+[ -z "$SVC_STATUS" ] && SVC_STATUS="unknown"
 [ "$SVC_STATUS" = "active" ] && echo "  ✓ nina.service running" || echo "  ⚠  nina.service is $SVC_STATUS"
 
 git fetch origin --quiet 2>/dev/null || true

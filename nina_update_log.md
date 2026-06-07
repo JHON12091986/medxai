@@ -785,3 +785,32 @@
 **Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+## Entry 063 — 2026-06-07 · feat(identity): B-3 F-03 — agentic identity directive in system prompt, AGENTS.md, nina_state.md
+
+**Triggered by:** User request.
+
+**Files changed:**
+- `core/nina.py`
+- `AGENTS.md`
+- `docs/space/nina_state.md`
+
+**What changed:**
+- Added NINA agentic identity directive to SYSTEM_PROMPT_TEMPLATE in core/nina.py, AGENTS.md top section, and docs/space/nina_state.md identity block. NINA is now declared as autonomous agent not chatbot across all canonical files.
+
+**What was verified:**
+- py_compile + pyflakes on core/nina.py passed.
+
+**Rollback path:**
+- git checkout HEAD -- core/nina.py AGENTS.md docs/space/nina_state.md nina_update_log.md
+
+---
+
+---
+
+## Entry 064 — 2026-06-07 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,core/nina.py,docs/space/AGENTS.md,docs/space/nina_state.md,nina_sync.sh,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service activating
