@@ -966,3 +966,31 @@
 **Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service activating
+## Entry 077 — 2026-06-07 · docs(policy): G-04 — make NINA docs tool-agnostic for IDE switching and update routing policy to four-tool
+
+**Triggered by:** User request.
+
+**Files changed:**
+- `AGENTS.md`
+- `docs/space/nina_state.md`
+
+**What changed:**
+- Made the markdown documentation system work cleanly when switching between agy, Cursor, Claude Code, Cline, and aider. Refined existing docs so the active local tool is treated as the local executor.
+
+**What was verified:**
+- Verified via git diff and grep. No Python files were changed.
+
+**Rollback path:**
+- git checkout HEAD -- AGENTS.md docs/space/nina_state.md nina_update_log.md
+
+---
+
+---
+
+## Entry 078 — 2026-06-07 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** jules_lock.txt,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service activating
