@@ -60,6 +60,56 @@ def get_service_status():
         except Exception:
             return "unknown"
 
+def get_hot_context():
+    import subprocess, re
+    from pathlib import Path
+    nina = Path(os.environ.get('NINA_DIR', '/home/aibony/nina'))
+
+    # Last 3 merged PRs
+    try:
+        result = subprocess.run(['git', 'log', '--oneline', '--merges', '-3'],
+            capture_output=True, text=True, cwd=str(nina))
+        merges = result.stdout.strip() or 'none'
+    except Exception:
+        merges = 'unavailable'
+
+    # Active locks
+    try:
+        lock_file = nina / 'juleslock.txt'
+        if not lock_file.exists():
+            lock_file = nina / 'jules_lock.txt'
+        lock_content = lock_file.read_text()
+        m = re.search(r'LOCKED_FILES=([^\n]*)', lock_content)
+        locks = m.group(1).strip() if m and m.group(1).strip() else 'none'
+    except Exception:
+        locks = 'unavailable'
+
+    # Open error count
+    try:
+        reg = (nina / 'docs/space/nina_error_register.md').read_text()
+        open_count = len(re.findall(r'\|\s*OPEN\s*\|', reg, re.IGNORECASE))
+    except Exception:
+        open_count = 'unavailable'
+
+    # Next READY task
+    try:
+        backlog = (nina / 'docs/space/jules_backlog.md').read_text()
+        m = re.search(r'\|\s*((?:B|AG|R)-[\w-]+)\s*\|([^|]+)\|[^|]+\|\s*`READY`\s*\|', backlog)
+        next_task = f'{m.group(1).strip()} — {m.group(2).strip()}' if m else 'none'
+    except Exception:
+        next_task = 'unavailable'
+
+    return f'''## 🔥 HOT CONTEXT
+> Auto-generated — read this first
+
+- **Last merged PRs:** {merges}
+- **Active locks:** {locks}
+- **Open errors:** {open_count}
+- **Next READY task:** {next_task}
+
+---
+'''
+
 def get_header():
     branch = "main"
     try:
@@ -349,6 +399,9 @@ def main():
 
     print("Starting compact export...")
 
+    print("Gathering hot context...")
+    hot_context = get_hot_context()
+
     print("Gathering header...")
     header = get_header()
 
@@ -374,12 +427,13 @@ def main():
     appendix = get_appendix()
 
     parts = [
+        hot_context,
         header,
-        snapshot,
         action_board,
+        snapshot,
+        agents_rules,
         roadmap,
         recent_changes,
-        agents_rules,
         code_context,
         appendix
     ]
