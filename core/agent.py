@@ -130,13 +130,13 @@ class AgentLoop:
                     # Strip markdown bold/italic and [Step N/M] so MISTRAL's **TOOL:web** works
                     clean_resp = _re.sub(r'[*_`]', '', response)
                     clean_resp = _re.sub(r'^\[Step \d+/\d+\]\s*', '', clean_resp, flags=_re.MULTILINE)
-                    tool_name = clean_resp.split("TOOL:")[1].split()[0].strip(":- ").lower()
-                    if "INPUT:" in clean_resp:
-                        tool_input = clean_resp.split("INPUT:")[1].split("\n")[0].strip()
-                    else:
-                        # Fallback: grab the rest of the TOOL:<name> line as the query
-                        after_tool = clean_resp.split(f"TOOL:{tool_name}", 1)[1]
-                        tool_input = after_tool.split("\n")[0].strip().lstrip(":- ")
+
+                    match = _re.search(r'TOOL:\s*([^\s:]+)(?:\s+INPUT:\s*([^\n]*)|[ \t]+([^\n]*))?', clean_resp)
+                    if not match:
+                        raise ValueError("Failed to parse TOOL from response")
+
+                    tool_name = match.group(1).strip(":- ").lower()
+                    tool_input = (match.group(2) or match.group(3) or '').strip().strip('\'"')
                     tool = self.tools.get(tool_name)
                     if not _registry.is_healthy(tool_name):
                         obs = f"Tool {tool_name} unavailable (unhealthy)."
