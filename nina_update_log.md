@@ -768,21 +768,10 @@
 
 ---
 
-## Entry 061 — 2026-06-07 · feat(router): F-09 ModelDiscoveryService — auto-discover best model per provider
+## Entry 061 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** Jules async PR merge (PR #25)
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** tools/model_discovery.py, crons/manager.py, core/router.py, data/model_cache.json
+**Files changed:** docs/space/jules_backlog.md,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
-**What changed:**
-- Added `tools/model_discovery.py` to auto-discover models for various LLM providers.
-- Updated `crons/manager.py` to schedule model discovery running daily with a startup delay of 30s.
-- Modified `core/router.py` to integrate model discovery into `HybridRouter`.
-- Generated `data/model_cache.json` with initial fallback defaults.
-
-**What was verified:**
-- Compiled and linted all changed python files successfully.
-- Verified that existing tests pass successfully.
-
-**Rollback path:**
-- `git checkout HEAD~1 -- core/router.py crons/manager.py data/model_cache.json && rm tools/model_discovery.py`
+**Verification:** git push OK, nina.service active
