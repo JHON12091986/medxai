@@ -13,6 +13,7 @@ import logging
 import os
 import platform
 import re
+import shlex
 import shutil
 import socket
 import subprocess
@@ -500,11 +501,17 @@ SEVERITY_ORDER = {"BLOCKER": 0, "WARN": 1, "DEBT": 2, "INFO": 3}
 
 # ── Utility helpers ───────────────────────────────────────────────────────────
 
-def run_cmd(cmd, timeout=30):
-    """Run a shell command, return (stdout, stderr, returncode)."""
+def run_cmd(cmd, timeout=30, use_shell=False):
+    """Run a shell command, return (stdout, stderr, returncode).
+    Security: shell=False with shlex.split() prevents command injection.
+    """
     try:
+        if not use_shell:
+            args = shlex.split(cmd) if isinstance(cmd, str) else cmd
+        else:
+            args = cmd
         r = subprocess.run(
-            cmd, shell=True, capture_output=True, text=True, timeout=timeout
+            args, shell=use_shell, capture_output=True, text=True, timeout=timeout
         )
         return r.stdout, r.stderr, r.returncode
     except subprocess.TimeoutExpired:
@@ -569,25 +576,25 @@ def relative_time(seconds_ago):
 
 def collect_journal_recent():
     """Last 200 journal lines for nina.service."""
-    out, _, _ = run_cmd("journalctl -u nina -n 200 --no-pager 2>/dev/null")
+    out, _, _ = run_cmd("journalctl -u nina -n 200 --no-pager")
     return out
 
 
 def collect_journal_errors():
     """Error-level journal lines from current boot."""
-    out, _, _ = run_cmd("journalctl -u nina -p err -b --no-pager 2>/dev/null")
+    out, _, _ = run_cmd("journalctl -u nina -p err -b --no-pager")
     return out
 
 
 def collect_journal_15min():
     """Journal lines from the last 15 minutes."""
-    out, _, _ = run_cmd('journalctl -u nina --since "15 minutes ago" --no-pager 2>/dev/null')
+    out, _, _ = run_cmd('journalctl -u nina --since "15 minutes ago" --no-pager')
     return out
 
 
 def collect_service_status():
     """systemctl status nina output."""
-    out, _, _ = run_cmd("systemctl status nina 2>/dev/null")
+    out, _, _ = run_cmd("systemctl status nina")
     return out
 
 
@@ -835,7 +842,7 @@ def inspect_service_state(journal_recent, journal_15min):
         crash_loop = True
 
     # Check Ollama
-    out, _, rc = run_cmd("curl -s --max-time 3 http://localhost:11434/api/tags 2>/dev/null")
+    out, _, rc = run_cmd("curl -s --max-time 3 http://localhost:11434/api/tags")
     local_inference_ok = rc == 0 and "models" in out.lower()
 
     return {
@@ -931,7 +938,7 @@ def pip_freeze_sha():
     python = VENV_DIR / "bin" / "python"
     if not python.exists():
         python = "python3"
-    out, _, rc = run_cmd(f"{python} -m pip freeze 2>/dev/null")
+    out, _, rc = run_cmd(f"{python} -m pip freeze")
     if rc != 0 or not out.strip():
         return None
     return hashlib.sha256(out.encode()).hexdigest()
@@ -1512,7 +1519,7 @@ def run_engine(args):
     if healthcheck_path.exists():
         hc_out, hc_err, hc_rc = run_cmd(
             f"cd {NINA_DIR} && {python_bin} healthcheck.py --json 2>&1",
-            timeout=60,
+            timeout=60, use_shell=True
         )
         healthcheck_out = hc_out + hc_err
         hc_passed = (hc_rc == 0)
