@@ -80,10 +80,28 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
 
 **Principle:** _Perplexity plans, agy stabilizes, Jules builds._
 
-### 1. Three-Tool Operating Model
-- **Perplexity Enterprise Pro (THINK):** Diagnosis, root-cause analysis, architecture design, prompt-spec writing, and code review.
-- **Antigravity CLI (agy) (LOCAL-BUILD):** Scoped single-file or tightly bounded runtime-safe edits, urgent fixes, and deployment.
-- **Google Jules (BUILD):** Async multi-file implementation, broad refactors, and PR-based backlog work.
+### 1. Three-Tool Operating Model — Parallel Execution
+
+NINA uses three tools running IN PARALLEL as the standard operating mode:
+
+| Tool | Role | Execution Mode |
+|------|------|---------------|
+| Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
+| Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
+| Antigravity CLI (agy) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+
+THE FULL PARALLEL LOOP:
+1. Perplexity diagnoses + writes precise spec
+2. Jules receives spec → builds in cloud async (no interaction after submit)
+3. agy handles any urgent local fixes in parallel on its own worktree
+4. Jules opens PR when done
+5. agy reviews Jules PR diff, runs lint/compile checks, merges to main
+6. agy runs ./nina_sync.sh to deploy and export
+7. Perplexity reviews result (attach nina_latest.md to new thread)
+
+KEY DISTINCTION: agy is NOT just a fixer — it is the local merge and deploy executor.
+Jules does NOT merge its own PRs — agy always performs the merge after review.
+Perplexity is NOT idle during coding — it remains available for unblocking and mid-task review.
 
 ### 2. Task Routing Matrix
 | Task / Scenario | Default Tool | Rationale | What NOT to Use |
@@ -132,6 +150,12 @@ The following files must default to **agy** or manual local handling unless expl
 - **Lock Race:** Starting work without checking the active lock state in `jules_lock.txt`.
 - **Bundled Changes:** Stacking unrelated modifications in a single commit.
 - **Restore Confusion:** Treating the backup snapshot (`nina_latest.md`) as a repository recovery mechanism.
+
+### 8. agy as Merge Executor (Mandatory)
+- agy is responsible for ALL Jules PR merges — never auto-merge Jules PRs via GitHub UI
+- Before merging: run `python3 -m py_compile` on changed files, run `pyflakes`, check `jules_lock.txt`
+- After merging: run `./nina_sync.sh` — no exceptions
+- If merge conflict: stop, report to Perplexity for re-spec, do not attempt blind resolution
 
 ---
 

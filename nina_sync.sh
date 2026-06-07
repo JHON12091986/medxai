@@ -14,6 +14,7 @@ DRY_RUN=false
 
 SPACE_FILES=(
   AGENTS.md
+  WORKFLOW.md
   docs/space/nina_error_register.md
   docs/space/nina_state.md
 )

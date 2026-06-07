@@ -97,14 +97,35 @@ _Last updated: 2026-06-06_
 - **Rotating Logs Directory:** `/home/aibony/nina/logs/`
 - **Exports Directory:** `/home/aibony/nina/exports/`
 
-## NINA Tool Routing Policy v2
-- **Principle:** Perplexity plans, agy stabilizes, Jules builds.
-- **Tool Mapping:**
-  - **Perplexity:** THINK / diagnosis / architecture / spec writing / review.
-  - **agy (LOCAL):** LOCAL-BUILD / urgent fixes / single-file or high-risk edits.
-  - **Jules:** BUILD / async multi-file implementation / PR backlog.
-- **Key Rules:**
-  - Check `jules_lock.txt` lock state before starting any task.
-  - High-risk files (`main.py`, `router.py`, `telegram_interface.py`, `guardian_engine.py`, `shell.py`, `.env`) default to agy/local.
-  - Perplexity requires exact source attachments for code edits; `nina_latest.md` is for snapshot awareness only.
-  - Sensitive paths remain LOCAL only.
+## NINA Tool Routing Policy v2 Summary
+
+**Principle:** Perplexity plans, agy stabilizes, Jules builds — running IN PARALLEL.
+
+### Three-Tool Parallel Model
+
+| Tool | Role | Execution Mode |
+|------|------|---------------|
+| Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
+| Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
+| Antigravity CLI (agy) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+
+### The Full Parallel Loop
+1. Perplexity diagnoses + writes precise spec
+2. Jules receives spec → builds in cloud async (no interaction after submit)
+3. agy handles any urgent local fixes in parallel on its own worktree
+4. Jules opens PR when done
+5. agy reviews Jules PR diff, runs lint/compile checks, merges to main
+6. agy runs `./nina_sync.sh` to deploy and export
+7. Perplexity reviews result (attach `nina_latest.md` to new thread)
+
+### agy as Merge Executor (Mandatory)
+- agy performs ALL Jules PR merges — never auto-merge via GitHub UI
+- Before merge: `python3 -m py_compile` + `pyflakes` on changed files, check `jules_lock.txt`
+- After merge: `./nina_sync.sh` — no exceptions
+- Merge conflict → stop, escalate to Perplexity for re-spec
+
+### Key Rules
+- Check `jules_lock.txt` before starting any task.
+- High-risk files (`main.py`, `router.py`, `telegram_interface.py`, `guardian_engine.py`, `shell.py`, `.env`) default to agy/local only.
+- Perplexity requires exact source attachments for code edits; `nina_latest.md` is for snapshot awareness only.
+- Sensitive paths remain LOCAL only — never cloud.
