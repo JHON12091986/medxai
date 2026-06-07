@@ -648,43 +648,10 @@
 
 ---
 
-## Entry 049 — 2026-06-07 · Jules PR Merge Session
+## Entry 049 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** agy manual review + merge session (10+1 Jules overnight tasks)
+**Triggered by:** nina_sync.sh v5 automated run
 
-**PRs merged (11 total):**
-- #13 R-82: Makefile developer helpers
-- #14 D-24: Provider architecture docs (nina_context.md enhanced)
-- #15 R-81: Smoke tests for tools modules (tests/test_tools_smoke.py)
-- #16 F-08: Knowledge base core primitives (core/memory.py kb_add_entry/kb_search)
-- #17 R-80: Structured log quality in tools/crons (14 scratch scripts stripped)
-- #18 R-79: IdleProposalLoop rich markdown briefs with IMPACT tags
-- #19 F-07: Email triage groundwork (office_mail.py refactor + officemail.py wrapper)
-- #20 F-06: Proactive reminder engine (core/memory.py + core/nina.py + crons)
-- #21 F-05: Market Monitor DSE/CSE (tools/market.py + scheduler)
-- #22 F-04: Expenditure tracker (tools/finance.py + tests/test_finance.py)
-- #23 Bolt: Optimized _is_bangla with compiled regex (10x faster)
+**Files changed:** nina_update_log.md
 
-**What was verified:** py_compile + pyflakes on all .py files before each merge. Conflict resolution applied on 7 PRs (docs/space/nina_context.md repeated add/add conflict). Scratch scripts stripped from R-80. Indentation fixed in F-05 crons/manager.py.
-
-**Rollback path:** git revert each merge commit individually by PR merge SHA
-
-
----
-
-## Entry 050 — 2026-06-07 · Security fix(Sentinel/HIGH)
-
-**Triggered by:** agy manual review + merge
-
-**PR merged:** #24 — Sentinel HIGH: Fix shell=True command injection risk in guardian_engine.py run_cmd
-
-**What changed:**
-- Added import shlex to guardian_engine.py
-- run_cmd() now uses shlex.split(cmd) + shell=False by default
-- Removed 2>/dev/null redirects (handled by capture_output=True)
-- use_shell=True kept only for healthcheck wrapper (requires cd && python3 shell chaining)
-
-**What was verified:** py_compile OK, pyflakes pre-existing warnings only (not introduced by this PR), shlex quote-handling confirmed for --since arg.
-
-**Rollback path:** git revert the merge commit for PR #24
-
+**Verification:** git push OK, nina.service active
