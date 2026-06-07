@@ -88,7 +88,7 @@ for f in "${SPACE_FILES[@]}"; do
     echo "  = $f (unchanged)"
   fi
 done
-for lf in nina_update_log.md nina_problem_log.md; do
+for lf in nina_update_log.md; do
   if [ -f "$LOGS_DIR/$lf" ] && [ -f "$NINA/$lf" ]; then
     if ! diff -q "$LOGS_DIR/$lf" "$NINA/$lf" > /dev/null 2>&1; then
       echo "  ✓ $lf (synced from logs/)"; [ "$DRY_RUN" = false ] && cp "$LOGS_DIR/$lf" "$NINA/$lf"
