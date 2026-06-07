@@ -43,10 +43,6 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 ## Test Command After Every Change
 cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> && pyflakes <changed_file>
 
-Alternatively, you can use the developer helper Makefile:
-- `make check` — Runs `py_compile` and `pyflakes` automatically on all modified `.py` files.
-- `make test` — Runs pytest on the `tests/` directory (if tests exist).
-
 ## Mandatory Rules — After Every Code Change (agy)
 
 - Run `python3 -m py_compile <file>` + `pyflakes <file>` on every changed file before committing
