@@ -862,3 +862,31 @@
 **Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service activating
+## Entry 069 — 2026-06-07 · feat(ops): install aider-chat and configure OpenRouter
+
+**Triggered by:** User request.
+
+**Files changed:**
+- `.aider.conf.yml`
+- `nina-aider.sh`
+
+**What changed:**
+- Installed `aider-chat` (v0.86.2) and `audioop-lts` for Python 3.14 compatibility. Created `.aider.conf.yml` to set OpenRouter as default backend. Added `nina-aider.sh` wrapper script to export OpenRouter keys and launch aider.
+
+**What was verified:**
+- Verified `aider --version` runs correctly.
+
+**Rollback path:**
+- rm -f .aider.conf.yml nina-aider.sh && git checkout HEAD -- nina_update_log.md
+
+---
+
+---
+
+## Entry 070 — 2026-06-07 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** .aider.conf.yml,nina_aider.sh,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service activating
