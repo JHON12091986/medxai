@@ -1243,3 +1243,25 @@
 **Files changed:** tools/compact_exporter.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+## Entry 102 — 2026-06-08 · feat(sync): reorder nina_latest.md sections for faster Perplexity orientation
+
+**Triggered by:** User request to reorder compact_exporter sections and add hot context.
+
+**Files changed:**
+- `tools/compact_exporter.py`
+
+**What changed:**
+- Added `get_hot_context()` function to collect last merged PRs, active locks, open error counts, and next ready task details.
+- Reordered `parts` list in `main()` to place `hot_context` first and `action_board` before `snapshot` for faster Perplexity orientation.
+- Verified error count parses successfully from `nina_error_register.md`.
+- Verified locks query checks both `juleslock.txt` and `jules_lock.txt` for robustness.
+
+**What was verified:**
+- Python compilation check passed successfully (`python3 -m py_compile`).
+- Code style verification via `pyflakes` passed completely.
+- Output verification: generated `nina_latest.md` successfully started with the `## 🔥 HOT CONTEXT` section.
+
+**Rollback path:**
+- `git checkout HEAD -- tools/compact_exporter.py`
+
