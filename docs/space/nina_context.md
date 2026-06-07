@@ -37,3 +37,8 @@ The API is exposed via the NINA `MemorySystem`:
 ## Future Telegram UI Wiring
 
 In the future, Telegram UI commands (e.g., `/remind`) can be wired up by simply calling `await self.memory.add_reminder(text, due_time)` within `interfaces/telegram_interface.py` or agent actions, without needing to implement the persistence or timing logic.
+
+---
+
+# NINA Context
+Note: Groundwork for F-07 "Email triage improvement" exists in tools/office_mail.py. This provides a clear separation of connection, fetch, and triage concerns, along with soft-failing for unconfigured EWS.
