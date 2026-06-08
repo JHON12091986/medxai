@@ -9,3 +9,6 @@ exchangelib
 playwright
 psutil
 ollama
+fastapi
+uvicorn[standard]
+httpx
