@@ -35,7 +35,7 @@ GUARDIAN_PATH = REPO_ROOT / "guardian"
 SESSION_PATH = REPO_ROOT / "data/session_checkpoint.json"
 
 # ------------------------------------------------------------------
-# MODULE 0: CORE HELPERS (Functions 1-15)
+# MODULE 0: HARDENED HELPERS (Functions 1-15)
 # ------------------------------------------------------------------
 
 def run_cmd(cmd, cwd=str(REPO_ROOT), timeout=60, use_shell=False):
@@ -49,6 +49,27 @@ def run_cmd(cmd, cwd=str(REPO_ROOT), timeout=60, use_shell=False):
         return res.returncode, res.stdout.strip(), res.stderr.strip()
     except subprocess.TimeoutExpired:
         return -1, "", "Command timed out"
+
+def _safe_run(cmd: str, timeout=60) -> tuple[int, str, str]:
+    """[2] Hardened command executor with allowlist awareness."""
+    from tools.shell import is_command_safe
+    # Extract base command for security check
+    base_cmd = cmd.split()[0].split('/')[-1]
+    if not is_command_safe(cmd):
+        return 1, "", f"❌ SECURITY ALERT: Command '{base_cmd}' violates NINA safety policy."
+    
+    return run_cmd(cmd, timeout=timeout)
+
+def cmd_capability_map(args):
+    """[3] DISCOVERABILITY: Return structured JSON of all system capabilities."""
+    capabilities = {
+        "GIT_OPS": ["status", "pr-merge-surgical", "reconcile", "safe-push"],
+        "MEMORY": ["resume", "checkpoint", "query", "fact-extract"],
+        "OPS": ["thermal-gate", "vram", "doctor", "service"],
+        "BACKLOG": ["triage", "dag", "export", "add"],
+        "CODE": ["search", "dep-map", "impact-predict", "lint"]
+    }
+    print(json.dumps(capabilities, indent=2))
 
 def get_lock_files() -> List[str]:
     """[2] Parse locked files from jules_lock.txt."""
@@ -364,13 +385,21 @@ def _capability_extractor(file_path: Path) -> List[str]:
 
 def cmd_web_crawl(args):
     """[39] Fetch webpage and save markdown-condensed summary."""
-    # (Existing logic)
-    pass
+    from tools.web import fetch_url
+    print(f"Proxying to NINA Production Crawler: {args.url}")
+    try:
+        res = asyncio.run(fetch_url(args.url))
+        print(res.get("text", "No content found")[:2000] + "...")
+    except Exception as e: print(f"Crawl error: {e}")
 
 def cmd_search(args):
     """[40] Execute web search fallback chain."""
-    # (Existing logic)
-    pass
+    from tools.search import search as production_search
+    print(f"Proxying to NINA Production Search for: {args.query}")
+    try:
+        res = asyncio.run(production_search(args.query))
+        print(res)
+    except Exception as e: print(f"Search error: {e}")
 
 # Functions 41-45 (Additional navigation/chunking helpers)
 def _find_py_files() -> List[Path]: return [p for p in REPO_ROOT.rglob("*.py") if "venv" not in str(p)]
@@ -622,13 +651,9 @@ def _ops_get_disk_free():
 
 def cmd_help_ai(args):
     """[96] ADVANCED HELP: Returns a system prompt briefing for other AI agents."""
-    print("--- AGENT SYSTEM BRIEFING ---")
-    print("You are an AI working on NINA. Use the following CLI API for all system ops:")
-    print("• Git Ops: agynina pr merge-surgical <ID> | agynina git-safe-push")
-    print("• Backlog: agynina triage | agynina backlog tree")
-    print("• Diagnostics: agynina doctor | agynina ops thermal-gate")
-    print("• Memory: agynina session resume | agynina memory query '...'")
-    print("\nAlways check jules_lock.txt before writing. Never commit .env.")
+    print("NINA_KERNEL_API_V3")
+    print("Use: agynina <category> <cmd> | Use 'agynina capability-map' for full JSON spec.")
+    print("Standard flow: checkpoint -> lock -> [Task] -> verify -> surgical-merge -> triage.")
 
 def cmd_policy_enforce(args):
     """[97] Pre-commit hook: verify commit against AGENTS.md rules."""
@@ -663,6 +688,7 @@ def main():
     subparsers.add_parser("changelog")
     subparsers.add_parser("update")
     subparsers.add_parser("help-ai")
+    subparsers.add_parser("capability-map")
     
     p_dr = subparsers.add_parser("doctor"); p_dr.add_argument("action", choices=["log", "cpu", "journal"], default="log", nargs="?")
     
@@ -702,6 +728,7 @@ def main():
     args = parser.parse_args()
     
     if args.command == "status": cmd_status(args)
+    elif args.command == "capability-map": cmd_capability_map(args)
     elif args.command == "help-ai": cmd_help_ai(args)
     elif args.command == "triage": cmd_triage(args)
     elif args.command == "pr":
