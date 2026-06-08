@@ -140,7 +140,7 @@ Perplexity reads backlog each session
 | B-041 | DSE/Bangladesh financial data integration (F-05) | Needs real DSE API endpoint research first |
 | B-042 | Telegram inline keyboard for common commands (F-08) | Needs UX design pass |
 | B-043 | Multi-modal support: image input routing | Provider capability matrix needed |
-| B-044 | Web dashboard for NINA status (read-only) | HTML dashboard reading healthcheck.py output |
+| B-044 | Web dashboard for NINA status (read-only) | `DONE` |
 | B-045 | Conversation memory persistence across sessions | Storage design needed |
 
 ---
