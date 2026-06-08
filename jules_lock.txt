@@ -1,3 +1,10 @@
-LOCKED_FILES=tools/compact_exporter.py
-JULES_TASK=B-022
-LOCKED_SINCE=1780860964
+# Jules Lock File
+# When Jules is running a task, list the files it is touching here (one per line).
+# agynina must NOT edit files listed here while Jules is active.
+# Clear this file after Jules PR is merged.
+# Last updated: 2026-06-08T11:20:00Z
+
+LOCKED_FILES=
+JULES_TASK=
+JULES_PR=
+LOCKED_SINCE=
