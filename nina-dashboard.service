@@ -1,0 +1,15 @@
+[Unit]
+Description=NINA Dashboard & Architect
+After=network.target nina.service
+Partof=nina.service
+
+[Service]
+Type=simple
+User=aibony
+WorkingDirectory=/home/aibony/nina
+ExecStart=/home/aibony/nina/venv/bin/python tools/nina_dashboard.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

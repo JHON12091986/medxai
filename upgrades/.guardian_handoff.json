@@ -1,0 +1,12 @@
+{
+  "overall_status": "PASS",
+  "deploy_blocked": false,
+  "incident_dir": "/home/aibony/nina/upgrades/incidents/guardian_20260608_155952",
+  "json_report": "",
+  "root_cause_title": "AttributeError at startup/import",
+  "root_cause_signature": "startup.attributeError",
+  "blocker_count": 1,
+  "warn_count": 0,
+  "health_score": 9.0,
+  "suppressed_count": 0
+}
