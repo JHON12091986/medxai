@@ -1,6 +1,10 @@
 import logging
 import json
+import asyncio
 from dataclasses import dataclass
+from typing import List, Dict, Optional
+from core.router import HybridRouter
+from core.config import NinaConfig
 
 logger = logging.getLogger("nina.verifier")
 
@@ -41,6 +45,137 @@ class StepVerifier:
             score=score,
             check_name="non_empty"
         )
+
+    async def verify_success_criteria(self, output, criteria: str) -> VerificationResult:
+        prompt = f'Does this output satisfy the criteria? Output: <{output}>. Criteria: <{criteria}>. Reply with JSON only: {{"passed": true, "reason": "one sentence"}}'
+        passed = False
+        reason = "verification failed: unknown error"
+        score = 0.0
+        try:
+            cfg = NinaConfig()
+            router = HybridRouter(config=cfg)
+            await router.initialize()
+            
+            res_str = await router.single_turn(prompt, [])
+            try:
+                # Basic cleaning of LLM JSON response
+                if "```json" in res_str:
+                    res_str = res_str.split("```json")[1].split("```")[0].strip()
+                elif "```" in res_str:
+                    res_str = res_str.split("```")[1].split("```")[0].strip()
+                
+                res = json.loads(res_str.strip())
+                passed = bool(res.get("passed", False))
+                reason = res.get("reason", "no reason provided")
+                score = 1.0 if passed else 0.0
+            except json.JSONDecodeError as e:
+                reason = f"verification failed: invalid JSON response - {e}"
+        except Exception as e:
+            reason = f"verification failed: {e}"
+
+        logger.info(json.dumps({
+            "event": "verify",
+            "check": "success_criteria",
+            "passed": passed
+        }))
+
+        return VerificationResult(
+            passed=passed,
+            reason=reason,
+            score=score,
+            check_name="success_criteria"
+        )
+
+    def verify_numeric_range(self, output, min_val: float = None, max_val: float = None) -> VerificationResult:
+        passed = False
+        reason = ""
+        score = 0.0
+
+        try:
+            val = float(output)
+            passed = True
+            score = 1.0
+
+            if min_val is not None and val < min_val:
+                passed = False
+                score = 0.0
+                reason = f"value {val} is below minimum {min_val}"
+            elif max_val is not None and val > max_val:
+                passed = False
+                score = 0.0
+                reason = f"value {val} is above maximum {max_val}"
+            else:
+                reason = "numeric value in range"
+
+        except (ValueError, TypeError):
+            passed = False
+            score = 0.0
+            reason = "output is not numeric"
+
+        logger.info(json.dumps({
+            "event": "verify",
+            "check": "numeric_range",
+            "passed": passed
+        }))
+
+        return VerificationResult(
+            passed=passed,
+            reason=reason,
+            score=score,
+            check_name="numeric_range"
+        )
+
+    def verify_schema(self, output: dict, required_keys: List[str]) -> VerificationResult:
+        passed = False
+        reason = ""
+        score = 0.0
+
+        if not isinstance(output, dict):
+            reason = "output is not a dictionary"
+        else:
+            missing = [k for k in required_keys if k not in output]
+            if missing:
+                reason = f"missing keys: {', '.join(missing)}"
+            else:
+                passed = True
+                score = 1.0
+                reason = "schema valid"
+
+        logger.info(json.dumps({
+            "event": "verify",
+            "check": "schema",
+            "passed": passed
+        }))
+
+        return VerificationResult(
+            passed=passed,
+            reason=reason,
+            score=score,
+            check_name="schema"
+        )
+
+    async def verify_all(self, output, checks: List[dict]) -> List[VerificationResult]:
+        results = []
+        for check in checks:
+            check_type = check.get("type")
+            kwargs = {k: v for k, v in check.items() if k != "type"}
+
+            if check_type == "non_empty":
+                res = self.verify_non_empty(output)
+            elif check_type == "numeric_range":
+                res = self.verify_numeric_range(output, **kwargs)
+            elif check_type == "schema":
+                res = self.verify_schema(output, **kwargs)
+            elif check_type == "success_criteria":
+                res = await self.verify_success_criteria(output, **kwargs)
+            else:
+                res = VerificationResult(passed=False, reason=f"unknown check type: {check_type}", score=0.0, check_name="unknown")
+
+            results.append(res)
+            if not res.passed:
+                break
+
+        return results
 
 def is_valid_output(output) -> bool:
     verifier = StepVerifier()
