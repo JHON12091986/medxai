@@ -1,4 +1,10 @@
-LOCKED_FILES="tools/nina_dashboard.py,templates/dashboard.html,requirements.txt"
-JULES_TASK="Create lightweight read-only HTML status dashboard for NINA (B-044)"
-JULES_PR="feat(dashboard): read-only HTML status dashboard for NINA (B-044)"
-LOCKED_SINCE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+# Jules Lock File
+# When Jules is running a task, list the files it is touching here (one per line).
+# agynina must NOT edit files listed here while Jules is active.
+# Clear this file after Jules PR is merged.
+# Last updated: 2026-06-08T11:20:00Z
+
+LOCKED_FILES=core/config.py,core/router.py,tests/test_router.py
+JULES_TASK=
+JULES_PR=
+LOCKED_SINCE=2026-06-08T11:24:42Z
