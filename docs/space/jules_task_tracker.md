@@ -50,3 +50,4 @@
 | ASYNC-10 | AG-B-01: Create TaskStore with full CRUD and JSON persistence | ✅ MERGED | 2026-06-08 | PR #50 | E-121 | Submitted via agynina |
 | ASYNC-11 | AG-D-05: Create StepVerifier with non-empty output check | ✅ MERGED | 2026-06-08 | PR #51 | E-122 | Submitted via agynina |
 | ASYNC-12 | AG-D-01: Extend StepVerifier with criteria, numeric, schema checks | ✅ MERGED | 2026-06-08 | PR #53 | E-123 | Submitted via agynina |
+| ASYNC-13 | AG-B-03: Add startup auto-resume to TaskStore | ✅ MERGED | 2026-06-08 | PR #55 | E-124 | Submitted via agynina |
