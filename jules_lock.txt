@@ -4,7 +4,7 @@
 # Clear this file after Jules PR is merged.
 # Last updated: 2026-06-08T11:20:00Z
 
-LOCKED_FILES=
+LOCKED_FILES=core/router.py,tests/test_router.py
 JULES_TASK=
 JULES_PR=
 LOCKED_SINCE=2026-06-08T11:24:42Z

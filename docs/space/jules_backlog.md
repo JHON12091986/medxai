@@ -79,7 +79,7 @@ Perplexity reads backlog each session
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
 | B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `DONE` | tools/model_discovery.py, core/router.py, crons/manager.py | — | PR #25 merged 2026-06-07 |
-| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `READY` | core/router.py | B-005 | agynina only — high-risk file |
+| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `DONE` | core/router.py | B-005 | agynina only — high-risk file |
 | B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `DONE` | data/model_cache.json | B-005 | Jules can do this |
 | B-008 | Add circuit breaker state persistence to data/circuit_state.json | `READY` | core/router.py, data/ | — | Currently in-memory — lost on restart. agynina only |
 | B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegraminterface.py | — | agynina only — high-risk file |
@@ -196,7 +196,7 @@ _This is the foundation. Build AG-B-01 and AG-B-02 first — everything else dep
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-B-01 | `core/task_store.py` | Create TaskStore class — full CRUD for Task objects persisted to data/tasks.json | `NEEDS_SPEC` | — |
+| AG-B-01 | `core/task_store.py` | Create TaskStore class — full CRUD for Task objects persisted to data/tasks.json | `IN_PROGRESS` | — |
 | AG-B-02 | `core/task_store.py` | Define Task schema — id, goal, plan_steps, status (pending/running/paused/done/failed), created_at, updated_at, retries, result | `NEEDS_SPEC` | AG-B-01 |
 | AG-B-03 | `core/task_store.py` | Load open tasks on nina.service startup — TaskStore auto-resumes in-progress and pending tasks after restart | `NEEDS_SPEC` | AG-B-01 |
 | AG-B-04 | `core/task_store.py` | Add task indexing — lookup by status, tool_used, date range without full JSON scan | `NEEDS_SPEC` | AG-B-01 |
@@ -240,7 +240,7 @@ _Dependency: AG-C-02 must be DONE first_
 | AG-D-02 | `core/verifier.py` + `core/capabilities.py` | Add output schema validation — each tool declares expected output schema; Verifier checks compliance after execution | `NEEDS_SPEC` | AG-D-05 |
 | AG-D-03 | `core/verifier.py` | Add semantic verification — for LLM-generated outputs, second LLM call scores answer quality 1–5 | `NEEDS_SPEC` | AG-D-01 |
 | AG-D-04 | `core/verifier.py` | Add numeric assertion verifier — verify numeric outputs within declared expected range (e.g. price > 0) | `NEEDS_SPEC` | AG-D-01 |
-| AG-D-05 | `core/verifier.py` | Add non-empty verifier — simplest guard: step fails if output is None, empty string, or empty list | `NEEDS_SPEC` | AG-D-01 |
+| AG-D-05 | `core/verifier.py` | Add non-empty verifier — simplest guard: step fails if output is None, empty string, or empty list | `IN_PROGRESS` | — |
 | AG-D-06 | `core/verifier.py` + `core/planner.py` | Add replan trigger — when Verifier fails, send step back to Planner to generate alternative approach | `NEEDS_SPEC` | AG-D-01 |
 | AG-D-07 | `core/verifier.py` + `core/task_store.py` | Add verification result storage — store pass/fail and reason per step inside the Task object | `NEEDS_SPEC` | AG-D-01 |
 | AG-D-08 | `core/verifier.py` | Add verification scorecard — final task result includes per-step pass/fail summary from Verifier | `NEEDS_SPEC` | AG-D-07 |

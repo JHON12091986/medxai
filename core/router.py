@@ -344,6 +344,12 @@ class HybridRouter:
     def _ordered_providers(self, task: ClassifiedTask, force_local: bool = False) -> list:
         if task.is_sensitive or force_local:
             return ["LOCALFAST", "LOCALHEAVY"]
+        
+        try:
+            cache = self._model_discovery.load_cache() or {}
+        except Exception:
+            cache = {}
+
         avail: list[str] = []
         degraded: list[str] = []
         for pid, h in self.health.items():
@@ -353,6 +359,21 @@ class HybridRouter:
                 continue
             if not h.is_available(True):
                 continue
+            
+            # Wire ModelDiscovery check: ensure a model exists (via override, cache, or fallback)
+            model = self.config.model_overrides.get(pid) or cache.get(pid)
+            if not model:
+                meta = cast(dict, (PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3).get(pid, {}))
+                model = meta.get("model")
+            
+            if not model:
+                from tools.model_discovery import PROVIDER_MODEL_ENDPOINTS
+                model = PROVIDER_MODEL_ENDPOINTS.get(pid, {}).get("fallback_model")
+                
+            if not model:
+                logger.warning(f"Skipping provider {pid} in _ordered_providers: no model found", extra={"log": "router.log"})
+                continue
+
             (degraded if h.is_degraded() else avail).append(pid)
         sk = lambda p: self.health[p].composite_score(p)
         ordered = sorted(avail, key=sk, reverse=True) + sorted(degraded, key=sk, reverse=True)
