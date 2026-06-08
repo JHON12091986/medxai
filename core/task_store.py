@@ -505,12 +505,17 @@ class TaskStore:
         """
         if isinstance(status, str):
             status = TaskStatus(status)
+
+        # Optimization: Filter by status before sorting to reduce sort payload from O(N log N) to O(k log k)
+        tasks_iter = self._read_tasks().values()
+        if status is not None:
+            tasks_iter = [t for t in tasks_iter if t.status == status]
+
         tasks = sorted(
-            self._read_tasks().values(),
+            tasks_iter,
             key=lambda t: t.created_at,
         )
-        if status is not None:
-            tasks = [t for t in tasks if t.status == status]
+
         if limit is not None:
             tasks = tasks[:limit]
         return tasks
