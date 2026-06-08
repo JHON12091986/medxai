@@ -12,11 +12,14 @@ import ast
 import importlib
 import importlib.util
 import json
+import logging
 import os
 import sys
 import re
 import subprocess
 from pathlib import Path
+
+log = logging.getLogger(__name__)
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 NINA_DIR    = Path(__file__).parent.resolve()
@@ -183,7 +186,8 @@ def check_syntax():
                 detail=f"File: {rel}\nLine: {e.lineno}\nMessage: {e.msg}\nText: {e.text or ''}",
                 fix=f"Open ~/nina/{rel} at line {e.lineno} and fix the syntax error.",
             )
-        except Exception as e:
+        except (OSError, ValueError, UnicodeDecodeError) as e:
+            log.warning(f"Parse error in {rel}: {e}")
             record(
                 "WARN", f"syntax.parse_error.{rel.replace('/','.')}",
                 f"Parse error in {rel}: {e}",
@@ -254,7 +258,8 @@ def check_core_imports():
                     fix=f"Inspect ~/nina/{rel_path} for the symbol named in the error. "
                         f"Check recent patches via nina_update_log.md.",
                 )
-            except Exception as e:
+            except (RuntimeError, ValueError, OSError, LookupError, SystemError, ModuleNotFoundError) as e:
+                log.warning(f"Runtime error importing {mod_name}: {e}")
                 # Non-BLOCKER exception (e.g. missing .env at import time) — WARN only
                 record(
                     "WARN", f"import.runtime_error.{mod_name.replace('.','_')}",
@@ -265,7 +270,8 @@ def check_core_imports():
             finally:
                 # Remove from sys.modules to avoid polluting subsequent checks
                 sys.modules.pop(mod_name, None)
-        except Exception as outer:
+        except (OSError, ValueError, ImportError) as outer:
+            log.warning(f"Outer error testing import of {mod_name}: {outer}")
             record(
                 "WARN", f"import.outer_error.{mod_name.replace('.','_')}",
                 f"Outer error testing import of {mod_name}: {outer}",
@@ -538,7 +544,8 @@ def check_log_dir():
         try:
             logs_dir.mkdir(parents=True, exist_ok=True)
             record("PASS", "logs_dir.created", "logs/ directory created")
-        except Exception as e:
+        except OSError as e:
+            log.warning(f"Could not create logs/ directory: {e}")
             record(
                 "WARN", "logs_dir.create_fail",
                 f"Could not create logs/ directory: {e}",
@@ -592,7 +599,8 @@ def check_ollama():
                 "Ollama not responding at localhost:11434 (non-blocking — cloud fallback available)",
                 fix="Run: sudo systemctl start ollama",
             )
-    except Exception as e:
+    except (OSError, subprocess.TimeoutExpired, ValueError) as e:
+        log.warning(f"Ollama check failed: {e}")
         record(
             "INFO", "ollama.check_error",
             f"Ollama check failed: {e} (non-blocking)",
@@ -694,7 +702,8 @@ def get_prometheus_metrics():
                 pid_str = p.get("id", "UNKNOWN")
                 healthy = 1 if p.get("healthy") else 0
                 lines.append(f'nina_provider_health{{provider="{pid_str}"}} {healthy}')
-        except Exception:
+        except (json.JSONDecodeError, OSError, ValueError) as e:
+            log.error(f"Failed to read provider health metrics: {e}")
             pass
 
     # 3. cron job status
@@ -706,7 +715,8 @@ def get_prometheus_metrics():
             lines.append("# HELP nina_cron_job_status Count of defined cron jobs")
             lines.append("# TYPE nina_cron_job_status gauge")
             lines.append(f'nina_cron_job_status{{status="defined"}} {len(ids_found)}')
-        except Exception:
+        except (OSError, re.error) as e:
+            log.warning(f"Failed to read cron job status metrics: {e}")
             pass
 
     return "\n".join(lines) + "\n"
