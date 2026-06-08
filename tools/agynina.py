@@ -8,6 +8,7 @@ Version: 2.0
 
 import sys
 import os
+import shlex
 import re
 import argparse
 import asyncio
@@ -28,12 +29,16 @@ AIDER_PATH = REPO_ROOT / "nina_aider.sh"
 SYNC_PATH = REPO_ROOT / "nina_sync.sh"
 GUARDIAN_PATH = REPO_ROOT / "guardian"
 
-def run_cmd(cmd, cwd=str(REPO_ROOT), timeout=30):
+def run_cmd(cmd, cwd=str(REPO_ROOT), timeout=30, use_shell=False):
     """Run a shell command and return status, stdout, stderr."""
     try:
+        if not use_shell:
+            args = shlex.split(cmd) if isinstance(cmd, str) else cmd
+        else:
+            args = cmd
         res = subprocess.run(
-            cmd,
-            shell=True,
+            args,
+            shell=use_shell,
             capture_output=True,
             text=True,
             cwd=cwd,
@@ -557,11 +562,10 @@ def cmd_aider(args):
     print(f"Launching Aider for task {task_id}...")
     if files:
         print(f"Files loaded in context: {', '.join(files)}")
-        files_str = " ".join(files)
-        subprocess.run(f"{AIDER_PATH} {files_str}", shell=True, cwd=str(REPO_ROOT))
+        subprocess.run([str(AIDER_PATH)] + files, shell=False, cwd=str(REPO_ROOT))
     else:
         print("No files specified in backlog. Launching standard Aider...")
-        subprocess.run(f"{AIDER_PATH}", shell=True, cwd=str(REPO_ROOT))
+        subprocess.run([str(AIDER_PATH)], shell=False, cwd=str(REPO_ROOT))
 
 # 8. audit
 def cmd_audit(args):

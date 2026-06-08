@@ -38,9 +38,9 @@ async def test_officemail_smoke():
     mock_config.ews_max_emails = 5
     mock_config.ews_keywords = "urgent,important"
 
-    with patch("tools.officemail.Credentials"), \
-         patch("tools.officemail.Configuration"), \
-         patch("tools.officemail.Account") as mock_account_cls:
+    with patch("exchangelib.Credentials"), \
+         patch("exchangelib.Configuration"), \
+         patch("exchangelib.Account") as mock_account_cls:
 
         mock_account = MagicMock()
         mock_account_cls.return_value = mock_account
