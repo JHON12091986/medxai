@@ -20,9 +20,9 @@ sys.path.append(str(BASE_DIR))
 
 app = Flask(__name__, template_folder=str(TEMPLATE_DIR))
 
-@app.route('/architect')
-def architect():
-    return send_file(str(DASHBOARD_DIR / "puter_architect.html"))
+@app.route('/ninaui')
+def ninaui():
+    return send_file(str(DASHBOARD_DIR / "ninaui.html"))
 
 @app.route('/')
 def index():
