@@ -12,3 +12,5 @@ ollama
 flask
 fastapi
 uvicorn[standard]
+watchdog>=3.0.0
+gitpython>=3.1.0

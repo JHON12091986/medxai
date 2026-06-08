@@ -1,0 +1,10 @@
+.env
+.env.*
+data/
+*.lock
+*.log
+logs/
+__pycache__/
+*.pyc
+.DS_Store
+*.bak

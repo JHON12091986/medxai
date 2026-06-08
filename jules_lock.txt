@@ -1,10 +1,4 @@
-# Jules Lock File
-# When Jules is running a task, list the files it is touching here (one per line).
-# agynina must NOT edit files listed here while Jules is active.
-# Clear this file after Jules PR is merged.
-# Last updated: 2026-06-08T11:20:00Z
-
-LOCKED_FILES=core/config.py,core/router.py,tests/test_router.py
-JULES_TASK=
-JULES_PR=
-LOCKED_SINCE=2026-06-08T11:24:42Z
+LOCKED_FILES=tools/nina_sync.py,tests/test_nina_sync.py,.ninaignore,requirements.txt
+JULES_TASK=B-005
+JULES_PR=feat/b-005-nina-sync
+LOCKED_SINCE=2026-06-08T16:58:50+00:00
