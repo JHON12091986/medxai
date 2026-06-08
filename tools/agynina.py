@@ -83,9 +83,27 @@ def get_backlog_tasks() -> List[Dict[str, Any]]:
         if m:
             task_id = m.group(1)
             cols = [c.strip() for c in line.split("|")][1:-1]
-            if task_id.startswith("AG-"): files, title, status = cols[1], cols[2], cols[3].replace("`", "")
-            else: title, status, files = cols[1], cols[2].replace("`", ""), cols[3]
-            tasks.append({"id": task_id, "title": title, "status": status, "files": files, "section": current_section})
+            try:
+                if task_id.startswith("AG-"):
+                    # AG table format: ID | File | Task | Status | Depends On
+                    files = cols[1] if len(cols) > 1 else ""
+                    title = cols[2] if len(cols) > 2 else ""
+                    status = cols[3].replace("`", "") if len(cols) > 3 else "UNKNOWN"
+                else:
+                    # B table format: ID | Title | Status | Files Touched | Blocks | Notes
+                    title = cols[1] if len(cols) > 1 else ""
+                    status = cols[2].replace("`", "") if len(cols) > 2 else "UNKNOWN"
+                    files = cols[3] if len(cols) > 3 else ""
+                
+                tasks.append({
+                    "id": task_id, 
+                    "title": title, 
+                    "status": status, 
+                    "files": files, 
+                    "section": current_section
+                })
+            except IndexError:
+                continue
     return tasks
 
 def save_backlog_task_status(task_id, new_status, session_id=None, pr_id=None):
@@ -183,7 +201,12 @@ def cmd_status(args):
 def cmd_pr_merge_surgical(args):
     """[17] The Surgical Merge Protocol: Backup criticals -> Merge -> Restore regressions."""
     pr_id = args.pr_number
-    criticals = ["AGENTS.md", "nina_sync.sh", "nina_update_log.md", "tools/agynina.py", "main.py"]
+    criticals = [
+        "AGENTS.md", "nina_sync.sh", "nina_update_log.md", "tools/agynina.py", 
+        "main.py", "core/task_store.py", "tests/test_task_store.py",
+        "docs/agent-memory/architecture.md", "docs/agent-memory/current-state.md",
+        "docs/agent-memory/runbooks.md", "docs/agent-memory/workflow.md"
+    ]
     print(f"🚀 Starting Surgical Merge for PR #{pr_id}...")
     # 1. Backup
     backup_dir = Path("/tmp/agynina_surgical")
@@ -642,10 +665,13 @@ def main():
     subparsers.add_parser("help-ai")
     
     p_dr = subparsers.add_parser("doctor"); p_dr.add_argument("action", choices=["log", "cpu", "journal"], default="log", nargs="?")
-    p_pr = subparsers.add_parser("pr"); p_prs = p_pr.add_subparsers(dest="sub")
-    p_prm = p_prs.add_parser("merge"); p_prm.add_argument("pr_number", type=int)
-    p_pms = p_prs.add_parser("merge-surgical"); p_pms.add_argument("pr_number", type=int)
-    p_pms = p_prs.add_parser("reconcile")
+    
+    # PR Subcommands
+    p_pr = subparsers.add_parser("pr")
+    p_prs = p_pr.add_subparsers(dest="sub", required=True)
+    p_prm = p_prs.add_parser("merge", help="Standard merge"); p_prm.add_argument("pr_number", type=int)
+    p_pms = p_prs.add_parser("merge-surgical", help="Surgical merge"); p_pms.add_argument("pr_number", type=int)
+    p_prr = p_prs.add_parser("reconcile", help="Rebase stale PRs")
     
     p_rb = subparsers.add_parser("rollback"); p_rb.add_argument("task_id")
     p_dp = subparsers.add_parser("dispatch"); p_dp.add_argument("task_id")
@@ -656,14 +682,22 @@ def main():
     p_mq = subparsers.add_parser("memory_query"); p_mq.add_argument("query")
     p_se = subparsers.add_parser("search"); p_se.add_argument("query")
     p_cw = subparsers.add_parser("crawl"); p_cw.add_argument("url")
-    p_bl = subparsers.add_parser("backlog"); p_bl.add_argument("action", choices=["clean", "tree", "export"])
-    p_cs = subparsers.add_parser("code"); p_css = p_cs.add_subparsers(dest="sub")
+    
+    # Backlog Subcommands
+    p_bl = subparsers.add_parser("backlog")
+    p_bl.add_argument("action", choices=["clean", "tree", "export"])
+    
+    # Code Subcommands
+    p_cs = subparsers.add_parser("code")
+    p_css = p_cs.add_subparsers(dest="sub", required=True)
     p_csq = p_css.add_parser("search"); p_csq.add_argument("query")
     p_csd = p_css.add_parser("dep-map")
     
-    p_ops = subparsers.add_parser("ops"); p_opss = p_ops.add_subparsers(dest="sub")
-    p_ops.add_parser("thermal-gate")
-    p_ops.add_parser("vram")
+    # Ops Subcommands
+    p_ops = subparsers.add_parser("ops")
+    p_opss = p_ops.add_subparsers(dest="sub", required=True)
+    p_opss.add_parser("thermal-gate")
+    p_opss.add_parser("vram")
     
     args = parser.parse_args()
     
