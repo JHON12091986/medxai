@@ -1,18 +1,114 @@
 {
-  "GROQ": "llama-3.3-70b-versatile",
-  "GEMINI": "gemini-2.5-flash",
-  "CEREBRAS": "llama-3.3-70b",
-  "MISTRAL": "mistral-small-latest",
-  "DEEPSEEK": "deepseek-chat",
-  "TOGETHER": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-  "COHERE": "command-r-plus",
-  "XAI": "grok-3-mini",
-  "SAMBANOVA": "Meta-Llama-3.3-70B-Instruct",
-  "OPENAI": "gpt-4o-mini",
-  "PERPLEXITY": "llama-3.1-sonar-small-128k-online",
-  "FIREWORKS": "accounts/fireworks/models/llama-v3p3-70b-instruct",
-  "HYPERBOLIC": "meta-llama/Llama-3.3-70B-Instruct",
-  "NOVITA": "meta-llama/llama-3.3-70b-instruct",
-  "ONEBRAIN": "llama-3.3-70b-versatile",
-  "OPENROUTER": "meta-llama/llama-3.3-70b-instruct"
+  "GROQ": {
+    "provider_name": "GROQ",
+    "model_string": "llama-3.3-70b-versatile",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "GEMINI": {
+    "provider_name": "GEMINI",
+    "model_string": "gemini-2.5-flash",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "CEREBRAS": {
+    "provider_name": "CEREBRAS",
+    "model_string": "llama-3.3-70b",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "MISTRAL": {
+    "provider_name": "MISTRAL",
+    "model_string": "mistral-large-latest",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "DEEPSEEK": {
+    "provider_name": "DEEPSEEK",
+    "model_string": "deepseek-chat",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "TOGETHER": {
+    "provider_name": "TOGETHER",
+    "model_string": "llama-3.1-405b",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "COHERE": {
+    "provider_name": "COHERE",
+    "model_string": "command-r-plus",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "XAI": {
+    "provider_name": "XAI",
+    "model_string": "grok-beta",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "SAMBANOVA": {
+    "provider_name": "SAMBANOVA",
+    "model_string": "Meta-Llama-3.1-405B",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "OPENAI": {
+    "provider_name": "OPENAI",
+    "model_string": "gpt-4o-mini",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "PERPLEXITY": {
+    "provider_name": "PERPLEXITY",
+    "model_string": "sonar-pro",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "FIREWORKS": {
+    "provider_name": "FIREWORKS",
+    "model_string": "llama-v3p1-405b",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "HYPERBOLIC": {
+    "provider_name": "HYPERBOLIC",
+    "model_string": "llama-3.1-405b",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "NOVITA": {
+    "provider_name": "NOVITA",
+    "model_string": "llama-3.1-70b",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "ONEBRAIN": {
+    "provider_name": "ONEBRAIN",
+    "model_string": "default",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  },
+  "OPENROUTER": {
+    "provider_name": "OPENROUTER",
+    "model_string": "auto",
+    "discovered_at": "2026-06-08T00:00:00Z",
+    "ttl_seconds": 3600,
+    "source": "seed"
+  }
 }
