@@ -48,4 +48,4 @@
 | ASYNC-08 | B-014: Add startup banner to main.py showing active providers + model strings | ⏳ QUEUED | 2026-06-07 | — | — | Session: [16604506654173776295](https://jules.google.com/session/16604506654173776295) |
 | ASYNC-09 | B-015: crons/manager.py: add job execution metrics (duration, last_success, fail_count) | ✅ MERGED | 2026-06-07 | PR #45 | 2026-06-08 | Session: [6671558330966465193](https://jules.google.com/session/6671558330966465193) |
 | ASYNC-10 | AG-B-01: Create TaskStore with full CRUD and JSON persistence | ✅ MERGED | 2026-06-08 | PR #50 | E-121 | Submitted via agynina |
-| ASYNC-11 | AG-D-05: Create StepVerifier with non-empty output check | ⏳ IN_PROGRESS | 2026-06-08 | — | — | Submitted via agynina |
+| ASYNC-11 | AG-D-05: Create StepVerifier with non-empty output check | ✅ MERGED | 2026-06-08 | PR #51 | E-122 | Submitted via agynina |
