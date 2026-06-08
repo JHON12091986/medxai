@@ -10,3 +10,5 @@ playwright
 psutil
 ollama
 flask
+fastapi
+uvicorn[standard]
