@@ -50,5 +50,6 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 | config.missing_env.telegramchatid | 🔵 OPEN/PENDING | core.config | TELEGRAMCHATID missing from .env (non-blocking) | OPEN | unassigned | — | .env |
 | feature.ews_blocked | 🔵 OPEN/PENDING | tools.officemail | EWS email feature blocked (open issue O-02) | OPEN | unassigned | — | tools/officemail.py |
 | feature.playwright_blocked | 🔵 OPEN/PENDING | tools.browser | Playwright browser tool blocked (open issue O-01) | OPEN | unassigned | — | tools/browser.py |
+| E-062 | 🔵 INFO | - | B-020 promoted READY — B-005 dependency confirmed DONE (PR #25) | CLOSED | unassigned | 2026-06-08 | - |
 
 Archived FIXED entries → exports/nina_error_register_archive.md
