@@ -14,6 +14,25 @@ from core.config import NinaConfig
 from core.router import HybridRouter, ClassifiedTask, classify_task
 
 logger  = logging.getLogger("nina.telegram")
+
+# Bolt: Pre-compiled regexes for hot-path NLP intent matching
+_NLP_INTENTS_RE = {
+    "email":           re.compile(r"check my email|fetch email|my emails"),
+    "provider_hunt":   re.compile(r"hunt for new providers|find providers|missing providers"),
+    "provider_status": re.compile(r"provider status|addkey list|show providers"),
+    "config_update":   re.compile(r"set ews|config update|change setting"),
+    "rollback_request":re.compile(r"roll back|rollback"),
+    "upgrade_history": re.compile(r"upgrade history|upgrade log"),
+    "cost_report":     re.compile(r"how much did i spend|cost report|daily cost"),
+    "diagnose":        re.compile(r"diagnose errors|auto-diagnose"),
+    "run_schedule":    re.compile(r"run the morning report|run scheduled job|morning report"),
+    "gpu_config":      re.compile(r"gpu config|optimize gpu layers"),
+    "clear_session":   re.compile(r"clear my session|clear session"),
+    "show_idle_queue": re.compile(r"show idle queue|idle proposals"),
+    "ram_status":      re.compile(r"what's using the most ram|ram usage"),
+}
+_SEARCH_KEYWORDS_RE = re.compile(r"search|rate|price|news|today|current|latest|fetch|find|what is|how much")
+
 sec_log = logging.getLogger("nina.security")
 
 COMMANDS = {
@@ -245,22 +264,6 @@ class TelegramInterface:
     # ---- NLP fallback --------------------------------------------------------
 
     async def _handle_nlp(self, update: Update, text: str):
-        NLP_INTENTS = {
-            "email":           ["check my email", "fetch email", "my emails"],
-            "provider_hunt":   ["hunt for new providers", "find providers", "missing providers"],
-            "provider_status": ["provider status", "addkey list", "show providers"],
-            "config_update":   ["set ews", "config update", "change setting"],
-            "rollback_request":["roll back", "rollback"],
-            "upgrade_history": ["upgrade history", "upgrade log"],
-            "cost_report":     ["how much did i spend", "cost report", "daily cost"],
-            "diagnose":        ["diagnose errors", "auto-diagnose"],
-            "run_schedule":    ["run the morning report", "run scheduled job", "morning report"],
-            "gpu_config":      ["gpu config", "optimize gpu layers"],
-            "clear_session":   ["clear my session", "clear session"],
-            "show_idle_queue": ["show idle queue", "idle proposals"],
-            "ram_status":      ["what's using the most ram", "ram usage"],
-        }
-
         intent_map = {
             "email":           ("email",  ""),
             "provider_hunt":   ("shell",  "python -m tools.providerhunter"),
@@ -279,16 +282,14 @@ class TelegramInterface:
 
         lower  = text.lower()
         intent = "general_task"
-        for key, phrases in NLP_INTENTS.items():
-            if any(p in lower for p in phrases):
+        for key, regex in _NLP_INTENTS_RE.items():
+            if regex.search(lower):
                 intent = key
                 break
 
         if intent == "general_task":
             from tools.search import search
-            search_keywords = ["search", "rate", "price", "news", "today", "current",
-                               "latest", "fetch", "find", "what is", "how much"]
-            if any(k in text.lower() for k in search_keywords):
+            if _SEARCH_KEYWORDS_RE.search(lower):
                 result = await search(text)
                 await self._reply(update, result[:4000])
                 return
