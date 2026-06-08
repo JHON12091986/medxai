@@ -4,6 +4,12 @@ import re
 import sys
 import subprocess
 from datetime import datetime
+import json
+import time
+import logging
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 # Define file paths
 NINA_DIR = os.environ.get("NINA_DIR", "/home/aibony/nina")
@@ -370,6 +376,8 @@ def get_code_context():
     for i, rel in enumerate(FILES_TO_EXPORT):
         print(f"  Scanning file {i+1}/{total_files}: {rel}")
         context += get_file_summary(rel) + "\n---\n\n"
+        if (i + 1) % 10 == 0:
+            logger.info(json.dumps({"event": "export_progress", "processed": i + 1, "total": total_files, "pct": round(((i + 1) / total_files) * 100, 2)}))
     return context
 
 def get_appendix():
@@ -382,8 +390,12 @@ def get_appendix():
 """
     return appendix
 
-def main():
-    if "--dry-run" in sys.argv:
+def export():
+    start_time = time.time()
+    logger.info(json.dumps({"event": "export_start", "total_items": len(FILES_TO_EXPORT)}))
+
+    is_dry_run = "--dry-run" in sys.argv
+    if is_dry_run:
         print("DRY RUN: The following files would be scanned and compacted:")
         print("  - docs/space/nina_state.md")
         print("  - docs/space/nina_error_register.md")
@@ -393,9 +405,9 @@ def main():
             print(f"  - {f}")
         print(f"\nDRY RUN: The resulting snapshot would be written to: {OUTPUT_FILE}")
         print("DRY RUN: No files have been written or uploaded.")
-        return
 
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
+    if not is_dry_run:
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
 
     print("Starting compact export...")
 
@@ -440,12 +452,13 @@ def main():
     
     full_output = "\n\n".join(parts)
     
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write(full_output)
-        
-    print(f"Compact snapshot created: {OUTPUT_FILE}")
-    size = os.path.getsize(OUTPUT_FILE)
-    print(f"File size: {size} bytes")
+    if not is_dry_run:
+        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+            f.write(full_output)
+
+        print(f"Compact snapshot created: {OUTPUT_FILE}")
+        size = os.path.getsize(OUTPUT_FILE)
+        print(f"File size: {size} bytes")
     
     # Validation block
     mandatory_strings = [
@@ -461,5 +474,8 @@ def main():
         if string not in full_output:
             print(f"WARNING: nina_latest.md missing section: \"{string}\"")
 
+    duration = time.time() - start_time
+    logger.info(json.dumps({"event": "export_done", "duration_seconds": round(duration, 2), "items_written": len(FILES_TO_EXPORT)}))
+
 if __name__ == "__main__":
-    main()
+    export()
