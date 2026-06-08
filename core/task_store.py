@@ -131,3 +131,66 @@ class TaskStore:
             metrics["by_status"][t.status] = metrics["by_status"].get(t.status, 0) + 1
             metrics["by_priority"][t.priority] = metrics["by_priority"].get(t.priority, 0) + 1
         return metrics
+
+    def format_tasks_summary(self) -> str:
+        tasks = self._read_tasks()
+        active = [t for t in tasks if t.status in ["running", "pending", "paused", "failed"]]
+        if not active:
+            return "✅ No active tasks."
+
+        status_order = {"running": 0, "pending": 1, "paused": 2, "failed": 3}
+        active.sort(key=lambda t: status_order.get(t.status, 99))
+
+        lines = [f"📋 NINA Tasks ({len(active)} active)"]
+
+        symbols = {
+            "running": "🔴",
+            "pending": "🟡",
+            "paused": "⚪",
+            "failed": "❌"
+        }
+
+        for t in active[:10]:
+            sym = symbols.get(t.status, "❓")
+            short_id = t.id[:8]
+
+            goal = t.goal if len(t.goal) <= 40 else t.goal[:37] + "..."
+
+            if t.status == "failed":
+                reason = t.result or "Unknown error"
+                reason = reason if len(reason) <= 30 else reason[:27] + "..."
+                lines.append(f"{sym} {t.status}: {goal} [id: {short_id}] — {reason}")
+            else:
+                lines.append(f"{sym} {t.status}: {goal} [id: {short_id}]")
+
+        if len(active) > 10:
+            lines.append(f"...and {len(active) - 10} more")
+
+        return "\n".join(lines)
+
+    def format_task_detail(self, task_id: str) -> str:
+        t = self.get_task(task_id)
+        if not t:
+            return "Task not found."
+
+        try:
+            from datetime import datetime
+            dt = datetime.fromisoformat(t.created_at.replace("Z", "+00:00"))
+            created = dt.strftime("%Y-%m-%d %H:%M:%S")
+        except Exception:
+            created = t.created_at
+
+        res = t.result or "pending"
+        res = res if len(res) <= 100 else res[:97] + "..."
+
+        lines = [
+            f"📌 Task {t.id[:8]}",
+            f"Goal: {t.goal}",
+            f"Status: {t.status}",
+            f"Priority: {t.priority}",
+            f"Created: {created}",
+            f"Retries: {t.retries}",
+            f"Steps: {len(t.plan_steps)}",
+            f"Result: {res}"
+        ]
+        return "\n".join(lines)
