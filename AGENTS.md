@@ -254,3 +254,29 @@ Every local executor should use the automated `agynina` CLI toolset (located at 
 After every successful PR merge, update ~/nina/docs/space/jules_backlog.md:
 change the item's status from READY or IN_PROGRESS to DONE.
 Add PR number and date. Use Python file write — never bash echo.
+
+## Task Tracker Update Protocol
+After every Jules PR is merged, agynina updates `~/nina/docs/space/jules_task_tracker.md` using Python only — never bash echo.
+
+Fields to update:
+- Change status from `IN_PROGRESS` to `DONE`
+- Add PR number (e.g., `PR #123`)
+- Add merged date (e.g., `2026-06-08`)
+
+Rules:
+- Never update tracker from inside Jules — only agynina does tracker updates post-merge.
+- Run `./nina_sync.sh` after every tracker update.
+
+Example Python update block:
+```python
+from pathlib import Path
+
+tracker_path = Path("/home/aibony/nina/docs/space/jules_task_tracker.md")
+content = tracker_path.read_text()
+# Replace the old table row with the updated table row
+content = content.replace(
+    "| ASYNC-03 | B-002: Wire model_overrides dict to .env hot-reload in router.py | ⏳ QUEUED | 2026-06-07 | — | — | Session: [13876164946786086522](https://jules.google.com/session/13876164946786086522) |",
+    "| ASYNC-03 | B-002: Wire model_overrides dict to .env hot-reload in router.py | ✅ MERGED | 2026-06-07 | PR #123 | E-062 | Session: [13876164946786086522](https://jules.google.com/session/13876164946786086522) |"
+)
+tracker_path.write_text(content)
+```
