@@ -100,9 +100,44 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
 
 ---
 
-## NINA Tool Routing Policy v2
+## Tool Routing Policy (2026-06-08)
 
-**Principle:** _Perplexity plans, the local executor stabilizes, Jules builds._
+### Always-On Autocomplete (never disable)
+- **Codeium** — VSCode extension, unlimited completions
+- **Amazon Q Developer** — VSCode extension, unlimited inline
+
+### Decision Tree
+1. Architecture / spec / GitHub MCP → **Perplexity** (Space)
+2. Single-file scoped fix, urgent → **agy** (preserves other quotas)
+3. Multi-file local task → **Gemini CLI** (speed + 1M context + vision)
+4. Gemini CLI exhausted → **Qwen Code CLI** (Qwen3-Coder-480B, smarter model)
+5. Async multi-module PR, can wait → **Jules** (Gemini 3.1 Pro, best quality)
+6. All local quota gone → **Cursor Hobby** (50/month reserve)
+7. Everything gone / offline → **Ollama + Continue.dev** (unlimited)
+
+### Quota Reference
+| Tool | Model | Daily Quota | Reset |
+|------|-------|-------------|-------|
+| agy | Gemini Flash | ~5h rolling | Rolling |
+| Gemini CLI | Gemini 2.5 Flash | 1,000 req/day | Midnight PT (~1PM BD) |
+| Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
+| Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
+| Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |
+| Copilot Free | GPT-4o | 50 chat/month | Monthly |
+
+### Tool Rules
+- agy: always start prompt with "Use the permanent JSON approval setting..."
+- agy: one file at a time, sequential, never parallel
+- Gemini CLI: use for speed-sensitive tasks and anything needing image/multimodal
+- Qwen Code CLI: use for complex logic, deep refactors, when quality > speed
+- Jules: fire-and-forget only — NOT a chat tool, always opens PR
+- Jules PRs: always reviewed + merged by agy, never auto-merged
+- After ANY merge: run ./nina_sync.sh — no exceptions
+
+### Quota Cascade Rule
+Gemini CLI exhausted → Qwen Code → agy → Cursor → Jules (async) → Ollama
+
+---
 
 ### 1. Four-Tool Operating Model — Parallel Execution
 
