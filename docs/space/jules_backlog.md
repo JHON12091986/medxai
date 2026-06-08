@@ -86,9 +86,9 @@ Perplexity reads backlog each session
 | B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegraminterface.py | — | agynina only — high-risk file |
 | B-011 | Guardian engine: add file integrity check on startup | `READY` | guardianengine.py | — | SIGNATURES dict exists but startup check is passive. agynina only |
 | B-012 | Add structured JSON logging to router.py for provider selection events | `READY` | core/router.py | — | Plain text logs hard to parse for metrics. agynina only |
-| B-013 | healthcheck.py: replace bare except with typed exception handling | `IN_PROGRESS` | healthcheck.py | — | Bare except swallows real errors |
+| B-013 | healthcheck.py: replace bare except with typed exception handling | `DONE` | healthcheck.py | — | Bare except swallows real errors |
 | B-014 | Add startup banner to main.py showing active providers + model strings | `IN_PROGRESS` | main.py | B-002 | Needs model_overrides wired first. agynina only |
-| B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | `IN_PROGRESS` | crons/manager.py | — | No visibility into cron job health |
+| B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | `DONE` | crons/manager.py | — | No visibility into cron job health |
 | R-77 | Fix parallel_route RAM guard crash | `READY` | core/router.py | — | A-1 from action board. agynina only |
 | R-78 | Fix tool grammar fragility — minimum viable guard | `DONE` | core/agent.py | — | A-3 from action board; Jules session 230224707076942630 |
 
@@ -102,9 +102,9 @@ Perplexity reads backlog each session
 | B-017 | Write tests for core/router.py — provider ordering, circuit breaker, fallback | `DONE` | tests/test_router.py | — | Jules session 9354379735932974598 |
 | B-018 | Write tests for tools/browser.py — SSRF guard, URL validation | `DONE` | tests/test_browser.py | — | Jules session 9340521117119167710 |
 | B-019 | Write tests for guardianengine.py — SIGNATURES check, run_cmd | `DONE` | tests/test_guardian.py | — | High-risk file needs test coverage; Jules session 13016195312630697079 |
-| B-020 | Write tests for tools/model_discovery.py | `BLOCKED` | tests/test_model_discovery.py | B-005 | Unblock now — B-005 is DONE |
+| B-020 | Write tests for tools/model_discovery.py | `DONE` | tests/test_model_discovery.py | B-005 | Unblock now — B-005 is DONE |
 | B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `DONE` | healthcheck.py | — | Enables external monitoring; Jules session 4745946253740770652 |
-| B-022 | tools/compact_exporter.py: add progress logging for long exports | `IN_PROGRESS` | tools/compact_exporter.py | — | Silent during long runs; Jules session 7514279750845525195 |
+| B-022 | tools/compact_exporter.py: add progress logging for long exports | `DONE` | tools/compact_exporter.py | — | Silent during long runs; Jules session 7514279750845525195 |
 | B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `DONE` | AGENTS.md | — | Jules needs instructions to update task tracker after each run; Jules session 15026902744619615986 |
 | B-024 | Add AGENTS.md section: backlog update protocol | `DONE` | AGENTS.md | — | 2026-06-07 |
 | B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `DONE` | crons/manager.py | — | No clean shutdown on systemd stop; Jules session 5406292542431629720 |
@@ -410,6 +410,10 @@ AG3 Phase 3 (parallel with AG2):
 | B-021 | Add prometheus-style metrics endpoint to healthcheck.py | E-sync | #38 | 2026-06-08 |
 | B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | E-sync | #43 | 2026-06-08 |
 | B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | E-sync | #42 | 2026-06-08 |
+| B-020 | Write tests for tools/model_discovery.py | E-sync | #41 | 2026-06-08 |
+| B-022 | tools/compact_exporter.py: add progress logging for long exports | E-sync | #44 | 2026-06-08 |
+| B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | E-sync | #45 | 2026-06-08 |
+| B-013 | healthcheck.py: replace bare except with typed exception handling | E-sync | #46 | 2026-06-08 |
 
 ---
 
