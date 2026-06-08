@@ -31,6 +31,8 @@ _NLP_INTENTS_RE = {
     "show_idle_queue": re.compile(r"show idle queue|idle proposals"),
     "ram_status":      re.compile(r"what's using the most ram|ram usage"),
 }
+
+_SECRET_KEYS_RE = re.compile(r"key|token|secret|password", re.IGNORECASE)
 _SEARCH_KEYWORDS_RE = re.compile(r"search|rate|price|news|today|current|latest|fetch|find|what is|how much")
 
 sec_log = logging.getLogger("nina.security")
@@ -104,7 +106,7 @@ class TelegramInterface:
         if not isinstance(text, str):
             return text
         for k, v in self.config.dict().items():
-            if v and isinstance(v, str) and any(x in k.lower() for x in ['key', 'token', 'secret', 'password']):
+            if v and isinstance(v, str) and _SECRET_KEYS_RE.search(k):
                 if v in text:
                     masked = v[:4] + "***" + v[-4:] if len(v) > 8 else "***"
                     text = text.replace(v, masked)
