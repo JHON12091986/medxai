@@ -28,10 +28,26 @@ class Task:
     metadata: dict = field(default_factory=dict)
 
 class TaskStore:
+    RESUMABLE_STATUSES = frozenset(['pending', 'running', 'paused'])
+
     def __init__(self, path: str = 'data/tasks.json'):
         self.path = Path(path)
         self.lock_path = str(self.path) + ".lock"
         self._ensure_file()
+        self.resume_open_tasks()
+
+    def resume_open_tasks(self) -> List[Task]:
+        all_tasks = self.list_tasks()
+        resumable_tasks = [t for t in all_tasks if t.status in self.RESUMABLE_STATUSES]
+        found = len(resumable_tasks)
+        reset = 0
+        for t in resumable_tasks:
+            if t.status == 'running':
+                self.update_task(t.id, status='pending')
+                t.status = 'pending'
+                reset += 1
+        logger.info(json.dumps({"event": "task_resume_scan", "found": found, "reset_to_pending": reset}))
+        return resumable_tasks
 
     def _ensure_file(self):
         if not self.path.parent.exists():
@@ -98,6 +114,11 @@ class TaskStore:
         if status:
             return [t for t in tasks if t.status == status]
         return tasks
+
+    def get_resumable_tasks(self) -> List[Task]:
+        pending_tasks = self.list_tasks(status='pending')
+        prio_map = {'high': 0, 'normal': 1, 'low': 2}
+        return sorted(pending_tasks, key=lambda t: (prio_map.get(t.priority, 1), t.created_at))
 
     def get_task_metrics(self) -> Dict:
         tasks = self._read_tasks()
