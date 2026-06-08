@@ -236,7 +236,7 @@ _Dependency: AG-C-02 must be DONE first_
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-D-01 | `core/verifier.py` | Create StepVerifier class — checks whether a step's output satisfies its declared success_criteria | `NEEDS_SPEC` | AG-C-02 |
+| AG-D-01 | `core/verifier.py` | Create StepVerifier class — checks whether a step's output satisfies its declared success_criteria | `DONE` | AG-C-02 |
 | AG-D-02 | `core/verifier.py` + `core/capabilities.py` | Add output schema validation — each tool declares expected output schema; Verifier checks compliance after execution | `NEEDS_SPEC` | AG-D-05 |
 | AG-D-03 | `core/verifier.py` | Add semantic verification — for LLM-generated outputs, second LLM call scores answer quality 1–5 | `NEEDS_SPEC` | AG-D-01 |
 | AG-D-04 | `core/verifier.py` | Add numeric assertion verifier — verify numeric outputs within declared expected range (e.g. price > 0) | `NEEDS_SPEC` | AG-D-01 |
