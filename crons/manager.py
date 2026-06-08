@@ -18,6 +18,52 @@ logger = logging.getLogger("nina.scheduler")
 
 import asyncio
 import signal
+import time
+import json
+from datetime import datetime, timezone
+
+_job_metrics = {}
+
+def get_job_metrics():
+    return _job_metrics
+
+def _wrap_job(job_id, func):
+    _job_metrics[job_id] = {
+        "duration_seconds": 0.0,
+        "last_success": None,
+        "fail_count": 0
+    }
+
+    async def wrapper(*args, **kwargs):
+        start_time = time.time()
+        success = False
+        try:
+            if asyncio.iscoroutinefunction(func) or (isinstance(func, functools.partial) and asyncio.iscoroutinefunction(func.func)):
+                res = await func(*args, **kwargs)
+            else:
+                res = func(*args, **kwargs)
+                if asyncio.iscoroutine(res):
+                    res = await res
+            success = True
+            return res
+        except Exception:
+            raise
+        finally:
+            duration = time.time() - start_time
+            _job_metrics[job_id]["duration_seconds"] = duration
+            if success:
+                _job_metrics[job_id]["last_success"] = datetime.now(timezone.utc).isoformat()
+            else:
+                _job_metrics[job_id]["fail_count"] += 1
+
+            logger.info(json.dumps({
+                "event": "job_run",
+                "job": job_id,
+                "duration": duration,
+                "success": success
+            }), extra={"cron_module": "cron", "job_id": job_id})
+
+    return wrapper
 
 async def _model_discovery_job(nina_os):
     # Wait 30s before the first run. The IntervalTrigger doesn't run immediately on start usually,
@@ -38,7 +84,9 @@ class TaskScheduler:
 
     def start(self):
         n = self.nina
-        add = self._sched.add_job
+
+        def add(func, trigger, id, **kwargs):
+            return self._sched.add_job(_wrap_job(id, func), trigger, id=id, **kwargs)
 
         add(n.run_morning_report,    CronTrigger(hour=9,  minute=0,  timezone="Asia/Dhaka"), id="morning_report")
         add(n.run_heartbeat,         IntervalTrigger(hours=1),                               id="heartbeat")
