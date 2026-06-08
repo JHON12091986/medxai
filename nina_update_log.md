@@ -1513,3 +1513,13 @@
 **Files changed:** docs/space/nina_state.md,nina.service,nina_context.md,nina_problem_log.md,tools/nina_dashboard.py,nina-dashboard.service,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 129 — 2026-06-08 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** nina_sync.sh,tools/compact_exporter.py,nina-dashboard.service,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active

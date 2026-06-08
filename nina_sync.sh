@@ -247,21 +247,27 @@ if [ "$DRY_RUN" = true ]; then
 else
   # Step 8: Call the compact exporter Python script
   python3 "$NINA/tools/compact_exporter.py"
-  FIXED_FILE="$HOME/Downloads/nina_space_upload/nina_latest.md"
-
-  SIZE=$(wc -c < "$FIXED_FILE" | tr -d ' ')
-  echo ""
-  echo "  ╔══════════════════════════════════════════════╗"
-  echo "  ║  ✅  UPLOAD TO PERPLEXITY SPACE:             ║"
-  echo "  ║      nina_latest.md  (${SIZE} bytes)         ║"
-  echo "  ║      ~/Downloads/nina_space_upload/          ║"
-  echo "  ╚══════════════════════════════════════════════╝"
-  echo ""
+  
+  echo "  ✅ nina_latest.md:      $(wc -c < $HOME/Downloads/nina_space_upload/nina_latest.md) bytes"
+  echo "  ✅ nina_diff.md:        $(wc -c < $HOME/Downloads/nina_space_upload/nina_diff.md) bytes"
+  BFILE=$(ls -t $HOME/Downloads/nina_space_upload/nina_full_backup_*.md 2>/dev/null | head -1)
+  [ -n "$BFILE" ] && echo "  ✅ $(basename $BFILE): $(wc -c < $BFILE) bytes"
 
   if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q "gdrive:"; then
-    rclone copy "$FIXED_FILE" "gdrive:nina-backup/" --no-traverse 2>/dev/null && \
-      echo "  ☁️  Synced to Google Drive: gdrive:nina-backup/nina_latest.md" || \
-      echo "  ⚠️  rclone upload failed (sync still complete)"
+    rclone copy "$HOME/Downloads/nina_space_upload/nina_latest.md" "gdrive:nina-backup/" --no-traverse 2>/dev/null \
+      && echo "  ☁️  nina_latest.md → gdrive:nina-backup/ (overwritten)" \
+      || echo "  ⚠️  nina_latest.md upload failed"
+
+    rclone copy "$HOME/Downloads/nina_space_upload/nina_diff.md" "gdrive:nina-backup/" --no-traverse 2>/dev/null \
+      && echo "  ☁️  nina_diff.md → gdrive:nina-backup/ (overwritten)" \
+      || echo "  ⚠️  nina_diff.md upload failed"
+
+    BACKUP_FILE=$(ls -t "$HOME/Downloads/nina_space_upload/nina_full_backup_"*.md 2>/dev/null | head -1)
+    if [ -n "$BACKUP_FILE" ]; then
+      rclone copy "$BACKUP_FILE" "gdrive:nina-backup/versioned/" --no-traverse 2>/dev/null \
+        && echo "  ☁️  $(basename $BACKUP_FILE) → gdrive:nina-backup/versioned/ (permanent version)" \
+        || echo "  ⚠️  Full backup upload failed"
+    fi
   fi
 fi
 

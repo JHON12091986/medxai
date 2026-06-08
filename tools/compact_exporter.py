@@ -4,478 +4,227 @@ import re
 import sys
 import subprocess
 from datetime import datetime
-import json
 import time
 import logging
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 # Define file paths
-NINA_DIR = os.environ.get("NINA_DIR", "/home/aibony/nina")
-SPACE_DIR = os.path.join(NINA_DIR, "docs/space")
-EXPORTS_DIR = os.path.join(NINA_DIR, "exports")
-LOGS_DIR = os.path.join(NINA_DIR, "logs")
-UPLOAD_DIR = os.environ.get("NINA_UPLOAD_DIR", "/home/aibony/Downloads/nina_space_upload")
-OUTPUT_FILE = os.path.join(UPLOAD_DIR, "nina_latest.md")
+NINA_DIR = Path("/home/aibony/nina")
+SPACE_DIR = NINA_DIR / "docs/space"
+UPLOAD_DIR = Path("/home/aibony/Downloads/nina_space_upload")
 
-FILES_TO_EXPORT = [
-    "core/router.py",
-    "core/agent.py",
-    "core/nina.py",
-    "core/config.py",
-    "core/memory.py",
-    "core/hotreload.py",
-    "interfaces/telegram_interface.py",
-    "tools/shell.py",
-    "tools/browser.py",
-    "tools/upgradepipeline.py",
-    "tools/finance.py",
-    "tools/market.py",
-    "tools/officemail.py",
-    "crons/manager.py",
-    "guardian_engine.py",
-    "main.py",
-    "nina_sync.sh"
-]
+def ensure_upload_dir():
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-# We must defer makedirs until main so that we can optionally bypass it during a dry run
-# or when imported as a module without side-effects.
+def get_git_short_sha():
+    try:
+        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        return "unknown"
 
-def get_state_section(section_title):
-    state_path = os.path.join(SPACE_DIR, "nina_state.md")
-    if not os.path.exists(state_path):
-        return f"_Section {section_title} missing from nina_state.md_"
-    with open(state_path, "r", encoding="utf-8") as f:
-        content = f.read()
+def get_git_long_sha():
+    try:
+        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        return "unknown"
+
+def get_git_branch():
+    try:
+        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "--abbrev-ref", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
+    except Exception:
+        return "unknown"
+
+def get_state_section(section_title, max_lines=None, bullets_only=False):
+    state_path = SPACE_DIR / "nina_state.md"
+    if not state_path.exists():
+        return f"_Section {section_title} missing_"
     
+    content = state_path.read_text(encoding="utf-8")
     pattern = re.compile(rf"^## {section_title}\n(.*?)(?=\n## |\Z)", re.MULTILINE | re.DOTALL)
     match = pattern.search(content)
-    if match:
-        return match.group(1).strip()
-    return f"_Section {section_title} not parsed._"
-
-def get_service_status():
-    try:
-        status = subprocess.check_output(["systemctl", "--user", "is-active", "nina"], stderr=subprocess.DEVNULL).decode().strip()
-        return status
-    except Exception:
-        try:
-            status = subprocess.check_output(["systemctl", "is-active", "nina"], stderr=subprocess.DEVNULL).decode().strip()
-            return status
-        except Exception:
-            return "unknown"
-
-def get_hot_context():
-    import subprocess, re
-    from pathlib import Path
-    nina = Path(os.environ.get('NINA_DIR', '/home/aibony/nina'))
-
-    # Last 3 merged PRs
-    try:
-        result = subprocess.run(['git', 'log', '--oneline', '--merges', '-3'],
-            capture_output=True, text=True, cwd=str(nina))
-        merges = result.stdout.strip() or 'none'
-    except Exception:
-        merges = 'unavailable'
-
-    # Active locks
-    try:
-        lock_file = nina / 'juleslock.txt'
-        if not lock_file.exists():
-            lock_file = nina / 'jules_lock.txt'
-        lock_content = lock_file.read_text()
-        m = re.search(r'LOCKED_FILES=([^\n]*)', lock_content)
-        locks = m.group(1).strip() if m and m.group(1).strip() else 'none'
-    except Exception:
-        locks = 'unavailable'
-
-    # Open error count
-    try:
-        reg = (nina / 'docs/space/nina_error_register.md').read_text()
-        open_count = len(re.findall(r'\|\s*OPEN\s*\|', reg, re.IGNORECASE))
-    except Exception:
-        open_count = 'unavailable'
-
-    # Next READY task
-    try:
-        backlog = (nina / 'docs/space/jules_backlog.md').read_text()
-        m = re.search(r'\|\s*((?:B|AG|R)-[\w-]+)\s*\|([^|]+)\|[^|]+\|\s*`READY`\s*\|', backlog)
-        next_task = f'{m.group(1).strip()} — {m.group(2).strip()}' if m else 'none'
-    except Exception:
-        next_task = 'unavailable'
-
-    return f'''## 🔥 HOT CONTEXT
-> Auto-generated — read this first
-
-- **Last merged PRs:** {merges}
-- **Active locks:** {locks}
-- **Open errors:** {open_count}
-- **Next READY task:** {next_task}
-
----
-'''
-
-def get_header():
-    branch = "main"
-    try:
-        branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=NINA_DIR).decode().strip()
-    except Exception:
-        pass
+    if not match:
+        return f"_Section {section_title} not found_"
     
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    python_ver = sys.version.split()[0]
+    lines = match.group(1).strip().split('\n')
+    if bullets_only:
+        lines = [l for l in lines if l.strip().startswith(('-', '*', '1.'))]
     
-    header = f"""# NINA Operational AI Snapshot — {timestamp}
-_Generated: {timestamp} | Repo: github.com/aibony/nina | Branch: {branch} | Python: {python_ver}_
-_Purpose: AI context snapshot for Perplexity Space_
-_Target size: Compact, low-noise context (~200KB-300KB)_
-
----
-
-## SESSION START CHECKLIST (Perplexity)
-Before opening a new Perplexity thread:
-1. cd ~/nina && ./nina_sync.sh  (generates fresh nina_latest.md)
-2. Attach: exports/nina_latest.md
-3. Attach: the specific source file(s) to be discussed
-4. State: task type — bug / feature / doc / security / review
-5. Check: cat ~/nina/juleslock.txt — confirm no target files are locked
-
----
-"""
-    return header
-
-def get_executive_snapshot():
-    identity = get_state_section("Identity")
-    arch = get_state_section("Architecture & Stack")
-    providers = get_state_section("AI Providers & Quota")
-    policy = get_state_section("NINA Tool Routing Policy v2 Summary")
-    svc_status = get_service_status()
-    
-    snapshot = f"""## Executive Snapshot
-
-### Identity & Deployment Summary
-{identity}
-
-### Core Architecture Summary
-{arch}
-
-### Tool Routing & Quota Strategy Summary
-{providers}
-
-### NINA Tool Routing Policy v2 Summary
-{policy}
-
-### High-Risk Files
-- `interfaces/telegram_interface.py` (Telegram bot / security gate)
-- `.env` (Secrets — NEVER commit, NEVER send to cloud)
-- `core/router.py` (HybridRouter V4)
-- `main.py` (Entry point)
-- `guardian_engine.py` (Forensic engine)
-- `tools/shell.py` (Allowlist-gated shell)
-
-### Latest Verified Runtime Status
-- **nina.service Status:** {svc_status}
-"""
-    return snapshot
-
-def get_action_board():
-    register_path = os.path.join(SPACE_DIR, "nina_error_register.md")
-    if not os.path.exists(register_path):
-        return "## Current Action Board\n\n_nina_error_register.md not found._\n"
+    if max_lines:
+        lines = lines[:max_lines]
         
-    with open(register_path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-        
-    blockers, warnings, debts, features = [], [], [], []
+    return '\n'.join(lines)
+
+def export_summary():
+    """Produces nina_latest.md (BAREBONES SUMMARY)"""
+    sha = get_git_short_sha()
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
-    # Parse markdown table
-    for line in lines:
-        if not line.startswith("|") or line.strip().startswith("|----") or line.strip().startswith("| ID "):
-            continue
-        parts = [p.strip() for p in line.split("|")[1:-1]]
-        if len(parts) < 5:
-            continue
-        
-        severity = parts[1]
-        status = parts[4]
-        
-        if status.upper() not in ["OPEN", "OPEN/PENDING", "IN-PROGRESS", "IN PROGRESS"]:
-            continue
-            
-        if "BLOCKER" in severity.upper() or "🔴" in severity:
-            blockers.append(line)
-        elif "WARN" in severity.upper() or "🟠" in severity:
-            warnings.append(line)
-        elif "DEBT" in severity.upper() or "🟡" in severity:
-            debts.append(line)
-        else:
-            features.append(line)
-            
-    header_row = "| ID | Severity | Component | Issue (short) | Status | Assignee | Fixed In | File(s) |\n|----|----------|-----------|---------------|--------|----------|----------|---------|\n"
+    output = []
+    output.append(f"# NINA Latest State | {ts} | Git: {sha}")
     
-    action_board = f"""## Current Action Board
-
-### Summary Counts
-- **🔴 BLOCKER:** {len(blockers)}
-- **🟠 WARN:** {len(warnings)}
-- **🟡 DEBT:** {len(debts)}
-- **🔵 FEATURE/PENDING:** {len(features)}
-
-"""
-    if blockers:
-        action_board += "#### 🔴 BLOCKER\n" + header_row + "".join(blockers) + "\n"
-    if warnings:
-        action_board += "#### 🟠 WARN\n" + header_row + "".join(warnings) + "\n"
-    if debts:
-        action_board += "#### 🟡 DEBT\n" + header_row + "".join(debts) + "\n"
-    if features:
-        action_board += "#### 🔵 FEATURE/PENDING\n" + header_row + "".join(features) + "\n"
-        
-    return action_board
-
-def get_roadmap():
-    phase = get_state_section("Current Phase & Next Task")
-    milestones = get_state_section("Open Milestones")
-    confidence = get_state_section("Action Board Confidence")
+    output.append("\n## Identity")
+    output.append(get_state_section("Identity", max_lines=4))
     
-    content = f"""## Current Phase & Roadmap
-
-### Current Stage & Next Task
-{phase}
-
-### Open Milestones
-{milestones}
-
-### Action Board Confidence
-{confidence}
-"""
-    return content
-
-def get_recent_changes():
-    log_path = os.path.join(NINA_DIR, "nina_update_log.md")
-    if not os.path.exists(log_path):
-        return "## Recent Meaningful Changes\n\n_nina_update_log.md not found._\n"
-    with open(log_path, "r", encoding="utf-8") as f:
-        content = f.read()
-        
-    # Split by Entry
-    pattern = re.compile(r"^## Entry (\d+)", re.MULTILINE)
-    matches = list(pattern.finditer(content))
+    output.append("\n## Current Phase + Next Task")
+    output.append(get_state_section("Current Phase & Next Task", bullets_only=True))
     
-    entries = []
-    for i in range(len(matches)):
-        start = matches[i].start()
-        end = matches[i+1].start() if i+1 < len(matches) else len(content)
-        entry_text = content[start:end].strip()
-        if entry_text.endswith("---"):
-            entry_text = entry_text[:-3].strip()
-        entries.append(entry_text)
-        
-    meaningful_count = 0
-    skipped_sync_count = 0
-    recent_entries = []
+    output.append("\n## Open Error Register")
+    reg_path = SPACE_DIR / "nina_error_register.md"
+    open_errors = []
+    if reg_path.exists():
+        reg_content = reg_path.read_text(encoding="utf-8")
+        for line in reg_content.split('\n'):
+            if '|' in line and 'OPEN' in line.upper():
+                open_errors.append(line)
     
-    for entry in reversed(entries):
-        first_line = entry.split("\n")[0]
-        if "D-sync Post-session sync" in first_line:
-            skipped_sync_count += 1
-            continue
-        
-        if meaningful_count < 10:
-            recent_entries.append(entry)
-            meaningful_count += 1
-        else:
-            break
-            
-    recent_entries.reverse()
-    
-    changes = "## Recent Meaningful Changes\n\n"
-    changes += "\n\n---\n\n".join(recent_entries)
-    changes += f"\n\n---\n\n_Note: {skipped_sync_count} automated sync runs omitted; no material policy or architecture change._\n"
-    return changes
-
-def get_agents_rules():
-    agents_path = os.path.join(NINA_DIR, "AGENTS.md")
-    if not os.path.exists(agents_path):
-        return "## Key Rules for Future Patches\n\n_AGENTS.md not found._\n"
-    with open(agents_path, "r", encoding="utf-8") as f:
-        content = f.read()
-    
-    rules = "## Key Rules for Future Patches\n\n"
-    match = re.search(r"## Rules for Jules.*", content, re.DOTALL)
-    if match:
-        rules += match.group(0)
+    if open_errors:
+        output.append("| ID | Severity | Component | Issue (short) | Status | Assignee | Fixed In | File(s) |")
+        output.append("|----|----------|-----------|---------------|--------|----------|----------|---------|")
+        output.extend(open_errors)
     else:
-        rules += content
-    return rules
-
-def get_file_summary(rel_path):
-    abs_path = os.path.join(NINA_DIR, rel_path)
-    if not os.path.exists(abs_path):
-        return f"### `{rel_path}`\n_Status: File not found / does not exist yet._\n"
+        output.append("✅ No open errors")
         
-    with open(abs_path, "r", encoding="utf-8") as f:
-        lines = f.readlines()
+    output.append("\n## Tool Routing Policy")
+    policy = get_state_section("NINA Tool Routing Policy v2 Summary")
+    # Extract only the 4-row table if possible, or just the summary
+    table_match = re.search(r'(\|.*\|.*\n\|.*\|.*\n\|.*\|.*\n\|.*\|.*\n\|.*\|.*)', policy)
+    if table_match:
+        output.append(table_match.group(1))
+    else:
+        output.append(policy)
         
-    if len(lines) < 120 or rel_path.endswith(".sh") or rel_path.endswith(".txt") or rel_path.endswith(".json"):
-        ext = rel_path.split(".")[-1]
-        lang = "python" if ext == "py" else ("bash" if ext == "sh" else ext)
-        code = "".join(lines)
-        return f"### `{rel_path}`\n\n```{lang}\n{code}\n```\n"
-        
-    summary_lines = []
+    output.append("\n## Active Milestones")
+    output.append(get_state_section("Open Milestones", max_lines=3))
     
-    # Extract docstring if present
-    in_docstring = False
-    docstring_lines = []
-    for line in lines[:20]:
-        strip_line = line.strip()
-        if strip_line.startswith('"""') or strip_line.startswith("'''"):
-            if in_docstring:
-                docstring_lines.append(line)
-                break
-            else:
-                in_docstring = True
-                docstring_lines.append(line)
-        elif in_docstring:
-            docstring_lines.append(line)
-            
-    if docstring_lines:
-        summary_lines.append("#### Docstring\n" + "".join(docstring_lines).strip() + "\n")
-        
-    # Extract imports
-    imports = []
-    for line in lines:
-        if line.startswith("import ") or line.startswith("from "):
-            imports.append(line.strip())
-    if imports:
-        summary_lines.append("#### Imports\n```python\n" + "\n".join(imports) + "\n```\n")
-        
-    # Extract classes and methods
-    classes_and_methods = []
-    for line in lines:
-        strip_line = line.strip()
-        if line.startswith("class "):
-            classes_and_methods.append(line.rstrip())
-        elif line.startswith("def "):
-            classes_and_methods.append(line.rstrip())
-        elif strip_line.startswith("def ") and (line.startswith("    ") or line.startswith("\t")):
-            classes_and_methods.append("  " + strip_line)
-            
-    if classes_and_methods:
-        summary_lines.append("#### Classes & Signatures\n```python\n" + "\n".join(classes_and_methods) + "\n```\n")
-        
-    summary = f"### `{rel_path}` (Compact Signatures Summary)\n\n"
-    summary += "\n".join(summary_lines)
-    return summary
+    output.append("\n## Key Paths")
+    output.append(get_state_section("Key File Paths", max_lines=5))
+    
+    output.append(f"\n_Last sync: {ts}_")
+    
+    dest = UPLOAD_DIR / "nina_latest.md"
+    dest.write_text('\n'.join(output), encoding="utf-8")
+    print(f"Exported: {dest} ({dest.stat().st_size} bytes)")
 
-def get_code_context():
-    context = "## Targeted Code Context\n\n"
-    total_files = len(FILES_TO_EXPORT)
-    for i, rel in enumerate(FILES_TO_EXPORT):
-        print(f"  Scanning file {i+1}/{total_files}: {rel}")
-        context += get_file_summary(rel) + "\n---\n\n"
-        if (i + 1) % 10 == 0:
-            logger.info(json.dumps({"event": "export_progress", "processed": i + 1, "total": total_files, "pct": round(((i + 1) / total_files) * 100, 2)}))
-    return context
-
-def get_appendix():
-    appendix = """## Appendix Pointers
-
-- **Full Update Log Archive:** `exports/nina_update_log_archive_2026-05.md` (Contains the history of entries 001 to 093)
-- **Full Error Register Archive:** `exports/nina_error_register_archive.md` (Contains all historically FIXED entries)
-- **Exports Directory:** `exports/` (Contains backups and problem log archives)
-- **Handoff/Baseline Configurations:** `upgrades/.guardian_handoff.json` and `upgrades/guardian_baseline.json`
-"""
-    return appendix
-
-def export():
-    start_time = time.time()
-    logger.info(json.dumps({"event": "export_start", "total_items": len(FILES_TO_EXPORT)}))
-
-    is_dry_run = "--dry-run" in sys.argv
-    if is_dry_run:
-        print("DRY RUN: The following files would be scanned and compacted:")
-        print("  - docs/space/nina_state.md")
-        print("  - docs/space/nina_error_register.md")
-        print("  - nina_update_log.md")
-        print("  - AGENTS.md")
-        for f in FILES_TO_EXPORT:
-            print(f"  - {f}")
-        print(f"\nDRY RUN: The resulting snapshot would be written to: {OUTPUT_FILE}")
-        print("DRY RUN: No files have been written or uploaded.")
-
-    if not is_dry_run:
-        os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-    print("Starting compact export...")
-
-    print("Gathering hot context...")
-    hot_context = get_hot_context()
-
-    print("Gathering header...")
-    header = get_header()
-
-    print("Gathering executive snapshot...")
-    snapshot = get_executive_snapshot()
-
-    print("Gathering action board...")
-    action_board = get_action_board()
-
-    print("Gathering roadmap...")
-    roadmap = get_roadmap()
-
-    print("Gathering recent changes...")
-    recent_changes = get_recent_changes()
-
-    print("Gathering agents rules...")
-    agents_rules = get_agents_rules()
-
-    print("Gathering code context (this may take a moment)...")
-    code_context = get_code_context()
-
-    print("Gathering appendix...")
-    appendix = get_appendix()
-
-    parts = [
-        hot_context,
-        header,
-        action_board,
-        snapshot,
-        agents_rules,
-        roadmap,
-        recent_changes,
-        code_context,
-        appendix
+def export_diff():
+    """Produces nina_diff.md (LOCAL vs GITHUB DELTA)"""
+    sha = get_git_short_sha()
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    output = []
+    output.append(f"# NINA Local vs GitHub Diff\nGenerated: {ts}\nGit HEAD: {sha}\n")
+    
+    commands = [
+        ("## Git Status", ["git", "-C", str(NINA_DIR), "status", "--short"]),
+        ("## Unpushed Commits", ["git", "-C", str(NINA_DIR), "log", "origin/main..HEAD", "--oneline"]),
+        ("## facts.json diff", ["git", "-C", str(NINA_DIR), "diff", "HEAD", "--", "data/memory/facts.json"]),
+        ("## puter_architect.html diff", ["git", "-C", str(NINA_DIR), "diff", "HEAD", "--", "dashboard/puter_architect.html"]),
+        ("## nina_dashboard.py diff", ["git", "-C", str(NINA_DIR), "diff", "HEAD", "--", "tools/nina_dashboard.py"]),
+        ("## Files Changed Since Last Git Fetch", ["find", str(NINA_DIR), "-maxdepth", "4", "-newer", str(NINA_DIR / ".git/FETCH_HEAD"), 
+                                                   "-not", "-path", "*/.git/*", "-not", "-path", "*/venv/*", "-not", "-path", "*/ninavenv/*", 
+                                                   "-not", "-path", "*/__pycache__/*", "-not", "-name", "*.pyc", 
+                                                   "-not", "-path", "*/exports/*", "-not", "-name", "*.bak"])
     ]
     
-    full_output = "\n\n".join(parts)
-    
-    if not is_dry_run:
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            f.write(full_output)
+    for header, cmd in commands:
+        output.append(header)
+        try:
+            res = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode().strip()
+            if not res:
+                res = "(no changes)"
+        except Exception as e:
+            res = f"(error running command: {e})"
+        
+        output.append(f"```\n{res}\n```\n")
+        
+    dest = UPLOAD_DIR / "nina_diff.md"
+    dest.write_text('\n'.join(output), encoding="utf-8")
+    print(f"Exported: {dest} ({dest.stat().st_size} bytes)")
 
-        print(f"Compact snapshot created: {OUTPUT_FILE}")
-        size = os.path.getsize(OUTPUT_FILE)
-        print(f"File size: {size} bytes")
+def export_full_backup():
+    """Produces nina_full_backup_<YYYYMMDD_HHMMSS>.md (COMPLETE SNAPSHOT)"""
+    sha = get_git_long_sha()
+    branch = get_git_branch()
+    ts_now = datetime.now()
+    ts_str = ts_now.strftime("%Y-%m-%d %H:%M:%S")
+    ts_file = ts_now.strftime("%Y%m%d_%H%M%S")
     
-    # Validation block
-    mandatory_strings = [
-        "ARCHITECT",
-        "ASYNC CLOUD CODER",
-        "LOCAL MUSCLE",
-        "Local Executor as Merge Executor",
-        "The Full Parallel Loop",
-        "BLOCKER",
-        "Guardian Gate"
-    ]
-    for string in mandatory_strings:
-        if string not in full_output:
-            print(f"WARNING: nina_latest.md missing section: \"{string}\"")
+    inc_ext = {'.py', '.sh', '.md', '.txt', '.json', '.yml', '.yaml', '.cfg', '.ini', '.conf', '.service', '.html', '.css', '.js', '.env.example'}
+    exc_paths = {'venv', 'ninavenv', '.venv', '.git', '__pycache__', 'exports', 'upgrades/backups', 'upgrades/incidents', 'node_modules', 'logs', 'data', 'tests'}
+    exc_ext = {'.bak', '.fix', '.save', '.pyc', '.pyo', '.log'}
+    exc_files = {'.env'}
+    
+    files_to_backup = []
+    total_size = 0
+    
+    for root, dirs, files in os.walk(str(NINA_DIR)):
+        rel_root = os.path.relpath(root, str(NINA_DIR))
+        
+        # Prune excluded paths
+        if any(rel_root == p or rel_root.startswith(p + os.sep) for p in exc_paths):
+            dirs[:] = [] # skip this directory
+            continue
+            
+        for file in files:
+            rel_path = os.path.join(rel_root, file) if rel_root != '.' else file
+            
+            # Skip excluded paths in file walk if any (redundant but safe)
+            if any(rel_path.startswith(p + os.sep) for p in exc_paths):
+                continue
+                
+            path = Path(root) / file
+            ext = path.suffix
+            
+            if ext in inc_ext and ext not in exc_ext and file not in exc_files:
+                files_to_backup.append(path)
+                
+    # Sort order: .py -> .sh -> .md -> .json -> others. Alphabetical within.
+    def sort_key(p):
+        ext = p.suffix
+        if ext == '.py': group = 0
+        elif ext == '.sh': group = 1
+        elif ext == '.md': group = 2
+        elif ext == '.json': group = 3
+        else: group = 4
+        return (group, str(p.relative_to(NINA_DIR)))
+        
+    files_to_backup.sort(key=sort_key)
+    
+    output = []
+    output.append(f"# NINA Complete Local Snapshot\nGenerated: {ts_str}\nGit HEAD: {sha}\nGit branch: {branch}")
+    output.append(f"Total files captured: {{count}}\nTotal size: {{size}} bytes\n")
+    output.append("⚠️  CONFIDENTIAL — full disaster recovery backup\n⚠️  .env excluded — restore secrets manually from secure vault\n\n---\n")
+    
+    captured_count = 0
+    captured_size = 0
+    
+    for path in files_to_backup:
+        rel_path = path.relative_to(NINA_DIR)
+        try:
+            mtime = datetime.fromtimestamp(path.stat().st_mtime).strftime("%Y-%m-%d %H:%M:%S")
+            size = path.stat().st_size
+            content = path.read_text(encoding="utf-8", errors="replace")
+            
+            output.append(f"## [N] {rel_path}\nLast modified: {mtime}\nSize: {size} bytes\n```\n{content}\n```\n")
+            captured_count += 1
+            captured_size += size
+        except Exception as e:
+            output.append(f"## [N] {rel_path}\n❌ READ ERROR: {e}\n")
+            
+    # Update header counts
+    full_output = '\n'.join(output).replace("{count}", str(captured_count)).replace("{size}", str(captured_size))
+    
+    dest = UPLOAD_DIR / f"nina_full_backup_{ts_file}.md"
+    dest.write_text(full_output, encoding="utf-8")
+    print(f"Exported: {dest} ({dest.stat().st_size} bytes)")
 
-    duration = time.time() - start_time
-    logger.info(json.dumps({"event": "export_done", "duration_seconds": round(duration, 2), "items_written": len(FILES_TO_EXPORT)}))
+def main():
+    ensure_upload_dir()
+    export_summary()
+    export_diff()
+    export_full_backup()
 
 if __name__ == "__main__":
-    export()
+    main()
