@@ -9,3 +9,4 @@ exchangelib
 playwright
 psutil
 ollama
+flask
