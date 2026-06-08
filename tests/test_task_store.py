@@ -351,3 +351,113 @@ class TestErrorHandling:
         assert issubclass(TaskNotFoundError,       KeyError)
         assert issubclass(TaskStoreCorruptedError, RuntimeError)
         assert issubclass(TaskStoreLockError,      RuntimeError)
+
+
+# ---------------------------------------------------------------------------
+# Concurrency Fix Tests (B-003)
+# ---------------------------------------------------------------------------
+
+class TestLockConcurrency:
+    def test_exception_in_locked_section_releases_lock(self, tmp_path):
+        from core.task_store import TaskStore
+        from unittest.mock import patch
+        path = str(tmp_path / "tasks.json")
+        store = TaskStore(storage_path=path)
+
+        # We can simulate an exception by mocking _write_tasks
+        with patch.object(store, "_write_tasks", side_effect=RuntimeError("Simulated Failure")):
+            try:
+                store.create_task("Initial task")
+            except RuntimeError:
+                pass
+
+        # If lock wasn't released, this next call would hang/timeout.
+        # But we don't want it to hang, so we check if we can acquire it immediately.
+        assert store._lock.acquire(blocking=False) is True
+        store._lock.release()
+
+    def test_lock_timeout_raises_custom_error(self, tmp_path):
+        from core.task_store import TaskStore, TaskStoreLockError
+        import threading
+        import time
+
+        path = str(tmp_path / "tasks.json")
+        store = TaskStore(storage_path=path, lock_timeout=0.1)
+
+        # Acquire lock in main thread so background thread times out
+        store._lock.acquire()
+
+        error_raised = None
+
+        def worker():
+            nonlocal error_raised
+            try:
+                store.create_task("Will timeout")
+            except Exception as e:
+                error_raised = e
+
+        t = threading.Thread(target=worker)
+        t.start()
+        t.join(timeout=1.0)
+
+        # Release the lock after thread is done
+        store._lock.release()
+
+        assert isinstance(error_raised, TaskStoreLockError)
+        assert "TaskStore internal lock acquisition timed out" in str(error_raised)
+
+    def test_reentrancy_no_deadlock(self, tmp_path):
+        from core.task_store import TaskStore
+        path = str(tmp_path / "tasks.json")
+        store = TaskStore(storage_path=path)
+
+        # Since RLock is used, we can acquire it multiple times in the same thread
+        with store._lock:
+            with store._lock:
+                task = store.create_task("Re-entrancy task")
+                assert task is not None
+
+    def test_concurrent_stress_no_data_loss(self, tmp_path):
+        from core.task_store import TaskStore
+        import threading
+        path = str(tmp_path / "tasks.json")
+        errors = []
+        n_threads = 5
+        n_per_thread = 5
+
+        def worker(thread_id: int):
+            s = TaskStore(storage_path=path)
+            for i in range(n_per_thread):
+                try:
+                    t = s.create_task(f"T{thread_id}-task-{i}")
+                    s.update_task(t.id, status="completed")
+                    s.list_tasks()
+                except Exception as exc:
+                    errors.append(exc)
+
+        threads = [threading.Thread(target=worker, args=(i,)) for i in range(n_threads)]
+        for th in threads:
+            th.start()
+        for th in threads:
+            th.join()
+
+        assert not errors, f"Unexpected errors during concurrent writes: {errors}"
+        final_store = TaskStore(storage_path=path)
+        total = len(final_store.list_tasks())
+        assert total == n_threads * n_per_thread
+
+    def test_file_lock_timeout_raises_task_store_lock_error(self, tmp_path):
+        from core.task_store import TaskStore, TaskStoreLockError
+        from filelock import FileLock
+        path = str(tmp_path / "tasks.json")
+        store = TaskStore(storage_path=path, lock_timeout=0.1)
+
+        # Acquire the actual file lock manually in the main thread
+        manual_lock = FileLock(store.lock_path)
+        manual_lock.acquire()
+        try:
+            with pytest.raises(TaskStoreLockError) as exc_info:
+                store.create_task("Should fail on FileLock")
+            assert "Could not acquire task store lock within" in str(exc_info.value)
+        finally:
+            manual_lock.release()

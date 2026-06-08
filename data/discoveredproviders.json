@@ -5,7 +5,7 @@
     "model": "llama-3.3-70b-versatile",
     "key_required": true,
     "healthy": false,
-    "checked_at": "2026-06-06T02:00:00+0600"
+    "checked_at": "2026-06-09T02:00:00+0600"
   },
   {
     "id": "CEREBRAS_FREE",
@@ -13,6 +13,6 @@
     "model": "llama-3.3-70b",
     "key_required": true,
     "healthy": false,
-    "checked_at": "2026-06-06T02:00:01+0600"
+    "checked_at": "2026-06-09T02:00:00+0600"
   }
 ]

@@ -25,6 +25,7 @@ import logging
 import os
 import shutil
 import tempfile
+import threading
 import uuid
 from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
@@ -190,6 +191,7 @@ class TaskStore:
                       ``status=CANCELLED`` instead of removing the record.
                       Defaults to ``False`` (hard delete).
     """
+    _shared_locks = {}
 
     def __init__(
         self,
@@ -202,6 +204,7 @@ class TaskStore:
         self.bak_path     = Path(f"{storage_path}.bak")
         self.lock_timeout = lock_timeout
         self.soft_delete  = soft_delete
+        self._lock        = self._shared_locks.setdefault(self.storage_path.resolve(), threading.RLock())
         self._ensure_storage()
 
     # ------------------------------------------------------------------
@@ -231,49 +234,50 @@ class TaskStore:
             TaskStoreCorruptedError: If neither the main file nor backup can
                 be parsed.
         """
-        try:
-            raw = self.storage_path.read_text(encoding="utf-8").strip()
-        except OSError as exc:
-            logger.warning("Cannot read task store: %s", exc)
-            return {}
-
-        if not raw:
-            return {}
-
-        try:
-            payload = json.loads(raw)
-        except json.JSONDecodeError as exc:
-            return self._recover_from_backup(f"JSON decode error: {exc}")
-
-        # --- schema validation + legacy list migration ---
-        if isinstance(payload, list):
-            logger.info(
-                "Migrating legacy list-format task store (%d items) → dict format",
-                len(payload),
-            )
-            payload = {item["id"]: item for item in payload if "id" in item}
-
-        if not isinstance(payload, dict):
-            return self._recover_from_backup(
-                f"Unexpected JSON root type: {type(payload).__name__}"
-            )
-
-        tasks: Dict[str, Task] = {}
-        for tid, record in payload.items():
-            if not isinstance(record, dict):
-                logger.warning("Skipping non-dict task record for id=%s", tid)
-                continue
-            missing = _REQUIRED_TASK_KEYS - record.keys()
-            if missing:
-                logger.warning(
-                    "Task %s missing required keys %s — skipping", tid, missing
-                )
-                continue
+        with self._lock:
             try:
-                tasks[tid] = Task.from_dict(record)
-            except TaskStoreCorruptedError as exc:
-                logger.error("Skipping unparseable task %s: %s", tid, exc)
-        return tasks
+                raw = self.storage_path.read_text(encoding="utf-8").strip()
+            except OSError as exc:
+                logger.warning("Cannot read task store: %s", exc)
+                return {}
+
+            if not raw:
+                return {}
+
+            try:
+                payload = json.loads(raw)
+            except json.JSONDecodeError as exc:
+                return self._recover_from_backup(f"JSON decode error: {exc}")
+
+            # --- schema validation + legacy list migration ---
+            if isinstance(payload, list):
+                logger.info(
+                    "Migrating legacy list-format task store (%d items) → dict format",
+                    len(payload),
+                )
+                payload = {item["id"]: item for item in payload if "id" in item}
+
+            if not isinstance(payload, dict):
+                return self._recover_from_backup(
+                    f"Unexpected JSON root type: {type(payload).__name__}"
+                )
+
+            tasks: Dict[str, Task] = {}
+            for tid, record in payload.items():
+                if not isinstance(record, dict):
+                    logger.warning("Skipping non-dict task record for id=%s", tid)
+                    continue
+                missing = _REQUIRED_TASK_KEYS - record.keys()
+                if missing:
+                    logger.warning(
+                        "Task %s missing required keys %s — skipping", tid, missing
+                    )
+                    continue
+                try:
+                    tasks[tid] = Task.from_dict(record)
+                except TaskStoreCorruptedError as exc:
+                    logger.error("Skipping unparseable task %s: %s", tid, exc)
+            return tasks
 
     def _recover_from_backup(self, reason: str) -> Dict[str, Task]:
         """Attempt to restore the task store from a backup snapshot.
@@ -287,31 +291,32 @@ class TaskStore:
         Raises:
             TaskStoreCorruptedError: If the backup also cannot be parsed.
         """
-        logger.error(
-            "Task store corrupted (%s) — attempting backup recovery from %s",
-            reason, self.bak_path,
-        )
-        if not self.bak_path.exists():
-            logger.error("No backup available at %s; starting with empty store", self.bak_path)
-            return {}
-        try:
-            payload = json.loads(self.bak_path.read_text(encoding="utf-8"))
-            if isinstance(payload, list):
-                payload = {item["id"]: item for item in payload if "id" in item}
-            tasks = {}
-            for tid, record in payload.items():
-                try:
-                    tasks[tid] = Task.from_dict(record)
-                except TaskStoreCorruptedError:
-                    pass
-            logger.info("Recovered %d task(s) from backup", len(tasks))
-            # Restore good backup over the corrupted main file
-            shutil.copy2(self.bak_path, self.storage_path)
-            return tasks
-        except Exception as exc:  # noqa: BLE001
-            raise TaskStoreCorruptedError(
-                f"Backup recovery failed: {exc}"
-            ) from exc
+        with self._lock:
+            logger.error(
+                "Task store corrupted (%s) — attempting backup recovery from %s",
+                reason, self.bak_path,
+            )
+            if not self.bak_path.exists():
+                logger.error("No backup available at %s; starting with empty store", self.bak_path)
+                return {}
+            try:
+                payload = json.loads(self.bak_path.read_text(encoding="utf-8"))
+                if isinstance(payload, list):
+                    payload = {item["id"]: item for item in payload if "id" in item}
+                tasks = {}
+                for tid, record in payload.items():
+                    try:
+                        tasks[tid] = Task.from_dict(record)
+                    except TaskStoreCorruptedError:
+                        pass
+                logger.info("Recovered %d task(s) from backup", len(tasks))
+                # Restore good backup over the corrupted main file
+                shutil.copy2(self.bak_path, self.storage_path)
+                return tasks
+            except Exception as exc:  # noqa: BLE001
+                raise TaskStoreCorruptedError(
+                    f"Backup recovery failed: {exc}"
+                ) from exc
 
     def _write_tasks(self, tasks: Dict[str, Task]) -> None:
         """Persist the task dict using an atomic temp-file rename.
@@ -330,56 +335,63 @@ class TaskStore:
             TaskStoreLockError: If the lock cannot be acquired.
             TaskStoreCorruptedError: If the write or rollback fails.
         """
-        try:
-            lock = FileLock(str(self.lock_path), timeout=self.lock_timeout)
-        except Exception as exc:  # noqa: BLE001
-            raise TaskStoreLockError(f"Cannot create lock file: {exc}") from exc
-
-        try:
-            with lock:
-                # 1. Backup current file
-                if self.storage_path.exists():
-                    shutil.copy2(self.storage_path, self.bak_path)
-
-                # 2. Write to temp file
-                tmp_fd, tmp_path = tempfile.mkstemp(
-                    dir=self.storage_path.parent,
-                    prefix=".tasks_tmp_",
-                    suffix=".json",
-                )
-                try:
-                    with os.fdopen(tmp_fd, "w", encoding="utf-8") as fh:
-                        json.dump(
-                            {tid: t.to_dict() for tid, t in tasks.items()},
-                            fh,
-                            indent=2,
-                            ensure_ascii=False,
-                        )
-                    # 3. Atomic rename
-                    os.replace(tmp_path, self.storage_path)
-                except Exception as exc:  # noqa: BLE001
-                    # Cleanup temp
-                    try:
-                        os.unlink(tmp_path)
-                    except OSError:
-                        pass
-                    # Rollback
-                    if self.bak_path.exists():
-                        try:
-                            shutil.copy2(self.bak_path, self.storage_path)
-                            logger.warning(
-                                "Write failed (%s) — rolled back to backup", exc
-                            )
-                        except OSError as rb_exc:
-                            raise TaskStoreCorruptedError(
-                                f"Write failed AND rollback failed: {rb_exc}"
-                            ) from rb_exc
-                    raise TaskStoreCorruptedError(f"Write failed: {exc}") from exc
-        except FileLockTimeout as exc:
+        if not self._lock.acquire(timeout=self.lock_timeout):
             raise TaskStoreLockError(
-                f"Could not acquire task store lock within {self.lock_timeout}s"
-            ) from exc
+                "TaskStore internal lock acquisition timed out"
+            )
+        try:
+            try:
+                lock = FileLock(str(self.lock_path), timeout=self.lock_timeout)
+            except Exception as exc:  # noqa: BLE001
+                raise TaskStoreLockError(f"Cannot create lock file: {exc}") from exc
 
+            try:
+                with lock:
+                    # 1. Backup current file
+                    if self.storage_path.exists():
+                        shutil.copy2(self.storage_path, self.bak_path)
+
+                    # 2. Write to temp file
+                    tmp_fd, tmp_path = tempfile.mkstemp(
+                        dir=self.storage_path.parent,
+                        prefix=".tasks_tmp_",
+                        suffix=".json",
+                    )
+                    try:
+                        with os.fdopen(tmp_fd, "w", encoding="utf-8") as fh:
+                            json.dump(
+                                {tid: t.to_dict() for tid, t in tasks.items()},
+                                fh,
+                                indent=2,
+                                ensure_ascii=False,
+                            )
+                        # 3. Atomic rename
+                        os.replace(tmp_path, self.storage_path)
+                    except Exception as exc:  # noqa: BLE001
+                        # Cleanup temp
+                        try:
+                            os.unlink(tmp_path)
+                        except OSError:
+                            pass
+                        # Rollback
+                        if self.bak_path.exists():
+                            try:
+                                shutil.copy2(self.bak_path, self.storage_path)
+                                logger.warning(
+                                    "Write failed (%s) — rolled back to backup", exc
+                                )
+                            except OSError as rb_exc:
+                                raise TaskStoreCorruptedError(
+                                    f"Write failed AND rollback failed: {rb_exc}"
+                                ) from rb_exc
+                        raise TaskStoreCorruptedError(f"Write failed: {exc}") from exc
+            except FileLockTimeout as exc:
+                raise TaskStoreLockError(
+                    f"Could not acquire task store lock within {self.lock_timeout}s"
+                ) from exc
+
+        finally:
+            self._lock.release()
     # ------------------------------------------------------------------
     # Public CRUD API
     # ------------------------------------------------------------------
@@ -398,16 +410,21 @@ class TaskStore:
         Returns:
             The newly created :class:`Task` with ``status=PENDING``.
         """
-        task = Task(description=description, metadata=metadata or {})
-        tasks = self._read_tasks()
-        tasks[task.id] = task
-        self._write_tasks(tasks)
-        logger.info(
-            '{"event":"task_created","task_id":"%s","status":"%s"}',
-            task.id, task.status.value,
-        )
-        return task
+        if not self._lock.acquire(timeout=self.lock_timeout):
+            raise TaskStoreLockError("TaskStore internal lock acquisition timed out")
+        try:
+            task = Task(description=description, metadata=metadata or {})
+            tasks = self._read_tasks()
+            tasks[task.id] = task
+            self._write_tasks(tasks)
+            logger.info(
+                '{"event":"task_created","task_id":"%s","status":"%s"}',
+                task.id, task.status.value,
+            )
+            return task
 
+        finally:
+            self._lock.release()
     def get_task(self, task_id: str) -> Optional[Task]:
         """Retrieve a task by its UUID.
 
@@ -417,7 +434,8 @@ class TaskStore:
         Returns:
             The matching :class:`Task`, or *None* if not found.
         """
-        return self._read_tasks().get(task_id)
+        with self._lock:
+            return self._read_tasks().get(task_id)
 
     def update_task(self, task_id: str, **kwargs: Any) -> Task:
         """Update one or more fields of an existing task.
@@ -436,29 +454,34 @@ class TaskStore:
         Raises:
             TaskNotFoundError: If *task_id* does not exist.
         """
-        tasks = self._read_tasks()
-        if task_id not in tasks:
-            raise TaskNotFoundError(
-                f"Task '{task_id}' not found — cannot update"
+        if not self._lock.acquire(timeout=self.lock_timeout):
+            raise TaskStoreLockError("TaskStore internal lock acquisition timed out")
+        try:
+            tasks = self._read_tasks()
+            if task_id not in tasks:
+                raise TaskNotFoundError(
+                    f"Task '{task_id}' not found — cannot update"
+                )
+            task = tasks[task_id]
+            for key, value in kwargs.items():
+                if key == "status" and isinstance(value, str):
+                    value = TaskStatus(value)
+                if hasattr(task, key):
+                    setattr(task, key, value)
+                else:
+                    # Store unknown kwargs in metadata rather than silently dropping
+                    task.metadata[key] = value
+            task.updated_at = _now_iso()
+            tasks[task_id] = task
+            self._write_tasks(tasks)
+            logger.info(
+                '{"event":"task_updated","task_id":"%s","status":"%s"}',
+                task.id, task.status.value,
             )
-        task = tasks[task_id]
-        for key, value in kwargs.items():
-            if key == "status" and isinstance(value, str):
-                value = TaskStatus(value)
-            if hasattr(task, key):
-                setattr(task, key, value)
-            else:
-                # Store unknown kwargs in metadata rather than silently dropping
-                task.metadata[key] = value
-        task.updated_at = _now_iso()
-        tasks[task_id] = task
-        self._write_tasks(tasks)
-        logger.info(
-            '{"event":"task_updated","task_id":"%s","status":"%s"}',
-            task.id, task.status.value,
-        )
-        return task
+            return task
 
+        finally:
+            self._lock.release()
     def delete_task(self, task_id: str) -> bool:
         """Remove or soft-cancel a task.
 
@@ -473,19 +496,24 @@ class TaskStore:
             ``True`` if the task existed and was deleted/cancelled;
             ``False`` if *task_id* was not found.
         """
-        tasks = self._read_tasks()
-        if task_id not in tasks:
-            return False
-        if self.soft_delete:
-            tasks[task_id].status     = TaskStatus.CANCELLED
-            tasks[task_id].updated_at = _now_iso()
-            logger.info('{"event":"task_soft_deleted","task_id":"%s"}', task_id)
-        else:
-            del tasks[task_id]
-            logger.info('{"event":"task_deleted","task_id":"%s"}', task_id)
-        self._write_tasks(tasks)
-        return True
+        if not self._lock.acquire(timeout=self.lock_timeout):
+            raise TaskStoreLockError("TaskStore internal lock acquisition timed out")
+        try:
+            tasks = self._read_tasks()
+            if task_id not in tasks:
+                return False
+            if self.soft_delete:
+                tasks[task_id].status     = TaskStatus.CANCELLED
+                tasks[task_id].updated_at = _now_iso()
+                logger.info('{"event":"task_soft_deleted","task_id":"%s"}', task_id)
+            else:
+                del tasks[task_id]
+                logger.info('{"event":"task_deleted","task_id":"%s"}', task_id)
+            self._write_tasks(tasks)
+            return True
 
+        finally:
+            self._lock.release()
     def list_tasks(
         self,
         status: Optional[TaskStatus] = None,
@@ -503,22 +531,23 @@ class TaskStore:
         Returns:
             List of matching :class:`Task` objects.
         """
-        if isinstance(status, str):
-            status = TaskStatus(status)
+        with self._lock:
+            if isinstance(status, str):
+                status = TaskStatus(status)
 
-        # Optimization: Filter by status before sorting to reduce sort payload from O(N log N) to O(k log k)
-        tasks_iter = self._read_tasks().values()
-        if status is not None:
-            tasks_iter = [t for t in tasks_iter if t.status == status]
+            # Optimization: Filter by status before sorting to reduce sort payload from O(N log N) to O(k log k)
+            tasks_iter = self._read_tasks().values()
+            if status is not None:
+                tasks_iter = [t for t in tasks_iter if t.status == status]
 
-        tasks = sorted(
-            tasks_iter,
-            key=lambda t: t.created_at,
-        )
+            tasks = sorted(
+                tasks_iter,
+                key=lambda t: t.created_at,
+            )
 
-        if limit is not None:
-            tasks = tasks[:limit]
-        return tasks
+            if limit is not None:
+                tasks = tasks[:limit]
+            return tasks
 
     # ------------------------------------------------------------------
     # Convenience helpers (used by router / dashboard)
@@ -530,11 +559,12 @@ class TaskStore:
         Returns:
             Dict with ``total``, ``by_status`` sub-dict.
         """
-        all_tasks = self._read_tasks().values()
-        by_status: Dict[str, int] = {}
-        for t in all_tasks:
-            by_status[t.status.value] = by_status.get(t.status.value, 0) + 1
-        return {"total": len(list(all_tasks)), "by_status": by_status}
+        with self._lock:
+            all_tasks = self._read_tasks().values()
+            by_status: Dict[str, int] = {}
+            for t in all_tasks:
+                by_status[t.status.value] = by_status.get(t.status.value, 0) + 1
+            return {"total": len(list(all_tasks)), "by_status": by_status}
 
     def format_tasks_summary(self) -> str:
         """Return a human-readable multi-line summary of active tasks.
@@ -542,33 +572,34 @@ class TaskStore:
         Returns:
             Formatted string suitable for Telegram / CLI output.
         """
-        active_statuses = {
-            TaskStatus.IN_PROGRESS, TaskStatus.PENDING, TaskStatus.FAILED
-        }
-        active = [
-            t for t in self._read_tasks().values() if t.status in active_statuses
-        ]
-        if not active:
-            return "✅ No active tasks."
+        with self._lock:
+            active_statuses = {
+                TaskStatus.IN_PROGRESS, TaskStatus.PENDING, TaskStatus.FAILED
+            }
+            active = [
+                t for t in self._read_tasks().values() if t.status in active_statuses
+            ]
+            if not active:
+                return "✅ No active tasks."
 
-        order = {
-            TaskStatus.IN_PROGRESS: 0,
-            TaskStatus.PENDING:     1,
-            TaskStatus.FAILED:      2,
-        }
-        active.sort(key=lambda t: order.get(t.status, 99))
-        symbols = {
-            TaskStatus.IN_PROGRESS: "🔵",
-            TaskStatus.PENDING:     "🟡",
-            TaskStatus.FAILED:      "❌",
-        }
-        lines = [f"📋 NINA Tasks ({len(active)} active)"]
-        for t in active[:10]:
-            sym  = symbols.get(t.status, "❓")
-            goal = t.description
-            if len(goal) > 40:
-                goal = goal[:37] + "..."
-            lines.append(f"{sym} {t.status.value}: {goal} [{t.id[:8]}]")
-        if len(active) > 10:
-            lines.append(f"...and {len(active) - 10} more")
-        return "\n".join(lines)
+            order = {
+                TaskStatus.IN_PROGRESS: 0,
+                TaskStatus.PENDING:     1,
+                TaskStatus.FAILED:      2,
+            }
+            active.sort(key=lambda t: order.get(t.status, 99))
+            symbols = {
+                TaskStatus.IN_PROGRESS: "🔵",
+                TaskStatus.PENDING:     "🟡",
+                TaskStatus.FAILED:      "❌",
+            }
+            lines = [f"📋 NINA Tasks ({len(active)} active)"]
+            for t in active[:10]:
+                sym  = symbols.get(t.status, "❓")
+                goal = t.description
+                if len(goal) > 40:
+                    goal = goal[:37] + "..."
+                lines.append(f"{sym} {t.status.value}: {goal} [{t.id[:8]}]")
+            if len(active) > 10:
+                lines.append(f"...and {len(active) - 10} more")
+            return "\n".join(lines)
