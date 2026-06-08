@@ -80,7 +80,7 @@ Perplexity reads backlog each session
 |----|-------|--------|---------------|--------|-------|
 | B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `DONE` | tools/model_discovery.py, core/router.py, crons/manager.py | — | PR #25 merged 2026-06-07 |
 | B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `READY` | core/router.py | B-005 | agynina only — high-risk file |
-| B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `IN_PROGRESS` | data/model_cache.json | B-005 | Jules can do this |
+| B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `DONE` | data/model_cache.json | B-005 | Jules can do this |
 | B-008 | Add circuit breaker state persistence to data/circuit_state.json | `READY` | core/router.py, data/ | — | Currently in-memory — lost on restart. agynina only |
 | B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegraminterface.py | — | agynina only — high-risk file |
 | B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegraminterface.py | — | agynina only — high-risk file |
@@ -409,6 +409,7 @@ AG3 Phase 3 (parallel with AG2):
 | B-040 | Write CONTRIBUTING.md | E-sync | #36 | 2026-06-08 |
 | B-021 | Add prometheus-style metrics endpoint to healthcheck.py | E-sync | #38 | 2026-06-08 |
 | B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | E-sync | #43 | 2026-06-08 |
+| B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | E-sync | #42 | 2026-06-08 |
 
 ---
 

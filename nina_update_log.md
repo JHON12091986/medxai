@@ -1333,3 +1333,13 @@
 **Files changed:** docs/space/jules_backlog.md,jules_lock.txt,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 111 — 2026-06-08 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/AGENTS.md,docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+
+**Verification:** git push OK, nina.service active
