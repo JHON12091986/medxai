@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 RATELIMITS = {
-    "GROQ":       {"rpm":30,  "tpd":14400,   "rpd":14400, "min_spacing_s":2},
+    "GROQ":       {"rpm":30,  "tpd":None,    "rpd":14400, "min_spacing_s":2},
     "CEREBRAS":   {"rpm":30,  "tpd":100000,  "rpd":None,  "min_spacing_s":2},
     "GEMINI":     {"rpm":15,  "tpd":1500000, "rpd":1500,  "min_spacing_s":4},
     "MISTRAL":    {"rpm":1,   "tpd":None,    "rpd":None,  "min_spacing_s":61},

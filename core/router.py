@@ -145,11 +145,17 @@ class ProviderHealth:
 
     def is_near_limit(self, pid: str) -> bool:
         tpd = cast(dict, RATELIMITS).get(pid, {}).get("tpd")
-        return bool(tpd and (self.tokens_today + self.reserved_tokens) > 0.8 * tpd)
+        rpd = cast(dict, RATELIMITS).get(pid, {}).get("rpd")
+        token_near = bool(tpd and (self.tokens_today + self.reserved_tokens) > 0.8 * tpd)
+        req_near = bool(rpd and (self.requests_today + self.reserved_requests) > 0.8 * rpd)
+        return token_near or req_near
 
     def is_exhausted(self, pid: str) -> bool:
         tpd = cast(dict, RATELIMITS).get(pid, {}).get("tpd")
-        return bool(tpd and (self.tokens_today + self.reserved_tokens) >= tpd)
+        rpd = cast(dict, RATELIMITS).get(pid, {}).get("rpd")
+        token_ex = bool(tpd and (self.tokens_today + self.reserved_tokens) >= tpd)
+        req_ex = bool(rpd and (self.requests_today + self.reserved_requests) >= rpd)
+        return token_ex or req_ex
 
     def composite_score(self, pid: str) -> float:
         lat = min(self.avg_latency_ms() / 5000.0, 1.0)

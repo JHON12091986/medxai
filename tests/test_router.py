@@ -161,3 +161,35 @@ def test_router_ordered_providers_with_model_discovery(router):
     providers = router._ordered_providers(task)
     assert "GROQ" in providers
 
+def test_provider_health_limits():
+    # Test token and request daily limits
+    h = ProviderHealth(provider_id="GEMINI")
+    
+    # Under limits initially
+    assert h.is_near_limit("GEMINI") is False
+    assert h.is_exhausted("GEMINI") is False
+
+    # Simulate token limit near (GEMINI tpd is 1500000, 80% is 1200000)
+    h.tokens_today = 1200001
+    assert h.is_near_limit("GEMINI") is True
+    assert h.is_exhausted("GEMINI") is False
+
+    # Simulate token limit reached
+    h.tokens_today = 1500000
+    assert h.is_exhausted("GEMINI") is True
+
+    # Reset
+    h.tokens_today = 0
+    assert h.is_near_limit("GEMINI") is False
+    assert h.is_exhausted("GEMINI") is False
+
+    # Simulate request limit near (GEMINI rpd is 1500, 80% is 1200)
+    h.requests_today = 1201
+    assert h.is_near_limit("GEMINI") is True
+    assert h.is_exhausted("GEMINI") is False
+
+    # Simulate request limit reached
+    h.requests_today = 1500
+    assert h.is_exhausted("GEMINI") is True
+
+
