@@ -1403,13 +1403,3 @@
 **Files changed:** upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
-
----
-
-## Entry 118 — 2026-06-08 · D-sync Post-session sync
-
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** core/router.py,data/model_cache.json,docs/space/jules_backlog.md,docs/space/jules_task_tracker.md,jules_lock.txt,tests/test_router.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active

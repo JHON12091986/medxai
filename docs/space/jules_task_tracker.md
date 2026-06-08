@@ -47,5 +47,3 @@
 | ASYNC-07 | B-013: healthcheck.py: replace bare except with typed exception handling | ✅ MERGED | 2026-06-07 | PR #46 | 2026-06-08 | Session: [10635814989193465007](https://jules.google.com/session/10635814989193465007) |
 | ASYNC-08 | B-014: Add startup banner to main.py showing active providers + model strings | ⏳ QUEUED | 2026-06-07 | — | — | Session: [16604506654173776295](https://jules.google.com/session/16604506654173776295) |
 | ASYNC-09 | B-015: crons/manager.py: add job execution metrics (duration, last_success, fail_count) | ✅ MERGED | 2026-06-07 | PR #45 | 2026-06-08 | Session: [6671558330966465193](https://jules.google.com/session/6671558330966465193) |
-| ASYNC-10 | AG-B-01: Create TaskStore with full CRUD and JSON persistence | ⏳ IN_PROGRESS | 2026-06-08 | — | — | Submitted via agynina |
-| ASYNC-11 | AG-D-05: Create StepVerifier with non-empty output check | ⏳ IN_PROGRESS | 2026-06-08 | — | — | Submitted via agynina |

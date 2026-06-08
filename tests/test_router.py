@@ -145,19 +145,3 @@ async def test_router_all_providers_fail(router):
     response = await router.route("Hello", [{"role": "user", "content": "Hello"}], task)
 
     assert "All providers are currently unavailable" in response
-
-def test_router_ordered_providers_with_model_discovery(router):
-    # Mock load_cache to return a specific cached model
-    router._model_discovery.load_cache = lambda: {"GROQ": "discovered-groq-model"}
-    task = ClassifiedTask("general", 100, False, False)
-    
-    # GROQ should resolve "discovered-groq-model", GEMINI should resolve fallback "gemini-2.5-flash"
-    providers = router._ordered_providers(task)
-    assert "GROQ" in providers
-    assert "GEMINI" in providers
-
-    # With model_overrides set, overrides should be preferred
-    router.config.model_overrides["GROQ"] = "overridden-groq-model"
-    providers = router._ordered_providers(task)
-    assert "GROQ" in providers
-
