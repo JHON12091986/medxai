@@ -1,7 +1,7 @@
 [Unit]
 Description=NINA Autonomous Agent
 After=network.target ollama.service
-Wants=ollama.service
+Wants=ollama.service nina-dashboard.service
 
 [Service]
 Type=simple

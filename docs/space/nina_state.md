@@ -1,11 +1,11 @@
 # NINA State — Single Source of Truth
-_Last updated: 2026-06-06_
+_Last updated: 2026-06-08_
 
 ## Identity
 - **Project Name:** NINA
 - **Owner:** M. Baizid Alam — AGM, BASIC Bank Limited, Dhaka, Bangladesh
 - **Deployment Machine:** ASUS VivoBook X530FN — Ubuntu 26.04 LTS — Python 3.14.4 — User: aibony
-- **Service Name:** systemd `nina.service` — Restart=always, depends on `ollama.service`
+- **Service Name:** systemd `nina.service` (Agent) + `nina-dashboard.service` (Architect)
 
 NINA IDENTITY DIRECTIVE (canonical, applies everywhere):
 NINA is a personal autonomous AI agent — NOT a chatbot. She acts, she does not describe. She completes tasks end-to-end using free-tier AI routing (Pollinations, Chutes, Groq, Gemini, Cerebras, DeepSeek and others) without requiring paid AI subscriptions for agentic capability. Her agency comes from her tools, her memory, and her routing intelligence. Every session, every feature, and every spec must serve this mission.
@@ -23,6 +23,9 @@ NINA is a personal autonomous AI agent — NOT a chatbot. She acts, she does not
   - `interfaces/telegraminterface.py` (Telegram bot / security gate)
 - **Guardian Engine**:
   - `guardianengine.py` (Forensic checks)
+- **Dashboard & Architect**:
+  - `tools/nina_dashboard.py` (Flask server)
+  - `dashboard/puter_architect.html` (Puter.js Dev Console)
 - **Key Files**:
   - `main.py` (Entry point)
   - `data/memory/facts.json` (Personal context facts)

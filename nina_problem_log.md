@@ -489,3 +489,15 @@ cd ~/nina && BACKUP_MD="$(ls -t upgrades/backups/nina_export_*.md 2>/dev/null | 
   - Cost-tracking-first work as a leading patch item.
 - **Rationale:** Selected quick wins improve correctness and resilience immediately with low regression risk and minimal architectural churn.
 - **Status:** Logged for implementation planning; no code patch applied in this session.
+
+---
+
+## R-126 - Architect Dashboard URL not working / not auto-starting
+- **Date:** 2026-06-08 21:05
+- **Component:** `tools/nina_dashboard.py`, `nina.service`
+- **Type:** Bug / Integration
+- **Summary:** User reported that the Architect dashboard URL was not working. Investigation revealed that the dashboard required manual starting and had relative path issues when run as a service.
+- **Resolution:**
+  - Refactored `tools/nina_dashboard.py` to use absolute paths for template and static file serving.
+  - Created `nina-dashboard.service` and integrated it into `nina.service` via `Wants` and `Partof`.
+- **Status:** FIXED

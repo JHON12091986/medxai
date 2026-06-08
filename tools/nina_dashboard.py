@@ -8,12 +8,21 @@ import subprocess
 import urllib.request
 import datetime
 from pathlib import Path
-from flask import Flask, render_template
+from flask import Flask, render_template, send_file
+
+# Resolve absolute paths
+BASE_DIR = Path(__file__).resolve().parent.parent
+TEMPLATE_DIR = BASE_DIR / "templates"
+DASHBOARD_DIR = BASE_DIR / "dashboard"
 
 # Ensure the parent directory is in sys.path so we can import core and crons
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(str(BASE_DIR))
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__, template_folder=str(TEMPLATE_DIR))
+
+@app.route('/architect')
+def architect():
+    return send_file(str(DASHBOARD_DIR / "puter_architect.html"))
 
 @app.route('/')
 def index():

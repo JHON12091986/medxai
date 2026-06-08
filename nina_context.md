@@ -1,7 +1,7 @@
 ---
 title: NINA Context
 version: 12.2
-updated: 2026-06-05
+updated: 2026-06-08
 stage: "A✅ B(partial) C(queued)"
 ---
 
