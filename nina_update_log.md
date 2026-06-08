@@ -1486,22 +1486,10 @@
 
 ---
 
-## Entry 126 — 2026-06-08 · feat(dashboard): merge B-044 HTML dashboard (PR #52)
+## Entry 126 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** PR merge
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- tools/nina_dashboard.py
-- templates/dashboard.html
-- requirements.txt
+**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
-**What changed:**
-- Merged Jules PR #52 implementing B-044: Read-only HTML status dashboard.
-- Removed invalid `jules_lock.txt` changes from the PR before merging.
-
-**What was verified:**
-- py_compile + pyflakes passed on tools/nina_dashboard.py
-- Guardian PASS
-
-**Rollback path:**
-- git revert -m 1 HEAD
+**Verification:** git push OK, nina.service active
