@@ -272,9 +272,19 @@ else
   fi
 fi
 
-bash "$HOME/nina/nina_logbase_backup.sh"
-bash "$HOME/nina/nina_docbase_backup.sh"
-bash "$HOME/nina/nina_codebase_backup.sh"
+LOGBASE_OUT=$(bash "$HOME/nina/nina_logbase_backup.sh" | grep "saved to" | awk -F'saved to ' '{print $2}')
+DOCBASE_OUT=$(bash "$HOME/nina/nina_docbase_backup.sh" | grep "saved to" | awk -F'saved to ' '{print $2}')
+CODEBASE_OUT=$(bash "$HOME/nina/nina_codebase_backup.sh" | grep "saved to" | awk -F'saved to ' '{print $2}')
+
+echo "NINA logbase backup saved to $LOGBASE_OUT"
+echo "NINA docbase backup saved to $DOCBASE_OUT"
+echo "NINA codebase backup saved to $CODEBASE_OUT"
+
+if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q "gdrive:"; then
+  [ -n "$LOGBASE_OUT" ] && rclone copy "$LOGBASE_OUT" "gdrive:nina_backups/$(basename "$LOGBASE_OUT")" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$LOGBASE_OUT") → gdrive:nina_backups/" || echo "  ⚠️  Logbase backup upload failed"
+  [ -n "$DOCBASE_OUT" ] && rclone copy "$DOCBASE_OUT" "gdrive:nina_backups/$(basename "$DOCBASE_OUT")" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$DOCBASE_OUT") → gdrive:nina_backups/" || echo "  ⚠️  Docbase backup upload failed"
+  [ -n "$CODEBASE_OUT" ] && rclone copy "$CODEBASE_OUT" "gdrive:nina_backups/$(basename "$CODEBASE_OUT")" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$CODEBASE_OUT") → gdrive:nina_backups/" || echo "  ⚠️  Codebase backup upload failed"
+fi
 
 echo "================================================"
 echo " SYNC COMPLETE  $TS"
