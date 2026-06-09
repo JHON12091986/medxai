@@ -106,23 +106,27 @@ def get_backlog_tasks() -> List[Dict[str, Any]]:
             task_id = m.group(1)
             cols = [c.strip() for c in line.split("|")][1:-1]
             try:
+                depends_on = ""
                 if task_id.startswith("AG-"):
                     # AG table format: ID | File | Task | Status | Depends On
                     files = cols[1] if len(cols) > 1 else ""
                     title = cols[2] if len(cols) > 2 else ""
                     status = cols[3].replace("`", "") if len(cols) > 3 else "UNKNOWN"
+                    depends_on = cols[4] if len(cols) > 4 else ""
                 else:
                     # B table format: ID | Title | Status | Files Touched | Blocks | Notes
                     title = cols[1] if len(cols) > 1 else ""
                     status = cols[2].replace("`", "") if len(cols) > 2 else "UNKNOWN"
                     files = cols[3] if len(cols) > 3 else ""
+                    depends_on = cols[4] if len(cols) > 4 else ""
                 
                 tasks.append({
                     "id": task_id, 
                     "title": title, 
                     "status": status, 
                     "files": files, 
-                    "section": current_section
+                    "section": current_section,
+                    "depends_on": depends_on
                 })
             except IndexError:
                 continue
@@ -546,12 +550,113 @@ def cmd_test_smoke_all(args):
 
 def cmd_backlog_add(args):
     """[71] Create a new task with JSON-validated Markdown formatting."""
-    pass
+    try:
+        title = input("Enter Task Title: ").strip()
+        if not title:
+            print("Title cannot be empty. Aborting.")
+            return
+
+        priority = input("Enter Priority (P0, P1, P2, P3, AG): ").strip().upper()
+        if priority not in ["P0", "P1", "P2", "P3", "AG"]:
+            print("Invalid priority. Must be P0, P1, P2, P3, or AG.")
+            return
+
+        component = input("Enter Files Touched (e.g. core/router.py): ").strip()
+
+        # Determine appropriate section heading based on priority
+        section_mapping = {
+            "P0": "## ██ P0 — CRITICAL",
+            "P1": "## ██ P1 — HIGH",
+            "P2": "## ██ P2 — MEDIUM",
+            "P3": "## ██ P3 — LOW / POLISH"
+        }
+
+        task_id = _backlog_get_next_id()
+        if priority == "AG":
+            ag_sub = input("Enter AG Component (A-J): ").strip().upper()
+            ag_num = input("Enter AG Number (e.g. 01): ").strip()
+            task_id = f"AG-{ag_sub}-{ag_num.zfill(2)}"
+            target_section = f"### AG-{ag_sub} — "
+        else:
+            target_section = section_mapping[priority]
+
+        new_row = f"| {task_id} | {title} | `NEEDS_SPEC` | {component} | — | New task added via CLI |\n"
+        if task_id.startswith("AG-"):
+            new_row = f"| {task_id} | `{component}` | {title} | `NEEDS_SPEC` | — |\n"
+
+        content = BACKLOG_PATH.read_text()
+
+        lines = content.splitlines()
+        new_lines = []
+        in_target = False
+        inserted = False
+
+        for idx, line in enumerate(lines):
+            new_lines.append(line)
+            if not inserted:
+                if target_section in line:
+                    in_target = True
+                elif in_target:
+                    if line.startswith("##") or line.startswith("---") or line.strip() == "":
+                        if idx > 0 and lines[idx-1].startswith("|"):
+                            new_lines.pop()
+                            new_lines.append(new_row.strip())
+                            new_lines.append(line)
+                            inserted = True
+
+        if not inserted:
+            print(f"Could not find section containing '{target_section}'. Appending to EOF.")
+            new_lines.append(f"\n{target_section}\n")
+            if task_id.startswith("AG-"):
+                new_lines.append("| ID | File | Task | Status | Depends On |\n|----|------|------|--------|------------|")
+            else:
+                new_lines.append("| ID | Title | Status | Files Touched | Blocks | Notes |\n|----|-------|--------|---------------|--------|-------|")
+            new_lines.append(new_row.strip())
+
+        BACKLOG_PATH.write_text("\n".join(new_lines) + "\n")
+        print(f"Successfully added task {task_id} to backlog.")
+
+    except KeyboardInterrupt:
+        print("\nAborted.")
 
 def cmd_backlog_dag(args):
     """[72] Visualize task dependencies as a DAG."""
-    # (Logic from existing cmd_backlog tree)
-    pass
+    task_id = args.task_id
+    tasks = get_backlog_tasks()
+    task_map = {t["id"]: t for t in tasks}
+
+    if task_id not in task_map:
+        print(f"Task {task_id} not found in backlog.")
+        return
+
+    def print_tree(tid, depth=0, visited=None):
+        if visited is None:
+            visited = set()
+
+        task = task_map.get(tid)
+        if not task:
+            prefix = "  " * depth + "└─ " if depth > 0 else ""
+            print(f"{prefix}{tid} [UNKNOWN]")
+            return
+
+        prefix = "  " * depth + "└─ " if depth > 0 else ""
+        print(f"{prefix}{task['id']} [{task['status']}] {task['title']}")
+
+        if tid in visited:
+            print("  " * (depth + 1) + "└─ [CIRCULAR DEPENDENCY DETECTED]")
+            return
+
+        visited.add(tid)
+        deps_str = task.get("depends_on", "")
+        if deps_str and deps_str != "—":
+            deps = [d.strip() for d in deps_str.replace("`", "").split(",")]
+            for dep in deps:
+                m = re.search(r"(B-\d+|AG-[A-J]-\d+|R-\d+)", dep)
+                if m:
+                    print_tree(m.group(1), depth + 1, visited.copy())
+
+    print(f"Dependency DAG for {task_id}:")
+    print_tree(task_id)
 
 def cmd_backlog_export(args):
     """[73] Export backlog as machine-readable JSON for dashboards."""
@@ -560,12 +665,112 @@ def cmd_backlog_export(args):
 
 def cmd_backlog_archive(args):
     """[74] Move DONE items from backlog to historical log."""
-    pass
+    if not BACKLOG_PATH.exists():
+        print("Backlog not found.")
+        return
+
+    content = BACKLOG_PATH.read_text()
+    lines = content.splitlines()
+
+    archive_section = "## ██ DONE — Completed Items"
+    in_archive = False
+
+    new_lines = []
+    done_items = []
+
+    for line in lines:
+        if line.startswith("## ") or line.startswith("### "):
+            in_archive = (archive_section in line)
+
+        if not in_archive and line.startswith("|") and "`DONE`" in line:
+            if "Status" not in line and "-------" not in line:
+                done_items.append(line)
+                continue
+
+        new_lines.append(line)
+
+    if not done_items:
+        print("No DONE items found to archive.")
+        return
+
+    final_lines = []
+    in_archive_section = False
+    inserted = False
+    for line in new_lines:
+        final_lines.append(line)
+        if archive_section in line:
+            in_archive_section = True
+        elif in_archive_section and not inserted and line.startswith("|----"):
+            for item in done_items:
+                m = re.match(r"^\|\s*(B-\d+|AG-[A-J]-\d+|R-\d+)\s*\|", item)
+                if m:
+                    tid = m.group(1)
+                    cols = [c.strip() for c in item.split("|")][1:-1]
+                    title = ""
+                    if tid.startswith("AG-") and len(cols) > 2:
+                        title = cols[2]
+                    elif not tid.startswith("AG-") and len(cols) > 1:
+                        title = cols[1]
+
+                    notes = cols[-1] if len(cols) > 5 else "—"
+                    pr_match = re.search(r"PR #(\d+)", notes)
+                    pr_str = f"#{pr_match.group(1)}" if pr_match else "—"
+                    date_match = re.search(r"\d{4}-\d{2}-\d{2}", notes)
+                    date_str = date_match.group(0) if date_match else "—"
+
+                    final_lines.append(f"| {tid} | {title} | — | {pr_str} | {date_str} |")
+            inserted = True
+
+    cleaned_lines = []
+    i = 0
+    while i < len(final_lines):
+        line = final_lines[i]
+        if line.startswith("## ") or line.startswith("### "):
+            has_tasks = False
+            j = i + 1
+            while j < len(final_lines) and not (final_lines[j].startswith("## ") or final_lines[j].startswith("### ")):
+                if final_lines[j].startswith("|") and "Status" not in final_lines[j] and "----" not in final_lines[j]:
+                    has_tasks = True
+                    break
+                j += 1
+
+            if not has_tasks and archive_section not in line and "Agentic Build Order" not in line and "How This File Works" not in line and "ID Namespaces" not in line and "Status Definitions" not in line:
+                i = j
+                continue
+        cleaned_lines.append(line)
+        i += 1
+
+    BACKLOG_PATH.write_text("\n".join(cleaned_lines) + "\n")
+    print(f"Archived {len(done_items)} items successfully.")
 
 def cmd_triage(args):
     """[75] Promote tasks from BLOCKED to READY."""
-    # (Existing logic)
-    pass
+    tasks = get_backlog_tasks()
+    task_map = {t["id"]: t for t in tasks}
+
+    promoted_count = 0
+    for task in tasks:
+        if task["status"] == "BLOCKED":
+            blockers = _backlog_find_blockers(task["id"])
+            if not blockers:
+                continue
+
+            all_done = True
+            for blocker_id in blockers:
+                blocker_task = task_map.get(blocker_id)
+                if not blocker_task or blocker_task["status"] != "DONE":
+                    all_done = False
+                    break
+
+            if all_done:
+                print(f"Promoting {task['id']} from BLOCKED to READY (all dependencies DONE)")
+                save_backlog_task_status(task["id"], "READY")
+                promoted_count += 1
+
+    if promoted_count == 0:
+        print("No tasks were eligible for promotion.")
+    else:
+        print(f"Successfully promoted {promoted_count} tasks.")
 
 def cmd_dispatch(args):
     """[76] Lock files and dispatch to Jules."""
@@ -585,7 +790,22 @@ def _backlog_get_next_id() -> str:
 
 def _backlog_find_blockers(task_id: str) -> List[str]:
     """[79] Helper: List what is blocking a task."""
-    pass
+    tasks = get_backlog_tasks()
+    task = next((t for t in tasks if t["id"] == task_id), None)
+    if not task:
+        return []
+
+    deps_str = task.get("depends_on", "")
+    if not deps_str or deps_str == "—":
+        return []
+
+    blockers = []
+    deps = [d.strip() for d in deps_str.replace("`", "").split(",")]
+    for dep in deps:
+        m = re.search(r"(B-\d+|AG-[A-J]-\d+|R-\d+)", dep)
+        if m:
+            blockers.append(m.group(1))
+    return blockers
 
 def _backlog_set_metadata(task_id: str, key: str, val: str):
     """[80] Helper: Update specific column in backlog table."""
@@ -777,7 +997,8 @@ def main():
     
     # Backlog Subcommands
     p_bl = subparsers.add_parser("backlog")
-    p_bl.add_argument("action", choices=["clean", "tree", "export"])
+    p_bl.add_argument("action", choices=["clean", "tree", "export", "dag", "triage", "add", "archive"])
+    p_bl.add_argument("task_id", nargs="?", help="Task ID for dag action")
     
     # Code Subcommands
     p_cs = subparsers.add_parser("code")
@@ -816,6 +1037,10 @@ def main():
         if args.sub == "tool": cmd_gen_tool(args)
     elif args.command == "backlog":
         if args.action == "export": cmd_backlog_export(args)
+        elif args.action == "dag": cmd_backlog_dag(args)
+        elif args.action == "triage": cmd_triage(args)
+        elif args.action == "add": cmd_backlog_add(args)
+        elif args.action == "archive": cmd_backlog_archive(args)
         else: cmd_backlog(args)
     elif args.command == "code":
         if args.sub == "search": cmd_code_search(args)
