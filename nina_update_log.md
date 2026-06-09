@@ -1803,3 +1803,13 @@
 **Files changed:** data/circuit_state.json,generate_backups.sh
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 158 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** bin/ninagate,data/circuit_state.json,generate_backups.sh
+
+**Verification:** git push OK, nina.service active
