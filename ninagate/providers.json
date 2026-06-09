@@ -1,0 +1,8 @@
+[
+  { "name": "groq",     "base_url": "https://api.groq.com/openai/v1",                              "model": "llama-3.3-70b-versatile",  "api_key_env": "GROQ_API_KEY" },
+  { "name": "cerebras", "base_url": "https://api.cerebras.ai/v1",                                  "model": "llama3.1-70b",             "api_key_env": "CEREBRAS_API_KEY" },
+  { "name": "gemini",   "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",    "model": "gemini-2.0-flash",         "api_key_env": "GEMINI_API_KEY" },
+  { "name": "deepseek", "base_url": "https://api.deepseek.com/v1",                                 "model": "deepseek-chat",            "api_key_env": "DEEPSEEK_API_KEY" },
+  { "name": "mistral",  "base_url": "https://api.mistral.ai/v1",                                   "model": "mistral-small-latest",     "api_key_env": "MISTRAL_API_KEY" },
+  { "name": "ollama",   "base_url": "http://localhost:11434/v1",                                    "model": "qwen2.5:7b",               "api_key_env": null }
+]

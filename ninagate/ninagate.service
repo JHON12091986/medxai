@@ -1,0 +1,17 @@
+[Unit]
+Description=NinaGate — OpenAI-compatible API proxy for CLI tools
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=YOUR_USERNAME
+WorkingDirectory=/path/to/nina/ninagate
+ExecStart=/path/to/venv/bin/python main.py
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
