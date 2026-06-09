@@ -1833,3 +1833,30 @@
 **Files changed:** bin/ninagate,data/circuit_state.json,generate_backups.sh,ninagate_load_test.sh
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 161 — 2026-06-10 · resolve PR #74: Port dynamic routing override and UI config from claude-code-router
+
+**Triggered by:** User request to resolve PR #74.
+
+**Files changed:**
+- `ninagate/main.py`
+- `dashboard/ninaui.html`
+- `ninagate/providers.json`
+
+**What changed:**
+- Merged and rebased PR #74 which ports dynamic routing directives (`/model <provider>,<model>`) and a configuration UI for NinaGate into the main branch.
+- Resolved merge conflicts in `ninagate/main.py` between the new features and existing health tracking/circuit breaker logic.
+- Preserved robust health monitoring, retries, and circuit breaker while integrating the new routing override and payload sanitization features.
+- Fixed a pre-existing mismatch in `ninagate/providers.json` where API key environment variable names used underscores (e.g., `GROQ_API_KEY`) but `.env` used no underscores (e.g., `GROQAPIKEY`).
+
+**Verification:**
+- Verified syntax of `ninagate/main.py`.
+- Tested the `/model groq` directive with a live request to Groq (succeeded).
+- Tested the new `GET /v1/config/providers` and `POST /v1/config/providers` endpoints (succeeded).
+- Verified `nina_update_log.md` consistency after rebase.
+
+**Rollback path:**
+- `git reset --hard 7600e49`
+
