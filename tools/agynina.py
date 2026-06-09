@@ -323,6 +323,55 @@ def cmd_verify_all(args):
     """[024] Atomic verification suite."""
     print("Verifying integrity...")
 
+def cmd_check_code(args):
+    """[033] Quality gate: run py_compile + pyflakes + ruff on target file."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+
+    # CHECK 1
+    syntax_code, syntax_out, syntax_err = run_cmd(f"python3 -m py_compile {path}")
+    syntax_label = "PASS" if syntax_code == 0 else f"FAIL — {syntax_err}"
+
+    # CHECK 2
+    pyflakes_code, pyflakes_out, pyflakes_err = run_cmd(f"pyflakes {path}")
+    pyflakes_label = "PASS" if pyflakes_code == 0 else f"FAIL — {pyflakes_out}"
+
+    # CHECK 3
+    ruff_installed = shutil.which("ruff") is not None
+    if ruff_installed:
+        ruff_code, ruff_out, ruff_err = run_cmd(f"ruff check {path}")
+        if ruff_code == 0:
+            ruff_label = "PASS"
+        else:
+            ruff_label = "FAIL" if args.strict else "WARN"
+    else:
+        ruff_code = 0
+        ruff_label = "SKIPPED"
+
+    if syntax_code != 0 or pyflakes_code != 0 or (ruff_code != 0 and args.strict):
+        verdict = "FAIL"
+    elif ruff_code != 0 and not args.strict:
+        verdict = "WARN"
+    else:
+        verdict = "PASS"
+
+    rel_path = path.relative_to(REPO_ROOT) if path.is_relative_to(REPO_ROOT) else path
+
+    print("── agynina check code ──────────────────")
+    print(f"File   : {rel_path}")
+    print(f"syntax : {syntax_label}")
+    print(f"pyflakes: {pyflakes_label}")
+    print(f"ruff   : {ruff_label}")
+    print("────────────────────────────────────────")
+
+    verdict_emoji = "✅ PASS" if verdict == "PASS" else ("⚠️ WARN" if verdict == "WARN" else "❌ FAIL")
+    print(f"Verdict: {verdict_emoji}")
+
+    _log_agent_action(f"check code {path} → {verdict}")
+
+
 # ------------------------------------------------------------------
 # MODULE 7: SCAFFOLDING & BOILERPLATE
 # ------------------------------------------------------------------
@@ -465,6 +514,14 @@ def main():
     p_ba.add_argument("--ag-num",    default=None, help="AG number e.g. 01")
     p_bs.add_parser("archive")
     
+
+    p_chk = subparsers.add_parser("check")
+    p_cks = p_chk.add_subparsers(dest="sub")
+
+    p_cc = p_cks.add_parser("code")
+    p_cc.add_argument("file")
+    p_cc.add_argument("--strict", action="store_true", default=False)
+
     args = parser.parse_args()
     if args.command == "status": cmd_status(args)
     elif args.command == "help-ai": cmd_help_ai(args)
@@ -483,6 +540,9 @@ def main():
         elif args.sub == "dag": cmd_backlog_dag(args)
         elif args.sub == "add": cmd_backlog_add(args)
         elif args.sub == "archive": cmd_backlog_archive(args)
+    elif args.command == "check":
+        if args.sub == "code": cmd_check_code(args)
+        elif args.sub == "doc": pass  # ASYNC-05
     elif args.command == "ops":
         if args.sub == "thermal": cmd_ops_thermal(args)
         elif args.sub == "vram": cmd_ops_vram(args)
