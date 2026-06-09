@@ -1073,7 +1073,7 @@
 - `git checkout HEAD -- AGENTS.md docs/space/AGENTS.md docs/space/nina_state.md docs/space/jules_backlog.md docs/space/nina_exporter_contract.md docs/space/nina_error_register.md tools/agynina.py nina_sync.sh jules_lock.txt && rm docs/space/agynina_task_tracker.md && git checkout HEAD -- docs/space/agy_task_tracker.md`
 
 ---
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 ---
 
 ## Entry 085 — 2026-06-07 · D-sync Post-session sync
@@ -1777,6 +1777,16 @@
 ---
 
 ## Entry 155 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** nina_update_log.md,data/circuit_state.json,generate_backups.sh
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 156 — 2026-06-09 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v5 automated run
 
