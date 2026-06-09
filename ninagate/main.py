@@ -58,6 +58,21 @@ async def stream_response(response: httpx.Response):
     finally:
         await response.aclose()
 
+@app.get("/v1/models")
+async def list_models():
+    """Dummy endpoint so BYOK CLI tools don't crash on boot connection tests."""
+    return JSONResponse(status_code=200, content={
+        "object": "list",
+        "data": [
+            {
+                "id": "auto",
+                "object": "model",
+                "created": 1686935002,
+                "owned_by": "ninagate"
+            }
+        ]
+    })
+
 @app.post("/v1/chat/completions")
 async def proxy_chat_completions(request: Request):
     try:
