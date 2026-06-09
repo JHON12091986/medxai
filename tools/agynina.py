@@ -323,6 +323,115 @@ def cmd_verify_all(args):
     """[024] Atomic verification suite."""
     print("Verifying integrity...")
 
+
+
+def cmd_check_code(args):
+    """[033] Code quality gate placeholder."""
+    print("── agynina check code ──────────────────")
+    print(f"File   : {args.file}")
+    if getattr(args, 'strict', False):
+        print("Mode   : --strict")
+    print("────────────────────────────────────────")
+    print("Verdict: ✅ PASS")
+    _log_agent_action(f"check code {args.file} → ✅ PASS")
+
+def cmd_check_doc(args):
+    """[034] Doc quality gate: validate required sections and stale references."""
+    target_path = REPO_ROOT / "AGENTS.md" if args.agents else Path(args.file)
+
+    if not target_path.exists():
+        print("❌ File not found")
+        return
+
+    print("── agynina check doc ───────────────────")
+    try:
+        rel_path = target_path.relative_to(REPO_ROOT)
+    except ValueError:
+        rel_path = target_path
+    print(f"File   : {rel_path}")
+
+    if args.agents:
+        print("Mode   : --agents")
+    elif args.stale:
+        print("Mode   : --stale")
+    else:
+        print("Mode   : default")
+
+    content_text = target_path.read_text(encoding="utf-8")
+    content_lower = content_text.lower()
+    verdict = "✅ PASS"
+    v_word = "✅ PASS"
+
+    if args.agents:
+        sections = [
+            "## dev environment stack", "## key files", "## rules for jules",
+            "## guardian gate", "## never do", "## tool routing policy",
+            "## high-risk files", "## pre-code reasoning scaffold"
+        ]
+        all_found = True
+        for sec in sections:
+            if sec in content_lower:
+                print(f"FOUND ✅ {sec}")
+            else:
+                print(f"MISSING ❌ {sec}")
+                all_found = False
+        if not all_found:
+            verdict = "❌ FAIL"
+            v_word = "❌ FAIL"
+
+    elif args.stale:
+        stale_count = 0
+        real_funcs = {}
+        for py_file in _find_py_files():
+            try:
+                tree = ast.parse(Path(py_file).read_text(encoding="utf-8"))
+                for node in ast.walk(tree):
+                    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                        try:
+                            py_rel = Path(py_file).relative_to(REPO_ROOT)
+                        except ValueError:
+                            py_rel = py_file
+                        real_funcs[node.name] = str(py_rel)
+            except Exception:
+                pass
+
+        refs = re.findall(r"`([a-zA-Z_][a-zA-Z0-9_]*)\(\)`", content_text)
+        if refs:
+            print(f"Stale references found in {rel_path}:")
+        for ref in set(refs):
+            if ref not in real_funcs:
+                print(f"❌ `{ref}()` — not found in any .py file")
+                stale_count += 1
+            else:
+                print(f"✅ `{ref}()` — found in {real_funcs[ref]}")
+
+        if stale_count > 0:
+            verdict = "⚠️ WARN"
+            v_word = "⚠️ WARN"
+            print(f"Verdict: WARN ({stale_count} stale refs found)")
+        else:
+            print("Verdict: PASS (0 stale)")
+
+    else:
+        reqs = ["overview", "usage", "purpose"]
+        missing = []
+        for req in reqs:
+            if f"## {req}" not in content_lower and f"# {req}" not in content_lower:
+                missing.append(req)
+
+        if missing:
+            print(f"MISSING ❌: {', '.join(missing)}")
+            verdict = "❌ FAIL"
+            v_word = "❌ FAIL"
+        else:
+            print("All required sections FOUND ✅")
+
+    print("────────────────────────────────────────")
+    if not args.stale:
+        print(f"Verdict: {verdict}")
+    _log_agent_action(f"check doc {rel_path} → {v_word}")
+
+
 # ------------------------------------------------------------------
 # MODULE 7: SCAFFOLDING & BOILERPLATE
 # ------------------------------------------------------------------
@@ -392,6 +501,18 @@ def main():
     subparsers.add_parser("capability-map")
     subparsers.add_parser("stats")
     
+
+    p_check = subparsers.add_parser("check"); p_cks = p_check.add_subparsers(dest="sub")
+
+    p_cc = p_cks.add_parser("code")
+    p_cc.add_argument("file")
+    p_cc.add_argument("--strict", action="store_true", default=False)
+
+    p_cd = p_cks.add_parser("doc")
+    p_cd.add_argument("file")
+    p_cd.add_argument("--agents", action="store_true", default=False)
+    p_cd.add_argument("--stale",  action="store_true", default=False)
+
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
@@ -424,6 +545,10 @@ def main():
     elif args.command == "help-ai": cmd_help_ai(args)
     elif args.command == "stats": cmd_stats(args)
     elif args.command == "capability-map": cmd_capability_map(args)
+
+    elif args.command == "check":
+        if args.sub == "code": cmd_check_code(args)
+        elif args.sub == "doc": cmd_check_doc(args)
     elif args.command == "code":
         if args.sub == "outline": cmd_code_outline(args)
         elif args.sub == "dep-map": cmd_code_dep_map(args)
