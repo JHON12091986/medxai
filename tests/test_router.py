@@ -193,3 +193,47 @@ def test_provider_health_limits():
     assert h.is_exhausted("GEMINI") is True
 
 
+def test_cb_persistence(dummy_config):
+    import os
+    import json
+    # Ensure data directory exists
+    os.makedirs("data", exist_ok=True)
+    state_path = "data/circuit_state.json"
+    if os.path.exists(state_path):
+        os.remove(state_path)
+
+    router = HybridRouter(dummy_config)
+    # Initialize health manually for testing
+    router.health["GROQ"] = ProviderHealth(provider_id="GROQ")
+    
+    # Change state to OPEN
+    router.health["GROQ"].cb.state = "OPEN"
+    router.health["GROQ"].cb.open_until = time.time() + 100
+    router.health["GROQ"].cb.failures.append(time.time())
+
+    # Save state
+    router._save_circuit_state()
+    assert os.path.exists(state_path)
+
+    # Check file content
+    with open(state_path, "r") as f:
+        data = json.load(f)
+    assert "GROQ" in data
+    assert data["GROQ"]["state"] == "OPEN"
+    assert data["GROQ"]["open_until"] > time.time()
+    assert len(data["GROQ"]["failures"]) == 1
+
+    # Load state in a new router instance
+    router2 = HybridRouter(dummy_config)
+    router2.health["GROQ"] = ProviderHealth(provider_id="GROQ")
+    router2._load_circuit_state()
+
+    assert router2.health["GROQ"].cb.state == "OPEN"
+    assert router2.health["GROQ"].cb.open_until == router.health["GROQ"].cb.open_until
+    assert len(router2.health["GROQ"].cb.failures) == 1
+
+    # Clean up
+    if os.path.exists(state_path):
+        os.remove(state_path)
+
+

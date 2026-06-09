@@ -81,7 +81,7 @@ Perplexity reads backlog each session
 | B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `DONE` | tools/model_discovery.py, core/router.py, crons/manager.py | — | PR #25 merged 2026-06-07 |
 | B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `DONE` | core/router.py | B-005 | agynina only — high-risk file |
 | B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `DONE` | data/model_cache.json | B-005 | Jules can do this |
-| B-008 | Add circuit breaker state persistence to data/circuit_state.json | `READY` | core/router.py, data/ | — | Currently in-memory — lost on restart. agynina only |
+| B-008 | Add circuit breaker state persistence to data/circuit_state.json | `DONE` | core/router.py, data/ | — | Currently in-memory — lost on restart. agynina only |
 | B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegraminterface.py | — | agynina only — high-risk file |
 | B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegraminterface.py | — | agynina only — high-risk file |
 | B-011 | Guardian engine: add file integrity check on startup | `READY` | guardianengine.py | — | SIGNATURES dict exists but startup check is passive. agynina only |

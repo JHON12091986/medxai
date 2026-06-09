@@ -1633,3 +1633,15 @@
 **Files changed:** tools/agynina.py
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 141 — 2026-06-09 · B-008 Circuit Breaker Persistence
+
+**Triggered by:** agynina task B-008
+
+**Files changed:** core/router.py, tests/test_router.py
+
+**Verification:** pytest tests/test_router.py passed (9 tests)
+
+**Rollback path:** git checkout core/router.py tests/test_router.py

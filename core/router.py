@@ -1,5 +1,5 @@
 # core/router.py
-import asyncio, hashlib, json, logging, re, time, uuid
+import asyncio, hashlib, json, logging, os, re, time, uuid
 from collections import deque
 from dataclasses import dataclass, field
 from typing import Optional, cast
@@ -60,6 +60,19 @@ class CircuitBreaker:
         self.state = "CLOSED"
         self.failures = deque()
         self.open_until = 0.0
+        self.half_open_in_flight = False
+
+    def to_dict(self) -> dict:
+        return {
+            "state": self.state,
+            "open_until": self.open_until,
+            "failures": list(self.failures)
+        }
+
+    def from_dict(self, data: dict):
+        self.state = data.get("state", "CLOSED")
+        self.open_until = data.get("open_until", 0.0)
+        self.failures = deque(data.get("failures", []))
         self.half_open_in_flight = False
 
     def _prune(self):
@@ -294,11 +307,37 @@ class HybridRouter:
         self.cost = CostTracker()
         self.http: Optional[httpx.AsyncClient] = None
         self._idle_task = None
+        self._state_path = "data/circuit_state.json"
+
+    def _save_circuit_state(self):
+        try:
+            state = {pid: h.cb.to_dict() for pid, h in self.health.items()}
+            tmp_path = f"{self._state_path}.tmp"
+            os.makedirs(os.path.dirname(self._state_path), exist_ok=True)
+            with open(tmp_path, "w") as f:
+                json.dump(state, f, indent=2)
+            os.replace(tmp_path, self._state_path)
+        except Exception as e:
+            logger.warning(f"failed_to_save_circuit_state: {e}")
+
+    def _load_circuit_state(self):
+        if not os.path.exists(self._state_path):
+            return
+        try:
+            with open(self._state_path, "r") as f:
+                state = json.load(f)
+            for pid, cb_data in state.items():
+                if pid in self.health:
+                    self.health[pid].cb.from_dict(cb_data)
+            logger.info(f"Loaded circuit breaker state from {self._state_path}")
+        except Exception as e:
+            logger.warning(f"failed_to_load_circuit_state: {e}")
 
     async def initialize(self):
         self.http = httpx.AsyncClient(timeout=60.0)
         for pid in [*PROVIDERS_TIER1, *PROVIDERS_TIER2, *PROVIDERS_TIER3, "LOCALFAST", "LOCALHEAVY"]:
             self.health[pid] = ProviderHealth(provider_id=pid)
+        self._load_circuit_state()
         await self._discover_local_models()
         self._idle_task = asyncio.create_task(self._idle_monitor())
         logger.info("HybridRouter initialized")
@@ -312,6 +351,7 @@ class HybridRouter:
                 pass
             except Exception:
                 pass
+        self._save_circuit_state()
         if self.http:
             await self.http.aclose()
 
@@ -608,6 +648,7 @@ class HybridRouter:
             try:
                 await asyncio.sleep(300)
                 now = time.time()
+                self._save_circuit_state()
                 if now - last_cache_purge >= 300:
                     self.cache.purge_expired()
                     last_cache_purge = now
