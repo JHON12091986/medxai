@@ -272,6 +272,10 @@ else
   fi
 fi
 
+bash "$HOME/nina/nina_logbase_backup.sh"
+bash "$HOME/nina/nina_docbase_backup.sh"
+bash "$HOME/nina/nina_codebase_backup.sh"
+
 echo "================================================"
 echo " SYNC COMPLETE  $TS"
 echo "================================================"
