@@ -1,0 +1,49 @@
+#!/bin/bash
+# Unified wrapper to launch NinaGate proxy and Qwen Code seamlessly
+
+NINA_DIR="$HOME/nina"
+ENV_FILE="$NINA_DIR/.env"
+PROXY_SCRIPT="$NINA_DIR/ninagate/main.py"
+PYTHON_BIN="$NINA_DIR/venv/bin/python"
+QWEN_BIN="$HOME/.npm-global/bin/qwen"
+
+# Fallback if qwen isn't at the exact absolute path
+if [ ! -x "$QWEN_BIN" ]; then
+    if command -v qwen >/dev/null 2>&1; then
+        QWEN_BIN=$(command -v qwen)
+    else
+        echo "Error: 'qwen' executable not found."
+        exit 1
+    fi
+fi
+
+# Load NINA environment variables to populate API keys for the proxy
+if [ -f "$ENV_FILE" ]; then
+    set -a
+    source "$ENV_FILE"
+    set +a
+fi
+
+echo "🚀 Starting NinaGate proxy..."
+# Run the proxy in the background and redirect output to a log file
+"$PYTHON_BIN" "$PROXY_SCRIPT" > /tmp/ninagate.log 2>&1 &
+PROXY_PID=$!
+
+# Ensure the proxy is killed when Qwen exits (or if the script is interrupted)
+trap 'echo ""; echo "🛑 Shutting down NinaGate proxy (PID $PROXY_PID)..."; kill -9 $PROXY_PID 2>/dev/null' EXIT
+
+# Give the proxy a second to bind to the port
+sleep 1.5
+
+# Check if proxy started successfully
+if ! kill -0 $PROXY_PID 2>/dev/null; then
+    echo "❌ Error: NinaGate proxy failed to start. Check /tmp/ninagate.log for details."
+    cat /tmp/ninagate.log
+    exit 1
+fi
+
+echo "✅ Proxy running. Launching Qwen Code..."
+echo "----------------------------------------"
+
+# Launch Qwen Code pointing to the local proxy
+"$QWEN_BIN" --auth-type openai --openai-base-url "http://localhost:8765/v1" --openai-api-key ninagate -m auto "$@"
