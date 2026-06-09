@@ -1836,55 +1836,10 @@
 
 ---
 
-## Entry 161 — 2026-06-10 · resolve PR #74: Port dynamic routing override and UI config from claude-code-router
+## Entry 161 — 2026-06-10 · D-sync Post-session sync
 
-**Triggered by:** User request to resolve PR #74.
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:**
-- `ninagate/main.py`
-- `dashboard/ninaui.html`
-- `ninagate/providers.json`
+**Files changed:** nina_update_log.md,data/circuit_state.json,generate_backups.sh,ninagate_load_test.sh
 
-**What changed:**
-- Merged and rebased PR #74 which ports dynamic routing directives (`/model <provider>,<model>`) and a configuration UI for NinaGate into the main branch.
-- Resolved merge conflicts in `ninagate/main.py` between the new features and existing health tracking/circuit breaker logic.
-- Preserved robust health monitoring, retries, and circuit breaker while integrating the new routing override and payload sanitization features.
-- Fixed a pre-existing mismatch in `ninagate/providers.json` where API key environment variable names used underscores (e.g., `GROQ_API_KEY`) but `.env` used no underscores (e.g., `GROQAPIKEY`).
-
-**Verification:**
-- Verified syntax of `ninagate/main.py`.
-- Tested the `/model groq` directive with a live request to Groq (succeeded).
-- Tested the new `GET /v1/config/providers` and `POST /v1/config/providers` endpoints (succeeded).
-- Verified `nina_update_log.md` consistency after rebase.
-
-**Rollback path:**
-- `git reset --hard 7600e49`
-
----
-
-## Entry 162 — 2026-06-10 · Standardize API key environment variables with underscores
-
-**Triggered by:** User request to fix underscore naming in `.env`.
-
-**Files changed:**
-- `.env` (updated local keys)
-- `ninagate/providers.json`
-- `bin/ninagate`
-- `core/config.py`
-- `interfaces/cli_interface.py`
-
-**What changed:**
-- Standardized all API key environment variables to use the `_API_KEY` suffix (e.g., `GROQ_API_KEY` instead of `GROQAPIKEY`).
-- Updated the `.env` file to include underscores for all LLM provider keys.
-- Synchronized `ninagate/providers.json` to match the new underscored keys.
-- Refactored `bin/ninagate` to remove the now-redundant manual mapping of non-underscored keys to underscored ones.
-- Updated `core/config.py` and `interfaces/cli_interface.py` to ensure the core agent and CLI use the standardized environment variable names.
-
-**Verification:**
-- Verified `ninagate` server functionality and successful routing to Groq using the new `GROQ_API_KEY` directly from the environment.
-- Verified core config correctly identifies the new key names.
-
-**Rollback path:**
-- `git reset --hard a4b98d9` (Note: `.env` changes must be manually reverted if needed)
-
-
+**Verification:** git push OK, nina.service active
