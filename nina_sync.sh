@@ -281,9 +281,9 @@ echo "NINA docbase backup saved to $DOCBASE_OUT"
 echo "NINA codebase backup saved to $CODEBASE_OUT"
 
 if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q "gdrive:"; then
-  [ -n "$LOGBASE_OUT" ] && rclone copy "$LOGBASE_OUT" "gdrive:nina_backups/$(basename "$LOGBASE_OUT")" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$LOGBASE_OUT") → gdrive:nina_backups/" || echo "  ⚠️  Logbase backup upload failed"
-  [ -n "$DOCBASE_OUT" ] && rclone copy "$DOCBASE_OUT" "gdrive:nina_backups/$(basename "$DOCBASE_OUT")" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$DOCBASE_OUT") → gdrive:nina_backups/" || echo "  ⚠️  Docbase backup upload failed"
-  [ -n "$CODEBASE_OUT" ] && rclone copy "$CODEBASE_OUT" "gdrive:nina_backups/$(basename "$CODEBASE_OUT")" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$CODEBASE_OUT") → gdrive:nina_backups/" || echo "  ⚠️  Codebase backup upload failed"
+  [ -n "$LOGBASE_OUT" ] && rclone copy "$LOGBASE_OUT" "gdrive:nina-backup/versioned/" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$LOGBASE_OUT") → gdrive:nina-backup/versioned/" || echo "  ⚠️  Logbase backup upload failed"
+  [ -n "$DOCBASE_OUT" ] && rclone copy "$DOCBASE_OUT" "gdrive:nina-backup/versioned/" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$DOCBASE_OUT") → gdrive:nina-backup/versioned/" || echo "  ⚠️  Docbase backup upload failed"
+  [ -n "$CODEBASE_OUT" ] && rclone copy "$CODEBASE_OUT" "gdrive:nina-backup/versioned/" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$CODEBASE_OUT") → gdrive:nina-backup/versioned/" || echo "  ⚠️  Codebase backup upload failed"
 fi
 
 echo "================================================"
