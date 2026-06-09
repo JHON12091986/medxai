@@ -76,7 +76,7 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
 
 ## Mandatory Rules — After Every Task (Local Sync & Export)
 
-- Append a log entry to `nina_update_log.md` using **Python only** — never heredoc, never bash echo
+- Append a log entry to `docs/logs/nina_update_log.md` using **Python only** — never heredoc, never bash echo
   - Auto-detect the next entry number from the file
   - Include: entry number, date, title, what changed, what was verified, rollback path
 - Run `cd ~/nina && ./nina_sync.sh` — no exceptions
