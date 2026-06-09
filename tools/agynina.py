@@ -348,7 +348,49 @@ def cmd_ops_vram(args):
     print("VRAM: 20%")
 
 # ------------------------------------------------------------------
-# MODULE 9: SELF-IMPROVING LOGIC & AI BRIEFING
+# MODULE 9: HARDWARE GATE & NINAGATE (PROMOTED FROM STUB)
+# ------------------------------------------------------------------
+
+def cmd_hw_gate(args):
+    """[033] Hardware Gate: Check sensors and return GO/HOLD/DEFER."""
+    status, reason, data = _get_hw_status()
+    if getattr(args, "json", False):
+        print(json.dumps({"status": status, "reason": reason, **data}))
+    else:
+        print(f"NinaGate: {status} | Reason: {reason}")
+        print(f"Details: CPU {data['cpu_temp']}°C | RAM {data['ram_gb']:.1f}GB | Load {data['load']}%")
+
+def _get_hw_status() -> Tuple[str, str, dict]:
+    """[034] Logic for hardware gate GO/HOLD/DEFER."""
+    import psutil
+    from tools.system import get_temps
+    
+    # Defaults
+    ram_guard = float(os.getenv("RAM_GUARD_GB", 10.5))
+    
+    # Gather data
+    ram_gb = psutil.virtual_memory().used / 1e9
+    cpu_load = psutil.cpu_percent(interval=0.5)
+    try:
+        # get_temps is async in tools/system.py
+        temps = asyncio.run(get_temps())
+    except Exception:
+        temps = {}
+    
+    cpu_temp = temps.get("cpu") or 0
+    
+    # Decision Logic (based on Blueprint v12.2)
+    if cpu_temp >= 95 or ram_gb >= (ram_guard + 1.0):
+        return "DEFER", "Critical thermal/RAM state", {"cpu_temp": cpu_temp, "ram_gb": ram_gb, "load": cpu_load}
+    if cpu_temp >= 90 or ram_gb >= ram_guard:
+        return "HOLD", "High resource usage", {"cpu_temp": cpu_temp, "ram_gb": ram_gb, "load": cpu_load}
+    if cpu_temp >= 80:
+        return "GO", "System warm but safe (WARN)", {"cpu_temp": cpu_temp, "ram_gb": ram_gb, "load": cpu_load}
+    
+    return "GO", "System healthy", {"cpu_temp": cpu_temp, "ram_gb": ram_gb, "load": cpu_load}
+
+# ------------------------------------------------------------------
+# MODULE 10: SELF-IMPROVING LOGIC & AI BRIEFING
 # ------------------------------------------------------------------
 
 def cmd_help_ai(args):
@@ -392,6 +434,10 @@ def main():
     subparsers.add_parser("capability-map")
     subparsers.add_parser("stats")
     
+    p_hw = subparsers.add_parser("hw"); p_hs = p_hw.add_subparsers(dest="sub")
+    p_hg = p_hs.add_parser("gate")
+    p_hg.add_argument("--json", action="store_true", help="Output as JSON")
+
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
@@ -424,6 +470,8 @@ def main():
     elif args.command == "help-ai": cmd_help_ai(args)
     elif args.command == "stats": cmd_stats(args)
     elif args.command == "capability-map": cmd_capability_map(args)
+    elif args.command == "hw":
+        if args.sub == "gate": cmd_hw_gate(args)
     elif args.command == "code":
         if args.sub == "outline": cmd_code_outline(args)
         elif args.sub == "dep-map": cmd_code_dep_map(args)

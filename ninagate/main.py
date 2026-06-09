@@ -42,7 +42,7 @@ http_client: httpx.AsyncClient = None
 async def lifespan(app: FastAPI):
     # Startup
     global http_client
-    http_client = httpx.AsyncClient(timeout=10.0)
+    http_client = httpx.AsyncClient(timeout=60.0)
     watcher_task = asyncio.create_task(watch_providers())
     yield
     # Shutdown
@@ -129,7 +129,7 @@ async def proxy_chat_completions(request: Request):
                         background=None # The response generator handles reading
                     )
                 else:
-                    data = await response.json()
+                    data = response.json()
                     return JSONResponse(status_code=response.status_code, content=data)
 
             except httpx.TimeoutException:
