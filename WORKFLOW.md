@@ -1,82 +1,73 @@
-# NINA Workflow — Four-Tool Parallel Model
+# NINA Workflow — Three-Tier Agent Model
 
 ## Identity
 NINA is a personal AI assistant built by M. Baizid Alam (GitHub: aibony), AGM at BASIC Bank,
-Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 24.04) at github.com/aibony/nina.
+Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com/aibony/nina.
 
-## The Four Tools
+## The Three-Tier Agent Model
 
-| Tool | Role | Mode |
+| Agent | Role | Scope |
 |------|------|------|
-| Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
+| Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Strategic direction, specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
-| Antigravity CLI (agynina) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
-| aider-chat (./nina-aider.sh) | INTERACTIVE LOCAL CODER | Interactive sync — live multi-file pair-programming in local workspace |
+| agynina (Antigravity CLI) | LOCAL EXECUTOR | Sync local executor — edits, reviews Jules PR diff, merges, deploys |
 
-## The Full Parallel Loop
+## The Full Parallel Loop (Jules + agynina Pipeline)
 
 1. Perplexity diagnoses issue and writes precise spec
 2. Jules receives spec → builds in cloud async (no interaction after submit)
-3. Local executor (agynina/aider) handles urgent local fixes in parallel on its own worktree
-4. Jules opens PR when done
-5. agynina reviews Jules PR diff, runs lint/compile checks, merges to main
-6. agynina runs ./nina_sync.sh to deploy and export
-7. Perplexity reviews result (attach nina_latest.md to new thread)
+3. agynina (local executor) handles urgent local fixes in parallel on its own worktree
+4. Jules opens PR when feature is complete
+5. agynina runs Guardian lint/compile checks on the PR diff
+6. agynina merges PR → runs `./nina_sync.sh` → deploys to systemd
+7. Perplexity reviews result in a new thread
 
 **KEY RULES:**
-- agynina is NOT just a fixer — it is the local merge and deploy executor
-- Jules does NOT merge its own PRs — agynina always performs the merge after review
-- Perplexity is NOT idle during coding — available for unblocking and mid-task review
-- All tools can run IN PARALLEL as the standard operating mode
+- agynina is NOT just a fixer — it is the local merge and deploy executor.
+- Jules does NOT merge its own PRs — agynina always performs the merge after review.
+- Perplexity is NOT idle during coding — available for unblocking and mid-task review.
+- All tools can run IN PARALLEL as the standard operating mode.
 
-## Session Start Checklist (Perplexity Thread)
+## Standard Session Start Checklist (Perplexity Thread)
 Before starting any new Perplexity thread:
-- [ ] Run: cd ~/nina && ./nina_sync.sh
-- [ ] Attach: exports/nina_latest.md to the Perplexity thread
-- [ ] Attach: the specific source file(s) being discussed (never rely on snapshot alone for code edits)
-- [ ] State: the task type (bug / feature / doc / security / review)
-- [ ] Check: jules_lock.txt — is any target file currently locked by Jules?
+1. Start from clean `main` in `~/nina`.
+2. Run `./nina_sync.sh`.
+3. Create branch + worktree for each task.
+4. Record claimed files in the centralized `~/nina/jules_lock.txt`.
+5. Launch local executor and Jules only after territories are confirmed non-overlapping.
 
 ## Session Close Checklist (agynina)
 After every task:
-1. Run syntax/linter checks on changed files using `agynina pr merge` or verify status with `agynina status`
-2. Update locks using `agynina` or manual lock update
-3. Run `cd ~/nina && ./nina_sync.sh`
+1. The local executor commits only its branch/worktree.
+2. Jules opens PR only from its branch/worktree.
+3. Review and merge one stream at a time into `main`.
+4. Pull updated `main` into remaining worktrees before further edits.
+5. Run `./nina_sync.sh` from `main`.
+6. Remove finished worktrees.
+7. Update task tracker and backlog (see below).
 
-## agynina as Merge Executor
-- agynina is responsible for ALL Jules PR merges — never auto-merge via GitHub UI
-- Before merging: run `agynina pr merge <PR_NUMBER>` to automate compile checks, linting, and backlog status updates
-- After merging: run `./nina_sync.sh` — no exceptions
-- If merge conflict: stop, report to Perplexity for re-spec
+## Post-Task Mandatory Updates
+After every successful PR merge, agynina must update tracking using **Python only** (never bash echo):
+1. Update `docs/space/jules_task_tracker.md` (change IN_PROGRESS to DONE, add PR number/date).
+2. Update `docs/space/jules_backlog.md` (set status to DONE, add PR number/date).
+3. Run `./nina_sync.sh` again to sync these tracker changes.
 
-## Branch Lanes
-- main — production truth, review/merge/sync only
-- local-{task-id-slug} — local docs, shell, single-file hotfixes
-- jules-{task-id-slug} — multi-file features, refactors, async PR builds
+## Worktree Branching Strategy
+True parallel work is allowed only through separate git branches and separate git worktrees.
+- `~/nina` → `main` (production truth, review/merge/sync only)
+- `~/nina/.worktrees/local-<task-id>` → `local/<task-id>-<slug>` (local docs, shell, hotfixes)
+- `~/nina/.worktrees/jules-<task-id>` → `jules/<task-id>-<slug>` (multi-file features, async PR builds)
 
-## Territory Rules
-- agynina default: docs/space/*.md, AGENTS.md, *.sh, single-file hotfixes
-- Jules default: core/*.py, tools/*.py, interfaces/*.py, tests/*.py
-- Shared (sequential only): requirements.txt, data/*.json
-- Forbidden parallel: .env, secrets, lock-sensitive runtime files
+Never run parallel agent tasks from the same working directory.
 
-## High-Risk Files (agynina/manual only — never Jules)
-interfaces/telegram_interface.py | .env | core/router.py | main.py | guardian_engine.py | tools/shell.py
+## Quota Cascade Order
 
-## Key Paths
-- Repo: ~/nina
-- venv: source ~/nina/venv/bin/activate
-- agynina binary: bin/agynina
-- Service: sudo systemctl restart nina.service
-- Snapshot export: ~/nina/exports/nina_latest.md
-- Lock file: ~/nina/jules_lock.txt
+| Tool | Model | Daily Quota | Reset |
+|------|-------|-------------|-------|
+| agynina (agy) | Gemini Flash | ~5h rolling | Rolling |
+| Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
+| Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
+| Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |
+| Ollama | Local | Unlimited | — |
 
-## Quota Reference
-| Tool | Model | Reset |
-|------|-------|-------|
-| agynina | Gemini 3.5 Flash Medium (default) | ~5h rolling |
-| agynina | Gemini 3.5 Flash High | ~5h rolling |
-| agynina | Gemini 3.1 Pro High | ~5h rolling |
-| agynina | Claude Sonnet 4.6 Thinking | Weekly ~7 days — reserve |
-| agynina | Claude Opus 4.6 Thinking | Weekly ~7 days — last resort |
-| Jules | Gemini 3.1 Pro (built-in) | Rolling 24h, 100 tasks/day |
+**Cascade order:** `agy → Qwen Code → Jules (async) → Cursor → Ollama`
