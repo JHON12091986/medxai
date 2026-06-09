@@ -1518,8 +1518,8 @@ def run_engine(args):
 
     if healthcheck_path.exists():
         hc_out, hc_err, hc_rc = run_cmd(
-            f"cd {NINA_DIR} && {python_bin} healthcheck.py --json 2>&1",
-            timeout=60, use_shell=True
+            [str(python_bin), str(healthcheck_path), "--json"],
+            timeout=60, use_shell=False
         )
         healthcheck_out = hc_out + hc_err
         hc_passed = (hc_rc == 0)

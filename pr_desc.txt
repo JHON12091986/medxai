@@ -1,0 +1,5 @@
+🚨 Severity: CRITICAL
+💡 Vulnerability: `guardian_engine.py` was invoking `healthcheck.py` using `subprocess.run` with a single un-tokenized string and `use_shell=True`, which is a command injection risk.
+🎯 Impact: If any paths or variables like `NINA_DIR` were manipulated or interpreted by the shell, it could lead to arbitrary command execution as the user running the guardian script.
+🔧 Fix: Modified the `run_cmd` invocation to use `use_shell=False` and explicitly passed the arguments as a list of strings (`[str(python_bin), str(healthcheck_path), "--json"]`).
+✅ Verification: Ran `python3 tools/agynina.py audit` and `python3 healthcheck.py --json`. Both tools confirm `guardian_engine.py` is no longer flagged for `shell=True`. Tested the application and healthcheck execution to ensure it works correctly.
