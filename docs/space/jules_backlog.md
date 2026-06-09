@@ -353,7 +353,7 @@ _Directory: `tests/`_
 | AG-J-01 | `tests/test_planner.py` | Unit tests for GoalDecomposer: goal parsing, step generation, dependency ordering | `NEEDS_SPEC` | AG-A-01 |
 | AG-J-02 | `tests/test_task_store.py` | Unit tests for TaskStore: CRUD, persistence, TTL, status transitions | `NEEDS_SPEC` | AG-B-01 |
 | AG-J-03 | `tests/test_agent_loop.py` | Integration tests for upgraded AgentLoop: step execution, result piping, loop detection | `NEEDS_SPEC` | AG-C-01 |
-| AG-J-04 | `tests/test_verifier.py` | Unit tests for StepVerifier: schema check, numeric assertion, semantic scoring | `NEEDS_SPEC` | AG-D-01 |
+| AG-J-04 | `tests/test_verifier.py` | Unit tests for StepVerifier: schema check, numeric assertion, semantic scoring | `DONE` | 2026-06-09 |
 | AG-J-05 | `tests/test_events.py` | Unit tests for EventBus: publish, subscribe, filter, rate-limit, replay | `NEEDS_SPEC` | AG-E-01 |
 | AG-J-06 | `tests/test_market_agent.py` | Unit tests for MarketAgent: mock price feed, threshold crossing, alert emission | `NEEDS_SPEC` | AG-F-02 |
 | AG-J-07 | `tests/test_chain.py` | Unit tests for ToolChain: sequential execution, conditional branching, dry-run mode | `NEEDS_SPEC` | AG-H-01 |

@@ -1636,24 +1636,80 @@
 
 ---
 
-## Entry 141 — 2026-06-09 · B-008 Circuit Breaker Persistence
+## Entry 141 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** agynina task B-008
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** core/router.py, tests/test_router.py
+**Files changed:** tools/agynina.py
 
-**Verification:** pytest tests/test_router.py passed (9 tests)
-
-**Rollback path:** git checkout core/router.py tests/test_router.py
+**Verification:** git push OK, nina.service active
 
 ---
 
-## Entry 142 — 2026-06-09 · PR Unification and Verification
+## Entry 142 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** Manual PR resolution and merge request
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** core/verifier.py, tests/test_verifier.py, tools/agynina.py, core/nina.py, AGENTS.md, dashboard/puter_architect.html
+**Files changed:** tools/agynina.py,kernel_generator.py,tools/kernel/
 
-**Verification:** All 141 tests passed (pytest tests/). Verified agynina check code/doc commands.
+**Verification:** git push OK, nina.service active
 
-**Rollback path:** git revert -m 1 96af53f c2f984e 18db682
+---
+
+## Entry 143 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** tools/agynina.py,kernel_generator.py,tools/kernel/
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 001 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/AGENTS.md,docs/space/WORKFLOW.md
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 145 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** nina_update_log.md
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 146 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** core/router.py,docs/logs/nina_update_log.md,docs/space/agynina_task_tracker.md,docs/space/jules_backlog.md,tests/test_router.py,nina_update_log.md
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 147 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/agynina_task_tracker.md,nina_update_log.md,repro_r77.py
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 148 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** ninagate/main.py,tools/agynina.py,nina_update_log.md,repro_r77.py
+
+**Verification:** git push OK, nina.service active
