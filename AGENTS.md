@@ -67,6 +67,13 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 ## Test Command After Every Change
 cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> && pyflakes <changed_file>
 
+## Mandatory Verification — After Every Task (Local Executor)
+
+1. **Syntax Check:** Run `python3 -m py_compile <file>` + `pyflakes <file>` on every changed file.
+2. **Full Test Suite:** Run the complete test suite to ensure no regressions:
+   `./venv/bin/python -m pytest tests/`
+   (Note: Ensure all ~112 tests pass, or justify any known failures).
+
 ## Mandatory Rules — After Every Code Change (Local Executor)
 
 - Run `python3 -m py_compile <file>` + `pyflakes <file>` on every changed file before committing
