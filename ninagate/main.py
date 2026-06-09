@@ -1,3 +1,4 @@
+import re
 import asyncio
 import json
 import logging
@@ -13,9 +14,11 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, StreamingResponse
 from watchfiles import awatch
 
+# Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("ninagate")
 
+# Load environment variables from NINA's .env file
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "..", ".env"))
 
 PROVIDERS_FILE = os.path.join(os.path.dirname(__file__), "providers.json")
@@ -99,7 +102,7 @@ def load_providers():
         for p in providers:
             if p["name"] not in health_tracker:
                 health_tracker[p["name"]] = ProviderHealth(p["name"])
-        logger.info(f"Loaded {len(providers)} providers.")
+        logger.info(f"Loaded {len(providers)} providers from {PROVIDERS_FILE}")
     except Exception as e:
         logger.error(f"Failed to load providers: {e}")
 
@@ -138,11 +141,13 @@ http_client: httpx.AsyncClient = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    # Startup
     global http_client
     http_client = httpx.AsyncClient(timeout=60.0)
     watcher_task = asyncio.create_task(watch_providers())
     model_fetch_task = asyncio.create_task(fetch_models_background())
     yield
+    # Shutdown
     watcher_task.cancel()
     model_fetch_task.cancel()
     await http_client.aclose()
@@ -168,44 +173,96 @@ async def list_models():
 
 @app.post("/v1/chat/completions")
 async def proxy_chat_completions(request: Request):
-    try: payload = await request.json()
-    except Exception: return JSONResponse(status_code=400, content={"error": "Invalid JSON"})
+    try:
+        payload = await request.json()
+    except Exception:
+        return JSONResponse(status_code=400, content={"error": "Invalid JSON"})
 
     is_stream = payload.get("stream", False)
-    
-    # 3. Dynamic Load Balancing: Sort providers by real-time health score
+
+    target_provider_name = None
+    target_model = None
+
+    # Check for /model directive in the last message
+    messages = payload.get("messages", [])
+    if messages and len(messages) > 0:
+        last_msg = messages[-1]
+        if last_msg.get("role") == "user" and isinstance(last_msg.get("content"), str):
+            content_str = last_msg["content"]
+            match = re.search(r'^/model\s+([^\s]+)', content_str)
+            if match:
+                model_str = match.group(1)
+                if "," in model_str:
+                    target_provider_name, target_model = model_str.split(",", 1)
+                else:
+                    target_provider_name = model_str
+
+                # Strip the directive
+                last_msg["content"] = content_str.replace(match.group(0), "", 1).lstrip()
+                payload["messages"] = messages
+
+    # Dynamic Load Balancing: Sort providers by real-time health score
     available_providers = []
     for p in providers:
+        # If a target provider is specified, skip others
+        if target_provider_name and p.get("name") != target_provider_name:
+            continue
+            
         api_key = os.getenv(p.get("api_key_env", "")) if p.get("api_key_env") else None
-        if not api_key and p.get("name") != "ollama": continue
+        if not api_key and p.get("name") != "ollama":
+            continue
+            
         h = health_tracker[p["name"]]
         
-        # 1. Circuit Breaker validation
-        if h.cb.allow_request():
+        # 1. Circuit Breaker validation (unless explicitly targeted)
+        if target_provider_name or h.cb.allow_request():
             available_providers.append((h.score(), p, api_key, h))
             
-    available_providers.sort(key=lambda x: x[0], reverse=True)
+    if not target_provider_name:
+        available_providers.sort(key=lambda x: x[0], reverse=True)
+    elif not available_providers:
+        logger.warning(f"Target provider {target_provider_name} not found or missing API key, using fallback cascade.")
+        # Fallback to normal behavior if target not found
+        for p in providers:
+            api_key = os.getenv(p.get("api_key_env", "")) if p.get("api_key_env") else None
+            if not api_key and p.get("name") != "ollama": continue
+            h = health_tracker[p["name"]]
+            if h.cb.allow_request():
+                available_providers.append((h.score(), p, api_key, h))
+        available_providers.sort(key=lambda x: x[0], reverse=True)
 
     for score, provider, api_key, h in available_providers:
         provider_name = provider["name"]
+        base_url = provider.get("base_url")
         
         headers = {"Content-Type": "application/json"}
         if api_key: headers["Authorization"] = f"Bearer {api_key}"
 
         provider_payload = payload.copy()
-        if provider.get("model"):
+        
+        # Priority: target_model (from directive) > provider["model"] (from config) > default
+        if target_model:
+            provider_payload["model"] = target_model
+        elif provider.get("model"):
             provider_payload["model"] = provider["model"]
         elif provider_name == "ollama" and "model" not in provider_payload:
             provider_payload["model"] = "qwen2.5:7b"
 
-        url = f"{provider['base_url']}/chat/completions"
+        # Basic Transformers / Payload Sanitization
+        if provider_name == "gemini":
+            provider_payload.pop("stream_options", None)
+            provider_payload.pop("cache_control", None)
+        elif provider_name == "groq":
+            provider_payload.pop("stream_options", None)
+
+        url = f"{base_url}/chat/completions"
 
         # 2. Automatic Retries with backoff (up to 2 attempts)
         for attempt in range(2):
             try:
                 start_time = time.time()
                 if attempt == 0:
-                    logger.info(f"Trying provider: {provider_name} (health_score: {score:.2f})")
+                    logger.info(f"Trying provider: {provider_name} (health_score: {score:.2f}) at {url}")
                 else:
                     logger.info(f"Retrying provider: {provider_name} (attempt 2)")
                 
@@ -213,9 +270,12 @@ async def proxy_chat_completions(request: Request):
                 response = await http_client.send(req, stream=is_stream)
 
                 if response.status_code >= 400:
-                    err_body = ""
-                    try: err_body = (await response.aread()).decode()
-                    except: pass
+                    error_body = ""
+                    try:
+                        error_body = await response.aread()
+                        error_body = error_body.decode("utf-8")
+                    except Exception:
+                        pass
                     
                     if response.status_code == 429:
                         retry_after = float(response.headers.get("retry-after", 60))
@@ -225,12 +285,12 @@ async def proxy_chat_completions(request: Request):
                         break # Break retry loop, immediately failover to next provider
                         
                     elif 500 <= response.status_code < 600 and attempt == 0:
-                        logger.warning(f"5xx Server Error from {provider_name}, retrying... {err_body[:100]}")
+                        logger.warning(f"5xx Server Error from {provider_name}, retrying... {error_body[:100]}")
                         await response.aclose()
                         await asyncio.sleep(1.0) # 1 second backoff
                         continue # Retry same provider
                     
-                    logger.warning(f"Provider {provider_name} failed: {response.status_code} {err_body[:100]}")
+                    logger.warning(f"Provider {provider_name} failed with status {response.status_code}: {error_body[:100]}")
                     h.record_failure()
                     await response.aclose()
                     break # Try next provider in cascade
@@ -239,7 +299,8 @@ async def proxy_chat_completions(request: Request):
                 if is_stream:
                     return StreamingResponse(
                         stream_response(response, h, start_time),
-                        status_code=response.status_code
+                        status_code=response.status_code,
+                        background=None
                     )
                 else:
                     data = response.json()
@@ -260,7 +321,35 @@ async def proxy_chat_completions(request: Request):
                 break
 
     logger.error("All providers exhausted.")
-    return JSONResponse(status_code=503, content={"error": {"message": "All proxy providers exhausted.", "type": "server_error"}})
+    return JSONResponse(
+        status_code=503,
+        content={"error": {"message": "All proxy providers exhausted.", "type": "server_error"}}
+    )
+
+
+@app.get("/v1/config/providers")
+async def get_providers_config():
+    return JSONResponse(status_code=200, content=providers)
+
+@app.post("/v1/config/providers")
+async def update_providers_config(request: Request):
+    try:
+        new_providers = await request.json()
+        if not isinstance(new_providers, list):
+            return JSONResponse(status_code=400, content={"error": "Expected a JSON array of providers"})
+
+        # Write to file
+        with open(PROVIDERS_FILE, "w") as f:
+            json.dump(new_providers, f, indent=2)
+
+        # The watchfiles awatch will pick this up and reload globally,
+        # but we can also update it immediately.
+        global providers
+        providers = new_providers
+        return JSONResponse(status_code=200, content={"status": "success", "message": "Providers updated successfully"})
+    except Exception as e:
+        logger.error(f"Failed to update providers: {e}")
+        return JSONResponse(status_code=500, content={"error": str(e)})
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8765)
