@@ -267,12 +267,6 @@ class TaskStore:
                 if not isinstance(record, dict):
                     logger.warning("Skipping non-dict task record for id=%s", tid)
                     continue
-                missing = _REQUIRED_TASK_KEYS - record.keys()
-                if missing:
-                    logger.warning(
-                        "Task %s missing required keys %s — skipping", tid, missing
-                    )
-                    continue
                 try:
                     tasks[tid] = Task.from_dict(record)
                 except TaskStoreCorruptedError as exc:
@@ -367,6 +361,8 @@ class TaskStore:
                             )
                         # 3. Atomic rename
                         os.replace(tmp_path, self.storage_path)
+                        # 4. Update backup with the fresh success
+                        shutil.copy2(self.storage_path, self.bak_path)
                     except Exception as exc:  # noqa: BLE001
                         # Cleanup temp
                         try:
