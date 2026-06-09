@@ -1713,3 +1713,13 @@
 **Files changed:** ninagate/main.py,tools/agynina.py,nina_update_log.md,repro_r77.py
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 149 — 2026-06-09 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/AGENTS.md
+
+**Verification:** git push OK, nina.service active

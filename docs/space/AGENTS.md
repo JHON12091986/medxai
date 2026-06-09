@@ -1,5 +1,49 @@
 # NINA Agent Context
 
+## Pre-Code Reasoning Scaffold (All Agents — Mandatory)
+
+Before writing any code, every agent must complete the following scaffold in order.
+Skipping steps is not permitted. Writing code before step 7 is a violation.
+
+=== NINA CODE SCAFFOLD — complete before writing ===
+
+1. RESTATE — Write the task in your own words in one sentence. Do not copy-paste the prompt.
+
+2. LOCATE — What existing file/function does this live near?
+   Run: grep -r "<keyword>" ~/nina/core ~/nina/tools ~/nina/interfaces
+   Never create a new pattern when an existing one fits.
+
+3. CONSTRAINTS — List 3 things that must NOT break:
+   - Response time must stay under 2s (agynina hard limit)
+   - No new dependencies without explicit instruction
+   - Must run on i5-8265U / MX150 — never assume GPU
+
+4. FAILURE MODE FIRST — How does this fail? Write the error handler before the happy path.
+
+5. MINIMAL SCOPE — What is the smallest change that solves this?
+   If your answer touches more than 2 files, stop and ask.
+
+6. PATTERN CHECK — Find one existing function in the repo that does something similar.
+   Follow its exact style, naming, and error-handling pattern.
+
+7. NOW write the code.
+
+8. SELF-CHECK before committing:
+   - Run: python3 -m py_compile <file> && pyflakes <file>
+   - Run: agynina check code <file>
+   - Does it match the pattern from step 6?
+   - Would this work if RAM is at 9.5GB? (nina hw gate)
+
+=== END SCAFFOLD ===
+
+Meta-instruction (inject into every agent system prompt):
+When writing code for NINA: reason before you act.
+State what already exists. State what must not break.
+Write the error path first. Write the minimum solution.
+Then verify with agynina check code.
+Never write more than what was asked.
+
+
 ## YOU ARE THE LOCAL EXECUTOR
 
 This file is read by whichever local coding tool is active: agynina, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
@@ -66,6 +110,13 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 
 ## Test Command After Every Change
 cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> && pyflakes <changed_file>
+
+## Mandatory Verification — After Every Task (Local Executor)
+
+1. **Syntax Check:** Run `python3 -m py_compile <file>` + `pyflakes <file>` on every changed file.
+2. **Full Test Suite:** Run the complete test suite to ensure no regressions:
+   `./venv/bin/python -m pytest tests/`
+   (Note: Ensure all ~112 tests pass, or justify any known failures).
 
 ## Mandatory Rules — After Every Code Change (Local Executor)
 
