@@ -1,5 +1,14 @@
 # NINA Architecture
 
+## Overview
+A high-level blueprint of the NINA ecosystem, detailing the interactions between the strategic, cloud-based, and local execution layers.
+
+## Purpose
+To define the structural boundaries, security protocols, and optimization strategies that ensure NINA remains stable, secure, and cost-effective during autonomous expansion.
+
+## Usage
+Consult this document when designing new core modules or agents to ensure they align with the three-tier agent model and the Prime Directive.
+
 ## System Overview
 
 NINA is a three-tier autonomous agentic OS. It is not a chatbot. It is an action-first system that relies on a multi-layered approach involving a strategic Architect, an asynchronous Cloud Coder, and a dedicated Local Executor for maximum local security and robust performance.
@@ -35,8 +44,18 @@ NINA is a three-tier autonomous agentic OS. It is not a chatbot. It is an action
 
 ## Component Deep-Dives
 
-**ninaflash Universe-Mode Kernel:**
-The heart of ninaflash's execution capability. It consists of a Nucleus with 1,001 core functions and 1,000,000 Synapses (specialized Neural Op-Codes) distributed across 1,000 sector files. An Omniscient Dispatcher dynamically loads sectors on demand. This architecture gives ninaflash near-infinite local skills without incurring cloud token costs, providing robust and low-cost execution power locally.
+**ninaflash (nf):**
+The "Local Muscle" of NINA. A high-performance CLI executor (v6.0+) that offloads research, validation, and project management from the cloud. It features a "Surgical Code Intelligence" engine that uses local AST parsing to extract function signatures and symbols, avoiding expensive full-file reads. ninaflash maintains a strict 100-function core Nucleus to ensure high "attention" and reliability during autonomous execution.
+
+**NinaGate:**
+A lightweight OpenAI-compatible API proxy (`ninagate/main.py`) running on port 8765. It implements a "Fast-Path" routing strategy, directing boilerplate and low-complexity reasoning to local Ollama models (Qwen2.5-Coder, DeepSeek-Coder). NinaGate manages a priority cascade across 19+ providers, ensuring NINA always has a path to a model even during high-latency or rate-limit events.
+
+**Token-Surgical Architecture (v2.1):**
+A cross-cutting optimization layer designed to reduce cloud token consumption by 50-90%. It utilizes:
+- **Local RAG:** Semantic chunk-searching via ChromaDB to provide precise context.
+- **Reasoning Offloading:** Moving the 7-step planning scaffold to local models.
+- **Differential Context:** Prioritizing git diffs and symbol skeletons over full file contents in cloud prompts.
+- **Cached Templating:** Moving project-wide instructions (AGENTS.md) into NinaGate's system prompt cache.
 
 **HybridRouter V4:**
 NINA's model routing engine located in `core/router.py`. It intelligently routes queries across 19+ cloud AI providers and local Ollama instances based on a weighted scoring mechanism (success rate × latency × rate limits). The router integrates a CircuitBreaker to prevent cascading failures when a provider drops, prioritizing free-tier options first while safeguarding performance.

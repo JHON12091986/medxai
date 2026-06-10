@@ -1,4 +1,13 @@
-# NINA — Neural Intelligent Network Assistant
+# NINA — Neural Intelligent Network Assistant (v13.0)
+
+## Overview
+NINA is an autonomous agentic OS designed for private, local-first operation. It integrates with professional banking workflows while maintaining strict data residency.
+
+## Purpose
+To transform AI from a reactive chatbot into a proactive operational partner that handles email, markets, and code development with minimal human intervention.
+
+## Usage
+Deploy NINA on a Linux machine via the provided systemd services. Use the `nf` (ninaflash) CLI for local execution and PR management.
 
 *A self-hosted, self-developing autonomous AI OS running on Ubuntu 26.04.*
 
@@ -7,41 +16,38 @@
 NINA is NOT a chatbot. It is an action-first autonomous agent that:
 - Routes tasks across 20+ AI providers via HybridRouter V4
 - Develops itself autonomously via Jules + ninaflash pipeline
-- Manages email (EWS), monitors markets (DSE/CSE), handles finance, and self-repairs
-- Keeps all banking and sensitive data strictly on the local machine in Dhaka
+- **Optimization Offensive:** v2.0/v2.1 architecture designed to reduce cloud token usage by 90%.
+- **Active Pipeline:** 83 READY mega-tasks for autonomous optimization.
+- Keeps all banking and sensitive data strictly on the local machine in Dhaka.
 
 ## Three-Tier Agent Model
 
-This model is the heart of NINA's architecture, employing three parallel agents:
+This model is the heart of NINA's architecture:
 
 | Agent | Role | Backend | Scope |
 |---|---|---|---|
 | Perplexity Enterprise Pro | Architect + Overwatch | Claude Sonnet 4.6 | Strategic direction, specs, post-execution review |
-| Jules (jules.google.com) | Async Cloud Coder | Gemini 3.1 Pro | Multi-file feature builds, submits PRs |
-| ninaflash (Antigravity CLI) | Local Executor | Gemini Flash | Hotfixes, PR merges, deploys, syncs |
+| Jules (jules.google.com) | Async Cloud Coder | Gemini 3.1 Pro | Multi-file feature builds, 14 concurrent session limit |
+| ninaflash (nf) | Local Muscle | Gemini Flash | Local research, syntax fixing, PR merges, triage |
 
-Jules builds features asynchronously in the cloud. ninaflash reviews and merges Jules' PRs locally. Perplexity architects before and reviews after. Nobody does manual coding.
+## ninaflash — The Local Muscle
 
-## ninaflash — The Local Executor
-
-ninaflash is NINA's local muscle:
-- CLI tool at `bin/nf` (Antigravity CLI, v1.0.5)
-- Powered by Claude Sonnet 4.6 Thinking
+ninaflash is NINA's local high-performance executor:
+- CLI tool at `bin/nf` (v6.0+)
+- **Surgical Intelligence:** Extract functions/symbols locally to save cloud tokens.
+- **Auto-Hygiene:** Local syntax fixing and document auto-formatting.
 - Commands:
-  - `nf status` — checks locks, git workspace, backlog
-  - `nf pr merge <PR>` — lint check → merge → sync → backlog update
-  - `nf dispatch <TASK_ID>` — locks files → IN_PROGRESS → sends to Jules API
-  - `nf aider <TASK_ID>` — launches aider with task context
-  - `nf doctor` — finds latest Python traceback in logs
-  - `nf ninaloop` — activates continuous autonomous developer loop
+  - `nf status` — Pulse heartbeat of git, env, and backlog.
+  - `nf code outline` — Zero-token signature mapping.
+  - `nf check code --fix` — Automated local linting/fixing.
+  - `nf backlog summary` — High-density project state.
 
-## Universe-Mode Kernel (ninaflash v8.0)
+## Universe-Mode Kernel
 
-The kernel architecture giving ninaflash near-infinite capability at zero cloud token cost:
-- **Nucleus:** 1,001 core functions (`tools/ninaflash.py`)
-- **Synapses:** 1,000,000 specialized Neural Op-Codes across 1,000 sector files (`tools/kernel/sector_000.py` → `sector_999.py`)
-- **Omniscient Dispatcher:** Dynamic on-demand sector loader — executes any op-code without loading all sectors into memory
-- Purpose: Gives ninaflash near-infinite local skill capability at zero cloud token cost
+The kernel architecture giving NINA near-infinite capability at zero cloud token cost:
+- **Nucleus:** Strict 100-function core (`tools/ninaflash.py`) for high reliability.
+- **Fast-Path:** Routing via `NinaGate` (port 8765) to local Ollama models.
+- **Surgical Context:** Returning 40-line semantic chunks instead of full files.
 
 ## HybridRouter V4
 

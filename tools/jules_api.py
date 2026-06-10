@@ -73,6 +73,9 @@ async def run(cmd: str) -> str:
                 return requests.post(url, headers=headers, json=body, timeout=30)
                 
             response = await asyncio.to_thread(make_request)
+            if response.status_code >= 400:
+                logger.error(f"Jules API error response: {response.text}")
+                return f"Jules API request failed ({response.status_code}): {response.text}"
             response.raise_for_status()
             data = response.json()
             
@@ -121,9 +124,9 @@ async def run(cmd: str) -> str:
                     lines.append(f"{act_type}: {trimmed}")
                 return "\n".join(lines)
             else:
-                # Get last 5 sessions
+                # Get last 50 sessions
                 url = f"{base_url}/sessions"
-                params = {"pageSize": 5}
+                params = {"pageSize": 50}
                 
                 def make_request():
                     return requests.get(url, headers=headers, params=params, timeout=30)
@@ -156,6 +159,9 @@ async def run(cmd: str) -> str:
                 return requests.get(url, headers=headers, timeout=30)
             
             response = await asyncio.to_thread(make_request)
+            if response.status_code >= 400:
+                logger.error(f"Jules API error response: {response.text}")
+                return f"Jules API request failed ({response.status_code}): {response.text}"
             response.raise_for_status()
             data = response.json()
             

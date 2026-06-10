@@ -1998,3 +1998,22 @@
 
 **Rollback path:**
 - `git checkout HEAD -- docs/space/jules_backlog.md nina_update_log.md`
+
+---
+
+## Entry 175 — 2026-06-11 · docs: major v13.0 documentation refresh and quality alignment
+
+**Triggered by:** User request to update documentations and ensure alignment with the new optimization offensive.
+
+**What changed:**
+- Updated `nina_context.md` to v13.0: Integrated the "Prime Directive", updated development stages, added `NinaGate` details, and included `overview/purpose/usage` headers for doc-check compliance.
+- Updated `ARCHITECTURE.md`: Refined `ninaflash` definition to match the 100-function cap reality, added the "Token-Surgical Architecture (v2.1)" section, and included mandatory headers.
+- Updated `README.md` to v13.0: Reflected the 83-task optimization backlog, expanded the agent model summary, and included mandatory headers.
+- Verified all three core docs pass `./bin/ninaflash check doc` with a `✅ PASS` verdict.
+
+**What was verified:**
+- Documentation reflects the current repository state and the v2.0/v2.1 strategy.
+- Verified all links and file paths within the updated documents.
+
+**Rollback path:**
+- `git checkout HEAD -- nina_context.md README.md ARCHITECTURE.md nina_update_log.md`
