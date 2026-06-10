@@ -21,7 +21,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) — newe
 - **Verification:** Test suite expanded from ~110 to 202 passing tests.
 
 ### Fixed
-- **Sentinel Security:** Hardcoded `shell=False` in `tools/agynina.py` and `guardian_engine.py` to eliminate critical command injection risks.
+- **Sentinel Security:** Hardcoded `shell=False` in `tools/ninaflash.py` and `guardian_engine.py` to eliminate critical command injection risks.
 - **Memory Identity:** Fixed Jules identity and fact injection in `MemorySystem.build_context` (AG-F-02) ensuring deterministic personal context.
 - **Context Management:** Implemented character-based truncation (4000 char budget) in memory system to prevent context window overflow.
 - **Config Stability:** Added `.env` key validation to `NinaConfig` (B-028) to prevent startup crashes on missing required secrets.

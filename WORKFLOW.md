@@ -10,7 +10,7 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 |------|------|------|
 | Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Strategic direction, specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
-| agynina (Antigravity CLI) | LOCAL EXECUTOR | Sync local executor — edits, reviews Jules PR diff, merges, deploys |
+| ninaflash (Antigravity CLI) | LOCAL EXECUTOR | Sync local executor — edits, reviews Jules PR diff, merges, deploys |
 
 ## 0. Discovery & Governance (New)
 **Index-First Workflow:**
@@ -27,9 +27,9 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 8. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
 
 ## 0.6. Capability Crystallization (Self-Upgrading)
-NINA is designed to be a self-developing platform. Every session must aim to leave `agynina` more capable than it started.
+NINA is designed to be a self-developing platform. Every session must aim to leave `ninaflash` more capable than it started.
 - **Identify:** If a task requires complex cloud reasoning that will likely be repeated, don't just solve it—crystallize it.
-- **Register:** Turn the solution into a named command in the **Capability Registry** via `agynina register`.
+- **Register:** Turn the solution into a named command in the **Capability Registry** via `ninaflash register`.
 - **Harvest:** Regularly review the "Stray Locals" in the Hygiene Dashboard for potential new tools to be governed and registered.
 To prevent governance decay without blocking roadmap progress, NINA uses a dual-track operational model. **Rule of thumb: For every feature PR merged, complete at least one Governance Quest.**
 
@@ -54,19 +54,19 @@ Larger, user-facing feature arcs (e.g., Proactive Reminder Engine, Email Triage)
 - Implement in small batches.
 - At natural stopping points, switch to Lane A for a cool-down quest.
 
-## The Full Parallel Loop (Jules + agynina Pipeline)
+## The Full Parallel Loop (Jules + ninaflash Pipeline)
 
 1. Perplexity diagnoses issue and writes precise spec
 2. Jules receives spec → builds in cloud async (no interaction after submit)
-3. agynina (local executor) handles urgent local fixes in parallel on its own worktree
+3. ninaflash (local executor) handles urgent local fixes in parallel on its own worktree
 4. Jules opens PR when feature is complete
-5. agynina runs Guardian lint/compile checks on the PR diff
-6. agynina merges PR → runs `./nina_sync.sh` → deploys to systemd
+5. ninaflash runs Guardian lint/compile checks on the PR diff
+6. ninaflash merges PR → runs `./nina_sync.sh` → deploys to systemd
 7. Perplexity reviews result in a new thread
 
 **KEY RULES:**
-- agynina is NOT just a fixer — it is the local merge and deploy executor.
-- Jules does NOT merge its own PRs — agynina always performs the merge after review.
+- ninaflash is NOT just a fixer — it is the local merge and deploy executor.
+- Jules does NOT merge its own PRs — ninaflash always performs the merge after review.
 - Perplexity is NOT idle during coding — available for unblocking and mid-task review.
 - All tools can run IN PARALLEL as the standard operating mode.
 
@@ -78,7 +78,7 @@ Before starting any new Perplexity thread:
 4. Record claimed files in the centralized `~/nina/jules_lock.txt`.
 5. Launch local executor and Jules only after territories are confirmed non-overlapping.
 
-## Session Close Checklist (agynina)
+## Session Close Checklist (ninaflash)
 After every task:
 1. The local executor commits only its branch/worktree.
 2. Jules opens PR only from its branch/worktree.
@@ -89,7 +89,7 @@ After every task:
 7. Update task tracker and backlog (see below).
 
 ## Post-Task Mandatory Updates
-After every successful PR merge, agynina must update tracking using **Python only** (never bash echo):
+After every successful PR merge, ninaflash must update tracking using **Python only** (never bash echo):
 1. Update `docs/space/jules_task_tracker.md` (change IN_PROGRESS to DONE, add PR number/date).
 2. Update `docs/space/jules_backlog.md` (set status to DONE, add PR number/date).
 3. Run `./nina_sync.sh` again to sync these tracker changes.
@@ -106,7 +106,7 @@ Never run parallel agent tasks from the same working directory.
 
 | Tool | Model | Daily Quota | Reset |
 |------|-------|-------------|-------|
-| agynina (agy) | Gemini Flash | ~5h rolling | Rolling |
+| ninaflash (agy) | Gemini Flash | ~5h rolling | Rolling |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
 | Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |

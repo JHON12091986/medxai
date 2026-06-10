@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-agynina — The Unified AI Agent Kernel for NINA.
+ninaflash — The Unified AI Agent Kernel for NINA.
 Version: 6.0 (THE 100-FUNCTION "MARVELOUS" ARCHITECTURE)
 Author: Gemini CLI & Antigravity
 Mission: Minimize Token Usage, Maximize Execution Speed, Absolute Reliability.
 
 # HARD CAP: This file must not exceed 100 named functions.
-# Count with: grep -c "^def \\|^    def " tools/agynina.py
+# Count with: grep -c "^def \\|^    def " tools/ninaflash.py
 # Stubs (pass-only bodies) are BANNED. Add a function only when it is fully implemented.
 """
 
@@ -142,8 +142,8 @@ def _find_md_files() -> List[Path]:
 def cmd_pr_merge_surgical(args):
     """[010] Surgical merge: protects critical files from regressions."""
     pr_id = args.pr_number
-    criticals = ["AGENTS.md", "nina_sync.sh", "docs/logs/nina_update_log.md", "tools/agynina.py"]
-    backup_dir = Path("/tmp/agynina_surgical")
+    criticals = ["AGENTS.md", "nina_sync.sh", "docs/logs/nina_update_log.md", "tools/ninaflash.py"]
+    backup_dir = Path("/tmp/ninaflash_surgical")
     backup_dir.mkdir(exist_ok=True)
     for f in criticals:
         if (REPO_ROOT / f).exists(): shutil.copy(REPO_ROOT / f, backup_dir / Path(f).name)
@@ -361,7 +361,7 @@ def cmd_check_code(args):
 
     rel_path = path.relative_to(REPO_ROOT) if path.is_relative_to(REPO_ROOT) else path
 
-    print("── agynina check code ──────────────────")
+    print("── ninaflash check code ──────────────────")
     print(f"File   : {rel_path}")
     print(f"syntax : {syntax_label}")
     print(f"pyflakes: {pyflakes_label}")
@@ -381,7 +381,7 @@ def cmd_check_doc(args):
         print("❌ File not found")
         return
 
-    print("── agynina check doc ───────────────────")
+    print("── ninaflash check doc ───────────────────")
     try:
         rel_path = target_path.relative_to(REPO_ROOT)
     except ValueError:
@@ -599,7 +599,7 @@ def cmd_capability_map(args):
 
 # FIX 7: get_repo_stats
 def cmd_stats(args):
-    """[031] Show agynina file stats and function count."""
+    """[031] Show ninaflash file stats and function count."""
     src = Path(__file__).read_text()
     try:
         tree = ast.parse(src)
@@ -608,7 +608,7 @@ def cmd_stats(args):
         fn_count = src.count("\ndef ")
     lines = src.count("\n")
     tasks = get_backlog_tasks()
-    print(f"agynina.py: {lines} lines | {fn_count} functions")
+    print(f"ninaflash.py: {lines} lines | {fn_count} functions")
     print(f"Backlog: {len(tasks)} tasks | READY: {len([t for t in tasks if t['status']=='READY'])}")
     print(f"Repo .py files: {len(_find_py_files())}")
     cap_status = "✅ UNDER CAP" if fn_count <= 100 else f"🚨 OVER CAP by {fn_count - 100}"
@@ -623,7 +623,7 @@ def cmd_kernel_upgrade(args):
 # ------------------------------------------------------------------
 
 def main():
-    parser = argparse.ArgumentParser(description="agynina AI Agent Kernel v6.0 — The 100-Function OS.")
+    parser = argparse.ArgumentParser(description="ninaflash AI Agent Kernel v6.0 — The 100-Function OS.")
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("status")
     subparsers.add_parser("help-ai")

@@ -36,7 +36,7 @@ Merging Jules PRs blindly will frequently overwrite critical files
 - nina_sync.sh
 - nina_update_log.md
 - tools/nina_dashboard.py
-- tools/agynina.py
+- tools/ninaflash.py
 - interfaces/telegram_interface.py
 - core/router.py
 - main.py

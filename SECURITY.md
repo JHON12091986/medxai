@@ -23,7 +23,7 @@ The Guardian Gate (`guardian_engine.py`) serves as the active security enforceme
 
 ## High-Risk Files
 
-The following files control the core security, routing, and identity of NINA. They must default to manual local handling or `agynina` review, and are restricted from blind automated cloud edits (e.g., by Jules):
+The following files control the core security, routing, and identity of NINA. They must default to manual local handling or `ninaflash` review, and are restricted from blind automated cloud edits (e.g., by Jules):
 - `main.py`
 - `core/router.py`
 - `interfaces/telegram_interface.py`

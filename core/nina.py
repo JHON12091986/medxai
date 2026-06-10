@@ -17,7 +17,7 @@ Meta-instruction:
 When writing code for NINA: reason before you act.
 State what already exists. State what must not break.
 Write the error path first. Write the minimum solution.
-Then verify with agynina check code.
+Then verify with ninaflash check code.
 Never write more than what was asked.
 
 

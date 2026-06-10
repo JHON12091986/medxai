@@ -15,7 +15,7 @@ DRY_RUN=false
 SPACE_FILES=(
   AGENTS.md
   WORKFLOW.md
-  docs/space/agynina_task_tracker.md
+  docs/space/ninaflash_task_tracker.md
   docs/space/jules_backlog.md
   docs/space/jules_task_tracker.md
   docs/space/nina_error_register.md

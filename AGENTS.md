@@ -14,7 +14,7 @@ Skipping steps is not permitted. Writing code before step 7 is a violation.
    Never create a new pattern when an existing one fits.
 
 3. CONSTRAINTS — List 3 things that must NOT break:
-   - Response time must stay under 2s (agynina hard limit)
+   - Response time must stay under 2s (ninaflash hard limit)
    - No new dependencies without explicit instruction
    - Must run on i5-8265U / MX150 — never assume GPU
 
@@ -30,7 +30,7 @@ Skipping steps is not permitted. Writing code before step 7 is a violation.
 
 8. SELF-CHECK before committing:
    - Run: python3 -m py_compile <file> && pyflakes <file>
-   - Run: agynina check code <file>
+   - Run: ninaflash check code <file>
    - Does it match the pattern from step 6?
    - Would this work if RAM is at 9.5GB? (nina hw gate)
 
@@ -40,13 +40,13 @@ Meta-instruction (inject into every agent system prompt):
 When writing code for NINA: reason before you act.
 State what already exists. State what must not break.
 Write the error path first. Write the minimum solution.
-Then verify with agynina check code.
+Then verify with ninaflash check code.
 Never write more than what was asked.
 
 
 ## YOU ARE THE LOCAL EXECUTOR
 
-This file is read by whichever local coding tool is active: agynina, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
+This file is read by whichever local coding tool is active: ninaflash, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
 - Read only the required context files first.
 - **Index-First Workflow (Mandatory Governance):**
   1. Consult the **Repository Index** (`docs/space/nina_index.md` / `.json`) or use `python3 tools/query_index.py --path <file>` before creating or modifying governed artifacts. Check `role`, `governed`, `duplicate_cluster_id`, and `guardrails`.
@@ -65,13 +65,13 @@ This file is read by whichever local coding tool is active: agynina, Cursor, Cla
   - If it is useful for the future:
     1.  Encapsulate the logic into a standalone tool in `tools/` or a script in `bin/`.
     2.  Add it to the **Repository Index** with its governance metadata.
-    3.  Register it as a permanent agynina command (e.g., `python3 tools/agynina.py register --tool <path>`).
-  - **Goal:** Every session should incrementally upgrade agynina's "physical memory," collapsing complex cloud reasoning into zero-token local commands.
+    3.  Register it as a permanent ninaflash command (e.g., `python3 tools/ninaflash.py register --tool <path>`).
+  - **Goal:** Every session should incrementally upgrade ninaflash's "physical memory," collapsing complex cloud reasoning into zero-token local commands.
 
 - Do not scan the whole repo before you know the task.
 - Check juleslock.txt before editing.
 - Follow the verify → log → sync workflow.
-- Treat AGENTS.md as the shared operating law, not as agynina-specific instructions.
+- Treat AGENTS.md as the shared operating law, not as ninaflash-specific instructions.
 
 ## NINA Identity Directive — Agentic, Not a Chatbot
 
@@ -93,7 +93,7 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 
 ## Dev Environment Stack
 - **AI Tooling:** Perplexity Enterprise Pro with Claude Sonnet 4.6
-- **Developer CLI + Local Build Agent (Claude Sonnet 4.6 Thinking):** Antigravity CLI agynina v1.0.6
+- **Developer CLI + Local Build Agent (Claude Sonnet 4.6 Thinking):** Antigravity CLI ninaflash v1.0.6
 - **Primary Developer Agent:** Jules at jules.google
 - **Reference & Search:** NotebookLM
 - **Note:** Gemini CLI was removed on June 5, 2026.
@@ -216,7 +216,7 @@ NINA uses three tools running IN PARALLEL as the standard operating mode:
 |------|------|---------------|
 | Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
-| Local Executor (agynina, Cursor, Claude Code, Cline, aider) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+| Local Executor (ninaflash, Cursor, Claude Code, Cline, aider) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
 
 THE FULL PARALLEL LOOP:
 1. Perplexity diagnoses + writes precise spec
@@ -289,14 +289,14 @@ The following files must default to **local executor** or manual local handling 
 - After merging: run `./nina_sync.sh` — no exceptions
 - If merge conflict: stop, report to Perplexity for re-spec, do not attempt blind resolution
 
-### 9. Antigravity CLI Toolset (agynina)
-Every local executor should use the automated `agynina` CLI toolset (located at `bin/agynina`) to run standard workflows:
-- **`agynina status`**: Checks active file locks, git workspace, and backlog status.
-- **`agynina pr merge <PR_NUMBER>`**: Automatically runs syntax/linter checks on the PR, merges it, updates the backlog status to `DONE`, clears locks, and triggers the sync script.
-- **`agynina dispatch <TASK_ID>`**: Locks target files in `jules_lock.txt`, sets status to `IN_PROGRESS`, and sends task spec to the Jules API.
-- **`agynina aider <TASK_ID>`**: Launches `aider` preloaded with the task's files in the LLM context.
-- **`agynina doctor`**: Locates and prints the most recent Python traceback from NINA's logs or systemd journal.
-- **`agynina ninaloop`**: Activates the continuous autonomous developer loop.
+### 9. Antigravity CLI Toolset (ninaflash)
+Every local executor should use the automated `ninaflash` CLI toolset (located at `bin/ninaflash`) to run standard workflows:
+- **`ninaflash status`**: Checks active file locks, git workspace, and backlog status.
+- **`ninaflash pr merge <PR_NUMBER>`**: Automatically runs syntax/linter checks on the PR, merges it, updates the backlog status to `DONE`, clears locks, and triggers the sync script.
+- **`ninaflash dispatch <TASK_ID>`**: Locks target files in `jules_lock.txt`, sets status to `IN_PROGRESS`, and sends task spec to the Jules API.
+- **`ninaflash aider <TASK_ID>`**: Launches `aider` preloaded with the task's files in the LLM context.
+- **`ninaflash doctor`**: Locates and prints the most recent Python traceback from NINA's logs or systemd journal.
+- **`ninaflash ninaloop`**: Activates the continuous autonomous developer loop.
 
 ---
 
@@ -310,7 +310,7 @@ Every local executor should use the automated `agynina` CLI toolset (located at 
 
 ### Branch lanes
 - `main` → production truth, review, merge, sync only
-- `local/<task-id>-<slug>` (or `agynina/` / `aider/`) → local docs, shell, single-file hotfixes, policy work
+- `local/<task-id>-<slug>` (or `ninaflash/` / `aider/`) → local docs, shell, single-file hotfixes, policy work
 - `jules/<task-id>-<slug>` → multi-file features, refactors, async PR builds
 - Optional `review/<id>` → isolated test/review/merge prep
 
@@ -359,7 +359,7 @@ change the item's status from READY or IN_PROGRESS to DONE.
 Add PR number and date. Use Python file write — never bash echo.
 
 ## Task Tracker Update Protocol
-After every Jules PR is merged, agynina updates `~/nina/docs/space/jules_task_tracker.md` using Python only — never bash echo.
+After every Jules PR is merged, ninaflash updates `~/nina/docs/space/jules_task_tracker.md` using Python only — never bash echo.
 
 Fields to update:
 - Change status from `IN_PROGRESS` to `DONE`
@@ -367,7 +367,7 @@ Fields to update:
 - Add merged date (e.g., `2026-06-08`)
 
 Rules:
-- Never update tracker from inside Jules — only agynina does tracker updates post-merge.
+- Never update tracker from inside Jules — only ninaflash does tracker updates post-merge.
 - Run `./nina_sync.sh` after every tracker update.
 
 Example Python update block:

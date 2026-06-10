@@ -18,7 +18,7 @@ Located at `data/memory/facts.json`, this is the core of NINA's persistent perso
 
 ## Protection Mechanisms
 
-The `data/memory/facts.json` file is strictly protected. It is listed in the Guardian Gate's high-risk list. NINA's agents (like Jules) are explicitly forbidden from modifying this file autonomously. Any changes to the identity anchor must be performed manually or via highly scrutinized, locally executed `agynina` operations.
+The `data/memory/facts.json` file is strictly protected. It is listed in the Guardian Gate's high-risk list. NINA's agents (like Jules) are explicitly forbidden from modifying this file autonomously. Any changes to the identity anchor must be performed manually or via highly scrutinized, locally executed `ninaflash` operations.
 
 ## Context Management
 

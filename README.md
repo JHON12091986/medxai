@@ -6,7 +6,7 @@
 
 NINA is NOT a chatbot. It is an action-first autonomous agent that:
 - Routes tasks across 20+ AI providers via HybridRouter V4
-- Develops itself autonomously via Jules + agynina pipeline
+- Develops itself autonomously via Jules + ninaflash pipeline
 - Manages email (EWS), monitors markets (DSE/CSE), handles finance, and self-repairs
 - Keeps all banking and sensitive data strictly on the local machine in Dhaka
 
@@ -18,30 +18,30 @@ This model is the heart of NINA's architecture, employing three parallel agents:
 |---|---|---|---|
 | Perplexity Enterprise Pro | Architect + Overwatch | Claude Sonnet 4.6 | Strategic direction, specs, post-execution review |
 | Jules (jules.google.com) | Async Cloud Coder | Gemini 3.1 Pro | Multi-file feature builds, submits PRs |
-| agynina (Antigravity CLI) | Local Executor | Gemini Flash | Hotfixes, PR merges, deploys, syncs |
+| ninaflash (Antigravity CLI) | Local Executor | Gemini Flash | Hotfixes, PR merges, deploys, syncs |
 
-Jules builds features asynchronously in the cloud. agynina reviews and merges Jules' PRs locally. Perplexity architects before and reviews after. Nobody does manual coding.
+Jules builds features asynchronously in the cloud. ninaflash reviews and merges Jules' PRs locally. Perplexity architects before and reviews after. Nobody does manual coding.
 
-## agynina — The Local Executor
+## ninaflash — The Local Executor
 
-agynina is NINA's local muscle:
-- CLI tool at `bin/agynina` (Antigravity CLI, v1.0.5)
+ninaflash is NINA's local muscle:
+- CLI tool at `bin/ninaflash` (Antigravity CLI, v1.0.5)
 - Powered by Claude Sonnet 4.6 Thinking
 - Commands:
-  - `agynina status` — checks locks, git workspace, backlog
-  - `agynina pr merge <PR>` — lint check → merge → sync → backlog update
-  - `agynina dispatch <TASK_ID>` — locks files → IN_PROGRESS → sends to Jules API
-  - `agynina aider <TASK_ID>` — launches aider with task context
-  - `agynina doctor` — finds latest Python traceback in logs
-  - `agynina ninaloop` — activates continuous autonomous developer loop
+  - `ninaflash status` — checks locks, git workspace, backlog
+  - `ninaflash pr merge <PR>` — lint check → merge → sync → backlog update
+  - `ninaflash dispatch <TASK_ID>` — locks files → IN_PROGRESS → sends to Jules API
+  - `ninaflash aider <TASK_ID>` — launches aider with task context
+  - `ninaflash doctor` — finds latest Python traceback in logs
+  - `ninaflash ninaloop` — activates continuous autonomous developer loop
 
-## Universe-Mode Kernel (agynina v8.0)
+## Universe-Mode Kernel (ninaflash v8.0)
 
-The kernel architecture giving agynina near-infinite capability at zero cloud token cost:
-- **Nucleus:** 1,001 core functions (`tools/agynina.py`)
+The kernel architecture giving ninaflash near-infinite capability at zero cloud token cost:
+- **Nucleus:** 1,001 core functions (`tools/ninaflash.py`)
 - **Synapses:** 1,000,000 specialized Neural Op-Codes across 1,000 sector files (`tools/kernel/sector_000.py` → `sector_999.py`)
 - **Omniscient Dispatcher:** Dynamic on-demand sector loader — executes any op-code without loading all sectors into memory
-- Purpose: Gives agynina near-infinite local skill capability at zero cloud token cost
+- Purpose: Gives ninaflash near-infinite local skill capability at zero cloud token cost
 
 ## HybridRouter V4
 
@@ -59,7 +59,7 @@ The safety pipeline in `guardian_engine.py`:
 - Baseline drift analysis against `upgrades/guardian_baseline.json`
 - Syntax + linter checks (`py_compile` + `pyflakes`)
 - Verification workflow: Verify → Log (`docs/logs/nina_update_log.md`) → Sync (`nina_sync.sh`)
-- Single-instance locking via `jules_lock.txt` — prevents Jules and agynina from colliding
+- Single-instance locking via `jules_lock.txt` — prevents Jules and ninaflash from colliding
 
 ## Memory System
 
@@ -74,16 +74,16 @@ NINA's memory orchestrator in `core/memory.py`:
 | Runtime | Python 3.14, asyncio-based |
 | OS | Ubuntu 26.04, systemd managed |
 | Primary UI | Telegram bot (Gatekeeper) |
-| CLI | `bin/agynina` |
+| CLI | `bin/ninaflash` |
 | Local Models | Ollama: qwen2.5:1.5b, qwen2.5:7b |
 | Services | `nina.service`, `nina-dashboard.service` |
-| Dev Stack | Perplexity + Jules + agynina (parallel) |
+| Dev Stack | Perplexity + Jules + ninaflash (parallel) |
 
 ## Tool Quota Cascade (Daily)
 
 | Tool | Model | Daily Quota | Reset |
 |---|---|---|---|
-| agynina (agy) | Gemini Flash | ~5h rolling | Rolling |
+| ninaflash (agy) | Gemini Flash | ~5h rolling | Rolling |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
 | Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |
@@ -96,10 +96,10 @@ Cascade order: `agy → Qwen Code → Jules (async) → Cursor → Ollama`
 How NINA Builds Itself:
 1. Perplexity drafts spec with precise requirements
 2. Jules receives spec → builds async in cloud VM (no interaction after submit)
-3. agynina handles urgent local fixes in parallel (separate worktree)
+3. ninaflash handles urgent local fixes in parallel (separate worktree)
 4. Jules opens PR when feature is complete
-5. agynina runs Guardian lint/compile checks on the PR diff
-6. agynina merges PR → runs `./nina_sync.sh` → deploys to systemd
+5. ninaflash runs Guardian lint/compile checks on the PR diff
+6. ninaflash merges PR → runs `./nina_sync.sh` → deploys to systemd
 7. Perplexity reviews result in new thread
 
 ## Project Structure
@@ -122,7 +122,7 @@ nina/
 │   ├── capabilities.py        # Capability registry
 │   └── hotreload.py           # Live config reload
 ├── tools/
-│   ├── agynina.py             # Universe-Mode kernel (Nucleus: 1,001 functions)
+│   ├── ninaflash.py             # Universe-Mode kernel (Nucleus: 1,001 functions)
 │   ├── kernel/
 │   │   ├── sector_000.py      # Neural Op-Code sectors (1,000 files)
 │   │   └── sector_999.py      # 1,000,000 total op-codes
@@ -138,14 +138,14 @@ nina/
 │   ├── api.py                 # REST API (Phase 2)
 │   └── telegram_interface.py  # Telegram bot + security gate
 ├── bin/
-│   └── agynina                # agynina CLI entry point
+│   └── ninaflash                # ninaflash CLI entry point
 ├── crons/
 │   ├── manager.py             # Cron job manager
 │   └── backup_jobs.py         # Scheduled backups
 ├── dashboard/
 │   └── nina-guardian.html     # Web dashboard
 ├── docs/
-│   ├── agynina.md             # agynina architecture (NEW)
+│   ├── ninaflash.md             # ninaflash architecture (NEW)
 │   ├── router.md              # HybridRouter V4 deep-dive (NEW)
 │   ├── guardian.md            # Guardian Gate pipeline (NEW)
 │   ├── memory.md              # Memory system (NEW)

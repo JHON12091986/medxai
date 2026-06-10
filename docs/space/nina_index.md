@@ -61,7 +61,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `crons/` | subsystem | active | keep | Subsystem directory containing crons logic/docs. | ✅ YES |
 | `dashboard/` | subsystem | active | keep | Subsystem directory containing dashboard logic/docs. | ✅ YES |
 | `data/` | subsystem | active | keep | Subsystem directory containing data logic/docs. | ✅ YES |
-| `docs/` | subsystem | active | keep | Subsystem-level deep-dives (Guardian, Memory, Router, agynina). | ✅ YES |
+| `docs/` | subsystem | active | keep | Subsystem-level deep-dives (Guardian, Memory, Router, ninaflash). | ✅ YES |
 | `exports/` | subsystem | active | keep | Subsystem directory containing exports logic/docs. | ✅ YES |
 | `git-hooks/` | subsystem | active | keep | Subsystem directory containing git-hooks logic/docs. | ✅ YES |
 | `interfaces/` | subsystem | active | keep | Telegram and REST API communication layers. | ✅ YES |
@@ -69,7 +69,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `ninagate/` | subsystem | active | keep | Subsystem directory containing ninagate logic/docs. | ✅ YES |
 | `templates/` | subsystem | active | keep | Subsystem directory containing templates logic/docs. | ✅ YES |
 | `tests/` | subsystem | active | keep | Subsystem directory containing tests logic/docs. | ✅ YES |
-| `tools/` | subsystem | active | keep | Capability kernel and domain-specific action modules (agynina nucleus). | ✅ YES |
+| `tools/` | subsystem | active | keep | Capability kernel and domain-specific action modules (ninaflash nucleus). | ✅ YES |
 | `upgrades/` | subsystem | active | keep | Subsystem directory containing upgrades logic/docs. | ✅ YES |
 
 ## 3. Redundancy & Conflicts
@@ -153,7 +153,7 @@ The following clusters contain identical content. Consolidate to the canonical s
 - **Cluster `dup-0116`**: Canonical is `upgrades/backups/codebase_20260609_212539/tools/model_discovery.py`. Members: `upgrades/backups/codebase_20260609_212539/tools/model_discovery.py`, `upgrades/backups/codebase_20260609_214535/upgrades/backups/codebase_20260609_212539/tools/model_discovery.py`, `upgrades/backups/codebase_20260609_214535/tools/model_discovery.py`
 - **Cluster `dup-0117`**: Canonical is `upgrades/backups/codebase_20260609_212539/tools/jules_api.py`. Members: `upgrades/backups/codebase_20260609_212539/tools/jules_api.py`, `upgrades/backups/codebase_20260609_214535/upgrades/backups/codebase_20260609_212539/tools/jules_api.py`, `upgrades/backups/codebase_20260609_214535/tools/jules_api.py`
 - **Cluster `dup-0118`**: Canonical is `upgrades/backups/codebase_20260609_212539/tools/gputuner.py`. Members: `upgrades/backups/codebase_20260609_212539/tools/gputuner.py`, `upgrades/backups/codebase_20260609_214535/upgrades/backups/codebase_20260609_212539/tools/gputuner.py`, `upgrades/backups/codebase_20260609_214535/tools/gputuner.py`
-- **Cluster `dup-0119`**: Canonical is `upgrades/backups/codebase_20260609_212539/tools/agynina.py`. Members: `upgrades/backups/codebase_20260609_212539/tools/agynina.py`, `upgrades/backups/codebase_20260609_214535/upgrades/backups/codebase_20260609_212539/tools/agynina.py`, `upgrades/backups/codebase_20260609_214535/tools/agynina.py`
+- **Cluster `dup-0119`**: Canonical is `upgrades/backups/codebase_20260609_212539/tools/ninaflash.py`. Members: `upgrades/backups/codebase_20260609_212539/tools/ninaflash.py`, `upgrades/backups/codebase_20260609_214535/upgrades/backups/codebase_20260609_212539/tools/ninaflash.py`, `upgrades/backups/codebase_20260609_214535/tools/ninaflash.py`
 - **Cluster `dup-0120`**: Canonical is `upgrades/backups/codebase_20260609_212539/tests/test_tools_smoke.py`. Members: `upgrades/backups/codebase_20260609_212539/tests/test_tools_smoke.py`, `upgrades/backups/codebase_20260609_214535/upgrades/backups/codebase_20260609_212539/tests/test_tools_smoke.py`, `upgrades/backups/codebase_20260609_214535/tests/test_tools_smoke.py`
 - **Cluster `dup-0121`**: Canonical is `upgrades/backups/codebase_20260609_212539/tests/test_finance.py`. Members: `upgrades/backups/codebase_20260609_212539/tests/test_finance.py`, `upgrades/backups/codebase_20260609_214535/upgrades/backups/codebase_20260609_212539/tests/test_finance.py`, `upgrades/backups/codebase_20260609_214535/tests/test_finance.py`
 - **Cluster `dup-0122`**: Canonical is `upgrades/backups/codebase_20260609_212539/tests/test_model_discovery.py`. Members: `upgrades/backups/codebase_20260609_212539/tests/test_model_discovery.py`, `upgrades/backups/codebase_20260609_214535/upgrades/backups/codebase_20260609_212539/tests/test_model_discovery.py`, `upgrades/backups/codebase_20260609_214535/tests/test_model_discovery.py`

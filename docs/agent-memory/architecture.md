@@ -20,4 +20,4 @@ The following files default to local executor or manual local handling unless ex
 ## Tool Locations
 - Dashboard: `dashboard/nina-guardian.html`
 - Sync tool: `nina_sync.sh`
-- Architect/CLI Toolset: `bin/agynina`
+- Architect/CLI Toolset: `bin/ninaflash`

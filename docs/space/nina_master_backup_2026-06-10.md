@@ -20,7 +20,7 @@
 | **Open PRs** | 0 |
 | **`juleslock.txt`** | CLEARED |
 | **`nina.service`** | active |
-| **agynina Claude quota** | SPENT (resets ~127h from session) |
+| **ninaflash Claude quota** | SPENT (resets ~127h from session) |
 | **Jules daily quota** | 100 tasks/day (rolling 24h) |
 
 ### Today's Merged PRs (2026-06-07)
@@ -53,11 +53,11 @@
 │         ├──► Jules ─── async cloud VM ──► PR              │
 │         │      (fire-and-forget, NO interaction)           │
 │         │                                                  │
-│         └──► agynina ─── local executor ──► merge + deploy    │
+│         └──► ninaflash ─── local executor ──► merge + deploy    │
 │                (sync, single-file hotfixes in parallel)    │
 │                                                            │
-│  5. agynina reviews Jules PR diff                             │
-│  6. agynina: pycompile + pyflakes → merge → .ninasync.sh      │
+│  5. ninaflash reviews Jules PR diff                             │
+│  6. ninaflash: pycompile + pyflakes → merge → .ninasync.sh      │
 │  7. Perplexity reviews: attach fresh nina_latest.md        │
 └────────────────────────────────────────────────────────────┘
 ```
@@ -68,9 +68,9 @@
 |---|---|---|---|---|
 | Perplexity Enterprise Pro | Claude Sonnet 4.6 Thinking | ARCHITECT / OVERWATCH | Active throughout | — |
 | Google Jules | Gemini 3.1 Pro (built-in) | ASYNC CLOUD CODER | Fire-and-forget → PR | 100 tasks/24h |
-| Antigravity CLI (`agynina`) | Gemini 3.5 Flash Medium (default) | LOCAL MUSCLE | Sync executor, merge, deploy | ~5h rolling |
+| Antigravity CLI (`ninaflash`) | Gemini 3.5 Flash Medium (default) | LOCAL MUSCLE | Sync executor, merge, deploy | ~5h rolling |
 
-### agynina Model Tiers
+### ninaflash Model Tiers
 
 | Model | Budget | Use When |
 |---|---|---|
@@ -80,13 +80,13 @@
 | Claude Sonnet 4.6 Thinking | Weekly (~7 days) | Reserve — burns budget fast |
 | Claude Opus 4.6 Thinking | Weekly (~7 days) | Last resort — same pool as Sonnet |
 
-### agynina Mandatory Rules
+### ninaflash Mandatory Rules
 
-- **Always start every agynina prompt with:** `"Use the permanent JSON approval setting — approve all steps without prompting for this task."`
+- **Always start every ninaflash prompt with:** `"Use the permanent JSON approval setting — approve all steps without prompting for this task."`
 - Never generate bash scripts or code — write plain-English prompts only
-- Never write log entries, commits, or file edits directly — always instruct agynina
+- Never write log entries, commits, or file edits directly — always instruct ninaflash
 - Sequential only — one task at a time, one file at a time
-- agynina performs **ALL** Jules PR merges — never auto-merge via GitHub UI
+- ninaflash performs **ALL** Jules PR merges — never auto-merge via GitHub UI
 - Before merge: `python3 -m pycompile` + `pyflakes` on changed files + check `juleslock.txt`
 - After merge: `.ninasync.sh` — no exceptions
 
@@ -95,7 +95,7 @@
 - `jules remote new --repo aibony/nina --task start --session "full task spec"`
 - Fire-and-forget: submit and walk away — check GitHub for PR
 - Jules reads `AGENTS.md` automatically — keep it updated
-- Jules does **NOT** merge its own PRs — agynina always does the merge
+- Jules does **NOT** merge its own PRs — ninaflash always does the merge
 - Daily limit: 100 tasks (Pro)
 - **Do NOT pause for confirmation** at any point in the Jules spec
 
@@ -107,7 +107,7 @@
 |---|---|
 | NINA repo | `~/nina` |
 | venv activate | `source ~/nina/venv/bin/activate` |
-| agynina binary | `~/.local/bin/agynina` |
+| ninaflash binary | `~/.local/bin/ninaflash` |
 | Service restart | `sudo systemctl restart nina.service` |
 | Guardian run | `cd ~/nina && bash guardian.sh` |
 | Post-session sync | `cd ~/nina && ./nina_sync.sh` |
@@ -126,12 +126,12 @@
 
 | File | Risk | Default Route |
 |---|---|---|
-| `interfaces/telegram_interface.py` | Security gate, user-facing | agynina local only |
+| `interfaces/telegram_interface.py` | Security gate, user-facing | ninaflash local only |
 | `.env` | All secrets | NEVER cloud, NEVER commit |
-| `core/router.py` | HybridRouter V4 | agynina local only |
-| `main.py` | Entry point, PID lock | agynina local only |
-| `guardian_engine.py` | Forensic engine | agynina local only |
-| `tools/shell.py` | Allowlist-gated shell | agynina local only |
+| `core/router.py` | HybridRouter V4 | ninaflash local only |
+| `main.py` | Entry point, PID lock | ninaflash local only |
+| `guardian_engine.py` | Forensic engine | ninaflash local only |
+| `tools/shell.py` | Allowlist-gated shell | ninaflash local only |
 
 **Rule:** Jules can only touch these files if explicitly authorized in the task spec and they are **not** locked in `juleslock.txt`.
 
@@ -400,7 +400,7 @@ SPACEFILES=(
 | Branch | Purpose |
 |---|---|
 | `main` | Production truth — merge, sync only |
-| `agynina/task-id-slug` | Local docs, shell, single-file hotfixes |
+| `ninaflash/task-id-slug` | Local docs, shell, single-file hotfixes |
 | `jules/task-id-slug` | Multi-file features, async PR builds |
 | `review/id` | Isolated test/review/merge prep |
 
@@ -408,7 +408,7 @@ SPACEFILES=(
 
 | Tool | Default Territory | Forbidden |
 |---|---|---|
-| agynina | `docs/space/*.md`, `AGENTS.md`, `*.sh`, single-file hotfixes | Files claimed by Jules |
+| ninaflash | `docs/space/*.md`, `AGENTS.md`, `*.sh`, single-file hotfixes | Files claimed by Jules |
 | Jules | `core/*.py`, `tools/*.py`, `interfaces/*.py`, `tests/*.py` | `.env`, secrets, lock-sensitive files |
 | Both (sequential) | `requirements.txt`, `data/*.json` | Parallel edits |
 
@@ -416,7 +416,7 @@ SPACEFILES=(
 
 ```
 ~/nina/                     ← main (production)
-~/nina.worktrees/agynina-task-id/
+~/nina.worktrees/ninaflash-task-id/
 ~/nina.worktrees/jules-task-id/
 ```
 
@@ -440,8 +440,8 @@ The exporter validates `nina_latest.md` against 7 required strings before accept
 | `SESSION START CHECKLIST` | Pre-session checklist present |
 | `ARCHITECT / OVERWATCH` | Tool routing table present |
 | `ASYNC CLOUD CODER` | Jules role present |
-| `LOCAL MUSCLE` | agynina role present |
-| `agynina as Merge Executor` | Merge executor rule present |
+| `LOCAL MUSCLE` | ninaflash role present |
+| `ninaflash as Merge Executor` | Merge executor rule present |
 | `The Full Parallel Loop` | 7-step loop present |
 | `FEATURE_PENDING` | Action board present |
 
@@ -454,8 +454,8 @@ If any string is missing, the export fails with an explicit error — prevents s
 | Anti-Pattern | Why It Breaks |
 |---|---|
 | Blind editing — no source file attached | Perplexity cannot see actual code; hallucination risk |
-| Routing urgent fixes through Jules PR pipeline | Jules is async; runtime fixes need agynina (sync) |
-| Using agynina for broad multi-file refactors | agynina is sequential — scoped single-file only |
+| Routing urgent fixes through Jules PR pipeline | Jules is async; runtime fixes need ninaflash (sync) |
+| Using ninaflash for broad multi-file refactors | ninaflash is sequential — scoped single-file only |
 | Starting work without checking `juleslock.txt` | Lock race condition — two tools editing same file |
 | Stacking unrelated changes in one commit | Makes rollback impossible |
 | Treating `nina_latest.md` as repo recovery | It is a context snapshot, NOT a git backup |

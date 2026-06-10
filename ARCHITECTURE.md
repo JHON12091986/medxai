@@ -11,7 +11,7 @@ NINA is a three-tier autonomous agentic OS. It is not a chatbot. It is an action
 │                    NINA Ecosystem                            │
 │                                                             │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
-│  │  Perplexity  │    │    Jules     │    │   agynina    │  │
+│  │  Perplexity  │    │    Jules     │    │   ninaflash    │  │
 │  │  Enterprise  │    │  (Cloud VM)  │    │(Antigravity) │  │
 │  │    Pro       │    │Gemini 3.1 Pro│    │Gemini Flash  │  │
 │  │              │    │              │    │              │  │
@@ -35,8 +35,8 @@ NINA is a three-tier autonomous agentic OS. It is not a chatbot. It is an action
 
 ## Component Deep-Dives
 
-**agynina Universe-Mode Kernel:**
-The heart of agynina's execution capability. It consists of a Nucleus with 1,001 core functions and 1,000,000 Synapses (specialized Neural Op-Codes) distributed across 1,000 sector files. An Omniscient Dispatcher dynamically loads sectors on demand. This architecture gives agynina near-infinite local skills without incurring cloud token costs, providing robust and low-cost execution power locally.
+**ninaflash Universe-Mode Kernel:**
+The heart of ninaflash's execution capability. It consists of a Nucleus with 1,001 core functions and 1,000,000 Synapses (specialized Neural Op-Codes) distributed across 1,000 sector files. An Omniscient Dispatcher dynamically loads sectors on demand. This architecture gives ninaflash near-infinite local skills without incurring cloud token costs, providing robust and low-cost execution power locally.
 
 **HybridRouter V4:**
 NINA's model routing engine located in `core/router.py`. It intelligently routes queries across 19+ cloud AI providers and local Ollama instances based on a weighted scoring mechanism (success rate × latency × rate limits). The router integrates a CircuitBreaker to prevent cascading failures when a provider drops, prioritizing free-tier options first while safeguarding performance.
@@ -52,13 +52,13 @@ NINA's dual-tier memory orchestrator. It uses ChromaDB as a semantic vector stor
 
 ## Data Flow
 
-A typical operation begins when a command is received via Telegram. It passes through the `telegram_interface.py` which acts as the authenticated gateway. The request enters the `AgentLoop`, which synthesizes intent and coordinates action. The loop utilizes the `HybridRouter` to select an appropriate LLM provider for the reasoning. The generated response/action is executed—often utilizing local op-codes if handled by agynina—and the result is returned back through the interface to the user.
+A typical operation begins when a command is received via Telegram. It passes through the `telegram_interface.py` which acts as the authenticated gateway. The request enters the `AgentLoop`, which synthesizes intent and coordinates action. The loop utilizes the `HybridRouter` to select an appropriate LLM provider for the reasoning. The generated response/action is executed—often utilizing local op-codes if handled by ninaflash—and the result is returned back through the interface to the user.
 
 ## Safety Architecture
 
 NINA relies on multiple safeguards to ensure security:
 - **Guardian Gate:** Checks logic against an immutable baseline.
-- **jules_lock.txt:** Prevents concurrent access issues between Jules and agynina.
+- **jules_lock.txt:** Prevents concurrent access issues between Jules and ninaflash.
 - **Shell Allowlist:** Prevents arbitrary and dangerous command execution.
 - **Local-only Routing:** Ensures highly sensitive pathways, such as banking operations, always remain locally processed and never touch cloud providers.
 

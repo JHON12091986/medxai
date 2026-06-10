@@ -17,9 +17,9 @@ next session.
 Must contain ALL of the following subsections:
 - Identity & Deployment Summary (project name, owner, machine, service)
 - Core Architecture Summary (provider tiers, routing score algorithm)
-- NINA Tool Routing Policy v2 Summary (3-row tool table: Perplexity / Jules / agynina)
+- NINA Tool Routing Policy v2 Summary (3-row tool table: Perplexity / Jules / ninaflash)
 - Three-Tool Parallel Model (the 7-step parallel loop)
-- agynina as Merge Executor — Mandatory (4-rule block)
+- ninaflash as Merge Executor — Mandatory (4-rule block)
 - Key Rules (high-risk file list, juleslock check, sensitive paths)
 - High-Risk Files
 - Latest Verified Runtime Status (guardian health score, BLOCKER/WARN counts)
@@ -35,9 +35,9 @@ Must contain ALL of the following subsections:
 ### 5. Recent Meaningful Changes
 - Last 5 meaningful update log entries (skip D-sync spam)
 
-### 6. Key Rules (agynina + Jules)
-- agynina mandatory rules after every code change
-- agynina mandatory rules after every task close
+### 6. Key Rules (ninaflash + Jules)
+- ninaflash mandatory rules after every code change
+- ninaflash mandatory rules after every task close
 - Jules rules
 - Guardian gate
 - Never-do list
@@ -52,7 +52,7 @@ After every exporter run, confirm these strings appear in nina_latest.md:
 - "ARCHITECT" (routing policy table)
 - "ASYNC CLOUD CODER" (routing policy table)
 - "LOCAL MUSCLE" (routing policy table)
-- "agynina as Merge Executor" (executive snapshot section)
+- "ninaflash as Merge Executor" (executive snapshot section)
 - "The Full Parallel Loop" (executive snapshot section)
 - "BLOCKER" (action board)
 - "Guardian Gate" (key rules)

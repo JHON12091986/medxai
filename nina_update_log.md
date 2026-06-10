@@ -1031,7 +1031,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** jules_lock.txt,bin/agynina,tools/agynina.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** jules_lock.txt,bin/ninaflash,tools/ninaflash.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -1041,10 +1041,10 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** AGENTS.md,WORKFLOW.md,bin/agynina,docs/space/AGENTS.md,docs/space/WORKFLOW.md,tools/agynina.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** AGENTS.md,WORKFLOW.md,bin/ninaflash,docs/space/AGENTS.md,docs/space/WORKFLOW.md,tools/ninaflash.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
-## Entry 084 — 2026-06-07 · docs: rename agy references to agynina across the workspace
+## Entry 084 — 2026-06-07 · docs: rename agy references to ninaflash across the workspace
 
 **Triggered by:** User request.
 
@@ -1055,22 +1055,22 @@
 - `docs/space/jules_backlog.md`
 - `docs/space/nina_exporter_contract.md`
 - `docs/space/nina_error_register.md`
-- `docs/space/agy_task_tracker.md` (renamed to `agynina_task_tracker.md`)
-- `tools/agynina.py`
+- `docs/space/agy_task_tracker.md` (renamed to `ninaflash_task_tracker.md`)
+- `tools/ninaflash.py`
 - `nina_sync.sh`
 - `jules_lock.txt`
 
 **What changed:**
-- Renamed all occurrences of the word `agy` to `agynina` (matching the casing) in all active documentation and configuration files.
-- Renamed the task tracker file to `agynina_task_tracker.md` and updated references to it in the sync script and backlog.
-- Updated `tools/agynina.py` to support checking for both `agy only` and `agynina only` tags in backlog tasks.
+- Renamed all occurrences of the word `agy` to `ninaflash` (matching the casing) in all active documentation and configuration files.
+- Renamed the task tracker file to `ninaflash_task_tracker.md` and updated references to it in the sync script and backlog.
+- Updated `tools/ninaflash.py` to support checking for both `agy only` and `ninaflash only` tags in backlog tasks.
 
 **What was verified:**
-- Verified syntax correctness and compile status of `tools/agynina.py`.
+- Verified syntax correctness and compile status of `tools/ninaflash.py`.
 - Verified file layout and status using `git status`.
 
 **Rollback path:**
-- `git checkout HEAD -- AGENTS.md docs/space/AGENTS.md docs/space/nina_state.md docs/space/jules_backlog.md docs/space/nina_exporter_contract.md docs/space/nina_error_register.md tools/agynina.py nina_sync.sh jules_lock.txt && rm docs/space/agynina_task_tracker.md && git checkout HEAD -- docs/space/agy_task_tracker.md`
+- `git checkout HEAD -- AGENTS.md docs/space/AGENTS.md docs/space/nina_state.md docs/space/jules_backlog.md docs/space/nina_exporter_contract.md docs/space/nina_error_register.md tools/ninaflash.py nina_sync.sh jules_lock.txt && rm docs/space/ninaflash_task_tracker.md && git checkout HEAD -- docs/space/agy_task_tracker.md`
 
 ---
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
@@ -1230,7 +1230,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** .gitignore,jules_lock.txt,tools/agynina.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
+**Files changed:** .gitignore,jules_lock.txt,tools/ninaflash.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
 
 **Verification:** git push OK, nina.service active
 
@@ -1610,7 +1610,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** tools/agynina.py
+**Files changed:** tools/ninaflash.py
 
 **Verification:** git push OK, nina.service active
 
@@ -1620,7 +1620,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** tools/agynina.py
+**Files changed:** tools/ninaflash.py
 
 **Verification:** git push OK, nina.service active
 
@@ -1630,7 +1630,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** tools/agynina.py
+**Files changed:** tools/ninaflash.py
 
 **Verification:** git push OK, nina.service active
 
@@ -1640,7 +1640,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** tools/agynina.py
+**Files changed:** tools/ninaflash.py
 
 **Verification:** git push OK, nina.service active
 
@@ -1650,7 +1650,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** tools/agynina.py,kernel_generator.py,tools/kernel/
+**Files changed:** tools/ninaflash.py,kernel_generator.py,tools/kernel/
 
 **Verification:** git push OK, nina.service active
 
@@ -1660,7 +1660,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** tools/agynina.py,kernel_generator.py,tools/kernel/
+**Files changed:** tools/ninaflash.py,kernel_generator.py,tools/kernel/
 
 **Verification:** git push OK, nina.service active
 
@@ -1690,7 +1690,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** core/router.py,docs/logs/nina_update_log.md,docs/space/agynina_task_tracker.md,docs/space/jules_backlog.md,tests/test_router.py,nina_update_log.md
+**Files changed:** core/router.py,docs/logs/nina_update_log.md,docs/space/ninaflash_task_tracker.md,docs/space/jules_backlog.md,tests/test_router.py,nina_update_log.md
 
 **Verification:** git push OK, nina.service active
 
@@ -1700,7 +1700,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** docs/space/agynina_task_tracker.md,nina_update_log.md,repro_r77.py
+**Files changed:** docs/space/ninaflash_task_tracker.md,nina_update_log.md,repro_r77.py
 
 **Verification:** git push OK, nina.service active
 
@@ -1710,7 +1710,7 @@
 
 **Triggered by:** nina_sync.sh v5 automated run
 
-**Files changed:** ninagate/main.py,tools/agynina.py,nina_update_log.md,repro_r77.py
+**Files changed:** ninagate/main.py,tools/ninaflash.py,nina_update_log.md,repro_r77.py
 
 **Verification:** git push OK, nina.service active
 

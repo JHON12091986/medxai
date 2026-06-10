@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The Guardian Gate provides a crucial forensic safety layer for autonomous self-patching. Because NINA operates as a self-developing autonomous system—meaning AI agents are writing and deploying actual code updates locally—there is an inherent risk of syntax errors, broken logic, or catastrophic failures. The Guardian Gate acts as a mandatory filter ensuring that patches applied by agynina and Jules meet strict safety thresholds before they are deployed to the local system service.
+The Guardian Gate provides a crucial forensic safety layer for autonomous self-patching. Because NINA operates as a self-developing autonomous system—meaning AI agents are writing and deploying actual code updates locally—there is an inherent risk of syntax errors, broken logic, or catastrophic failures. The Guardian Gate acts as a mandatory filter ensuring that patches applied by ninaflash and Jules meet strict safety thresholds before they are deployed to the local system service.
 
 ## Components
 
@@ -31,7 +31,7 @@ The file `upgrades/guardian_baseline.json` serves as the immutable structural ma
 
 ## High-Risk Files
 
-Several critical files within NINA are flagged as "high-risk" by Guardian. These files always invoke the strictest analysis and are generally restricted from being edited by async tools (like Jules) without local human or agynina intervention:
+Several critical files within NINA are flagged as "high-risk" by Guardian. These files always invoke the strictest analysis and are generally restricted from being edited by async tools (like Jules) without local human or ninaflash intervention:
 - `interfaces/telegram_interface.py`
 - `.env`
 - `core/router.py`
