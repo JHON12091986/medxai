@@ -182,7 +182,7 @@ _Dependency: AG-B-01 and AG-B-02 must be DONE first_
 | AG-A-03 | `core/planner.py` + `core/capabilities.py` | Add plan validation — verify each step's required tool exists in CapabilityRegistry before execution begins | `NEEDS_SPEC` | AG-A-01 |
 | AG-A-04 | `core/planner.py` | Add plan serialization — save/load active plans to/from data/plans/ as JSON so plans survive service restarts | `NEEDS_SPEC` | AG-B-03 |
 | AG-A-05 | `core/planner.py` | Add plan branching — if step A fails, planner executes defined alternative step B (if-else planning) | `NEEDS_SPEC` | AG-A-02 |
-| AG-A-06 | `data/plans/templates/` | Add plan templates — pre-built JSON templates for: market_check, expense_log, reminder_set | `NEEDS_SPEC` | AG-A-01 |
+| AG-A-06 | `data/plans/templates/` | Add plan templates — pre-built JSON templates for: market_check, expense_log, reminder_set | `DONE` | AG-A-01 |
 | AG-A-07 | `core/planner.py` | Add plan confidence scoring — rate each generated plan 0.0–1.0; log score before execution | `NEEDS_SPEC` | AG-A-01 |
 | AG-A-08 | `core/planner.py` | Add plan pre-announcement — NINA summarises what it will do and waits for /approve or /cancel before starting | `NEEDS_SPEC` | AG-A-01 |
 | AG-A-09 | `core/planner.py` | Add per-step timeout budget — assign max_seconds per step; abort and mark failed if exceeded | `NEEDS_SPEC` | AG-A-02 |

@@ -1,0 +1,44 @@
+{
+  "template_id": "market_check",
+  "name": "Market Check",
+  "description": "Fetch DSE/CSE prices for watchlist, compare to thresholds, return alert or clear status",
+  "trigger_keywords": ["market", "prices", "dse", "cse", "stocks", "portfolio"],
+  "steps": [
+    {
+      "step_id": "fetch_prices",
+      "description": "Fetch current market prices for watchlist",
+      "tool": "market",
+      "args_template": {
+        "action": "get_prices",
+        "symbols": "$watchlist"
+      },
+      "depends_on": [],
+      "timeout_seconds": 30,
+      "success_criteria": "Prices fetched successfully"
+    },
+    {
+      "step_id": "compare_thresholds",
+      "description": "Compare fetched prices to configured thresholds in memory",
+      "tool": "memory",
+      "args_template": {
+        "action": "check_thresholds",
+        "prices": "$fetch_prices.output"
+      },
+      "depends_on": ["fetch_prices"],
+      "timeout_seconds": 15,
+      "success_criteria": "Threshold comparison completed"
+    },
+    {
+      "step_id": "send_alert",
+      "description": "Send alert or clear status via Telegram",
+      "tool": "telegram",
+      "args_template": {
+        "action": "send_message",
+        "message": "$compare_thresholds.output.summary"
+      },
+      "depends_on": ["compare_thresholds"],
+      "timeout_seconds": 10,
+      "success_criteria": "Message sent to user"
+    }
+  ]
+}

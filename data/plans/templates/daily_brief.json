@@ -1,0 +1,55 @@
+{
+  "template_id": "daily_brief",
+  "name": "Daily Brief",
+  "description": "Fetch market summary, check reminders due today, check open tasks, compose single Telegram message",
+  "trigger_keywords": ["brief", "summary", "daily", "morning", "update"],
+  "steps": [
+    {
+      "step_id": "fetch_market",
+      "description": "Fetch market summary",
+      "tool": "market",
+      "args_template": {
+        "action": "get_summary"
+      },
+      "depends_on": [],
+      "timeout_seconds": 30,
+      "success_criteria": "Market summary fetched successfully"
+    },
+    {
+      "step_id": "fetch_reminders",
+      "description": "Check reminders due today",
+      "tool": "memory",
+      "args_template": {
+        "action": "get_reminders",
+        "timeframe": "today"
+      },
+      "depends_on": [],
+      "timeout_seconds": 15,
+      "success_criteria": "Today's reminders fetched successfully"
+    },
+    {
+      "step_id": "fetch_tasks",
+      "description": "Check open tasks",
+      "tool": "task_store",
+      "args_template": {
+        "action": "get_tasks",
+        "status": "open"
+      },
+      "depends_on": [],
+      "timeout_seconds": 15,
+      "success_criteria": "Open tasks fetched successfully"
+    },
+    {
+      "step_id": "compose_and_send",
+      "description": "Compose daily brief and send via Telegram",
+      "tool": "telegram",
+      "args_template": {
+        "action": "send_message",
+        "message": "Daily Briefing:\nMarket: $fetch_market.output.summary\nReminders: $fetch_reminders.output.summary\nTasks: $fetch_tasks.output.summary"
+      },
+      "depends_on": ["fetch_market", "fetch_reminders", "fetch_tasks"],
+      "timeout_seconds": 15,
+      "success_criteria": "Daily brief sent to user"
+    }
+  ]
+}
