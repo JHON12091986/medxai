@@ -22,12 +22,11 @@ try:
     import dotenv
 except ImportError:
     dotenv = None
-import time
 import shutil
 import ast
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Set, Tuple
+from typing import List, Dict, Any, Optional, Tuple
 
 # --- KERNEL INITIALIZATION ---
 REPO_ROOT = Path(__file__).parent.parent.resolve()
@@ -587,6 +586,40 @@ def cmd_ops_vram(args):
     """[028] VRAM monitor."""
     print("VRAM: 20%")
 
+def cmd_ops_compress_logs(args):
+    """[036] Compress repetitive log lines using a sliding window."""
+    log_path = Path(args.log_file)
+    if not log_path.exists():
+        print(f"Error: Log file not found: {log_path}")
+        return
+
+    lines = log_path.read_text(encoding="utf-8").splitlines()
+    if not lines:
+        return
+
+    compressed = []
+    current_line = lines[0]
+    count = 1
+
+    for line in lines[1:]:
+        if line == current_line:
+            count += 1
+        else:
+            if count > 1:
+                compressed.append(f"{current_line} (repeated {count} times)")
+            else:
+                compressed.append(current_line)
+            current_line = line
+            count = 1
+
+    if count > 1:
+        compressed.append(f"{current_line} (repeated {count} times)")
+    else:
+        compressed.append(current_line)
+
+    log_path.write_text("\n".join(compressed) + "\n", encoding="utf-8")
+    print(f"✅ Compressed {len(lines)} lines into {len(compressed)} lines.")
+
 # ------------------------------------------------------------------
 # MODULE 9: HARDWARE GATE & NINAGATE (PROMOTED FROM STUB)
 # ------------------------------------------------------------------
@@ -677,7 +710,7 @@ def cmd_run_capability(args):
     code, out, err = run_cmd(cmd)
     if code == 0:
         print(out)
-        print(f"✅ Success.")
+        print("✅ Success.")
     else:
         print(f"❌ Failed (exit {code}): {err}")
 
@@ -749,6 +782,7 @@ def main():
     
     p_ops = subparsers.add_parser("ops"); p_os = p_ops.add_subparsers(dest="sub")
     p_os.add_parser("thermal"); p_os.add_parser("vram")
+    p_os.add_parser("compress-logs").add_argument("--log-file", required=True)
     
     p_gen = subparsers.add_parser("gen"); p_gs = p_gen.add_subparsers(dest="sub")
     p_gs.add_parser("tool").add_argument("name")
@@ -810,6 +844,7 @@ def main():
     elif args.command == "ops":
         if args.sub == "thermal": cmd_ops_thermal(args)
         elif args.sub == "vram": cmd_ops_vram(args)
+        elif args.sub == "compress-logs": cmd_ops_compress_logs(args)
 
 if __name__ == "__main__":
     main()

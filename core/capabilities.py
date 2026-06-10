@@ -1,3 +1,4 @@
+from typing import Optional, List
 """NINA v12 — CapabilityRegistry (Stage 6.8)"""
 import asyncio, json, logging, time
 from pathlib import Path
