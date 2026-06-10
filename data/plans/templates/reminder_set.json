@@ -1,0 +1,45 @@
+{
+  "template_id": "reminder_set",
+  "name": "Reminder Set",
+  "description": "Parse reminder text and datetime from user message, validate datetime is future, write to reminders store, confirm",
+  "trigger_keywords": ["remind", "reminder", "remember", "alert me", "ping me"],
+  "steps": [
+    {
+      "step_id": "parse_reminder",
+      "description": "Parse reminder text and datetime from user message",
+      "tool": "memory",
+      "args_template": {
+        "action": "extract_reminder",
+        "text": "$user_input"
+      },
+      "depends_on": [],
+      "timeout_seconds": 15,
+      "success_criteria": "Reminder text and future datetime extracted successfully"
+    },
+    {
+      "step_id": "save_reminder",
+      "description": "Write reminder to memory/reminders store",
+      "tool": "memory",
+      "args_template": {
+        "action": "save_reminder",
+        "reminder_text": "$parse_reminder.output.text",
+        "datetime": "$parse_reminder.output.datetime"
+      },
+      "depends_on": ["parse_reminder"],
+      "timeout_seconds": 15,
+      "success_criteria": "Reminder saved to store successfully"
+    },
+    {
+      "step_id": "confirm_user",
+      "description": "Confirm successful reminder creation to user via Telegram",
+      "tool": "telegram",
+      "args_template": {
+        "action": "send_message",
+        "message": "Reminder set for $parse_reminder.output.datetime: $parse_reminder.output.text"
+      },
+      "depends_on": ["save_reminder"],
+      "timeout_seconds": 10,
+      "success_criteria": "Confirmation message sent to user"
+    }
+  ]
+}

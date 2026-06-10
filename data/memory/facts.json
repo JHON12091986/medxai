@@ -1,0 +1,29 @@
+{
+  "name": "Baizid",
+  "role": "Assistant General Manager, Trade Finance Division",
+  "organization": "BASIC Bank Limited",
+  "location": "Dhaka, Bangladesh",
+  "timezone": "Asia/Dhaka (UTC+6)",
+  "language_preference": "English primary, Bangla accepted",
+  "communication_style": "direct, technical, no unnecessary softening",
+  "specializations": [
+    "Trade Finance",
+    "SWIFT Alliance Access Administration",
+    "ISO/IEC 27001:2022 Lead Auditor",
+    "ISO 20022 CBPR+ certified"
+  ],
+  "current_project": "NINA autonomous AI agent — building full agentic pipeline",
+  "current_phase": "AG-B Task State foundation, then AG-A Planning Layer",
+  "priorities": [
+    "Complete AG-B series before starting AG-A",
+    "Keep Guardian score stable after every merge",
+    "Real DSE/CSE market data integration",
+    "EWS email unblock (O-02)"
+  ],
+  "preferences": [
+    "BDT currency not USD",
+    "24h time format",
+    "Telegram as primary interface",
+    "Free-tier LLM routing priority"
+  ]
+}

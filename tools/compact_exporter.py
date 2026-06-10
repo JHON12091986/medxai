@@ -3,13 +3,16 @@ import os
 import re
 import sys
 import subprocess
+import signal
 from datetime import datetime
-import time
 import logging
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(message)s")
+
+SUBPROCESS_TIMEOUT = 30
+EXPORT_TIMEOUT = 300
 
 # Define file paths
 NINA_DIR = Path("/home/aibony/nina")
@@ -21,19 +24,28 @@ def ensure_upload_dir():
 
 def get_git_short_sha():
     try:
-        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
+        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "--short", "HEAD"], stderr=subprocess.DEVNULL, timeout=SUBPROCESS_TIMEOUT).decode().strip()
+    except subprocess.TimeoutExpired as e:
+        logger.error(f"TimeoutExpired: {e.cmd}")
+        return "unknown"
     except Exception:
         return "unknown"
 
 def get_git_long_sha():
     try:
-        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
+        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "HEAD"], stderr=subprocess.DEVNULL, timeout=SUBPROCESS_TIMEOUT).decode().strip()
+    except subprocess.TimeoutExpired as e:
+        logger.error(f"TimeoutExpired: {e.cmd}")
+        return "unknown"
     except Exception:
         return "unknown"
 
 def get_git_branch():
     try:
-        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "--abbrev-ref", "HEAD"], stderr=subprocess.DEVNULL).decode().strip()
+        return subprocess.check_output(["git", "-C", str(NINA_DIR), "rev-parse", "--abbrev-ref", "HEAD"], stderr=subprocess.DEVNULL, timeout=SUBPROCESS_TIMEOUT).decode().strip()
+    except subprocess.TimeoutExpired as e:
+        logger.error(f"TimeoutExpired: {e.cmd}")
+        return "unknown"
     except Exception:
         return "unknown"
 
@@ -131,7 +143,11 @@ def export_diff():
     for header, cmd in commands:
         output.append(header)
         try:
-            res = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode().strip()
+            try:
+                res = subprocess.check_output(cmd, stderr=subprocess.STDOUT, timeout=SUBPROCESS_TIMEOUT).decode().strip()
+            except subprocess.TimeoutExpired as e:
+                logger.error(f"TimeoutExpired: {e.cmd}")
+                res = "(timeout)"
             if not res:
                 res = "(no changes)"
         except Exception as e:
@@ -157,7 +173,6 @@ def export_full_backup():
     exc_files = {'.env'}
     
     files_to_backup = []
-    total_size = 0
     
     for root, dirs, files in os.walk(str(NINA_DIR)):
         rel_root = os.path.relpath(root, str(NINA_DIR))
@@ -194,7 +209,7 @@ def export_full_backup():
     
     output = []
     output.append(f"# NINA Complete Local Snapshot\nGenerated: {ts_str}\nGit HEAD: {sha}\nGit branch: {branch}")
-    output.append(f"Total files captured: {{count}}\nTotal size: {{size}} bytes\n")
+    output.append("Total files captured: {count}\nTotal size: {size} bytes\n")
     output.append("⚠️  CONFIDENTIAL — full disaster recovery backup\n⚠️  .env excluded — restore secrets manually from secure vault\n\n---\n")
     
     captured_count = 0
@@ -220,11 +235,20 @@ def export_full_backup():
     dest.write_text(full_output, encoding="utf-8")
     print(f"Exported: {dest} ({dest.stat().st_size} bytes)")
 
+def timeout_handler(signum, frame):
+    logger.error("Export operation exceeded timeout. Aborting.")
+    sys.exit(1)
+
 def main():
-    ensure_upload_dir()
-    export_summary()
-    export_diff()
-    export_full_backup()
+    signal.signal(signal.SIGALRM, timeout_handler)
+    signal.alarm(EXPORT_TIMEOUT)
+    try:
+        ensure_upload_dir()
+        export_summary()
+        export_diff()
+        export_full_backup()
+    finally:
+        signal.alarm(0)
 
 if __name__ == "__main__":
     main()
