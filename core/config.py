@@ -2,7 +2,7 @@
 import os
 from pathlib import Path
 from pydantic import BaseModel
-from typing import Optional
+from typing import ClassVar, Optional
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -30,6 +30,37 @@ RATELIMITS = {
 }
 
 class NinaConfig(BaseModel):
+
+    REQUIRED_KEYS: ClassVar[list[str]] = ["TELEGRAMBOTTOKEN", "AUTHORIZEDUSERID"]
+    OPTIONAL_KEYS: ClassVar[dict[str, str]] = {
+        "OPENAI_API_KEY": "OpenAI provider disabled",
+        "ANTHROPIC_API_KEY": "Anthropic provider disabled",
+        "GEMINI_API_KEY": "Gemini provider disabled",
+        "COHERE_API_KEY": "Cohere provider disabled",
+        "CEREBRAS_API_KEY": "Cerebras provider disabled",
+        "GROQ_API_KEY": "Groq provider disabled",
+        "MISTRAL_API_KEY": "Mistral provider disabled",
+        "DEEPSEEK_API_KEY": "Deepseek provider disabled",
+        "PERPLEXITY_API_KEY": "Perplexity provider disabled",
+        "TOGETHER_API_KEY": "Together provider disabled",
+        "FIREWORKS_API_KEY": "Fireworks provider disabled",
+        "XAI_API_KEY": "Xai provider disabled",
+        "SAMBANOVA_API_KEY": "Sambanova provider disabled",
+        "HYPERBOLIC_API_KEY": "Hyperbolic provider disabled",
+        "NOVITA_API_KEY": "Novita provider disabled",
+        "ONEBRAINAPIKEY": "OneBrain provider disabled",
+        "OPENROUTER_API_KEY": "Openrouter provider disabled",
+    }
+
+    def validate_env(self) -> tuple[list[str], list[str]]:
+        """Returns (errors, warnings).
+        errors: required keys missing — service should not start
+        warnings: optional keys missing — provider will be unavailable
+        """
+        errors = [k for k in self.REQUIRED_KEYS if not os.getenv(k)]
+        warnings = [f"{k}: {msg}" for k, msg in self.OPTIONAL_KEYS.items()
+                    if not os.getenv(k)]
+        return errors, warnings
     telegram_bot_token:   str
     authorized_user_id:   str
     ollama_host:          str = "http://localhost:11434"
@@ -97,7 +128,7 @@ def load_config() -> NinaConfig:
             "ollama_host":"OLLAMAHOST","cerebras_api_key":"CEREBRAS_API_KEY",
             "groq_api_key":"GROQ_API_KEY","gemini_api_key":"GEMINI_API_KEY",
             "mistral_api_key":"MISTRAL_API_KEY","openrouter_api_key":"OPENROUTER_API_KEY",
-            "openai_api_key":"OPEN_AI_API_KEY","deepseek_api_key":"DEEPSEEK_API_KEY",
+            "openai_api_key":"OPENAI_API_KEY","deepseek_api_key":"DEEPSEEK_API_KEY",
             "perplexity_api_key":"PERPLEXITY_API_KEY","together_api_key":"TOGETHER_API_KEY",
             "cohere_api_key":"COHERE_API_KEY","fireworks_api_key":"FIREWORKS_API_KEY",
             "xai_api_key":"XAI_API_KEY","sambanova_api_key":"SAMBANOVA_API_KEY",

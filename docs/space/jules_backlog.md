@@ -110,7 +110,7 @@ Perplexity reads backlog each session
 | B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `DONE` | crons/manager.py | — | No clean shutdown on systemd stop; Jules session 5406292542431629720 |
 | B-026 | Add retry with exponential backoff to provider API calls | `READY` | core/router.py | — | Current retry is basic — no backoff. agynina only |
 | B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `DONE` | tools/gputuner.py | — | Crashes on non-GPU systems; Jules session 18284106294453230200 |
-| B-028 | Add .env validation on startup — warn on missing required keys | `READY` | main.py, core/config.py | — | Silent failure on missing env vars. main.py → agynina only |
+| B-028 | Add .env validation on startup — warn on missing required keys | `IN_PR` (partial — config.py done) | main.py, core/config.py | — | Silent failure on missing env vars. main.py → agynina only |
 | B-029 | Write integration test: full request through router → provider → response | `DONE` | tests/test_integration.py | — | No end-to-end test exists; Jules session 7992182378283234865 |
 | B-030 | Add request ID to all log lines for traceability | `READY` | core/router.py, main.py | — | Hard to trace multi-step requests. agynina only |
 
