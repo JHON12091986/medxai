@@ -6,3 +6,8 @@
 **Vulnerability:** Found `subprocess.run` being called with `use_shell=True` and un-tokenized string commands in `guardian_engine.py` when invoking `healthcheck.py`.
 **Learning:** Even internal tool invocations that appear safe because they use local variables (like NINA_DIR) are flagged by our security scanners (tools/agynina.py and healthcheck.py) and represent a bad practice. The parameter `use_shell=True` allows shell operators and requires the command to be passed as a single string.
 **Prevention:** Always use `use_shell=False` (or `shell=False`) in `subprocess.run` and pass the command and its arguments as a list of strings (`[str(python_bin), str(healthcheck_path), "--json"]`). This explicitly prevents shell interpretation of any variable content.
+
+## 2026-06-10 - [CRITICAL] Exception Handlers and Mocking
+**Vulnerability:** Found generic `except Exception as e:` blocks in multiple tool files (`jules_api.py`, `model_discovery.py`, etc.).
+**Learning:** Using generic exceptions hides logic bugs (like `KeyError` in JSON structures) and makes debugging difficult. Furthermore, when mocking `httpx.RequestError` in tests, it requires a mandatory `request` keyword argument, else the mock itself throws a `TypeError`.
+**Prevention:** Always replace bare `except:` or `except Exception:` with explicit exception types (`OSError`, `ValueError`, `httpx.RequestError`, etc.) and ensure `logger.error` or `logger.warning` captures the failure. In tests, explicitly provide `request=MagicMock()` to `httpx.RequestError`.
