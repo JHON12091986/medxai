@@ -12,20 +12,18 @@ LOGS_DIR="$NINA/logs"
 DRY_RUN=false
 [ "${1:-}" = "--dry-run" ] && DRY_RUN=true
 
+TS=$(date '+%Y-%m-%d %H:%M')
+DATE=$(date '+%Y-%m-%d')
+
 SPACE_FILES=(
-  AGENTS.md
-  WORKFLOW.md
   docs/space/ninaflash_task_tracker.md
   docs/space/jules_backlog.md
   docs/space/jules_task_tracker.md
   docs/space/nina_error_register.md
   docs/space/nina_exporter_contract.md
-  docs/space/nina_master_backup.md
+  docs/space/nina_master_backup_$DATE.md
   docs/space/nina_state.md
 )
-
-TS=$(date '+%Y-%m-%d %H:%M')
-DATE=$(date '+%Y-%m-%d')
 
 echo "================================================"
 echo " NINA POST-SESSION SYNC  $TS$([ "$DRY_RUN" = true ] && echo " [DRY-RUN]")"
