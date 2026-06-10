@@ -104,6 +104,8 @@ How NINA Builds Itself:
 
 ## Project Structure
 
+*Note: For the definitive inventory, canonical status, and lifecycle metadata of all governed files, see the [Repository Index](docs/space/nina_index.md).*
+
 ```
 nina/
 ├── main.py                    # Entry point

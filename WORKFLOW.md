@@ -12,6 +12,10 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
 | agynina (Antigravity CLI) | LOCAL EXECUTOR | Sync local executor — edits, reviews Jules PR diff, merges, deploys |
 
+## 0. Discovery & Governance (New)
+- **Check the Index:** Before writing any code, creating a new tool, or modifying a document, consult the **Repository Index** (`docs/space/nina_index.md`). This prevents duplication and maintains canonical sources of truth.
+- **Update the Index:** If you create, move, rename, archive, or delete a governed artifact, you MUST run `python3 tools/update_index.py` and ensure `python3 tools/validate_index.py` passes.
+
 ## The Full Parallel Loop (Jules + agynina Pipeline)
 
 1. Perplexity diagnoses issue and writes precise spec

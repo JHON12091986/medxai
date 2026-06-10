@@ -48,6 +48,7 @@ Never write more than what was asked.
 
 This file is read by whichever local coding tool is active: agynina, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
 - Read only the required context files first.
+- Consult the **Repository Index** (`docs/space/nina_index.md`) to discover existing files, avoid duplicating functionality, and check canonical status before creating or modifying governed artifacts. Use `python3 tools/update_index.py` after adding/removing files.
 - Do not scan the whole repo before you know the task.
 - Check juleslock.txt before editing.
 - Follow the verify → log → sync workflow.
