@@ -215,7 +215,7 @@ Execute in this order. Each step is independently deployable and reversible.
 | **Create** | `core/models.py` | Canonical data objects currently scattered |
 | **Create** | `executors/__init__.py`, `executors/agy.py`, `executors/jules.py` | ACL adapters, currently missing |
 | **Create** | `sync/manager.py` | Sync logic currently only in shell scripts |
-| **Rename** | `append_lock.py` → function inside `guardian/error_register.py` | One-off script, should be a module function |
+| **Rename** | `tools/append_lock.py` → function inside `guardian/error_register.py` | One-off script, should be a module function |
 | **Rename** | `append_log.py` → utility in `sync/manager.py` | Same reason |
 | **Delete** | `agent/context.py` (0 bytes), `agent/__init__.py` (0 bytes) | Empty placeholder files |
 

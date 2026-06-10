@@ -26,7 +26,7 @@ async def test_browser_smoke():
 
 @pytest.mark.asyncio
 async def test_officemail_smoke():
-    from tools import officemail
+    from tools import office_mail
 
     mock_config = MagicMock()
     mock_config.ews_my_email = "test@example.com"
@@ -46,7 +46,7 @@ async def test_officemail_smoke():
         mock_account_cls.return_value = mock_account
         mock_account.inbox.filter.return_value.order_by.return_value.__getitem__.return_value = []
 
-        result = await officemail.fetch(mock_config)
+        result = await office_mail.fetch(mock_config)
         assert "**Personal**" in result
         assert "**BasicID**" in result
 
@@ -134,11 +134,12 @@ async def test_jules_api_smoke():
 
 @pytest.mark.asyncio
 async def test_gputuner_smoke(tmp_path):
-    from tools import gputuner
+    from tools import system
+    gputuner = system
 
-    with patch("tools.gputuner.GPU_CONFIG", tmp_path / "gpu_config.json"):
-        with patch("tools.gputuner.asyncio.create_subprocess_exec") as mock_create_subprocess, \
-             patch("tools.gputuner.asyncio.wait_for") as mock_wait_for:
+    with patch("tools.system.GPU_CONFIG", tmp_path / "gpu_config.json"):
+        with patch("tools.system.asyncio.create_subprocess_exec") as mock_create_subprocess, \
+             patch("tools.system.asyncio.wait_for") as mock_wait_for:
 
             mock_proc = MagicMock()
             mock_create_subprocess.return_value = mock_proc

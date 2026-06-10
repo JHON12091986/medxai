@@ -73,7 +73,7 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 
 ## Dev Environment Stack
 - **AI Tooling:** Perplexity Enterprise Pro with Claude Sonnet 4.6
-- **Developer CLI + Local Build Agent (Claude Sonnet 4.6 Thinking):** Antigravity CLI agynina v1.0.5
+- **Developer CLI + Local Build Agent (Claude Sonnet 4.6 Thinking):** Antigravity CLI agynina v1.0.6
 - **Primary Developer Agent:** Jules at jules.google
 - **Reference & Search:** NotebookLM
 - **Note:** Gemini CLI was removed on June 5, 2026.
@@ -160,17 +160,15 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
 ### Decision Tree
 1. Architecture / spec / GitHub MCP → **Perplexity** (Space)
 2. Single-file scoped fix, urgent → **agy** (preserves other quotas)
-3. Multi-file local task → **Gemini CLI** (speed + 1M context + vision)
-4. Gemini CLI exhausted → **Qwen Code CLI** (Qwen3-Coder-480B, smarter model)
-5. Async multi-module PR, can wait → **Jules** (Gemini 3.1 Pro, best quality)
-6. All local quota gone → **Cursor Hobby** (50/month reserve)
-7. Everything gone / offline → **Ollama + Continue.dev** (unlimited)
+3. Gemini CLI exhausted → **Qwen Code CLI** (Qwen3-Coder-480B, smarter model)
+4. Async multi-module PR, can wait → **Jules** (Gemini 3.1 Pro, best quality)
+5. All local quota gone → **Cursor Hobby** (50/month reserve)
+6. Everything gone / offline → **Ollama + Continue.dev** (unlimited)
 
 ### Quota Reference
 | Tool | Model | Daily Quota | Reset |
 |------|-------|-------------|-------|
 | agy | Gemini Flash | ~5h rolling | Rolling |
-| Gemini CLI | Gemini 2.5 Flash | 1,000 req/day | Midnight PT (~1PM BD) |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
 | Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |
@@ -199,7 +197,6 @@ NINA uses three tools running IN PARALLEL as the standard operating mode:
 | Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
 | Local Executor (agynina, Cursor, Claude Code, Cline, aider) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
-| aider-chat (./nina-aider.sh) | INTERACTIVE LOCAL CODER — interactive multi-file editing with full repo context via OpenRouter. Use when iterating live with direct file edits and needing conversational pair-programming. Requires terminal presence. | Interactive sync |
 
 THE FULL PARALLEL LOOP:
 1. Perplexity diagnoses + writes precise spec

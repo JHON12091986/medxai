@@ -1,4 +1,3 @@
-import re
 
 LOCK_FILE = "jules_lock.txt"
 FILES_TOUCHED = ["tools/finance.py", "tools/__init__.py", "core/capabilities.py", "tests/test_finance.py", "nina_context.md", "nina_update_log.md"]

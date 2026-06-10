@@ -1,5 +1,5 @@
 __all__ = [
     "shell", "browser", "system", "files",
-    "search", "web", "officemail", "gputuner",
-    "upgradepipeline", "market", "finance"
+    "search", "web", "append_lock", "append_log",
+    "create_pr", "upgradepipeline", "market", "finance"
 ]
