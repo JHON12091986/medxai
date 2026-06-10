@@ -3,17 +3,17 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-10 23:19 +06
-- Git HEAD: be20c176b366d320f21173bc953ef2729438d87f
-- Last commit: docs: post-session sync 2026-06-10 23:18
+- Generated: 2026-06-11 03:37 +06
+- Git HEAD: a5866ee7005abf9ea06f9ac7cbaec27e350bdd1b
+- Last commit: docs: post-session sync 2026-06-11 03:37
 - Service: active
 
 ## 2. Active Jules Sessions (live)
-#1 Implement Robust SSRF Protection in tools/browser.py — COMPLETED — no PR yet
-#2 Enriching NINA User Context in facts.json — COMPLETED — https://github.com/aibony/nina/pull/89
-#3 Unit Tests for MemorySystem (core/memory.py) — COMPLETED — https://github.com/aibony/nina/pull/87
-#4 Create Initial Plan Templates for NINA — COMPLETED — https://github.com/aibony/nina/pull/88
-#5 Implement Environment Variable Validation in NinaConfig — COMPLETED — https://github.com/aibony/nina/pull/92
+#1 Bolt: Performance Optimization Agent — AWAITING_USER_FEEDBACK — no PR yet
+#2 Sentinel: Security Vulnerability Protection Agent — AWAITING_USER_FEEDBACK — no PR yet
+#3 Bolt ⚡ Performance Optimization Agent — COMPLETED — https://github.com/aibony/nina/pull/95
+#4 Implement Robust SSRF Protection in tools/browser.py — COMPLETED — no PR yet
+#5 Enriching NINA User Context in facts.json — COMPLETED — https://github.com/aibony/nina/pull/89
 
 ## 3. Locked Files (do not touch in new specs)
 ```
@@ -37,11 +37,11 @@ _Directory: `tests/`_
 
 ## 5. Last 5 Completions
 ```
-be20c17 docs: post-session sync 2026-06-10 23:18
-f5d6dd6 chore(docs): date-stamp nina_master_backup to 2026-06-10
-c662338 chore(gitignore): stop tracking exports/nina_latest.md in git history
-b4f1906 chore(docs): archive nina_problem_log.md — superseded by nina_error_register.md
-801e8f3 chore(docs): consolidate nina_update_log.md and nina_context.md to root canonical
+a5866ee docs: post-session sync 2026-06-11 03:37
+212cdc1 docs: post-session sync 2026-06-11 03:34
+28b6a45 docs: hard-code mandatory documentation rule for Jules and unify instructions
+ee22ee0 docs: harden instructions and standardize on ninaflash (nf) shorthand
+6d44135 docs: refresh index for nf shorthand (final)
 ```
 
 ## 6. Open Blockers
@@ -76,4 +76,4 @@ b4f1906 chore(docs): archive nina_problem_log.md — superseded by nina_error_re
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 
 ---
-_Feed size: 4093 bytes_
+_Feed size: 3991 bytes_

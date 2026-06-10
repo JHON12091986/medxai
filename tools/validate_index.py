@@ -129,15 +129,26 @@ def validate(check_deltas=False, notify=False):
         total_files += 1
                 
     # 2. Check for "unmanaged but probably governed" files
-    ignore_dirs = {".git", ".venv", "venv", "__pycache__", ".agent", ".jules", ".pytest_cache", ".mypy_cache"}
+    ignore_dirs = {".git", ".venv", "venv", "__pycache__", ".pytest_cache", ".mypy_cache", ".agent", ".jules", "node_modules"}
+    governed_roots = ["core", "tools", "interfaces", "docs", "crons", "agent", "ninagate", "checks"]
+    
     for root, dirs, files in os.walk(repo_root):
+        # Prune high-volume automated dirs and hidden dirs
         dirs[:] = [d for d in dirs if d not in ignore_dirs and not d.startswith(".")]
+        
+        # Don't warn about missing index entries for high-volume automated artifacts
+        if "upgrades/backups" in root or "upgrades/incidents" in root:
+            continue
+            
         for file in files:
             rel_path = str((Path(root) / file).relative_to(repo_root))
             
             # If it's a doc, core logic, tool, or root script, it should be indexed
             if rel_path not in indexed_paths:
-                if rel_path.endswith(".md") or rel_path.endswith(".py") or rel_path.endswith(".sh") or rel_path.startswith("docs/"):
+                is_governed_path = any(rel_path.startswith(gr + "/") for gr in governed_roots)
+                is_script_or_doc = rel_path.endswith(".md") or rel_path.endswith(".py") or rel_path.endswith(".sh")
+                
+                if is_governed_path or is_script_or_doc:
                     print(f"⚠️ Unmanaged but probably governed: {rel_path} is missing from the index.")
                     warnings += 1
 

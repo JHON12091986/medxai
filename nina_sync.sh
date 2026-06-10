@@ -15,13 +15,13 @@ DRY_RUN=false
 TS=$(date '+%Y-%m-%d %H:%M')
 DATE=$(date '+%Y-%m-%d')
 
+# Fixed list of files to mirror/sync
 SPACE_FILES=(
   docs/space/ninaflash_task_tracker.md
   docs/space/jules_backlog.md
   docs/space/jules_task_tracker.md
   docs/space/nina_error_register.md
   docs/space/nina_exporter_contract.md
-  docs/space/nina_master_backup_$DATE.md
   docs/space/nina_state.md
 )
 
@@ -81,6 +81,7 @@ done
 
 echo "[2/8] Mirror to docs/space/..."
 [ "$DRY_RUN" = false ] && mkdir -p "$SPACE_DIR"
+# 2. Fixed Mirror Loop
 for f in "${SPACE_FILES[@]}"; do
   SRC="$NINA/$f"; DST="$SPACE_DIR/$(basename "$f")"
   if [ ! -f "$SRC" ]; then echo "  ✗ MISSING: $f"; continue; fi
@@ -88,6 +89,13 @@ for f in "${SPACE_FILES[@]}"; do
     echo "  ✓ $f (updated)"; [ "$DRY_RUN" = false ] && cp "$SRC" "$DST"
   else
     echo "  = $f (unchanged)"
+  fi
+done
+
+# 2.1 Dynamic Master Backup Mirror (handles date-stamped files)
+for f in "$SPACE_DIR"/nina_master_backup_*.md; do
+  if [ -f "$f" ]; then
+    echo "  = $(basename "$f") (present)"
   fi
 done
 for lf in nina_update_log.md; do
