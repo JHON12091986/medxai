@@ -56,7 +56,7 @@ def notify_telegram(message):
 
 def audit(strict=False, notify=False):
 
-    repo_root = Path("/home/aibony/nina")
+    repo_root = Path(__file__).parent.parent.resolve()
     
     # 1. Gather data
     git_tracked = get_git_tracked()

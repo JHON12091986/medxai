@@ -22,11 +22,12 @@ try:
     import dotenv
 except ImportError:
     dotenv = None
+import time
 import shutil
 import ast
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional, Set, Tuple
 
 # --- KERNEL INITIALIZATION ---
 REPO_ROOT = Path(__file__).parent.parent.resolve()
@@ -70,8 +71,10 @@ def cmd_status(args):
     print(f"NINA Kernel v6.0 | HEAD: {out} | Env: {'OK' if dotenv else 'NO_DOTENV'}")
     tasks = get_backlog_tasks()
     print(f"Backlog: {len(tasks)} total | READY: {len([t for t in tasks if t['status']=='READY'])}")
+
 def _print_pulse():
     """Generate high-density 10-line pulse."""
+    from datetime import datetime
     _, sha, _ = run_cmd("git rev-parse --short HEAD")
     _, branch, _ = run_cmd("git rev-parse --abbrev-ref HEAD")
     print(f"1. Git: {sha} ({branch})")
@@ -115,7 +118,6 @@ def _print_pulse():
     status, reason, data = _get_hw_status()
     print(f"9. Thermal: {data.get('cpu_temp', 0)}°C")
     print(f"10. VRAM: {data.get('ram_gb', 0):.1f}GB")
-
 
 def _get_locks() -> List[str]:
     """[005] Internal: Get list of locked files."""

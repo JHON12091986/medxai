@@ -36,7 +36,7 @@ def check_doc_deltas(data, repo_root):
                 doc_targets_changed.add(f)
                 
     if requires_delta and not doc_targets_changed:
-        print("\n❌ Governance Violation: Code/architecture changed but no documentation delta was found.")
+        print(f"\n❌ Governance Violation: Code/architecture changed but no documentation delta was found.")
         print("The following files require a doc delta:")
         for file_obj in requires_delta:
             print(f"  - {file_obj['path']} (Targets: {', '.join(file_obj.get('doc_targets', []))})")
@@ -71,7 +71,7 @@ def notify_telegram(message, repo_root):
         print(f"❌ Exception sending Telegram notification: {e}")
 
 def validate(check_deltas=False, notify=False):
-    repo_root = Path(__file__).parent.parent.resolve()
+    repo_root = Path("/home/aibony/nina")
     index_path = repo_root / "docs/space/nina_index.json"
 
     
@@ -93,10 +93,9 @@ def validate(check_deltas=False, notify=False):
     missing_tests = 0
     
     # 1. Check if index entries resolve to real files and validate schema
-    missing_ok_prefixes = ["logs/", "data/", "upgrades/", ".env", "ninagate_load_test.log", "test.lock", "tools.log", ".aider"]
     for file_obj in data["files"]:
         path_str = file_obj["path"]
-        if not (repo_root / path_str).exists() and not any(path_str.startswith(p) for p in missing_ok_prefixes):
+        if not (repo_root / path_str).exists():
             print(f"❌ Broken link: {path_str} in index does not exist on disk.")
             errors += 1
             
