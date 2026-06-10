@@ -12,39 +12,39 @@ PROVIDER_MODEL_ENDPOINTS = {
     "GROQ": {
         "models_url": "https://api.groq.com/openai/v1/models",
         "auth_header": "Bearer",
-        "model_filter_fn": lambda models: next((m["id"] for m in models if m["id"] == "llama-3.3-70b-versatile"),
-                                              sorted([m["id"] for m in models if "llama-3" in m["id"].lower()], reverse=True)[0] if any("llama-3" in m["id"].lower() for m in models) else "llama-3.3-70b-versatile"),
+        "model_filter_fn": lambda models: next((m.get("id") for m in models if m.get("id") == "llama-3.3-70b-versatile"),
+                                              sorted([m.get("id") for m in models if "llama-3" in m.get("id", "").lower()], reverse=True)[0] if any("llama-3" in m.get("id", "").lower() for m in models) else "llama-3.3-70b-versatile"),
         "fallback_model": "llama-3.3-70b-versatile"
     },
     "GEMINI": {
         "models_url": "https://generativelanguage.googleapis.com/v1beta/models",
         "auth_header": "?key=",
-        "model_filter_fn": lambda models: next((m["name"].split("/")[-1] for m in models if "gemini-2.5-flash" in m["name"] and "preview" not in m["name"] and "experimental" not in m["name"]), "gemini-2.5-flash"),
+        "model_filter_fn": lambda models: next((m.get("name", "").split("/")[-1] for m in models if "gemini-2.5-flash" in m.get("name", "") and "preview" not in m.get("name", "") and "experimental" not in m.get("name", "")), "gemini-2.5-flash"),
         "fallback_model": "gemini-2.5-flash"
     },
     "CEREBRAS": {
         "models_url": "https://api.cerebras.ai/v1/models",
         "auth_header": "Bearer",
-        "model_filter_fn": lambda models: next((m["id"] for m in models if m["id"] == "llama-3.3-70b"),
-                                              sorted([m["id"] for m in models if "llama" in m["id"].lower()], reverse=True)[0] if any("llama" in m["id"].lower() for m in models) else "llama-3.3-70b"),
+        "model_filter_fn": lambda models: next((m.get("id") for m in models if m.get("id") == "llama-3.3-70b"),
+                                              sorted([m.get("id") for m in models if "llama" in m.get("id", "").lower()], reverse=True)[0] if any("llama" in m.get("id", "").lower() for m in models) else "llama-3.3-70b"),
         "fallback_model": "llama-3.3-70b"
     },
     "MISTRAL": {
         "models_url": "https://api.mistral.ai/v1/models",
         "auth_header": "Bearer",
-        "model_filter_fn": lambda models: next((m["id"] for m in models if "mistral-small" in m["id"] and "latest" in m["id"]), "mistral-small-latest"),
+        "model_filter_fn": lambda models: next((m.get("id") for m in models if "mistral-small" in m.get("id", "") and "latest" in m.get("id", "")), "mistral-small-latest"),
         "fallback_model": "mistral-small-latest"
     },
     "DEEPSEEK": {
         "models_url": "https://api.deepseek.com/models",
         "auth_header": "Bearer",
-        "model_filter_fn": lambda models: next((m["id"] for m in models if m["id"] == "deepseek-chat"), "deepseek-chat"),
+        "model_filter_fn": lambda models: next((m.get("id") for m in models if m.get("id") == "deepseek-chat"), "deepseek-chat"),
         "fallback_model": "deepseek-chat"
     },
     "TOGETHER": {
         "models_url": "https://api.together.xyz/v1/models",
         "auth_header": "Bearer",
-        "model_filter_fn": lambda models: next((m["id"] for m in models if m["id"] == "meta-llama/Llama-3.3-70B-Instruct-Turbo"), "meta-llama/Llama-3.3-70B-Instruct-Turbo"),
+        "model_filter_fn": lambda models: next((m.get("id") for m in models if m.get("id") == "meta-llama/Llama-3.3-70B-Instruct-Turbo"), "meta-llama/Llama-3.3-70B-Instruct-Turbo"),
         "fallback_model": "meta-llama/Llama-3.3-70B-Instruct-Turbo"
     },
     "COHERE": {"fallback_model": "command-r-plus"},
@@ -71,7 +71,7 @@ class ModelDiscoveryService:
         try:
             with open(self.cache_path, "r") as f:
                 return json.load(f)
-        except Exception as e:
+        except (OSError, ValueError, json.JSONDecodeError) as e:
             logger.warning(f"Failed to load cache from {self.cache_path}: {e}")
             return {}
 
@@ -80,7 +80,7 @@ class ModelDiscoveryService:
             os.makedirs(os.path.dirname(self.cache_path), exist_ok=True)
             with open(self.cache_path, "w") as f:
                 json.dump(models, f, indent=2)
-        except Exception as e:
+        except (OSError, ValueError, TypeError) as e:
             logger.error(f"Failed to save cache to {self.cache_path}: {e}")
 
     async def get_model(self, provider_id: str) -> str:
@@ -142,7 +142,7 @@ class ModelDiscoveryService:
                         results[pid] = best_model
                     else:
                         results[pid] = fallback
-                except Exception as e:
+                except (OSError, ValueError, httpx.RequestError, httpx.HTTPStatusError, json.JSONDecodeError) as e:
                     logger.warning(f"Discovery failed for {pid}: {e}. Using fallback.")
                     results[pid] = fallback
 

@@ -246,6 +246,8 @@ class NINASync:
 
             self._last_commit_time = time.time()
             self.log_event("push", commit=commit_msg, files=len(rel_files))
+            from core.observability import get_hub
+            get_hub().set_sync_ts()
 
         except subprocess.CalledProcessError as e:
             self.log_event("error", msg=f"Git operation failed: {e.stderr}")
