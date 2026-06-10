@@ -1883,3 +1883,32 @@
 **Files changed:** data/circuit_state.json,generate_backups.sh,ninagate_load_test.sh
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 166 — 2026-06-10 · feat: Massive PR Resolution & Repository Cleanup
+
+**Triggered by:** User request to resolve all pending PRs.
+
+**Files changed:** core/memory.py, core/verifier.py, core/task_store.py, core/config.py, tests/test_memory.py, tests/test_verifier.py, tests/test_task_store.py, tools/compact_exporter.py, data/plans/templates/*, data/memory/facts.json
+
+**What changed:**
+- **Merged PRs:**
+  - `ag-d-03-04-verifiers`: Added `semantic_score` and `numeric_assert` to `StepVerifier`.
+  - `feat/ag-j-02-task-store-tests`: Integrated 46 new unit tests for `TaskStore`.
+  - `jules-memory-personal-context`: Fixed Jules identity/fact injection in AI context.
+  - `fix-config-validation`: Added `.env` validation to `NinaConfig`.
+  - `ag-a-06-plan-templates`: Added structured goal decomposition templates for NINA.
+  - `fix/compact-exporter-timeout`: Hardened `compact_exporter.py` with subprocess timeouts.
+  - `jules-facts-refactor`: Updated `data/memory/facts.json` with deterministic personal context.
+  - `jules-memory-tests`: Added 155 lines of unit tests for `core/memory.py`.
+- **Security:** Hardcoded `shell=False` in `tools/agynina.py` and `guardian_engine.py` (Sentinel fix).
+- **Cleanup:** Deleted 11 stale or redundant feature branches from `origin` to stabilize the repository.
+
+**What was verified:**
+- Full test suite passed: 75/75 tests successful.
+- Guardian healthcheck: 100% PASS (59 checks).
+- Manual verification of merged files for logic regressions.
+
+**Rollback path:**
+- `git reset --hard 5f6e3e8da8929dfab627eae08df43a1f3dded11c && git push origin main --force`
