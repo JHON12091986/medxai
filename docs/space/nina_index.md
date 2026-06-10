@@ -23,8 +23,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `SECURITY.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `WORKFLOW.md` | source_of_truth | active | keep | Repository rules of engagement and development lifecycle. | ✅ YES |
 | `commit_message.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `fix_update_index.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `fix_validate_index.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `generate_backups.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `guardian` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `guardian_engine.py` | source_of_truth | active | keep | Forensic AST scanner and baseline drift analyzer (73KB). | ✅ YES |
