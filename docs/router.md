@@ -36,6 +36,10 @@ The router rigorously tracks usage statistics internally to avoid HTTP 429 (Too 
 
 If an impending rate limit is detected for the top-priority provider, the router preemptively shifts the load to the next available provider.
 
-## Local Model Routing for Sensitive Data
+## Response Caching
 
-A critical feature of the HybridRouter V4 is its ability to recognize sensitive data context. If the task context flags sensitive operations—such as processing local banking parameters, personal financial data, or core identity manipulation—the router absolutely bypasses all cloud providers. It strictly routes these prompts to the local Ollama models (`qwen2.5:1.5b` or `qwen2.5:7b`) to ensure sensitive data never leaves the local machine.
+To further minimize token usage and latency, HybridRouter V4 includes a persistent response caching layer.
+- **Deduplication:** Identical prompts (including recent message history) are hashed and checked against the cache before any provider call is made.
+- **Persistence:** Unlike standard in-memory caches, NINA's cache is persisted to `data/router_cache.json`. This ensures that cached responses survive service restarts and system reboots.
+- **TTL Management:** Cache entries have specific Time-To-Live (TTL) values based on task type (e.g., `coding` tasks may be cached for 6 hours, while `quick` tasks are cached for 1 hour). Sensitive tasks are never cached.
+- **Automatic Purging:** The cache periodically purges expired entries during idle periods to maintain a lean storage footprint.

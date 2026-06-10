@@ -37,6 +37,10 @@ ninaflash serves as the localized enforcement arm for the broader Antigravity ec
 
 Because ninaflash uses the Universe-Mode Kernel and executes heavily on the local system, it absorbs massive amounts of routine computational work at near-zero cloud token cost. This architecture enables NINA to perform complex data manipulation, monitoring, and debugging locally, reserving expensive cloud model calls for architectural decisions and heavy reasoning.
 
+Additional token savings are achieved through:
+- **Persistent Response Caching:** The HybridRouter caches identical prompts to disk, ensuring that repeated local tasks or duplicate instructions consume zero external tokens.
+- **Local Model Routing:** Sensitive or routine tasks are routed to local Ollama instances, bypassing paid cloud APIs entirely.
+
 ## Continuous Developer Loop (`ninaloop`)
 
 By running `ninaflash ninaloop`, NINA enters an autonomous development cycle. In this state, ninaflash iteratively analyzes the task backlog, proposes system enhancements via the `idleloop.py`, dispatches specs to Jules, and subsequently automatically reviews and integrates Jules's pull requests. This turns NINA from a static assistant into a continuously evolving autonomous operating system.

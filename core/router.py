@@ -267,6 +267,26 @@ class ResponseCache:
         for k in dead:
             self.s.pop(k, None)
 
+    def save(self, path: str):
+        try:
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+            tmp = f"{path}.tmp"
+            with open(tmp, "w") as f:
+                json.dump(self.s, f)
+            os.replace(tmp, path)
+        except Exception as e:
+            logger.warning(f"cache_save_failed: {e}")
+
+    def load(self, path: str):
+        if not os.path.exists(path):
+            return
+        try:
+            with open(path, "r") as f:
+                self.s = json.load(f)
+            self.purge_expired()
+        except Exception as e:
+            logger.warning(f"cache_load_failed: {e}")
+
 class CostTracker:
     def __init__(self):
         self.daily_cost_usd = 0.0
@@ -308,6 +328,7 @@ class HybridRouter:
         self.http: Optional[httpx.AsyncClient] = None
         self._idle_task = None
         self._state_path = "data/circuit_state.json"
+        self._cache_path = "data/router_cache.json"
 
     def _save_circuit_state(self):
         try:
@@ -317,11 +338,13 @@ class HybridRouter:
             with open(tmp_path, "w") as f:
                 json.dump(state, f, indent=2)
             os.replace(tmp_path, self._state_path)
+            self.cache.save(self._cache_path)
         except Exception as e:
             logger.warning(f"failed_to_save_circuit_state: {e}")
 
     def _load_circuit_state(self):
         if not os.path.exists(self._state_path):
+            self.cache.load(self._cache_path)
             return
         try:
             with open(self._state_path, "r") as f:
@@ -329,7 +352,8 @@ class HybridRouter:
             for pid, cb_data in state.items():
                 if pid in self.health:
                     self.health[pid].cb.from_dict(cb_data)
-            logger.info(f"Loaded circuit breaker state from {self._state_path}")
+            self.cache.load(self._cache_path)
+            logger.info(f"Loaded circuit breaker state and cache")
         except Exception as e:
             logger.warning(f"failed_to_load_circuit_state: {e}")
 

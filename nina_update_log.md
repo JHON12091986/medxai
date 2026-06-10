@@ -1943,3 +1943,58 @@
 **Files changed:** docs/space/claude_feed.md,docs/space/nina_index.json,docs/space/nina_repo_hygiene_dashboard.md,nina_sync.sh,tools/validate_index.py
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 172 — 2026-06-11 · docs: fix and integrate Throughput Maximizer + Token Reduction MEGA-TASKs
+
+**Triggered by:** User request to fix and add Jules specs for optimization.
+
+**What changed:**
+- Fixed the "NINA Throughput Maximizer (v2.0 Architecture)" spec by renaming `agynina` to `ninaflash`/`nf`, correcting paths, and updating the NinaGate port to 8765.
+- Created `docs/space/jules_spec_throughput_maximizer.md` with the full corrected spec (AG-M-01).
+- Designed and created a new "Token-Surgical Architecture (v2.1)" spec at `docs/space/jules_spec_token_surgical.md` (AG-M-02) focused on aggressive cloud token reduction via local RAG, surgical context selection, and reasoning offloading.
+- Added `AG-M-01` and `AG-M-02` tasks to `docs/space/jules_backlog.md` and promoted both to `READY`.
+
+**What was verified:**
+- Verified paths and tool names in the specs match the current repository state.
+- Verified backlog structure is preserved.
+
+**Rollback path:**
+- `git checkout HEAD -- docs/space/jules_backlog.md nina_update_log.md && rm docs/space/jules_spec_throughput_maximizer.md docs/space/jules_spec_token_surgical.md`
+
+---
+
+## Entry 173 — 2026-06-11 · docs: create 10 token-saving MEGA-TASK specs for Jules
+
+**Triggered by:** User request to optimize Gemini CLI token usage.
+
+**What changed:**
+- Designed and created 10 new token-saving MEGA-TASK specs for Jules (AG-M-03 to AG-M-12) covering surgical code intelligence, instruction compression, incremental state monitoring, global context filtering, automated hygiene, high-density status pulses, historical offloading, system prompt templating, sliding window log summarization, and session checkpointing.
+- Created dedicated specification files for each task in `docs/space/`.
+- Added all 10 tasks to `docs/space/jules_backlog.md` and set their status to `READY`.
+
+**What was verified:**
+- Verified backlog structure and ID continuity.
+- Verified spec content aligns with NINA's token-surgical philosophy.
+
+**Rollback path:**
+- `git checkout HEAD -- docs/space/jules_backlog.md nina_update_log.md && rm docs/space/jules_spec_*.md`
+
+---
+
+## Entry 174 — 2026-06-11 · docs: integrate 71 new token-saving MEGA-TASKs into Jules backlog
+
+**Triggered by:** User request to maximize throughput and minimize token usage.
+
+**What changed:**
+- Designed and integrated 71 new token-saving MEGA-TASKs into `docs/space/jules_backlog.md`, grouped into 7 logical clusters: Advanced Code Intelligence (AG-N), Automated Testing & QA (AG-O), Performance & Latency (AG-P), Memory & Knowledge (AG-Q), Repository Hygiene (AG-R), Interface & Interaction (AG-S), and Token & Context Engineering (AG-T).
+- All 71 tasks are set to `READY` to keep Jules engaged.
+- Refined the backlog structure to handle the large volume of tasks efficiently.
+
+**What was verified:**
+- Verified backlog markdown syntax and table integrity.
+- Verified task IDs are unique and sequential.
+
+**Rollback path:**
+- `git checkout HEAD -- docs/space/jules_backlog.md nina_update_log.md`

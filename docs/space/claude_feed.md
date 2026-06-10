@@ -3,9 +3,9 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-11 03:37 +06
-- Git HEAD: a5866ee7005abf9ea06f9ac7cbaec27e350bdd1b
-- Last commit: docs: post-session sync 2026-06-11 03:37
+- Generated: 2026-06-11 03:43 +06
+- Git HEAD: 7d9e21a7d20ce956b5d64f00008e62824df3456f
+- Last commit: docs: post-session sync 2026-06-11 03:42
 - Service: active
 
 ## 2. Active Jules Sessions (live)
@@ -37,11 +37,11 @@ _Directory: `tests/`_
 
 ## 5. Last 5 Completions
 ```
+7d9e21a docs: post-session sync 2026-06-11 03:42
 a5866ee docs: post-session sync 2026-06-11 03:37
 212cdc1 docs: post-session sync 2026-06-11 03:34
 28b6a45 docs: hard-code mandatory documentation rule for Jules and unify instructions
 ee22ee0 docs: harden instructions and standardize on ninaflash (nf) shorthand
-6d44135 docs: refresh index for nf shorthand (final)
 ```
 
 ## 6. Open Blockers
@@ -76,4 +76,4 @@ ee22ee0 docs: harden instructions and standardize on ninaflash (nf) shorthand
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 
 ---
-_Feed size: 3991 bytes_
+_Feed size: 3987 bytes_

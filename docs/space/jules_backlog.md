@@ -128,7 +128,7 @@ Perplexity reads backlog each session
 | B-036 | Telegram: /errors command — shows open error register items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | ninaflash only |
 | B-037 | docs/space: add nina_architecture_diagram.md with ASCII diagrams | `DONE` | docs/space/nina_architecture_diagram.md | — | No visual architecture reference exists; Jules session 2468954092544028080 |
 | B-038 | Add per-provider cost tracking to router.py | `NEEDS_SPEC` | core/router.py | B-012 | ninaflash only |
-| B-039 | Add response caching layer for identical prompts (TTL 60s) | `NEEDS_SPEC` | core/router.py | — | ninaflash only |
+| B-039 | Add response caching layer for identical prompts (TTL 60s) | `DONE` | core/router.py | — | Persistent cache implemented by Gemini CLI 2026-06-11 |
 | B-040 | Write CONTRIBUTING.md | `DONE` | CONTRIBUTING.md | — | Jules session 1218304308318697501 |
 
 ---
@@ -360,6 +360,154 @@ _Directory: `tests/`_
 | AG-J-08 | `tests/test_proactive.py` | Unit tests for ProactiveEngine: quiet hours enforcement, deduplication, batching | `NEEDS_SPEC` | AG-G-01 |
 | AG-J-09 | `tests/test_memory_agentic.py` | Integration tests: episodic memory, working memory, preference learning | `NEEDS_SPEC` | AG-I-01 |
 | AG-J-10 | `tests/test_e2e_agent.py` | End-to-end: submit goal → plan → step execution → verification → result | `NEEDS_SPEC` | AG-J-09 |
+
+---
+
+### AG-M — Throughput Maximizer
+_MEGA-TASK: V2.0 Architecture Upgrade_
+_Dependency: AG-B-01 and AG-B-02 must be DONE first_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `READY` | AG-B-01 |
+| AG-M-02 | Multi-module | 📉 MEGA-TASK: Token-Surgical Architecture (v2.1) — Aggressive cloud token reduction via local RAG and surgical context selection. | `READY` | AG-M-01 |
+| AG-M-03 | Multi-module | 🛠️ NF-EXT: Surgical Code Intelligence — Add `nf code symbol`, `find-symbol`, and `sigs` for zero-token code research. | `READY` | — |
+| AG-M-04 | `AGENTS.md` | 📝 DOC-COMP: Instruction Compression — Refactor `AGENTS.md` into high-density directives; move guides to `docs/agent-memory/`. | `READY` | — |
+| AG-M-05 | `ninaflash.py` | 📊 NF-BACKLOG: Incremental State Monitoring — Add `backlog summary` and `task active` to avoid reading full backlog tables. | `READY` | — |
+| AG-M-06 | `.geminiignore` | 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiignore` for automated context pruning. | `READY` | — |
+| AG-M-07 | `ninaflash.py` | 🧹 NF-CLEAN: Automated Hygiene — Add `nf check code --fix` and `nf doc check --fix` for local error resolution. | `READY` | — |
+| AG-M-08 | `ninaflash.py` | 💓 NF-STATUS: High-Density Pulse — Implement `nf status --pulse` and `nf log next-id` for 10-line project heartbeats. | `READY` | — |
+| AG-M-09 | `ninaflash.py` | 📦 NF-ARCHIVE: Historical Offloading — Implement `nf backlog archive` to move `DONE` tasks to historical storage. | `READY` | — |
+| AG-M-10 | `ninagate/` | 📡 GATE-PROMPT: System Prompt Templating — Move `AGENTS.md` into cached NinaGate system prompts. | `READY` | AG-M-04 |
+| AG-M-11 | `ninaflash.py` | 📉 NF-LOG: Sliding Window Summarizer — Implement log compression and `nf log summarize` for noisy update logs. | `READY` | — |
+| AG-M-12 | `ninaflash.py` | 📦 NF-SESSIONS: Checkpoint & Resume — Add `nf session checkpoint` to preserve task state across restarts. | `READY` | — |
+
+---
+
+### AG-N — Advanced Code Intelligence
+_Focus: Zero-token research and semantic mapping_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `READY` | — |
+| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `READY` | AG-N-01 |
+| AG-N-03 | `core/` | Type Hint Enforcement — Automated script to add missing type hints. | `READY` | — |
+| AG-N-04 | `ninaflash.py` | Dead Code Detector — Identify and flag unused functions/imports. | `READY` | — |
+| AG-N-05 | `ninaflash.py` | Symbol-Based Context Injector — Read only the call stack of a function. | `READY` | AG-N-02 |
+| AG-N-06 | `ninaflash.py` | Docstring Quality Audit — Score docstrings on clarity and completeness. | `READY` | — |
+| AG-N-07 | `core/` | Automated Refactoring: Method Extraction — Split large functions via AST. | `READY` | — |
+| AG-N-08 | `ninaflash.py` | Dependency Cycle Detector — Identify circular imports locally. | `READY` | — |
+| AG-N-09 | `ninaflash.py` | Code Complexity Watchdog — Calculate cyclomatic complexity. | `READY` | — |
+| AG-N-10 | `ninaflash.py` | Symbol Migration Tool — Automate renaming and moving symbols. | `READY` | — |
+
+---
+
+### AG-O — Automated Testing & QA
+_Focus: Reducing debug turns through local verification_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-O-01 | `tests/` | Test Scaffold Generator — Create test stubs for every new function. | `READY` | — |
+| AG-O-02 | `tests/` | Mutation Test Suite — Implement basic mutation testing for core modules. | `READY` | — |
+| AG-O-03 | `tests/` | Coverage Optimizer — Identify "coldest" code paths with zero tests. | `READY` | — |
+| AG-O-04 | `ninaflash.py` | Automated Regression Bench — Run benchmarks on every PR. | `READY` | — |
+| AG-O-05 | `tests/` | Mock Factory — Automated generation of mocks for external APIs. | `READY` | — |
+| AG-O-06 | `tests/` | Flaky Test Detector — Identify intermittent test failures. | `READY` | — |
+| AG-O-07 | `tests/` | Integration Test Parallelizer — Run tests in concurrent chunks. | `READY` | — |
+| AG-O-08 | `tests/` | Data-Driven Test Generator — Create tests from session logs. | `READY` | — |
+| AG-O-09 | `bin/` | Security Scan: Dependency Audit — Automated venv security audit. | `READY` | — |
+| AG-O-10 | `tests/` | Doc-Test Validator — Ensure MD code examples are runnable. | `READY` | — |
+
+---
+
+### AG-P — Performance & Latency
+_Focus: High-velocity execution and low overhead_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-P-01 | `core/router.py` | Router Latency Optimizer — Profile and reduce router overhead. | `READY` | — |
+| AG-P-02 | `core/router.py` | Persistent Response Cache — Move cache to SQLite for speed. | `READY` | — |
+| AG-P-03 | `core/router.py` | Parallel Provider Dispatch — Concurrent routing to fallbacks. | `READY` | — |
+| AG-P-04 | `core/config.py` | Hot-Reload Speedup — Optimize NinaConfig reload time. | `READY` | — |
+| AG-P-05 | `core/memory.py` | Memory Fetch Indexer — Vector indexing for faster retrieval. | `READY` | — |
+| AG-P-06 | `ninaflash.py` | Subprocess Pool — Reuse subprocesses for shell tools. | `READY` | — |
+| AG-P-07 | `core/` | Async IO Optimization — Ensure non-blocking file/network ops. | `READY` | — |
+| AG-P-08 | `core/task_store.py`| Task Queue Prioritizer — Move to priority-based execution. | `READY` | — |
+| AG-P-09 | `core/observability.py`| Hardware Metric Optimization — Reduce sampling frequency. | `READY` | — |
+| AG-P-10 | `main.py` | Startup Time Minimizer — Profile and reduce boot time. | `READY` | — |
+
+---
+
+### AG-Q — Memory & Knowledge
+_Focus: Precision retrieval and minimal noise_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-Q-01 | `data/memory/` | ChromaDB Cluster — Shard vector memory by domain. | `READY` | — |
+| AG-Q-02 | `core/memory.py` | Automatic Fact Extraction — LLM-driven mining of logs. | `READY` | — |
+| AG-Q-03 | `core/memory.py` | Memory Conflict Resolver v2 — Automated contradiction detection. | `READY` | — |
+| AG-Q-04 | `tools/` | Knowledge Graph Visualization — Generate DOT relationships. | `READY` | — |
+| AG-Q-05 | `core/memory.py` | Memory Pruning — Remove redundant/low-utility memories. | `READY` | — |
+| AG-Q-06 | `core/memory.py` | Context-Aware Memory Retrieval — Filter by task type. | `READY` | — |
+| AG-Q-07 | `core/memory.py` | Shared Fact Validation — Cross-reference external sources. | `READY` | — |
+| AG-Q-08 | `core/memory.py` | Episodic Memory Summarization — Compress old session logs. | `READY` | — |
+| AG-Q-09 | `core/memory.py` | Entity Linking — Consolidate duplicate entities in memory. | `READY` | — |
+| AG-Q-10 | `data/memory/` | Memory Backup Sync — Multi-region backup implementation. | `READY` | — |
+
+---
+
+### AG-R — Repository Hygiene
+_Focus: Minimal repo size and clean structure_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-R-01 | `ninaflash.py` | Stale File Archiver — Auto-move 60-day untouched files. | `READY` | — |
+| AG-R-02 | `requirements.txt`| Requirement Pinner — Lock dependencies to exact hashes. | `READY` | — |
+| AG-R-03 | `ninaflash.py` | Large File Pointer — Move binary assets to external storage. | `READY` | — |
+| AG-R-04 | `ninaflash.py` | Directory Structure Audit — Enforce snake_case rules. | `READY` | — |
+| AG-R-05 | `ninaflash.py` | License Header Inserter — Add headers to all source files. | `READY` | — |
+| AG-R-06 | `ninaflash.py` | Orphaned Config Cleaner — Remove unused keys from .env.example. | `READY` | — |
+| AG-R-07 | `templates/` | Template Consolidator — Merge redundant dashboard templates. | `READY` | — |
+| AG-R-08 | `ninaflash.py` | Automated CHANGELOG — Generate from commit history. | `READY` | — |
+| AG-R-09 | `ninaflash.py` | Metadata Quality Gate — Require summaries for new dirs. | `READY` | — |
+| AG-R-10 | `dashboard/` | Repo Hygiene Dashboard v2 — Health trends and drift alerts. | `READY` | — |
+
+---
+
+### AG-S — Interface & Interaction
+_Focus: Fast feedback and low-overhead communication_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-S-01 | `interfaces/telegram_interface.py`| Telegram Batching — Consolidate short messages. | `READY` | — |
+| AG-S-02 | `ninaflash.py` | CLI Progress Bars — Rich bars for long nf commands. | `READY` | — |
+| AG-S-03 | `core/proactive.py`| Notification Priority — Gated alerts by activity hours. | `READY` | — |
+| AG-S-04 | `interfaces/telegram_interface.py`| Telegram Inline Results — Inline query status checks. | `READY` | — |
+| AG-S-05 | `core/observability.py`| Multi-Channel Alerts — Discord/Slack webhook support. | `READY` | — |
+| AG-S-06 | `ninaflash.py` | Command Autocomplete — Bash/Zsh completion for nf. | `READY` | — |
+| AG-S-07 | `dashboard/` | Visual Task Graph — Render current plan as SVG. | `READY` | — |
+| AG-S-08 | `ninaflash.py` | Interactive REPL — shell-like interactive mode for nf. | `READY` | — |
+| AG-S-09 | `interfaces/telegram_interface.py`| Voice Command Bridge — STT integration for voice. | `READY` | — |
+| AG-S-10 | `dashboard/` | Dashboard Dark Mode — High-contrast visual polish. | `READY` | — |
+
+---
+
+### AG-T — Token & Context Engineering
+_Focus: Absolute minimum context overhead_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-T-01 | `core/agent.py` | Dynamic Prompting — Adjust prompt length by task diff. | `READY` | — |
+| AG-T-02 | `ninaflash.py` | Context Window Estimator — Predict token usage before call. | `READY` | — |
+| AG-T-03 | `core/agent.py` | Instruction Deduplication — Strip identical rules. | `READY` | — |
+| AG-T-04 | `ninaflash.py` | Token-Optimized JSON — Key-abbreviations in exports. | `READY` | — |
+| AG-T-05 | `ninaflash.py` | Differential PR Body — Symbol-focused descriptions. | `READY` | — |
+| AG-T-06 | `ninaflash.py` | Tool Metadata Compression — Strip docstrings in prompt. | `READY` | — |
+| AG-T-07 | `tools/` | Incremental Search — Search tools return delta only. | `READY` | — |
+| AG-T-08 | `ninaflash.py` | Context-Specific Ignore — .geminiignore by task type. | `READY` | — |
+| AG-T-09 | `core/nina.py` | Prompt Versioning — AB test different system prompts. | `READY` | — |
+| AG-T-10 | `ninaflash.py` | Token Usage Forecasting — Predict weekly costs. | `READY` | — |
+| AG-T-11 | `ninaflash.py` | Final Synthesis — Consolidate all 100+ functions. | `READY` | — |
 
 ---
 

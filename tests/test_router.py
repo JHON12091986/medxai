@@ -236,4 +236,39 @@ def test_cb_persistence(dummy_config):
     if os.path.exists(state_path):
         os.remove(state_path)
 
+def test_cache_persistence(dummy_config):
+    import os
+    import json
+    # Ensure data directory exists
+    os.makedirs("data", exist_ok=True)
+    cache_path = "data/router_cache.json"
+    if os.path.exists(cache_path):
+        os.remove(cache_path)
+
+    router = HybridRouter(dummy_config)
+    
+    # Set a cache entry
+    router.cache.set("test prompt", "quick", "test response", "GROQ")
+    
+    # Save state (which now also saves cache)
+    router._save_circuit_state()
+    assert os.path.exists(cache_path)
+
+    # Check file content
+    with open(cache_path, "r") as f:
+        data = json.load(f)
+    # The key is a hash, so we just check if it's there
+    assert len(data) == 1
+    
+    # Load state in a new router instance
+    router2 = HybridRouter(dummy_config)
+    router2._load_circuit_state()
+    
+    cached = router2.cache.get("test prompt", "quick")
+    assert cached == "test response"
+
+    # Clean up
+    if os.path.exists(cache_path):
+        os.remove(cache_path)
+
 
