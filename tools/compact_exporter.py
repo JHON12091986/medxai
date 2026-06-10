@@ -71,12 +71,6 @@ def get_state_section(section_title, max_lines=None, bullets_only=False):
 
 def export_summary():
     """Produces nina_latest.md (BAREBONES SUMMARY)"""
-    # Before exporting, summarize the update log to keep context small
-    try:
-        subprocess.run(["python3", str(NINA_DIR / "tools/ninaflash.py"), "log", "summarize"], capture_output=True, timeout=10)
-    except Exception as e:
-        logger.warning(f"Failed to summarize log: {e}")
-
     sha = get_git_short_sha()
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
