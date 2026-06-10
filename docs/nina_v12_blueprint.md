@@ -1,9 +1,9 @@
 # NINA Architecture Blueprint
-**Version:** 12.2
+**Version:** 12.3
 **Type:** Architecture & Design Reference
 **Status:** Active — Phase 1
 **Owner:** M. Baizid Alam — BASIC Bank, Dhaka
-**Last Updated:** 2026-06-04
+**Last Updated:** 2026-06-10
 
 > This is the **public-safe** architecture document for NINA.
 > It describes structure, design decisions, and component roles.
@@ -165,11 +165,11 @@ Guardian must pass before any deployment. See `NINA-Development-Policy.md` for r
 
 | ID | Target | Status |
 |----|--------|--------|
-| T-1 | Personal expenditure tracker | 🔨 In progress |
-| T-2 | Email intelligence & triage | 🔨 In progress |
-| T-3 | DSE/CSE share market alerts | 📋 Planned |
+| T-1 | Personal expenditure tracker | ✅ DONE |
+| T-2 | Email intelligence & triage | ✅ DONE |
+| T-3 | DSE/CSE share market alerts | ✅ DONE |
 | T-4 | Proactive reminder engine | 📋 Planned |
-| T-5 | Personal context memory | 🔨 In progress |
+| T-5 | Personal context memory | ✅ DONE |
 | T-6 | Personal knowledge base remember and recall | ✅ DONE |
 
 ---

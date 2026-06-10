@@ -14,11 +14,18 @@ NINA utilizes ChromaDB as a semantic, local vector store to record the "what hap
 ### 2. facts.json (Identity Anchor)
 Located at `data/memory/facts.json`, this is the core of NINA's persistent personality.
 - **Function:** It contains hardcoded, foundational truths about NINA's identity, the user (M. Baizid Alam), the operating environment, and core directives.
-- **Why it matters:** The combination of ChromaDB (episodic) and `facts.json` (identity) prevents "context drift." Even after thousands of API calls or autonomous development loops, NINA will not hallucinate a new persona or forget its primary directives, because `facts.json` grounds every context window.
+- **Why it matters:** The combination of ChromaDB (episodic) and `facts.json` (identity) prevents "context drift." Even after thousands of API calls or autonomous development loops, NINA will not hallucinate a new persona or forget its primary directives, because `facts.json` grounds every context window. (Fixed in v12.3: ensured deterministic injection at the top of every prompt).
 
 ## Protection Mechanisms
 
 The `data/memory/facts.json` file is strictly protected. It is listed in the Guardian Gate's high-risk list. NINA's agents (like Jules) are explicitly forbidden from modifying this file autonomously. Any changes to the identity anchor must be performed manually or via highly scrutinized, locally executed `agynina` operations.
+
+## Context Management
+
+### Truncation & Budgeting
+To prevent Context Window Overflow and ensure reliable model performance, `core/memory.py` implements character-based truncation:
+- **Budget:** The total context injected by the memory system is capped (default: 4000 characters).
+- **Prioritization:** The deterministic "Personal Context" (from `facts.json`) is always preserved in full. Episodic docs from ChromaDB are truncated to fit the remaining budget, ensuring NINA never loses its identity even when history is deep.
 
 ## Recommended Enhancements
 
