@@ -43,11 +43,11 @@ LOCK_PATH = REPO_ROOT / "jules_lock.txt"
 # MODULE 0: CORE KERNEL & SHELL
 # ------------------------------------------------------------------
 
-def run_cmd(cmd, cwd=str(REPO_ROOT), timeout=60, use_shell=False) -> Tuple[int, str, str]:
+def run_cmd(cmd, cwd=str(REPO_ROOT), timeout=60) -> Tuple[int, str, str]:
     """[001] Base execution primitive."""
     try:
-        args = cmd if use_shell else (shlex.split(cmd) if isinstance(cmd, str) else cmd)
-        res = subprocess.run(args, shell=use_shell, capture_output=True, text=True, cwd=cwd, timeout=timeout)
+        args = shlex.split(cmd) if isinstance(cmd, str) else cmd
+        res = subprocess.run(args, shell=False, capture_output=True, text=True, cwd=cwd, timeout=timeout)
         return res.returncode, res.stdout.strip(), res.stderr.strip()
     except subprocess.TimeoutExpired: return -1, "", "Command timed out"
 
@@ -153,7 +153,9 @@ def cmd_pr_merge_surgical(args):
     for f in criticals:
         src = backup_dir / Path(f).name
         if src.exists(): shutil.copy(src, REPO_ROOT / f)
-    run_cmd("git add . && git commit -m 'fix(sync): restore regressions' && git push origin main")
+    run_cmd("git add .")
+    run_cmd("git commit -m 'fix(sync): restore regressions'")
+    run_cmd("git push origin main")
     print("✅ Surgical merge successful.")
 
 def cmd_pr_reconcile(args):

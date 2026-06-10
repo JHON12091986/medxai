@@ -51,7 +51,7 @@ async def run(cmd: str) -> str:
             loop.run_in_executor(None,
                 lambda: subprocess.run(
                     shlex.split(cmd),
-                    capture_output=True, text=True, timeout=10)),
+                    capture_output=True, text=True, timeout=10, shell=False)),
             timeout=12)
 
         out = (r.stdout + r.stderr).strip()[:2000]
@@ -69,5 +69,6 @@ async def run(cmd: str) -> str:
         return "Command timed out (10s)."
     except FileNotFoundError:
         return f"Command not found: {cmd.split()[0]}"
-    except Exception as e:
+    except (OSError, ValueError, subprocess.SubprocessError) as e:
+        logger.error(f"shell_error cmd={cmd!r} err={e}", extra={"log": "tools.log", "tool_name": "shell"})
         return f"Error: {e}"

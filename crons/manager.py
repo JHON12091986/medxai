@@ -22,6 +22,15 @@ import time
 import json
 from datetime import datetime, timezone
 
+from crons.registry import CronJob
+CRON_JOB = CronJob(
+    id='manager',
+    name='Manager',
+    schedule='0 * * * *',
+    module='crons.manager',
+    description='APScheduler manager for legacy tasks'
+)
+
 _job_metrics = {}
 
 def get_job_metrics():
@@ -134,3 +143,6 @@ class TaskScheduler:
 
     @property
     def job_count(self): return len(self._sched.get_jobs())
+
+def run():
+    pass  # TODO: wire existing logic here
