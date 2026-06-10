@@ -66,30 +66,77 @@ class UpgradePipeline:
         except Exception:
             return False
 
-    async def submit(self, code: str, filename: str) -> str:
-        if not filename.endswith(".py"):
-            return "NINA only accepts .py files for upgrades."
-        if not self._in_writable_scope(filename):
-            return f"Upgrade rejected: {filename} is outside writable scope or is a protected file."
+    async def submit(self, code: str, filename: str) -> list:
+        step_results = []
 
-        hits = self._scan(code)
-        if hits:
-            for h in hits:
-                logger.warning(h, extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
-            return "\n".join(hits)
+        # Step: extension check
+        step_name = "check_extension"
+        try:
+            if not filename.endswith(".py"):
+                raise ValueError("NINA only accepts .py files for upgrades.")
+            step_results.append({"step_name": step_name, "ok": True, "error": None})
+            logger.info(f"{step_name}: SUCCESS", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+        except Exception as e:
+            step_results.append({"step_name": step_name, "ok": False, "error": str(e)})
+            logger.info(f"{step_name}: FAILED - {e}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+            return step_results
 
-        # Syntax check
+        # Step: writable scope check
+        step_name = "check_writable_scope"
+        try:
+            if not self._in_writable_scope(filename):
+                raise ValueError(f"Upgrade rejected: {filename} is outside writable scope or is a protected file.")
+            step_results.append({"step_name": step_name, "ok": True, "error": None})
+            logger.info(f"{step_name}: SUCCESS", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+        except Exception as e:
+            step_results.append({"step_name": step_name, "ok": False, "error": str(e)})
+            logger.info(f"{step_name}: FAILED - {e}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+            return step_results
+
+        # Step: pattern scan
+        step_name = "pattern_scan"
+        try:
+            hits = self._scan(code)
+            if hits:
+                for h in hits:
+                    logger.warning(h, extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+                raise ValueError("\n".join(hits))
+            step_results.append({"step_name": step_name, "ok": True, "error": None})
+            logger.info(f"{step_name}: SUCCESS", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+        except Exception as e:
+            step_results.append({"step_name": step_name, "ok": False, "error": str(e)})
+            logger.info(f"{step_name}: FAILED - {e}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+            return step_results
+
+        # Step: syntax check
+        step_name = "syntax_check"
         try:
             ast.parse(code)
+            step_results.append({"step_name": step_name, "ok": True, "error": None})
+            logger.info(f"{step_name}: SUCCESS", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
         except SyntaxError as e:
-            return f"Upgrade rejected: SyntaxError — {e}"
+            err = f"Upgrade rejected: SyntaxError — {e}"
+            step_results.append({"step_name": step_name, "ok": False, "error": err})
+            logger.info(f"{step_name}: FAILED - {err}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+            return step_results
+        except Exception as e:
+            step_results.append({"step_name": step_name, "ok": False, "error": str(e)})
+            logger.info(f"{step_name}: FAILED - {e}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+            return step_results
 
-        # Stage as pending
-        self._pending = {"filename": filename, "code": code, "submitted_at": time.time()}
-        diff_lines = len(code.splitlines())
-        return (f"Upgrade ready for review: `{filename}` ({diff_lines} lines)\n"
-                f"Pattern scan: ✅ clean\nSyntax: ✅ valid\n\n"
-                f"Reply `approve` to deploy or `reject` to discard.")
+        # Step: stage pending
+        step_name = "stage_pending"
+        try:
+            self._pending = {"filename": filename, "code": code, "submitted_at": time.time()}
+
+            step_results.append({"step_name": step_name, "ok": True, "error": None})
+            logger.info(f"{step_name}: SUCCESS", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+        except Exception as e:
+            step_results.append({"step_name": step_name, "ok": False, "error": str(e)})
+            logger.info(f"{step_name}: FAILED - {e}", extra={"log":"upgrade.log", "tool_name": "upgradepipeline"})
+            return step_results
+
+        return step_results
 
     async def handle_command(self, cmd: str, arg: str) -> str:
         if cmd == "approve":

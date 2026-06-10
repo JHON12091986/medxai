@@ -1,0 +1,7 @@
+feat: Implement retry logic and structured returns in finance and market tools
+
+- Introduced `tools/retry.py` featuring a `retry` decorator equipped with exponential backoff and a unified `ToolResult` dataclass.
+- Hardened `tools/finance.py` to seamlessly wrap operations in `try/except` returning `ToolResult` directly, without touching signatures.
+- Hardened `tools/market.py`, wrapping `_fetch_dummy_price` with `@retry` and adapting the main monitor pipeline to return explicit `ToolResult` successes and failures.
+- Systematized `tools/upgradepipeline.py` by segregating internal check steps within the `submit` routine and aggregating them gracefully into an enumerated `step_results` collection.
+- Added comprehensive unit testing coverage in `tests/test_tools_hardening.py` verifying both retry behaviors and correct response formations natively and asynchronously.

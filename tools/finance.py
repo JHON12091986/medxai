@@ -1,4 +1,5 @@
 import csv
+from tools.retry import ToolResult
 import io
 import json
 import logging
@@ -12,7 +13,7 @@ file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 logger.setLevel(logging.INFO)
 
-def run_expenditure_report(expenses_data: str) -> str:
+def run_expenditure_report(expenses_data: str) -> ToolResult:
     """
     Parses expenses from CSV or text, categorizes and sums them by month and category.
     Returns a JSON string containing a compact text summary and a structured report.
@@ -20,21 +21,20 @@ def run_expenditure_report(expenses_data: str) -> str:
     Expected CSV columns (or text lines comma-separated): date, amount, category, note
     Example line: 2023-10-15, 50.00, Groceries, Weekly shopping
     """
-    logger.info("TAG:finance action=run_expenditure_report msg=starting_report_generation")
-
-    if not expenses_data or not expenses_data.strip():
-        logger.warning("TAG:finance action=run_expenditure_report msg=empty_input")
-        return json.dumps({
-            "summary": "No expenditure data provided.",
-            "report": {}
-        })
-
-    report = defaultdict(lambda: defaultdict(float))
-    total_spent = 0.0
-    valid_entries = 0
-    errors = 0
-
     try:
+        logger.info("TAG:finance action=run_expenditure_report msg=starting_report_generation")
+
+        if not expenses_data or not expenses_data.strip():
+            logger.warning("TAG:finance action=run_expenditure_report msg=empty_input")
+            return ToolResult.success(json.dumps({
+                "summary": "No expenditure data provided.",
+                "report": {}
+            }))
+
+        report = defaultdict(lambda: defaultdict(float))
+        total_spent = 0.0
+        valid_entries = 0
+        errors = 0
         # Simple heuristic to detect if it's text/csv.
         # We process line by line, trying to split by comma
         reader = csv.reader(io.StringIO(expenses_data.strip()))
@@ -88,14 +88,11 @@ def run_expenditure_report(expenses_data: str) -> str:
 
         logger.info(f"TAG:finance action=run_expenditure_report msg=success valid_entries={valid_entries} errors={errors} total={total_spent}")
 
-        return json.dumps({
+        return ToolResult.success(json.dumps({
             "summary": text_summary,
             "report": {month: dict(cats) for month, cats in report.items()}
-        })
+        }))
 
     except Exception as e:
         logger.error(f"TAG:finance action=run_expenditure_report msg=unexpected_error error={str(e)}")
-        return json.dumps({
-            "summary": "Failed to process expenditure report due to an internal error.",
-            "report": {}
-        })
+        return ToolResult.failure(str(e))
