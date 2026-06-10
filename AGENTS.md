@@ -60,6 +60,14 @@ This file is read by whichever local coding tool is active: agynina, Cursor, Cla
   6. Run `python3 tools/validate_index.py`. No PR or task touching governed paths is "Done" unless this validator passes. The index is the single enforceable contract for doc/log/code inventory.
   7. Run `./nina_audit.sh` to reconcile the local filesystem with Git and check for stale files.
   8. Run `python3 tools/generate_dashboard.py` to refresh the [Operational Governance Dashboard](docs/space/nina_governance_dashboard.md).
+- **Capability Crystallization (Mandatory):**
+  - Whenever you (the agent) build or discover a highly effective, repeatable, or critical technical procedure (e.g., a specific log parser, a complex data transformation, or a multi-step cleanup), you MUST evaluate it as a **Capability Candidate**.
+  - If it is useful for the future:
+    1.  Encapsulate the logic into a standalone tool in `tools/` or a script in `bin/`.
+    2.  Add it to the **Repository Index** with its governance metadata.
+    3.  Register it as a permanent agynina command (e.g., `python3 tools/agynina.py register --tool <path>`).
+  - **Goal:** Every session should incrementally upgrade agynina's "physical memory," collapsing complex cloud reasoning into zero-token local commands.
+
 - Do not scan the whole repo before you know the task.
 - Check juleslock.txt before editing.
 - Follow the verify → log → sync workflow.

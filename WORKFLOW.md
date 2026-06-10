@@ -26,7 +26,11 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 7. Run `./nina_audit.sh` to reconcile local drifts and identify stale artifacts.
 8. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
 
-## 0.5. The Dual-Track Operating Model
+## 0.6. Capability Crystallization (Self-Upgrading)
+NINA is designed to be a self-developing platform. Every session must aim to leave `agynina` more capable than it started.
+- **Identify:** If a task requires complex cloud reasoning that will likely be repeated, don't just solve it—crystallize it.
+- **Register:** Turn the solution into a named command in the **Capability Registry** via `agynina register`.
+- **Harvest:** Regularly review the "Stray Locals" in the Hygiene Dashboard for potential new tools to be governed and registered.
 To prevent governance decay without blocking roadmap progress, NINA uses a dual-track operational model. **Rule of thumb: For every feature PR merged, complete at least one Governance Quest.**
 
 ### Lane A: Governance Quests (Continuous)
