@@ -501,17 +501,14 @@ SEVERITY_ORDER = {"BLOCKER": 0, "WARN": 1, "DEBT": 2, "INFO": 3}
 
 # ── Utility helpers ───────────────────────────────────────────────────────────
 
-def run_cmd(cmd, timeout=30, use_shell=False):
+def run_cmd(cmd, timeout=30):
     """Run a shell command, return (stdout, stderr, returncode).
     Security: shell=False with shlex.split() prevents command injection.
     """
     try:
-        if not use_shell:
-            args = shlex.split(cmd) if isinstance(cmd, str) else cmd
-        else:
-            args = cmd
+        args = shlex.split(cmd) if isinstance(cmd, str) else cmd
         r = subprocess.run(
-            args, shell=use_shell, capture_output=True, text=True, timeout=timeout
+            args, shell=False, capture_output=True, text=True, timeout=timeout
         )
         return r.stdout, r.stderr, r.returncode
     except subprocess.TimeoutExpired:
@@ -1519,7 +1516,7 @@ def run_engine(args):
     if healthcheck_path.exists():
         hc_out, hc_err, hc_rc = run_cmd(
             [str(python_bin), str(healthcheck_path), "--json"],
-            timeout=60, use_shell=False
+            timeout=60
         )
         healthcheck_out = hc_out + hc_err
         hc_passed = (hc_rc == 0)

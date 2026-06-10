@@ -1657,3 +1657,12 @@
 **Verification:** All 141 tests passed (pytest tests/). Verified agynina check code/doc commands.
 
 **Rollback path:** git revert -m 1 96af53f c2f984e 18db682
+
+## Entry 143 — 2026-06-10 · Developer Tooling Hardening
+**Triggered by:** PR submission
+
+**Files changed:** tools/jules_api.py, tools/model_discovery.py, tools/shell.py, tests/test_model_discovery.py
+
+**Verification:** Ran pytest tests/test_shell.py tests/test_model_discovery.py passed. Syntax checked with pyflakes.
+
+**Rollback path:** git revert HEAD
