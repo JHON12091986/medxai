@@ -134,6 +134,8 @@ summaries = {
     "tools/update_index.py": "Utility to regenerate the repository index.",
     "tools/query_index.py": "Agent API to query file governance status.",
     "tools/cleanup_by_index.py": "Safe dry-run cleanup planner based on retention policies.",
+    "tools/generate_dashboard.py": "Generates the operational governance dashboard.",
+    "docs/space/nina_governance_dashboard.md": "Auto-generated operational governance dashboard."
 }
 
 def generate_index():
