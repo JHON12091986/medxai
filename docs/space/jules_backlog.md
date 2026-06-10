@@ -69,7 +69,7 @@ Perplexity reads backlog each session
 |----|-------|--------|---------------|--------|-------|
 | B-001 | Sentinel: remove shell=True from run_cmd in guardianengine.py | `DONE` | guardianengine.py | — | PR #60 merged 2026-06-07 |
 | B-002 | Wire model_overrides dict to .env hot-reload | `IN_PROGRESS` | core/router.py, core/config.py | — | model_overrides in NinaConfig but not wired to hot-reload |
-| B-003 | Add timeout to all subprocess calls in compact_exporter.py | `IN_PROGRESS` | tools/compact_exporter.py | — | No timeout = potential hang / DoS risk |
+| B-003 | Add timeout to all subprocess calls in compact_exporter.py | `DONE` | tools/compact_exporter.py | — | No timeout = potential hang / DoS risk |
 | B-004 | Validate TELEGRAM_CHAT_ID exists before any send attempt | `IN_PROGRESS` | interfaces/telegraminterface.py | — | Silent failure if env var missing; non-blocking open item |
 
 ---
