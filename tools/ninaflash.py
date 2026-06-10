@@ -400,13 +400,101 @@ def cmd_backlog_archive(args):
 # MODULE 5: CROSS-AGENT SESSION MEMORY
 # ------------------------------------------------------------------
 
+def cmd_memory_stash(args):
+    """[037] Save a snippet of working memory."""
+    text = args.text
+    if not text:
+        print("❌ Error: Memory text is required.")
+        return
+
+    stash_path = REPO_ROOT / "data" / "memory_stash.json"
+    stash_path.parent.mkdir(parents=True, exist_ok=True)
+
+    stash = []
+    if stash_path.exists():
+        try:
+            with open(stash_path, "r") as f:
+                stash = json.load(f)
+        except Exception:
+            pass
+
+    stash.append({
+        "timestamp": datetime.now().isoformat(),
+        "text": text
+    })
+
+    try:
+        with open(stash_path, "w") as f:
+            json.dump(stash, f, indent=2)
+        print(f"✅ Memory stashed: '{text[:50]}{'...' if len(text) > 50 else ''}'")
+    except Exception as e:
+        print(f"❌ Error stashing memory: {e}")
+
 def cmd_session_checkpoint(args):
     """[022] Save session state."""
-    print("Checkpoint saved.")
+    try:
+        code_branch, out_branch, _ = run_cmd("git branch --show-current")
+        branch = out_branch.strip() if code_branch == 0 else "unknown"
+
+        code_diff, out_diff, _ = run_cmd("git diff --name-only")
+        changed_files = [f for f in out_diff.strip().split("\n") if f] if code_diff == 0 else []
+
+        goal = getattr(args, "goal", "")
+
+        checkpoint = {
+            "branch": branch,
+            "changed_files": changed_files,
+            "goal": goal,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        checkpoint_path = REPO_ROOT / "data" / "session_checkpoint.json"
+        checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(checkpoint_path, "w") as f:
+            json.dump(checkpoint, f, indent=2)
+
+        print(f"✅ Session checkpoint saved for branch '{branch}'.")
+    except Exception as e:
+        print(f"❌ Error saving checkpoint: {e}")
 
 def cmd_session_resume(args):
     """[023] Resume session state."""
-    print("Resuming...")
+    checkpoint_path = REPO_ROOT / "data" / "session_checkpoint.json"
+    if not checkpoint_path.exists():
+        print("❌ No session checkpoint found.")
+        return
+
+    try:
+        with open(checkpoint_path, "r") as f:
+            checkpoint = json.load(f)
+
+        branch = checkpoint.get("branch", "unknown")
+        goal = checkpoint.get("goal", "")
+        changed_files = checkpoint.get("changed_files", [])
+        timestamp = checkpoint.get("timestamp", "")
+
+        print(f"🔄 Resuming session from {timestamp}")
+        print(f"  Branch: {branch}")
+        if goal:
+            print(f"  Goal: {goal}")
+        print(f"  Changed files: {len(changed_files)}")
+
+        if branch != "unknown":
+            code, out, err = run_cmd(f"git checkout {branch}")
+            if code == 0:
+                print(f"✅ Restored branch '{branch}'")
+            else:
+                print(f"⚠️ Could not check out branch: {err}")
+
+        # Show git status to re-verify changes
+        _, status_out, _ = run_cmd("git status --short")
+        if status_out:
+            print("\nCurrent changes:")
+            print(status_out)
+
+    except Exception as e:
+        print(f"❌ Error resuming session: {e}")
 
 # ------------------------------------------------------------------
 # MODULE 6: PRODUCTION GUARD & VERIFIER
@@ -760,6 +848,15 @@ def main():
     p_hg = p_hs.add_parser("gate")
     p_hg.add_argument("--json", action="store_true", help="Output as JSON")
 
+    p_session = subparsers.add_parser("session"); p_ss = p_session.add_subparsers(dest="sub")
+    p_sc = p_ss.add_parser("checkpoint")
+    p_sc.add_argument("--goal", default="", help="Active goal for this session")
+    p_ss.add_parser("resume")
+
+    p_memory = subparsers.add_parser("memory"); p_ms = p_memory.add_subparsers(dest="sub")
+    p_ms_stash = p_ms.add_parser("stash")
+    p_ms_stash.add_argument("text", help="Text to stash in working memory")
+
     p_check = subparsers.add_parser("check"); p_cks = p_check.add_subparsers(dest="sub")
 
     p_cc = p_cks.add_parser("code")
@@ -824,6 +921,11 @@ def main():
     elif args.command == "capability-map": cmd_capability_map(args)
     elif args.command == "register": cmd_register_capability(args)
     elif args.command == "run": cmd_run_capability(args)
+    elif args.command == "session":
+        if args.sub == "checkpoint": cmd_session_checkpoint(args)
+        elif args.sub == "resume": cmd_session_resume(args)
+    elif args.command == "memory":
+        if args.sub == "stash": cmd_memory_stash(args)
     elif args.command == "hw":
         if args.sub == "gate": cmd_hw_gate(args)
     elif args.command == "check":
