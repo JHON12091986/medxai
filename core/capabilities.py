@@ -28,6 +28,25 @@ class CapabilityRegistry:
             CAP_FILE.write_text(json.dumps(DEFAULT_CAPS, indent=2))
         self._caps: dict = json.loads(CAP_FILE.read_text())
 
+    def register(self, name: str, path: str, description: str = "", role: str = "tool"):
+        """Register a new dynamic capability."""
+        self._caps[name] = {
+            "path": path,
+            "description": description,
+            "role": role,
+            "loaded": True,
+            "healthy": True,
+            "registered_at": time.strftime("%Y-%m-%dT%H:%M:%S+0600")
+        }
+        CAP_FILE.write_text(json.dumps(self._caps, indent=2))
+        logger.info(f"capability_registered name={name} path={path}")
+
+    def get_capability(self, name: str) -> Optional[dict]:
+        return self._caps.get(name)
+
+    def list_capabilities(self) -> List[dict]:
+        return [{"name": k, **v} for k, v in self._caps.items()]
+
     def is_healthy(self, tool_name: str) -> bool:
         return self._caps.get(tool_name, {}).get("healthy", True)
 

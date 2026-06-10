@@ -26,5 +26,13 @@
   "gpu": {
     "loaded": true,
     "healthy": true
+  },
+  "audit-hygiene": {
+    "path": "tools/audit_repo_hygiene.py",
+    "description": "Deep Git vs FS reconciliation audit",
+    "role": "script",
+    "loaded": true,
+    "healthy": true,
+    "registered_at": "2026-06-11T02:58:05+0600"
   }
 }

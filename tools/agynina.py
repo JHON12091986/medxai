@@ -541,6 +541,54 @@ def _get_hw_status() -> Tuple[str, str, dict]:
 # MODULE 10: SELF-IMPROVING LOGIC & AI BRIEFING
 # ------------------------------------------------------------------
 
+def cmd_register_capability(args):
+    """[035] Dynamically register a new capability."""
+    from core.capabilities import CapabilityRegistry
+    registry = CapabilityRegistry()
+    
+    path = _path_resolve(args.tool_path)
+    if not path.exists():
+        print(f"❌ Error: Path {args.tool_path} does not exist.")
+        return
+        
+    name = args.name or path.stem
+    description = args.description or f"Dynamically registered tool from {args.tool_path}"
+    
+    registry.register(name, args.tool_path, description, args.role)
+    print(f"✅ Capability '{name}' registered successfully.")
+
+def cmd_run_capability(args):
+    """[036] Execute a registered capability by name."""
+    from core.capabilities import CapabilityRegistry
+    registry = CapabilityRegistry()
+    
+    cap = registry.get_capability(args.name)
+    if not cap:
+        print(f"❌ Error: Capability '{args.name}' not found.")
+        return
+        
+    path = cap.get("path")
+    if not path:
+        print(f"❌ Error: Capability '{args.name}' has no path.")
+        return
+        
+    print(f"🚀 Running capability '{args.name}' ({path})...")
+    # Execute based on extension
+    if path.endswith(".py"):
+        cmd = f"python3 {path} {' '.join(args.extra_args)}"
+    elif path.endswith(".sh"):
+        cmd = f"bash {path} {' '.join(args.extra_args)}"
+    else:
+        print(f"❌ Error: Unknown file type for path {path}")
+        return
+        
+    code, out, err = run_cmd(cmd)
+    if code == 0:
+        print(out)
+        print(f"✅ Success.")
+    else:
+        print(f"❌ Failed (exit {code}): {err}")
+
 def cmd_help_ai(args):
     """[029] Optimized briefing for new agents."""
     print("WELCOME AGENT. I am NINA KERNEL v6.0. Hard Cap: 100 functions.")
@@ -624,12 +672,24 @@ def main():
     p_ba.add_argument("--ag-num",    default=None, help="AG number e.g. 01")
     p_bs.add_parser("archive")
     
+    # Capability Subcommands
+    p_reg = subparsers.add_parser("register")
+    p_reg.add_argument("--tool-path",   required=True, help="Path to the tool file")
+    p_reg.add_argument("--name",        help="Optional name (default: filename)")
+    p_reg.add_argument("--description", help="Short summary of what it does")
+    p_reg.add_argument("--role",        default="tool", help="Role (tool, script, task)")
+
+    p_run = subparsers.add_parser("run")
+    p_run.add_argument("name",          help="Name of the capability to run")
+    p_run.add_argument("extra_args",    nargs=argparse.REMAINDER, help="Arguments passed to the tool")
 
     args = parser.parse_args()
     if args.command == "status": cmd_status(args)
     elif args.command == "help-ai": cmd_help_ai(args)
     elif args.command == "stats": cmd_stats(args)
     elif args.command == "capability-map": cmd_capability_map(args)
+    elif args.command == "register": cmd_register_capability(args)
+    elif args.command == "run": cmd_run_capability(args)
     elif args.command == "hw":
         if args.sub == "gate": cmd_hw_gate(args)
     elif args.command == "check":
