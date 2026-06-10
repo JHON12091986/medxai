@@ -632,6 +632,8 @@ if not METRICS_MODE:
     check_data_dir()
     check_log_dir()
     check_ollama()
+    from core.observability import get_hub
+    get_hub().set_health_ts()
 # ── Final report ──────────────────────────────────────────────────────────────
 total  = len(results)
 passed = sum(1 for r in results if r["level"] == "PASS")

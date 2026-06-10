@@ -24,6 +24,17 @@ app = Flask(__name__, template_folder=str(TEMPLATE_DIR))
 def ninaui():
     return send_file(str(DASHBOARD_DIR / "ninaui.html"))
 
+@app.route('/health')
+def health():
+    from core.observability import get_hub
+    import json
+    data = get_hub().to_dict()
+    return app.response_class(
+        response=json.dumps(data, indent=2),
+        status=200,
+        mimetype='application/json'
+    )
+
 @app.route('/')
 def index():
     # 1. NINA service status
