@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Overview
+A chronological record of all notable changes, improvements, and fixes made to the NINA ecosystem.
+
+## Purpose
+To provide transparency and a clear historical audit trail of the project's evolution for human operators and AI agents.
+
+## Usage
+Refer to this document to understand recent architectural shifts, feature additions, or security hardening measures before starting new development tasks.
+
 All notable changes to NINA are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) — newest first.
 
@@ -7,6 +16,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) — newe
 > following the release of Ubuntu 26.04 LTS, the project was ported to a dedicated Linux
 > machine (ASUS VivoBook, i5 8th Gen, 16 GB RAM, MX150 GPU) for always-on deployment.
 > v9 onward targets Linux/systemd. Core Python logic is platform-agnostic.
+
+---
+
+## [13.0.0] — 2026-06-11
+
+### Added
+- **Optimization Offensive:** Launched the major "Throughput Maximizer" initiative aimed at 90% cloud token reduction and 10x feature delivery acceleration.
+- **83-Task Backlog:** Expanded `docs/space/jules_backlog.md` with 83 "READY" mega-tasks grouped into 7 strategic clusters (Advanced Code Intelligence, QA Automation, Performance, Memory, Repository Hygiene, Interface, and Context Engineering).
+- **NinaGate Proxy:** Integrated an OpenAI-compatible proxy on port 8765 for local "Fast-Path" routing and boilerplate offloading to Ollama models.
+- **Surgical Code Intel:** Added `nf code outline` capability to `tools/ninaflash.py` for zero-token signature mapping using local AST parsing.
+- **Detailed Specifications:** Created 12 individual mega-task specifications in `docs/space/` covering Surgical Intel, Token Reduction, Backlog Monitoring, and Automated Hygiene.
+- **Concurrent Execution:** Dispatched 14 simultaneous high-priority optimization tasks to Jules API (system saturation limit).
+
+### Changed
+- **Documentation Overhaul:** Updated `nina_context.md`, `ARCHITECTURE.md`, and `README.md` to v13.0, integrating the "Prime Directive" and v2.1 architecture.
+- **ninaflash (nf) v6.0:** Refined local executor to prioritize surgical research, automated hygiene, and high-density project heartbeats (strict 100-function Nucleus).
+- **Quality Gates:** Enforced mandatory `overview/purpose/usage` sections across all core documentation to pass `nf check doc` verification.
+
+### Fixed
+- **Jules API Resilience:** Enhanced `tools/jules_api.py` with detailed error response logging and 50-session status visibility for better observability.
+- **Backlog Integrity:** Repaired and unified task IDs across the entire agentic pipeline to ensure ID continuity.
 
 ---
 
