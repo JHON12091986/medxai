@@ -1,9 +1,10 @@
+import re
 import logging
 import json
 import asyncio
 from dataclasses import dataclass
 from typing import List, Dict, Optional
-from core.router import HybridRouter
+from core.router import HybridRouter, ClassifiedTask
 from core.config import NinaConfig
 
 logger = logging.getLogger("nina.verifier")
@@ -86,6 +87,43 @@ class StepVerifier:
             check_name="success_criteria"
         )
 
+    async def semantic_score(self, output: str, success_criteria: str) -> dict:
+        prompt = f'Score this output 1-5 for how well it satisfies the criteria.\nCriteria: {success_criteria}\nOutput: {output}\nReply with JSON only: {{"score": N, "reason": "one sentence"}}'
+        passed = False
+        reason = "verifier error"
+        score = 0
+        try:
+            cfg = NinaConfig()
+            router = HybridRouter(config=cfg)
+            await router.initialize()
+
+            task = ClassifiedTask(task_type="verification", estimated_tokens=200, is_parallel_candidate=False, is_sensitive=False)
+            res_str = await router.route(prompt, [], task)
+
+            try:
+                if "```json" in res_str:
+                    res_str = res_str.split("```json")[1].split("```")[0].strip()
+                elif "```" in res_str:
+                    res_str = res_str.split("```")[1].split("```")[0].strip()
+
+                res = json.loads(res_str.strip())
+                score = int(res.get("score", 0))
+                reason = res.get("reason", "no reason provided")
+                passed = bool(score >= 3)
+            except (json.JSONDecodeError, ValueError) as e:
+                reason = f"verifier error: invalid JSON response - {e}"
+        except Exception as e:
+            reason = f"verifier error"
+
+        logger.info(json.dumps({
+            "event": "verify",
+            "check": "semantic_score",
+            "passed": passed,
+            "score": score
+        }))
+
+        return {"score": score, "reason": reason, "passed": passed}
+
     def verify_numeric_range(self, output, min_val: float = None, max_val: float = None) -> VerificationResult:
         passed = False
         reason = ""
@@ -124,6 +162,56 @@ class StepVerifier:
             score=score,
             check_name="numeric_range"
         )
+
+    def numeric_assert(self, output: str | int | float, min_val: float | None = None, max_val: float | None = None, expected: float | None = None, tolerance: float = 0.01) -> dict:
+        passed = False
+        reason = "output is not numeric or None"
+        value = None
+
+        if output is not None:
+            if isinstance(output, (int, float)):
+                if isinstance(output, bool):
+                    reason = "output is boolean, not numeric"
+                else:
+                    value = float(output)
+            elif isinstance(output, str):
+                match = re.search(r'[-+]?\d*\.?\d+', output)
+                if match:
+                    try:
+                        value = float(match.group())
+                    except ValueError:
+                        pass
+
+            if value is not None:
+                passed = True
+                reason = "numeric assertion passed"
+
+                # Check expected with tolerance
+                if expected is not None:
+                    if abs(value - expected) > tolerance:
+                        passed = False
+                        reason = f"value {value} does not match expected {expected} within tolerance {tolerance}"
+
+                # Check min_val
+                if passed and min_val is not None:
+                    if value < min_val:
+                        passed = False
+                        reason = f"value {value} is below minimum {min_val}"
+
+                # Check max_val
+                if passed and max_val is not None:
+                    if value > max_val:
+                        passed = False
+                        reason = f"value {value} is above maximum {max_val}"
+
+        logger.info(json.dumps({
+            "event": "verify",
+            "check": "numeric_assert",
+            "passed": passed,
+            "value": value
+        }))
+
+        return {"value": value, "passed": passed, "reason": reason}
 
     def verify_schema(self, output: dict, required_keys: List[str]) -> VerificationResult:
         passed = False
