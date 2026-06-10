@@ -22,12 +22,11 @@ try:
     import dotenv
 except ImportError:
     dotenv = None
-import time
 import shutil
 import ast
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Set, Tuple
+from typing import List, Dict, Any, Optional, Tuple
 
 # --- KERNEL INITIALIZATION ---
 REPO_ROOT = Path(__file__).parent.parent.resolve()
@@ -63,10 +62,61 @@ def _path_resolve(rel_path: str) -> Path:
 
 def cmd_status(args):
     """[004] Unified system health snapshot."""
+    if getattr(args, 'pulse', False):
+        _print_pulse()
+        return
+
     code, out, _ = run_cmd("git rev-parse --short HEAD")
     print(f"NINA Kernel v6.0 | HEAD: {out} | Env: {'OK' if dotenv else 'NO_DOTENV'}")
     tasks = get_backlog_tasks()
     print(f"Backlog: {len(tasks)} total | READY: {len([t for t in tasks if t['status']=='READY'])}")
+def _print_pulse():
+    """Generate high-density 10-line pulse."""
+    _, sha, _ = run_cmd("git rev-parse --short HEAD")
+    _, branch, _ = run_cmd("git rev-parse --abbrev-ref HEAD")
+    print(f"1. Git: {sha} ({branch})")
+
+    venv = "ACTIVE" if os.environ.get("VIRTUAL_ENV") else "INACTIVE"
+    print(f"2. Venv: {venv}")
+
+    log_path = REPO_ROOT / "nina_update_log.md"
+    sync_time = "UNKNOWN"
+    if log_path.exists():
+        import datetime
+        mtime = log_path.stat().st_mtime
+        sync_time = datetime.datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+    print(f"3. Sync: {sync_time}")
+
+    locks = _get_locks()
+    lock_str = ", ".join(locks) if locks else "NONE"
+    print(f"4. Locks: {lock_str}")
+
+    tasks = get_backlog_tasks()
+    ready = len([t for t in tasks if t['status'] == 'READY'])
+    done = len([t for t in tasks if t['status'] == 'DONE'])
+    print(f"5. Backlog: {ready} READY / {done} DONE / {len(tasks)} TOTAL")
+
+    errors = ["---", "---", "---"]
+    err_path = REPO_ROOT / "docs/space/nina_error_register.md"
+    if err_path.exists():
+        err_lines = []
+        for line in err_path.read_text(encoding="utf-8").splitlines():
+            if line.startswith("|") and not line.startswith("| ID |") and not line.startswith("|----|"):
+                cols = [c.strip() for c in line.split("|")][1:-1]
+                if len(cols) >= 4:
+                    err_lines.append(f"{cols[0]} [{cols[1]}] {cols[2]}: {cols[3]}")
+        recent = err_lines[-3:]
+        for i, e in enumerate(recent):
+            errors[i + (3 - len(recent))] = e
+
+    print(f"6. Err1: {errors[0]}")
+    print(f"7. Err2: {errors[1]}")
+    print(f"8. Err3: {errors[2]}")
+
+    status, reason, data = _get_hw_status()
+    print(f"9. Thermal: {data.get('cpu_temp', 0)}°C")
+    print(f"10. VRAM: {data.get('ram_gb', 0):.1f}GB")
+
 
 def _get_locks() -> List[str]:
     """[005] Internal: Get list of locked files."""
@@ -193,6 +243,24 @@ def cmd_context_mini_gen(args):
 def _compress_diff(diff_text: str) -> str:
     """[015] Strip metadata from diffs to save tokens."""
     return "\n".join([l for l in diff_text.splitlines() if not l.startswith(('---','+++','@@'))])
+def cmd_log_find_id(args):
+    """[037] Zero-token log parsing for specific task ID."""
+    task_id = args.task_id
+    path = REPO_ROOT / "nina_update_log.md"
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+
+    content = path.read_text(encoding="utf-8")
+    entries = content.split("## Entry")
+    for entry in reversed(entries):
+        if not entry.strip(): continue
+        full_entry = "## Entry" + entry
+        if task_id in full_entry:
+            print(full_entry.strip())
+            return
+    print(f"❌ Task ID {task_id} not found in log")
+
 
 # ------------------------------------------------------------------
 # MODULE 4: AUTONOMOUS BACKLOG & DAG
@@ -585,7 +653,7 @@ def cmd_run_capability(args):
     code, out, err = run_cmd(cmd)
     if code == 0:
         print(out)
-        print(f"✅ Success.")
+        print("✅ Success.")
     else:
         print(f"❌ Failed (exit {code}): {err}")
 
@@ -625,7 +693,8 @@ def cmd_kernel_upgrade(args):
 def main():
     parser = argparse.ArgumentParser(description="ninaflash AI Agent Kernel v6.0 — The 100-Function OS.")
     subparsers = parser.add_subparsers(dest="command", required=True)
-    subparsers.add_parser("status")
+    p_status = subparsers.add_parser("status")
+    p_status.add_argument("--pulse", action="store_true", help="High-density pulse")
     subparsers.add_parser("help-ai")
     subparsers.add_parser("capability-map")
     subparsers.add_parser("stats")
@@ -673,6 +742,10 @@ def main():
     p_bs.add_parser("archive")
     
     # Capability Subcommands
+    p_log = subparsers.add_parser("log"); p_ls = p_log.add_subparsers(dest="sub")
+    p_lfind = p_ls.add_parser("find-id")
+    p_lfind.add_argument("task_id", help="Task ID to find in logs")
+
     p_reg = subparsers.add_parser("register")
     p_reg.add_argument("--tool-path",   required=True, help="Path to the tool file")
     p_reg.add_argument("--name",        help="Optional name (default: filename)")
@@ -685,6 +758,8 @@ def main():
 
     args = parser.parse_args()
     if args.command == "status": cmd_status(args)
+    elif args.command == "log":
+        if args.sub == "find-id": cmd_log_find_id(args)
     elif args.command == "help-ai": cmd_help_ai(args)
     elif args.command == "stats": cmd_stats(args)
     elif args.command == "capability-map": cmd_capability_map(args)
