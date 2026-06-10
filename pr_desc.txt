@@ -1,5 +1,7 @@
+🛡️ Sentinel: [CRITICAL] Fix command injection vulnerability by hardcoding shell=False
+
 🚨 Severity: CRITICAL
-💡 Vulnerability: `guardian_engine.py` was invoking `healthcheck.py` using `subprocess.run` with a single un-tokenized string and `use_shell=True`, which is a command injection risk.
-🎯 Impact: If any paths or variables like `NINA_DIR` were manipulated or interpreted by the shell, it could lead to arbitrary command execution as the user running the guardian script.
-🔧 Fix: Modified the `run_cmd` invocation to use `use_shell=False` and explicitly passed the arguments as a list of strings (`[str(python_bin), str(healthcheck_path), "--json"]`).
-✅ Verification: Ran `python3 tools/agynina.py audit` and `python3 healthcheck.py --json`. Both tools confirm `guardian_engine.py` is no longer flagged for `shell=True`. Tested the application and healthcheck execution to ensure it works correctly.
+💡 Vulnerability: `subprocess.run` was called with `shell=use_shell` where `use_shell` could be `True`, allowing potential command injection in the base execution primitives within `tools/agynina.py` and `guardian_engine.py`.
+🎯 Impact: Untrusted input or maliciously crafted strings passed to these execution utilities could be evaluated by the system shell, leading to arbitrary command execution.
+🔧 Fix: Removed the `use_shell` parameter and hardcoded `shell=False` in `run_cmd` for both files, strictly enforcing argument tokenization via `shlex.split`. Additionally, refactored a brittle `&&` shell chaining execution in `tools/agynina.py` to use discrete `run_cmd` calls instead, preserving functionality while allowing `shell=False`.
+✅ Verification: Ran `bandit` to ensure no `shell=True` warnings remained and passed the full `pytest` suite locally.
