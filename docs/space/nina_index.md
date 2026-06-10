@@ -23,6 +23,8 @@ This index tracks all governed artifacts in the NINA repository.
 | `SECURITY.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `WORKFLOW.md` | source_of_truth | active | keep | Repository rules of engagement and development lifecycle. | ✅ YES |
 | `commit_message.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `fix_update_index.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `fix_validate_index.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `generate_backups.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `guardian` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `guardian_engine.py` | source_of_truth | active | keep | Forensic AST scanner and baseline drift analyzer (73KB). | ✅ YES |
@@ -47,6 +49,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `pr_desc.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pytest.ini` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `requirements.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `tools.log` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `agent/` | subsystem | active | keep | Subsystem directory containing agent logic/docs. | ✅ YES |
 | `bin/` | subsystem | active | keep | Subsystem directory containing bin logic/docs. | ✅ YES |
 | `checks/` | subsystem | active | keep | Subsystem directory containing checks logic/docs. | ✅ YES |
@@ -58,6 +61,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `exports/` | subsystem | active | keep | Subsystem directory containing exports logic/docs. | ✅ YES |
 | `git-hooks/` | subsystem | active | keep | Subsystem directory containing git-hooks logic/docs. | ✅ YES |
 | `interfaces/` | subsystem | active | keep | Telegram and REST API communication layers. | ✅ YES |
+| `logs/` | subsystem | active | keep | Subsystem directory containing logs logic/docs. | ✅ YES |
 | `ninagate/` | subsystem | active | keep | Subsystem directory containing ninagate logic/docs. | ✅ YES |
 | `templates/` | subsystem | active | keep | Subsystem directory containing templates logic/docs. | ✅ YES |
 | `tests/` | subsystem | active | keep | Subsystem directory containing tests logic/docs. | ✅ YES |
@@ -67,9 +71,10 @@ This index tracks all governed artifacts in the NINA repository.
 ## 3. Redundancy & Conflicts
 The following clusters contain identical content. Consolidate to the canonical source where possible.
 
-- **Cluster `dup-0001`**: Canonical is `agent/context.py`. Members: `docs/archive/jules_backlog_archive.md`, `interfaces/api.py`, `interfaces/__init__.py`, `tests/__init__.py`, `crons/__init__.py`, `agent/__init__.py`, `agent/context.py`
+- **Cluster `dup-0001`**: Canonical is `data/tasks.json`. Members: `data/tasks.json`, `data/circuit_state.json`
 - **Cluster `dup-0002`**: Canonical is `data/gpuconfig.json`. Members: `data/modeldiscovery.json`, `data/gpuconfig.json`
-- **Cluster `dup-0003`**: Canonical is `bin/nf`. Members: `bin/nf`, `bin/ninaflash`
+- **Cluster `dup-0003`**: Canonical is `agent/context.py`. Members: `interfaces/api.py`, `interfaces/__init__.py`, `logs/nina_sync.log`, `tests/__init__.py`, `crons/__init__.py`, `agent/__init__.py`, `agent/context.py`
+- **Cluster `dup-0004`**: Canonical is `bin/nf`. Members: `bin/nf`, `bin/ninaflash`
 
 ## 4. Governance Rules & Index-First Workflow
 1. **Check the Index:** `python3 tools/query_index.py --path <file>`
