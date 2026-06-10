@@ -16,6 +16,8 @@ from core.router import HybridRouter, ClassifiedTask, classify_task
 logger  = logging.getLogger("nina.telegram")
 
 # Bolt: Pre-compiled regexes for hot-path NLP intent matching
+from interfaces.middleware import RateLimiter
+_rate_limiter = RateLimiter(max_calls=20, period_seconds=60)
 _NLP_INTENTS_RE = {
     "email":           re.compile(r"check my email|fetch email|my emails"),
     "provider_hunt":   re.compile(r"hunt for new providers|find providers|missing providers"),
@@ -156,32 +158,45 @@ class TelegramInterface:
             await self._reply(update, "Unsupported document format. Only .py files are allowed.")
 
     async def _handle_update(self, update: Update, ctx: ContextTypes.DEFAULT_TYPE):
-        if not update.message:
-            return
-        uid = str(update.message.from_user.id)
+        try:
+            if not update.message:
+                return
+            if not _rate_limiter.is_allowed(update.effective_user.id):
+                await update.message.reply_text("⚠️ Too many requests. Please wait.")
+                return
+            uid = str(update.message.from_user.id)
 
-        if uid != str(self.config.authorized_user_id):
-            sec_log.warning(f"unauthorized_access uid={uid}", extra={"log": "security.log"})
-            return
+            if uid != str(self.config.authorized_user_id):
+                sec_log.warning(f"unauthorized_access uid={uid}", extra={"log": "security.log"})
+                return
 
-        # Document updates are handled by the registered document handler; only text falls through
-        text = (update.message.text or "").strip()
-        if not text:
-            return
+            # Document updates are handled by the registered document handler; only text falls through
+            text = (update.message.text or "").strip()
+            if not text:
+                return
 
-        now = time.time()
-        self._flood_window = [t for t in self._flood_window
-                              if now - t < self.config.flood_window_s]
-        if len(self._flood_window) >= self.config.flood_max_messages:
-            queued = len(self._flood_window) - self.config.flood_max_messages + 1
-            sec_log.warning(f"authorized_user_flood uid={uid}", extra={"log": "security.log"})
-            await self._reply(update, f"Slow down -- {queued} message(s) queued.")
-            return
-        self._flood_window.append(now)
+            now = time.time()
+            self._flood_window = [t for t in self._flood_window
+                                  if now - t < self.config.flood_window_s]
+            if len(self._flood_window) >= self.config.flood_max_messages:
+                queued = len(self._flood_window) - self.config.flood_max_messages + 1
+                sec_log.warning(f"authorized_user_flood uid={uid}", extra={"log": "security.log"})
+                await self._reply(update, f"Slow down -- {queued} message(s) queued.")
+                return
+            self._flood_window.append(now)
 
-        if hasattr(self.nina, "idle_loop") and self.nina.idle_loop:
-            self.nina.idle_loop.record_user_message()
-        asyncio.create_task(self._dispatch(update, text))
+            if hasattr(self.nina, "idle_loop") and self.nina.idle_loop:
+                self.nina.idle_loop.record_user_message()
+            asyncio.create_task(self._dispatch(update, text))
+
+        except Exception as e:
+            import logging
+            logging.getLogger("nina.telegram").error(f"Handler error: {e}", exc_info=True)
+            try:
+                await ctx.bot.send_message(chat_id=update.effective_chat.id,
+                    text="⚠️ NINA encountered an error. The team has been notified.")
+            except Exception:
+                pass
 
     # ---- Dispatcher ----------------------------------------------------------
 
