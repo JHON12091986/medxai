@@ -13,8 +13,15 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 | agynina (Antigravity CLI) | LOCAL EXECUTOR | Sync local executor — edits, reviews Jules PR diff, merges, deploys |
 
 ## 0. Discovery & Governance (New)
-- **Check the Index:** Before writing any code, creating a new tool, or modifying a document, consult the **Repository Index** (`docs/space/nina_index.md`). This prevents duplication and maintains canonical sources of truth.
-- **Update the Index:** If you create, move, rename, archive, or delete a governed artifact, you MUST run `python3 tools/update_index.py` and ensure `python3 tools/validate_index.py` passes.
+**Index-First Workflow:**
+1. Check `docs/space/nina_index.md` for the file's entry (path, role, lifecycle).
+2. If modifying a file within a `duplicate_cluster_id`, edit the `canonical_path` only.
+3. If creating, moving, renaming, archiving, or deleting a governed file:
+   - Update the file structure.
+   - Run `python3 tools/update_index.py`.
+   - Run `python3 tools/validate_index.py`.
+4. Fix validation issues until the validator passes.
+5. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
 
 ## The Full Parallel Loop (Jules + agynina Pipeline)
 

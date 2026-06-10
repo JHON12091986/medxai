@@ -48,7 +48,11 @@ Never write more than what was asked.
 
 This file is read by whichever local coding tool is active: agynina, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
 - Read only the required context files first.
-- Consult the **Repository Index** (`docs/space/nina_index.md`) to discover existing files, avoid duplicating functionality, and check canonical status before creating or modifying governed artifacts. Use `python3 tools/update_index.py` after adding/removing files.
+- **Index-First Workflow (Mandatory Governance):**
+  1. Consult the **Repository Index** (`docs/space/nina_index.md` / `.json`) before creating or modifying governed artifacts. Check `role`, `governed`, and `duplicate_cluster_id`.
+  2. If the file is part of a `duplicate_cluster_id`, you MUST ONLY write to the `canonical_path`.
+  3. If creating, moving, renaming, archiving, or deleting a governed file, you must run `python3 tools/update_index.py`.
+  4. Run `python3 tools/validate_index.py`. No PR or task touching governed paths is "Done" unless this validator passes. The index is the single enforceable contract for doc/log/code inventory.
 - Do not scan the whole repo before you know the task.
 - Check juleslock.txt before editing.
 - Follow the verify → log → sync workflow.

@@ -17,24 +17,59 @@ def scan():
         for file in files:
             full_path = Path(root) / file
             rel_path = full_path.relative_to(repo_root)
+            path_str = str(rel_path)
+            
             category = "other"
-            if rel_path.suffix == ".md": category = "docs"
+            if rel_path.suffix == ".md": category = "doc"
             elif rel_path.suffix == ".py": category = "code"
-            elif rel_path.suffix == ".sh": category = "scripts"
-            elif rel_path.suffix == ".json": category = "data/config"
-            elif str(rel_path).startswith("logs/"): category = "logs"
-            elif str(rel_path).startswith("exports/"): category = "exports"
-            elif str(rel_path).startswith("upgrades/backups"): category = "backups"
-            elif str(rel_path).startswith("upgrades/incidents"): category = "incidents"
+            elif rel_path.suffix == ".sh": category = "script"
+            elif rel_path.suffix == ".json": category = "config"
+            
+            if path_str.startswith("logs/"): category = "log"
+            elif path_str.startswith("exports/"): category = "export"
+            elif path_str.startswith("upgrades/backups"): category = "backup"
+            elif path_str.startswith("upgrades/incidents"): category = "incident"
+            
             lifecycle = "active"
-            if category in ["backups", "incidents"]: lifecycle = "archived"
-            if category == "exports": lifecycle = "generated"
+            if category in ["backup", "incident"]: lifecycle = "archived"
+            if category == "export": lifecycle = "generated"
             if rel_path.name.endswith(".bak") or ".bak_" in rel_path.name: lifecycle = "deprecated"
             
+            role = "source_of_truth"
+            if path_str in ["nina_update_log.md", "docs/space/nina_error_register.md", "data/memory/facts.json", "jules_lock.txt"]:
+                role = "system_of_record"
+            elif lifecycle in ["archived", "deprecated"]:
+                role = "archive"
+            elif lifecycle == "generated" or category == "export":
+                role = "generated"
+            elif category == "log":
+                role = "derived"
+                
+            origin = "manual"
+            if category == "incident": origin = "guardian"
+            elif category == "backup": origin = "script:backup"
+            elif category == "export": origin = "script:sync"
+            elif path_str in ["docs/space/nina_index.json", "docs/space/nina_index.md"]: origin = "script:update_index"
+            
+            retention_policy = "keep"
+            if category == "log": retention_policy = "rotate"
+            elif category == "backup": retention_policy = "keep_latest_n: 10"
+            elif category == "incident": retention_policy = "purge_candidate"
+            elif category == "export": retention_policy = "ephemeral"
+            
             governed_files.append({
-                "path": str(rel_path),
+                "path": path_str,
                 "category": category,
+                "role": role,
+                "governed": True,
+                "canonical": True, # Updated below
                 "lifecycle": lifecycle,
+                "retention_policy": retention_policy,
+                "origin": origin,
+                "owner": "system" if origin != "manual" else "engineering",
+                "duplicate_cluster_id": None,
+                "summary": "",
+                "tags": [category, role, lifecycle],
                 "hash": get_hash(full_path)
             })
     return governed_files
@@ -67,23 +102,52 @@ summaries = {
 
 def generate_index():
     files = scan()
+    
+    # Identify duplicate clusters
     hash_map = {}
     for f in files:
         h = f["hash"]
         if h:
             if h not in hash_map: hash_map[h] = []
-            hash_map[h].append(f["path"])
-    duplicates = {h: paths for h, paths in hash_map.items() if len(paths) > 1}
+            hash_map[h].append(f)
+            
+    duplicate_clusters = []
+    cluster_counter = 1
+    
+    for h, members in hash_map.items():
+        if len(members) > 1:
+            cluster_id = f"dup-{cluster_counter:04d}"
+            cluster_counter += 1
+            
+            # Determine canonical (prefer root, or shortest path, or active lifecycle)
+            active_members = sorted([m for m in members if m["lifecycle"] == "active"], key=lambda x: len(x["path"]))
+            canonical_path = active_members[0]["path"] if active_members else members[0]["path"]
+            
+            # Update files
+            for m in members:
+                m["duplicate_cluster_id"] = cluster_id
+                if m["path"] != canonical_path:
+                    m["canonical"] = False
+                    if m["lifecycle"] == "active":
+                        m["lifecycle"] = "deprecated" # Demote redundant active copies
+                        
+            duplicate_clusters.append({
+                "cluster_id": cluster_id,
+                "canonical_path": canonical_path,
+                "members": [m["path"] for m in members],
+                "reason": "exact_md5_duplicate"
+            })
 
     for f in files:
+        del f["hash"] # Remove hash from output payload to keep it clean
         f["summary"] = summaries.get(f["path"], summaries.get(f["path"].split("/")[0] + "/", "Governed artifact."))
-        f["canonical"] = (f["lifecycle"] == "active")
 
     index_data = {
-        "version": "1.0",
+        "version": "1.1",
         "updated": "2026-06-10",
+        "governed_scope": "All docs under docs/ and docs/space/, shims/scripts under tools/, configs (*.service, requirements.txt, .env.example), exported snapshots in exports/ and logs. Excludes temp data and cache.",
         "files": files,
-        "duplicate_clusters": duplicates
+        "duplicate_clusters": duplicate_clusters
     }
 
     with open("docs/space/nina_index.json", "w") as f:
@@ -92,42 +156,47 @@ def generate_index():
     md_content = """# NINA Repository Index
 _Single Source of Truth for File Inventory & Governance_
 
-## 1. Overview
-This index tracks all governed artifacts in the NINA repository. It is the primary discovery point for both humans and AI agents.
+## 1. Overview & Scope
+This index tracks all governed artifacts in the NINA repository.
+- **Governed:** true. Includes docs, tools, scripts, configs, exports, and persistent logs.
+- **Unmanaged:** Excludes `__pycache__`, `.venv`, `.git`, transient temp files.
 
 ## 2. File Inventory
-| Path | Category | Lifecycle | Summary | Canonical |
-|------|----------|-----------|---------|-----------|
+| Path | Role | Lifecycle | Retention | Summary | Canonical |
+|------|------|-----------|-----------|---------|-----------|
 """
 
     root_items = sorted([f for f in files if "/" not in f["path"]], key=lambda x: x["path"])
     for item in root_items:
         path = item["path"]
-        summary = summaries.get(path, "Root artifact.")
-        is_canonical = "✅ YES" if item["lifecycle"] == "active" else "NO"
-        md_content += f"| `{path}` | {item['category']} | {item['lifecycle']} | {summary} | {is_canonical} |\n"
+        summary = item["summary"]
+        is_canonical = "✅ YES" if item["canonical"] else "NO"
+        md_content += f"| `{path}` | {item['role']} | {item['lifecycle']} | {item['retention_policy']} | {summary} | {is_canonical} |\n"
 
     dirs = sorted(list(set([f["path"].split("/")[0] for f in files if "/" in f["path"]])))
     for d in dirs:
         path = d + "/"
         summary = summaries.get(path, f"Subsystem directory containing {path[:-1]} logic/docs.")
-        md_content += f"| `{path}` | directory | active | {summary} | ✅ YES |\n"
+        md_content += f"| `{path}` | subsystem | active | keep | {summary} | ✅ YES |\n"
 
     md_content += """
 ## 3. Redundancy & Conflicts
 The following clusters contain identical content. Consolidate to the canonical source where possible.
 
 """
-    for h, paths in duplicates.items():
-        if 1 < len(paths) < 10:
-            md_content += f"- **Cluster `{h[:8]}`**: " + ", ".join([f"`{p}`" for p in paths]) + "\n"
+    for cluster in duplicate_clusters:
+        if 1 < len(cluster["members"]) < 10:
+            md_content += f"- **Cluster `{cluster['cluster_id']}`**: Canonical is `{cluster['canonical_path']}`. Members: " + ", ".join([f"`{p}`" for p in cluster["members"]]) + "\n"
 
     md_content += """
-## 4. Governance Rules
-1. **Creation:** Every new file must be added to this index.
-2. **Move/Rename:** Update the path and lifecycle status.
-3. **Deletion:** Mark as `archived` or remove from index if safe.
-4. **Canonical:** Only one active canonical file should exist per functional role.
+## 4. Governance Rules & Index-First Workflow
+1. **Check the Index:** Check `docs/space/nina_index.md` for the file's entry (path, role, lifecycle).
+2. **Duplicate Clusters:** When writing to a path that belongs to a duplicate cluster, you MUST only write to the `canonical_path`.
+3. **Index Modification:** If creating/moving a governed file:
+   - Run `python3 tools/update_index.py`.
+   - Run `python3 tools/validate_index.py`.
+4. **Validation:** No PR touching governed paths is "Done" unless `validate_index.py` passes.
+5. **Contract:** The index is the single enforceable contract for doc/log/code inventory.
 
 ---
 _Generated by NINA Indexer on 2026-06-10_
@@ -137,4 +206,4 @@ _Generated by NINA Indexer on 2026-06-10_
 
 if __name__ == "__main__":
     generate_index()
-    print("Index updated.")
+    print("Index updated with full governance schema.")
