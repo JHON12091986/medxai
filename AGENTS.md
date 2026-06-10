@@ -54,10 +54,11 @@ This file is read by whichever local coding tool is active: agynina, Cursor, Cla
      - If `high_risk_do_not_edit_directly`: Do not edit directly via CLI/script. Suggest a PR or request manual human review.
      - If `append_only`: Do not modify past content, only append to the end.
      - If `read_only_for_agents`: Strictly read-only for all automated tools. Do not write to these files.
-  3. If the file is part of a `duplicate_cluster_id`, you MUST ONLY write to the `canonical_path`.
-  4. If creating, moving, renaming, archiving, or deleting a governed file, you must run `python3 tools/update_index.py`.
-  5. Run `python3 tools/validate_index.py`. No PR or task touching governed paths is "Done" unless this validator passes. The index is the single enforceable contract for doc/log/code inventory.
-  6. Run `python3 tools/generate_dashboard.py` to refresh the [Operational Governance Dashboard](docs/space/nina_governance_dashboard.md).
+  3. **Doc Delta Required:** If `query_index.py` indicates a Doc Delta is required, you MUST update `nina_update_log.md` (and any relevant backlog tracking docs) in the same PR or commit batch.
+  4. If the file is part of a `duplicate_cluster_id`, you MUST ONLY write to the `canonical_path`.
+  5. If creating, moving, renaming, archiving, or deleting a governed file, you must run `python3 tools/update_index.py`.
+  6. Run `python3 tools/validate_index.py`. No PR or task touching governed paths is "Done" unless this validator passes. The index is the single enforceable contract for doc/log/code inventory.
+  7. Run `python3 tools/generate_dashboard.py` to refresh the [Operational Governance Dashboard](docs/space/nina_governance_dashboard.md).
 - Do not scan the whole repo before you know the task.
 - Check juleslock.txt before editing.
 - Follow the verify → log → sync workflow.

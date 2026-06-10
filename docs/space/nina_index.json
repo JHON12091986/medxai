@@ -943,7 +943,7 @@
       "requires_tests": false,
       "doc_required": false,
       "guardrails": [],
-      "summary": "Governed artifact.",
+      "summary": "Permanent wrapper script for safe redundancy cleanup execution.",
       "tags": [
         "script",
         "source_of_truth",
@@ -40609,7 +40609,7 @@
       "requires_tests": true,
       "doc_required": true,
       "guardrails": [],
-      "summary": "Capability kernel and domain-specific action modules (agynina nucleus).",
+      "summary": "Active redundancy pruner for incident and backup duplicates.",
       "tags": [
         "code",
         "source_of_truth",

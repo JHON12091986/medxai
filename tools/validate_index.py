@@ -1,7 +1,51 @@
-import json, os, sys
+import json, os, sys, argparse, subprocess
 from pathlib import Path
 
-def validate():
+def check_doc_deltas(data, repo_root):
+    try:
+        # Check against HEAD~1 for push, or origin/main for PR. 
+        base = os.environ.get("GITHUB_BASE_REF")
+        if base:
+            cmd = ["git", "diff", "--name-only", f"origin/{base}...HEAD"]
+        else:
+            cmd = ["git", "diff", "--name-only", "HEAD~1", "HEAD"]
+        
+        result = subprocess.run(cmd, cwd=repo_root, capture_output=True, text=True)
+        if result.returncode != 0:
+            print("⚠️  Skipping doc delta check (git diff failed - likely no previous commit).")
+            return True
+            
+        changed_files = result.stdout.strip().split("\n")
+        changed_files = [f for f in changed_files if f]
+    except Exception as e:
+        print(f"⚠️  Skipping doc delta check (error: {e})")
+        return True
+
+    doc_targets_changed = set()
+    requires_delta = []
+    
+    indexed_files = {f["path"]: f for f in data["files"]}
+    
+    for f in changed_files:
+        if f in indexed_files:
+            file_obj = indexed_files[f]
+            if file_obj.get("doc_delta_required"):
+                requires_delta.append(file_obj)
+            # Check if this changed file is a target for anything
+            if f in ["nina_update_log.md", "CHANGELOG.md", "docs/space/jules_backlog.md", "docs/space/nina_error_register.md", "docs/space/nina_state.md"]:
+                doc_targets_changed.add(f)
+                
+    if requires_delta and not doc_targets_changed:
+        print(f"\n❌ Governance Violation: Code/architecture changed but no documentation delta was found.")
+        print("The following files require a doc delta:")
+        for file_obj in requires_delta:
+            print(f"  - {file_obj['path']} (Targets: {', '.join(file_obj.get('doc_targets', []))})")
+        print("\nPlease add an entry to nina_update_log.md (or equivalent) before merging.")
+        return False
+        
+    return True
+
+def validate(check_deltas=False):
     repo_root = Path("/home/aibony/nina")
     index_path = repo_root / "docs/space/nina_index.json"
     
@@ -76,6 +120,10 @@ def validate():
         print(f"❌ Metadata Quality Score ({quality_pct:.1f}%) is below the required 75.0% threshold.")
         errors += 1
 
+    if check_deltas:
+        if not check_doc_deltas(data, repo_root):
+            errors += 1
+
     if errors > 0:
         print(f"\n❌ Validation FAILED with {errors} errors and {warnings} warnings.")
         print(f"📊 Metadata Quality Score: {quality_pct:.1f}%")
@@ -89,5 +137,8 @@ def validate():
 
 
 if __name__ == "__main__":
-    if not validate():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--check-deltas", action="store_true", help="Check that code changes are accompanied by doc deltas.")
+    args = parser.parse_args()
+    if not validate(args.check_deltas):
         sys.exit(1)

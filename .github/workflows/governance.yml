@@ -17,4 +17,4 @@ jobs:
           python-version: '3.11' # Matches the script requirements
       - name: Validate Index
         run: |
-          python3 tools/validate_index.py
+          python3 tools/validate_index.py --check-deltas
