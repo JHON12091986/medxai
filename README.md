@@ -174,12 +174,13 @@ NINA runs a strict, metadata-driven governance index. All agents and tools must 
 
 - **Metadata Completeness:** 80.8% (Required: ≥75.0%)
 - **Test Coverage Audit:** 32 Python files are missing dedicated tests (see `python3 tools/validate_index.py` output).
-
 ## Installation
 
 ```bash
 git clone https://github.com/aibony/nina.git
 cd nina
+./bin/install_governance.sh
+```
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt

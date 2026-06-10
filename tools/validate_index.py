@@ -45,9 +45,35 @@ def check_doc_deltas(data, repo_root):
         
     return True
 
-def validate(check_deltas=False):
+def notify_telegram(message, repo_root):
+    from dotenv import load_dotenv
+    load_dotenv(repo_root / ".env")
+    bot_token = os.environ.get("TELEGRAMBOTTOKEN")
+    chat_id = os.environ.get("TELEGRAMCHATID")
+    if not bot_token or not chat_id:
+        print("⚠️  Telegram credentials not found in environment. Skipping notification.")
+        return
+        
+    import urllib.request
+    import urllib.parse
+    
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    data = urllib.parse.urlencode({'chat_id': chat_id, 'text': message, 'parse_mode': 'Markdown'}).encode('utf-8')
+    
+    try:
+        req = urllib.request.Request(url, data=data)
+        with urllib.request.urlopen(req) as response:
+            if response.status == 200:
+                print("✅ Telegram notification sent successfully.")
+            else:
+                print(f"❌ Failed to send Telegram notification: {response.status}")
+    except Exception as e:
+        print(f"❌ Exception sending Telegram notification: {e}")
+
+def validate(check_deltas=False, notify=False):
     repo_root = Path("/home/aibony/nina")
     index_path = repo_root / "docs/space/nina_index.json"
+
     
     if not index_path.exists():
         print("❌ Error: nina_index.json not found.")
@@ -128,6 +154,9 @@ def validate(check_deltas=False):
         print(f"\n❌ Validation FAILED with {errors} errors and {warnings} warnings.")
         print(f"📊 Metadata Quality Score: {quality_pct:.1f}%")
         print(f"🧪 Missing Tests: {missing_tests}")
+        if notify:
+            msg = f"🚨 *NINA Governance Alert*\n\nValidation FAILED with *{errors}* errors.\nMetadata Quality Score: {quality_pct:.1f}%\nCheck CI logs or run validation locally."
+            notify_telegram(msg, repo_root)
         return False
         
     print(f"\n✅ Index validation PASSED ({warnings} warnings).")
@@ -139,6 +168,7 @@ def validate(check_deltas=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-deltas", action="store_true", help="Check that code changes are accompanied by doc deltas.")
+    parser.add_argument("--notify", action="store_true", help="Send Telegram alerts on violations or low score")
     args = parser.parse_args()
-    if not validate(args.check_deltas):
+    if not validate(args.check_deltas, args.notify):
         sys.exit(1)

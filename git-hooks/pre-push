@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# NINA Pre-Push Governance Hook
+# Ensures repository hygiene and index validation before code leaves the local machine.
+
+echo "================================================"
+echo " NINA PRE-PUSH GOVERNANCE CHECK"
+echo "================================================"
+
+# Find Python executable
+if [ -z "$VIRTUAL_ENV" ]; then
+    if [ -d "venv" ]; then
+        PYTHON_CMD="venv/bin/python"
+    elif [ -d "ninavenv" ]; then
+        PYTHON_CMD="ninavenv/bin/python"
+    else
+        echo "⚠️ Virtual environment not found. Proceeding with system python3."
+        PYTHON_CMD="python3"
+    fi
+else
+    PYTHON_CMD="python"
+fi
+
+# Run fast validation
+echo "[1/2] Validating Governance Index..."
+if ! $PYTHON_CMD tools/validate_index.py; then
+    echo "❌ Pre-push failed: Index validation errors detected."
+    echo "Fix metadata, run 'python3 tools/update_index.py', and try again."
+    exit 1
+fi
+
+# Run fast hygiene audit (strict mode)
+echo "[2/2] Auditing Repository Hygiene..."
+if ! ./nina_audit.sh --strict; then
+    echo "❌ Pre-push failed: Hygiene audit detected hard violations."
+    echo "Ensure no governed files are missing or untracked."
+    exit 1
+fi
+
+echo "✅ Pre-push governance checks passed. Safe to deploy."
+exit 0

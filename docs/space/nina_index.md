@@ -10,7 +10,6 @@ This index tracks all governed artifacts in the NINA repository.
 | Path | Role | Lifecycle | Retention | Summary | Canonical |
 |------|------|-----------|-----------|---------|-----------|
 | `.aider.chat.history.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `.aider.conf.yml` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `.aider.input.history` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `.coverage` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `.env` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -38,6 +37,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `nina-dashboard.service` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `nina.service` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `nina_aider.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `nina_audit.sh` | source_of_truth | active | keep | Permanent wrapper script for the repository hygiene audit. | ✅ YES |
 | `nina_cleanup.sh` | source_of_truth | active | keep | Permanent wrapper script for safe redundancy cleanup execution. | ✅ YES |
 | `nina_codebase_backup.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `nina_context.md` | source_of_truth | active | keep | AI session grounding profile & architecture context. Attach to new threads. | ✅ YES |
@@ -63,6 +63,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `data/` | subsystem | active | keep | Subsystem directory containing data logic/docs. | ✅ YES |
 | `docs/` | subsystem | active | keep | Subsystem-level deep-dives (Guardian, Memory, Router, agynina). | ✅ YES |
 | `exports/` | subsystem | active | keep | Subsystem directory containing exports logic/docs. | ✅ YES |
+| `git-hooks/` | subsystem | active | keep | Subsystem directory containing git-hooks logic/docs. | ✅ YES |
 | `interfaces/` | subsystem | active | keep | Telegram and REST API communication layers. | ✅ YES |
 | `logs/` | subsystem | active | keep | Subsystem directory containing logs logic/docs. | ✅ YES |
 | `ninagate/` | subsystem | active | keep | Subsystem directory containing ninagate logic/docs. | ✅ YES |
@@ -103,7 +104,7 @@ The following clusters contain identical content. Consolidate to the canonical s
 - **Cluster `dup-0036`**: Canonical is `upgrades/backups/docbase_20260609_214535/nina_context.md`. Members: `upgrades/backups/docbase_20260609_214535/nina_context.md`, `upgrades/backups/docbase_20260609_212539/nina_context.md`
 - **Cluster `dup-0037`**: Canonical is `upgrades/backups/docbase_20260609_214535/nina_v12_blueprint.md`. Members: `upgrades/backups/docbase_20260609_214535/nina_v12_blueprint.md`, `upgrades/backups/docbase_20260609_212539/nina_v12_blueprint.md`
 - **Cluster `dup-0038`**: Canonical is `upgrades/backups/docbase_20260609_214535/nina_update_log.md`. Members: `upgrades/backups/docbase_20260609_214535/nina_update_log.md`, `upgrades/backups/logbase_20260609_214535/nina_update_log.md`
-- **Cluster `dup-0039`**: Canonical is `upgrades/backups/docbase_20260609_214535/nina_context.md.bak_20260604`. Members: `upgrades/backups/docbase_20260609_214535/nina_context.md.bak_20260604`, `upgrades/backups/docbase_20260609_212539/nina_context.md.bak_20260604`, `docs/nina_context.md.bak_20260604`
+- **Cluster `dup-0039`**: Canonical is `upgrades/backups/docbase_20260609_214535/nina_context.md.bak_20260604`. Members: `upgrades/backups/docbase_20260609_214535/nina_context.md.bak_20260604`, `upgrades/backups/docbase_20260609_212539/nina_context.md.bak_20260604`
 - **Cluster `dup-0040`**: Canonical is `upgrades/backups/docbase_20260609_214535/memory.md`. Members: `upgrades/backups/docbase_20260609_214535/memory.md`, `upgrades/backups/docbase_20260609_212539/memory.md`
 - **Cluster `dup-0041`**: Canonical is `upgrades/backups/docbase_20260609_214535/space/nina_context.md`. Members: `upgrades/backups/docbase_20260609_214535/space/nina_context.md`, `upgrades/backups/docbase_20260609_212539/space/nina_context.md`
 - **Cluster `dup-0042`**: Canonical is `upgrades/backups/docbase_20260609_214535/space/nina_update_log.md`. Members: `upgrades/backups/docbase_20260609_214535/space/nina_update_log.md`, `upgrades/backups/docbase_20260609_212539/space/nina_update_log.md`

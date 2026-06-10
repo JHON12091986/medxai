@@ -140,7 +140,8 @@ summaries = {
     "docs/space/nina_governance_dashboard.md": "Auto-generated operational governance dashboard.",
     "tools/audit_repo_hygiene.py": "Deep repository audit tool for Git vs FS reconciliation.",
     "nina_audit.sh": "Permanent wrapper script for the repository hygiene audit.",
-    "docs/space/nina_repo_hygiene_dashboard.md": "Auto-generated repository hygiene dashboard."
+    "docs/space/nina_repo_hygiene_dashboard.md": "Auto-generated repository hygiene dashboard.",
+    "bin/install_governance.sh": "Bootstrap installer for NINA repository governance and Git hooks."
 }
 
 def generate_index():

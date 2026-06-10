@@ -21,10 +21,34 @@ if [ -z "$VIRTUAL_ENV" ]; then
     fi
 fi
 
-if [ "$1" == "--strict" ]; then
+STRICT_MODE=false
+NOTIFY_MODE=false
+
+for arg in "$@"; do
+    case $arg in
+        --strict)
+            STRICT_MODE=true
+            shift
+            ;;
+        --notify)
+            NOTIFY_MODE=true
+            shift
+            ;;
+    esac
+done
+
+CMD="python3 tools/audit_repo_hygiene.py"
+
+if [ "$STRICT_MODE" = true ]; then
     echo "Running in STRICT mode..."
-    python3 tools/audit_repo_hygiene.py --strict
+    CMD="$CMD --strict"
 else
     echo "Running in DRY RUN (warn-only) mode..."
-    python3 tools/audit_repo_hygiene.py
 fi
+
+if [ "$NOTIFY_MODE" = true ]; then
+    echo "Telegram Notifications ENABLED."
+    CMD="$CMD --notify"
+fi
+
+$CMD

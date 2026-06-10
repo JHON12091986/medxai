@@ -73,6 +73,29 @@
       ]
     },
     {
+      "path": "nina_audit.sh",
+      "category": "script",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Permanent wrapper script for the repository hygiene audit.",
+      "tags": [
+        "script",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "pytest.ini",
       "category": "other",
       "role": "source_of_truth",
@@ -887,29 +910,6 @@
     },
     {
       "path": ".env.save",
-      "category": "other",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "other",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": ".aider.conf.yml",
       "category": "other",
       "role": "source_of_truth",
       "governed": true,
@@ -37849,29 +37849,6 @@
       ]
     },
     {
-      "path": "docs/nina_context.md.bak_20260604",
-      "category": "other",
-      "role": "archive",
-      "governed": true,
-      "canonical": false,
-      "lifecycle": "deprecated",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": "dup-0039",
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, agynina).",
-      "tags": [
-        "other",
-        "archive",
-        "deprecated"
-      ]
-    },
-    {
       "path": "docs/memory.md",
       "category": "doc",
       "role": "source_of_truth",
@@ -38081,7 +38058,7 @@
       ]
     },
     {
-      "path": "docs/space/AGENTS.md",
+      "path": "docs/space/nina_repo_hygiene_dashboard.md",
       "category": "doc",
       "role": "source_of_truth",
       "governed": true,
@@ -38096,7 +38073,7 @@
       "requires_tests": false,
       "doc_required": false,
       "guardrails": [],
-      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, agynina).",
+      "summary": "Auto-generated repository hygiene dashboard.",
       "tags": [
         "doc",
         "source_of_truth",
@@ -38194,29 +38171,6 @@
       "tags": [
         "doc",
         "system_of_record",
-        "active"
-      ]
-    },
-    {
-      "path": "docs/space/WORKFLOW.md",
-      "category": "doc",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, agynina).",
-      "tags": [
-        "doc",
-        "source_of_truth",
         "active"
       ]
     },
@@ -38425,52 +38379,6 @@
       "summary": "Governed artifact.",
       "tags": [
         "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "agent/archive/memory.py.orphaned",
-      "category": "other",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "other",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "agent/archive/loop.py.orphaned",
-      "category": "other",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "other",
         "source_of_truth",
         "active"
       ]
@@ -38729,52 +38637,6 @@
       ]
     },
     {
-      "path": "crons/manager.py.bak",
-      "category": "other",
-      "role": "archive",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "deprecated",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "other",
-        "archive",
-        "deprecated"
-      ]
-    },
-    {
-      "path": "crons/manager.py.bak2",
-      "category": "other",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "other",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "crons/manager.py",
       "category": "code",
       "role": "source_of_truth",
@@ -38890,6 +38752,29 @@
       ]
     },
     {
+      "path": "git-hooks/pre-push",
+      "category": "other",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "other",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "templates/dashboard.html",
       "category": "other",
       "role": "source_of_truth",
@@ -39000,6 +38885,29 @@
       "summary": "Governed artifact.",
       "tags": [
         "doc",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/install_governance.sh",
+      "category": "script",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Bootstrap installer for NINA repository governance and Git hooks.",
+      "tags": [
+        "script",
         "source_of_truth",
         "active"
       ]
@@ -40286,6 +40194,29 @@
       "doc_required": true,
       "guardrails": [],
       "summary": "Capability kernel and domain-specific action modules (agynina nucleus).",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "tools/audit_repo_hygiene.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": true,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Deep repository audit tool for Git vs FS reconciliation.",
       "tags": [
         "code",
         "source_of_truth",
@@ -42394,29 +42325,6 @@
       ]
     },
     {
-      "path": "core/config.py.bak2",
-      "category": "other",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "System orchestrator, router, memory, and config modules.",
-      "tags": [
-        "other",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "core/__init__.py",
       "category": "code",
       "role": "source_of_truth",
@@ -43311,8 +43219,7 @@
       "canonical_path": "upgrades/backups/docbase_20260609_214535/nina_context.md.bak_20260604",
       "members": [
         "upgrades/backups/docbase_20260609_214535/nina_context.md.bak_20260604",
-        "upgrades/backups/docbase_20260609_212539/nina_context.md.bak_20260604",
-        "docs/nina_context.md.bak_20260604"
+        "upgrades/backups/docbase_20260609_212539/nina_context.md.bak_20260604"
       ],
       "reason": "exact_md5_duplicate"
     },
