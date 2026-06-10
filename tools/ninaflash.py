@@ -22,6 +22,7 @@ try:
     import dotenv
 except ImportError:
     dotenv = None
+
 import shutil
 import ast
 from pathlib import Path
@@ -394,10 +395,129 @@ def cmd_backlog_add(args):
 
 def cmd_backlog_archive(args):
     """[021] Move DONE items to archived status (simplified)."""
-    print("Archiving done items...")
+    backlog_path = Path('docs/space/jules_backlog.md')
+    archive_path = Path('docs/archive/jules_backlog_archive.md')
+    if not backlog_path.exists():
+        print("Backlog not found.")
+        return
+
+    if not archive_path.exists():
+        archive_path.parent.mkdir(parents=True, exist_ok=True)
+        archive_path.write_text("# Jules Backlog Archive\n\n| ID | Title | Status | Files touched | Depends On | Notes |\n|----|-------|--------|---------------|------------|-------|\n")
+
+    lines = backlog_path.read_text().splitlines()
+    top_archived_rows = []
+    main_lines = []
+
+    for line in lines:
+        if line.strip().startswith('|') and ('| `DONE` |' in line or '| `DEFERRED` |' in line):
+            parts = [p.strip() for p in line.split('|')]
+            if len(parts) > 2 and re.match(r'^[A-Z0-9\-]+$', parts[1]):
+                top_archived_rows.append(line)
+                continue
+        main_lines.append(line)
+
+    start_idx = -1
+    end_idx = -1
+    for i, line in enumerate(main_lines):
+        if line.startswith('## ██ DONE — Completed Items'):
+            start_idx = i
+            break
+
+    bottom_archived_rows = []
+    if start_idx != -1:
+        for i in range(start_idx + 1, len(main_lines)):
+            if main_lines[i].startswith('## ') or main_lines[i].startswith('---'):
+                end_idx = i
+                break
+        if end_idx == -1:
+            end_idx = len(main_lines)
+
+        done_section = main_lines[start_idx:end_idx]
+
+        rows = []
+        for line in done_section:
+            if line.strip().startswith('|') and 'ID | Title' not in line and '---|---' not in line:
+                rows.append(line)
+
+        recent_history = rows[-10:] if len(rows) > 10 else rows
+        bottom_archived_rows = rows[:-10] if len(rows) > 10 else []
+
+        new_done_section = []
+        in_table = False
+        for line in done_section:
+            if line.strip().startswith('|'):
+                if 'ID | Title' in line or '---|---' in line:
+                    new_done_section.append(line)
+                elif not in_table:
+                    new_done_section.extend(recent_history)
+                    in_table = True
+            else:
+                new_done_section.append(line)
+
+        main_lines = main_lines[:start_idx] + new_done_section + main_lines[end_idx:]
+
+    backlog_path.write_text('\n'.join(main_lines) + '\n')
+
+    if top_archived_rows or bottom_archived_rows:
+        with archive_path.open('a') as f:
+            if top_archived_rows:
+                f.write('\n'.join(top_archived_rows) + '\n')
+            if bottom_archived_rows:
+                f.write('\n'.join(bottom_archived_rows) + '\n')
+
+    print(f"Archived {len(top_archived_rows) + len(bottom_archived_rows)} done items.")
+
+
+def cmd_error_archive(args):
+    """[024] Move ✅ FIXED items to archived status."""
+    error_path = Path('docs/space/nina_error_register.md')
+    archive_path = Path('exports/nina_error_register_archive.md')
+
+    if not error_path.exists():
+        print("Error register not found.")
+        return
+
+    if not archive_path.exists():
+        archive_path.parent.mkdir(parents=True, exist_ok=True)
+        archive_path.write_text("# NINA Error Register Archive\n\n| ID | Severity | Component | Issue (short) | Status | Assignee | Fixed In | File(s) |\n|----|----------|-----------|---------------|--------|----------|----------|---------|\n")
+
+    lines = error_path.read_text().splitlines()
+    main_lines = []
+    rows = []
+
+    for line in lines:
+        if line.strip().startswith('|') and 'ID | Severity' not in line and '---|---' not in line:
+            if '| ✅ FIXED |' in line:
+                rows.append(line)
+            else:
+                main_lines.append(line)
+        else:
+            main_lines.append(line)
+
+    recent_history = rows[-10:] if len(rows) > 10 else rows
+    archived_rows = rows[:-10] if len(rows) > 10 else []
+
+    last_header_idx = -1
+    for i, line in enumerate(main_lines):
+        if '---|---' in line:
+            last_header_idx = i
+            break
+
+    if last_header_idx != -1:
+        main_lines = main_lines[:last_header_idx+1] + recent_history + main_lines[last_header_idx+1:]
+
+    error_path.write_text('\n'.join(main_lines) + '\n')
+
+    if archived_rows:
+        with archive_path.open('a') as f:
+            f.write('\n'.join(archived_rows) + '\n')
+
+    print(f"Archived {len(archived_rows)} fixed errors.")
 
 # ------------------------------------------------------------------
 # MODULE 5: CROSS-AGENT SESSION MEMORY
+
 # ------------------------------------------------------------------
 
 def cmd_session_checkpoint(args):
@@ -754,6 +874,10 @@ def main():
     p_gs.add_parser("test")
     
     # Backlog Subcommands (FIX 4)
+    p_er = subparsers.add_parser("error"); p_es = p_er.add_subparsers(dest="sub")
+    p_es.add_parser("archive")
+
+    # Backlog Subcommands (FIX 4)
     p_bl = subparsers.add_parser("backlog"); p_bs = p_bl.add_subparsers(dest="sub")
     p_bs.add_parser("triage")
     p_bs.add_parser("dag").add_argument("task_id", nargs="?")
@@ -801,6 +925,8 @@ def main():
     elif args.command == "pr":
         if args.sub == "merge-surgical": cmd_pr_merge_surgical(args)
         elif args.sub == "reconcile": cmd_pr_reconcile(args)
+    elif args.command == "error":
+        if args.sub == "archive": cmd_error_archive(args)
     elif args.command == "backlog":
         if args.sub == "triage": cmd_backlog_triage(args)
         elif args.sub == "dag": cmd_backlog_dag(args)

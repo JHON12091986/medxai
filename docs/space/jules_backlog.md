@@ -67,9 +67,7 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-001 | Sentinel: remove shell=True from run_cmd in guardianengine.py | `DONE` | guardianengine.py | — | PR #60 merged 2026-06-07 |
 | B-002 | Wire model_overrides dict to .env hot-reload | `IN_PROGRESS` | core/router.py, core/config.py | — | model_overrides in NinaConfig but not wired to hot-reload |
-| B-003 | Add timeout to all subprocess calls in compact_exporter.py | `DONE` | tools/compact_exporter.py | — | No timeout = potential hang / DoS risk |
 | B-004 | Validate TELEGRAM_CHAT_ID exists before any send attempt | `IN_PROGRESS` | interfaces/telegraminterface.py | — | Silent failure if env var missing; non-blocking open item |
 
 ---
@@ -78,19 +76,12 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `DONE` | tools/model_discovery.py, core/router.py, crons/manager.py | — | PR #25 merged 2026-06-07 |
-| B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `DONE` | core/router.py | B-005 | ninaflash only — high-risk file |
-| B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `DONE` | data/model_cache.json | B-005 | Jules can do this |
-| B-008 | Add circuit breaker state persistence to data/circuit_state.json | `DONE` | core/router.py, data/ | — | Currently in-memory — lost on restart. ninaflash only |
 | B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegraminterface.py | — | ninaflash only — high-risk file |
 | B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegraminterface.py | — | ninaflash only — high-risk file |
 | B-011 | Guardian engine: add file integrity check on startup | `READY` | guardianengine.py | — | SIGNATURES dict exists but startup check is passive. ninaflash only |
 | B-012 | Add structured JSON logging to router.py for provider selection events | `READY` | core/router.py | — | Plain text logs hard to parse for metrics. ninaflash only |
-| B-013 | healthcheck.py: replace bare except with typed exception handling | `DONE` | healthcheck.py | — | Bare except swallows real errors |
 | B-014 | Add startup banner to main.py showing active providers + model strings | `IN_PROGRESS` | main.py | B-002 | Needs model_overrides wired first. ninaflash only |
-| B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | `DONE` | crons/manager.py | — | No visibility into cron job health |
 | R-77 | Fix parallel_route RAM guard crash | `READY` | core/router.py | — | A-1 from action board. ninaflash only |
-| R-78 | Fix tool grammar fragility — minimum viable guard | `DONE` | core/agent.py | — | A-3 from action board; Jules session 230224707076942630 |
 
 ---
 
@@ -98,20 +89,8 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-016 | Write tests for tools/shell.py — full blocklist and allowlist coverage | `DONE` | tests/test_shell.py | — | Most critical security tool has zero tests; Jules session 15759165614254551433 |
-| B-017 | Write tests for core/router.py — provider ordering, circuit breaker, fallback | `DONE` | tests/test_router.py | — | Jules session 9354379735932974598 |
-| B-018 | Write tests for tools/browser.py — SSRF guard, URL validation | `DONE` | tests/test_browser.py | — | Jules session 9340521117119167710 |
-| B-019 | Write tests for guardianengine.py — SIGNATURES check, run_cmd | `DONE` | tests/test_guardian.py | — | High-risk file needs test coverage; Jules session 13016195312630697079 |
-| B-020 | Write tests for tools/model_discovery.py | `DONE` | tests/test_model_discovery.py | B-005 | Unblock now — B-005 is DONE |
-| B-021 | Add prometheus-style metrics endpoint to healthcheck.py | `DONE` | healthcheck.py | — | Enables external monitoring; Jules session 4745946253740770652 |
-| B-022 | tools/compact_exporter.py: add progress logging for long exports | `DONE` | tools/compact_exporter.py | — | Silent during long runs; Jules session 7514279750845525195 |
-| B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `DONE` | AGENTS.md | — | Jules needs instructions to update task tracker after each run; Jules session 15026902744619615986 |
-| B-024 | Add AGENTS.md section: backlog update protocol | `DONE` | AGENTS.md | — | 2026-06-07 |
-| B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `DONE` | crons/manager.py | — | No clean shutdown on systemd stop; Jules session 5406292542431629720 |
 | B-026 | Add retry with exponential backoff to provider API calls | `READY` | core/router.py | — | Current retry is basic — no backoff. ninaflash only |
-| B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `DONE` | tools/gputuner.py | — | Crashes on non-GPU systems; Jules session 18284106294453230200 |
 | B-028 | Add .env validation on startup — warn on missing required keys | `IN_PR` (partial — config.py done) | main.py, core/config.py | — | Silent failure on missing env vars. main.py → ninaflash only |
-| B-029 | Write integration test: full request through router → provider → response | `DONE` | tests/test_integration.py | — | No end-to-end test exists; Jules session 7992182378283234865 |
 | B-030 | Add request ID to all log lines for traceability | `READY` | core/router.py, main.py | — | Hard to trace multi-step requests. ninaflash only |
 
 ---
@@ -121,15 +100,11 @@ Perplexity reads backlog each session
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
 | B-031 | Add provider latency histogram to router metrics | `READY` | core/router.py | B-012 | Needs structured logging first. ninaflash only |
-| B-032 | tools/compact_exporter.py: add --dry-run flag | `DONE` | tools/compact_exporter.py | — | Jules session 16016744403096643329 |
 | B-033 | Telegram: /status command — shows provider health summary | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | ninaflash only |
 | B-034 | Telegram: /models command — shows current model per provider | `NEEDS_SPEC` | interfaces/telegraminterface.py | B-005 | ninaflash only |
 | B-035 | Telegram: /backlog command — shows top 5 READY items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | ninaflash only |
 | B-036 | Telegram: /errors command — shows open error register items | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | ninaflash only |
-| B-037 | docs/space: add nina_architecture_diagram.md with ASCII diagrams | `DONE` | docs/space/nina_architecture_diagram.md | — | No visual architecture reference exists; Jules session 2468954092544028080 |
 | B-038 | Add per-provider cost tracking to router.py | `NEEDS_SPEC` | core/router.py | B-012 | ninaflash only |
-| B-039 | Add response caching layer for identical prompts (TTL 60s) | `DONE` | core/router.py | — | Persistent cache implemented by Gemini CLI 2026-06-11 |
-| B-040 | Write CONTRIBUTING.md | `DONE` | CONTRIBUTING.md | — | Jules session 1218304308318697501 |
 
 ---
 
@@ -140,7 +115,6 @@ Perplexity reads backlog each session
 | B-041 | DSE/Bangladesh financial data integration (F-05) | Needs real DSE API endpoint research first |
 | B-042 | Telegram inline keyboard for common commands (F-08) | Needs UX design pass |
 | B-043 | Multi-modal support: image input routing | Provider capability matrix needed |
-| B-044 | Web dashboard for NINA status (read-only) | `DONE` |
 | B-045 | Conversation memory persistence across sessions | Storage design needed |
 
 ---
@@ -182,7 +156,6 @@ _Dependency: AG-B-01 and AG-B-02 must be DONE first_
 | AG-A-03 | `core/planner.py` + `core/capabilities.py` | Add plan validation — verify each step's required tool exists in CapabilityRegistry before execution begins | `NEEDS_SPEC` | AG-A-01 |
 | AG-A-04 | `core/planner.py` | Add plan serialization — save/load active plans to/from data/plans/ as JSON so plans survive service restarts | `NEEDS_SPEC` | AG-B-03 |
 | AG-A-05 | `core/planner.py` | Add plan branching — if step A fails, planner executes defined alternative step B (if-else planning) | `NEEDS_SPEC` | AG-A-02 |
-| AG-A-06 | `data/plans/templates/` | Add plan templates — pre-built JSON templates for: market_check, expense_log, reminder_set | `DONE` | AG-A-01 |
 | AG-A-07 | `core/planner.py` | Add plan confidence scoring — rate each generated plan 0.0–1.0; log score before execution | `NEEDS_SPEC` | AG-A-01 |
 | AG-A-08 | `core/planner.py` | Add plan pre-announcement — NINA summarises what it will do and waits for /approve or /cancel before starting | `NEEDS_SPEC` | AG-A-01 |
 | AG-A-09 | `core/planner.py` | Add per-step timeout budget — assign max_seconds per step; abort and mark failed if exceeded | `NEEDS_SPEC` | AG-A-02 |
@@ -196,9 +169,7 @@ _This is the foundation. Build AG-B-01 and AG-B-02 first — everything else dep
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-B-01 | `core/task_store.py` | Create TaskStore class — full CRUD for Task objects persisted to data/tasks.json | `DONE` | — |
 | AG-B-02 | `core/task_store.py` | Define Task schema — id, goal, plan_steps, status (pending/running/paused/done/failed), created_at, updated_at, retries, result | `NEEDS_SPEC` | AG-B-01 |
-| AG-B-03 | `core/task_store.py` | Load open tasks on nina.service startup — TaskStore auto-resumes in-progress and pending tasks after restart | `DONE` | AG-B-01 |
 | AG-B-04 | `core/task_store.py` | Add task indexing — lookup by status, tool_used, date range without full JSON scan | `NEEDS_SPEC` | AG-B-01 |
 | AG-B-05 | `core/task_store.py` | Add /tasks list command — show active, pending, and failed tasks with summary via Telegram | `NEEDS_SPEC` | AG-B-01 |
 | AG-B-06 | `core/task_store.py` | Add /task cancel <id> — gracefully stop a running task and mark it cancelled | `NEEDS_SPEC` | AG-B-01 |
@@ -236,11 +207,7 @@ _Dependency: AG-C-02 must be DONE first_
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-D-01 | `core/verifier.py` | Create StepVerifier class — checks whether a step's output satisfies its declared success_criteria | `DONE` | AG-C-02 |
 | AG-D-02 | `core/verifier.py` + `core/capabilities.py` | Add output schema validation — each tool declares expected output schema; Verifier checks compliance after execution | `NEEDS_SPEC` | AG-D-05 |
-| AG-D-03 | `core/verifier.py` | Add semantic verification — for LLM-generated outputs, second LLM call scores answer quality 1–5 | `DONE` | AG-D-01 |
-| AG-D-04 | `core/verifier.py` | Add numeric assertion verifier — verify numeric outputs within declared expected range (e.g. price > 0) | `DONE` | AG-D-01 |
-| AG-D-05 | `core/verifier.py` | Add non-empty verifier — simplest guard: step fails if output is None, empty string, or empty list | `DONE` | — |
 | AG-D-06 | `core/verifier.py` + `core/planner.py` | Add replan trigger — when Verifier fails, send step back to Planner to generate alternative approach | `NEEDS_SPEC` | AG-D-01 |
 | AG-D-07 | `core/verifier.py` + `core/task_store.py` | Add verification result storage — store pass/fail and reason per step inside the Task object | `NEEDS_SPEC` | AG-D-01 |
 | AG-D-08 | `core/verifier.py` | Add verification scorecard — final task result includes per-step pass/fail summary from Verifier | `NEEDS_SPEC` | AG-D-07 |
@@ -351,9 +318,7 @@ _Directory: `tests/`_
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
 | AG-J-01 | `tests/test_planner.py` | Unit tests for GoalDecomposer: goal parsing, step generation, dependency ordering | `NEEDS_SPEC` | AG-A-01 |
-| AG-J-02 | `tests/test_task_store.py` | Unit tests for TaskStore: CRUD, persistence, TTL, status transitions | `DONE` | AG-B-01 |
 | AG-J-03 | `tests/test_agent_loop.py` | Integration tests for upgraded AgentLoop: step execution, result piping, loop detection | `NEEDS_SPEC` | AG-C-01 |
-| AG-J-04 | `tests/test_verifier.py` | Unit tests for StepVerifier: schema check, numeric assertion, semantic scoring | `DONE` | 2026-06-09 |
 | AG-J-05 | `tests/test_events.py` | Unit tests for EventBus: publish, subscribe, filter, rate-limit, replay | `NEEDS_SPEC` | AG-E-01 |
 | AG-J-06 | `tests/test_market_agent.py` | Unit tests for MarketAgent: mock price feed, threshold crossing, alert emission | `NEEDS_SPEC` | AG-F-02 |
 | AG-J-07 | `tests/test_chain.py` | Unit tests for ToolChain: sequential execution, conditional branching, dry-run mode | `NEEDS_SPEC` | AG-H-01 |
@@ -542,17 +507,6 @@ AG3 Phase 3 (parallel with AG2):
 
 | ID | Title | Entry | PR | Date |
 |----|-------|-------|----|------|
-| F-02 | memory: deterministic personal_context | E-sync | — | 2026-06-09 |
-| B-001 | Sentinel: shell=True fix in guardianengine.py | E-057 | #60 | 2026-06-07 |
-| SCHED-ALL | 15 daily scheduled tasks defined | E-059 | — | 2026-06-07 |
-| TRACK-ALL | jules_task_tracker.md + ninaflash_task_tracker.md created | E-059 | — | 2026-06-07 |
-| B-024 | AGENTS.md: backlog update protocol | E-060 | — | 2026-06-07 |
-| B-005 | F-09 ModelDiscoveryService — tools/model_discovery.py | E-061 | #25 | 2026-06-07 |
-| B-037 | docs/space: add nina_architecture_diagram.md with ASCII diagrams | E-sync | #26 | 2026-06-07 |
-| B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | E-sync | #27 | 2026-06-07 |
-| B-029 | Write integration test: full request through router → provider → response | E-sync | #28 | 2026-06-08 |
-| B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | E-sync | #29 | 2026-06-08 |
-| B-017 | Write tests for core/router.py — provider ordering, circuit breaker, fallback | E-sync | #30 | 2026-06-08 |
 | B-019 | Write tests for guardianengine.py — SIGNATURES check, run_cmd | E-sync | #33 | 2026-06-08 |
 | R-78 | Fix tool grammar fragility — minimum viable guard | E-sync | #35 | 2026-06-08 |
 | B-040 | Write CONTRIBUTING.md | E-sync | #36 | 2026-06-08 |
