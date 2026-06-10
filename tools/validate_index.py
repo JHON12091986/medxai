@@ -36,7 +36,7 @@ def check_doc_deltas(data, repo_root):
                 doc_targets_changed.add(f)
                 
     if requires_delta and not doc_targets_changed:
-        print(f"\n❌ Governance Violation: Code/architecture changed but no documentation delta was found.")
+        print("\n❌ Governance Violation: Code/architecture changed but no documentation delta was found.")
         print("The following files require a doc delta:")
         for file_obj in requires_delta:
             print(f"  - {file_obj['path']} (Targets: {', '.join(file_obj.get('doc_targets', []))})")
@@ -71,7 +71,7 @@ def notify_telegram(message, repo_root):
         print(f"❌ Exception sending Telegram notification: {e}")
 
 def validate(check_deltas=False, notify=False):
-    repo_root = Path("/home/aibony/nina")
+    repo_root = Path(__file__).parent.parent.resolve()
     index_path = repo_root / "docs/space/nina_index.json"
 
     
