@@ -62,61 +62,62 @@ class MemorySystem:
         logger.info(f"MemorySystem ready conversations={conv_count} facts={len(self.facts)} reminders={len(self.reminders)}")
 
     async def build_context(self, query: str, n: int = 5) -> str:
+        docs = []
         try:
-            if not self.col:
-                return "(none)"
-            nresults = min(n, self.col.count())
-            if nresults > 0:
-                res = await asyncio.to_thread(
-                    self.col.query, query_texts=[query], n_results=nresults,
-                    include=["documents", "metadatas"]
-                )
-                raw_docs  = res.get("documents", [[]])[0]
-                raw_metas = res.get("metadatas",  [[]])[0]
-                paired = sorted(
-                    zip(raw_metas, raw_docs),
-                    key=lambda x: float(x[0].get("ts", 0)),
-                    reverse=True
-                )
-                docs = [d for _, d in paired[:5]]
-            else:
-                docs = []
+            if self.col:
+                nresults = min(n, self.col.count())
+                if nresults > 0:
+                    res = await asyncio.to_thread(
+                        self.col.query, query_texts=[query], n_results=nresults,
+                        include=["documents", "metadatas"]
+                    )
+                    raw_docs  = res.get("documents", [[]])[0]
+                    raw_metas = res.get("metadatas",  [[]])[0]
+                    paired = sorted(
+                        zip(raw_metas, raw_docs),
+                        key=lambda x: float(x[0].get("ts", 0)),
+                        reverse=True
+                    )
+                    docs = [d for _, d in paired[:5]]
         except Exception:
             docs = []
 
         # ── F-02: personal_context — fixed top section, always injected ─────
-        # Facts are already loaded into self.facts by initialize(); read from
-        # memory instead of hitting disk on every build_context call (R-83).
-        _pc: dict = self.facts.get("personal_context", {})
+        def get_val(key, default="unknown"):
+            fact = self.facts.get(key)
+            if fact is None: return default
+            val = fact.get("value", default) if isinstance(fact, dict) else fact
+            return val if val != "" else default
 
-        prefs, recents = [], []
-        for k, v in list(self.facts.items()):
-            if k == "personal_context":
-                continue
-            val   = v["value"] if isinstance(v, dict) else str(v)
-            ts    = v.get("ts", 0.0) if isinstance(v, dict) else 0.0
-            entry = f"{k}: {val}"
-            if k.lower() in PREF_KEYS:
-                prefs.append(entry)
-            else:
-                recents.append((ts, entry))
+        def format_list(val):
+            if isinstance(val, list): return ", ".join(val)
+            if isinstance(val, str): return val
+            return str(val)
 
-        recents.sort(key=lambda x: x[0], reverse=True)
-        recent_lines = [e for _, e in recents[:7]]
+        pc_block = (
+            "--- PERSONAL CONTEXT ---\n"
+            f"Name: {get_val('name')}\n"
+            f"Role: {get_val('role')}\n"
+            f"Organization: {get_val('organization')}\n"
+            f"Location: {get_val('location')}\n"
+            f"Timezone: {get_val('timezone')}\n"
+            f"Priorities: {format_list(get_val('priorities', []))}\n"
+            f"Preferences: {format_list(get_val('preferences', []))}\n"
+            "--- END PERSONAL CONTEXT ---"
+        )
 
-        parts = []
-        if _pc:
-            block = "\n".join(f"  {k}: {v}" for k, v in _pc.items())
-            parts.append(f"[Owner]\n{block}")
-        if prefs or recent_lines:
-            facts_block = "\n".join(prefs + recent_lines)
-            parts.append(f"Facts:\n{facts_block}")
+        parts = [pc_block]
         if docs:
             parts.append("Recent context:\n" + "\n".join(docs))
 
-        return "\n\n".join(parts) if parts else "(none)"
+        return "\n\n".join(parts)
+
+
+    def get_facts(self) -> dict:
+        return self.facts
 
     async def save_turn(self, role: str, content: str):
+
         try:
             if not self.col:
                 return
