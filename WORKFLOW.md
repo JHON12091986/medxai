@@ -14,14 +14,14 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 
 ## 0. Discovery & Governance (New)
 **Index-First Workflow:**
-1. Check `python3 tools/query_index.py --path <file>` for the file's entry (path, role, lifecycle, guardrails).
+1. Check `nf run query-index --path <file>` for the file's entry (path, role, lifecycle, guardrails).
 2. **Obey Guardrails:** Strictly adhere to tags like `high_risk_do_not_edit_directly`, `append_only`, and `read_only_for_agents`.
 3. **Doc Delta Required:** If code or architecture changes, you MUST update `nina_update_log.md`.
 4. If modifying a file within a `duplicate_cluster_id`, edit the `canonical_path` only.
 5. If creating, moving, renaming, archiving, or deleting a governed file:
    - Update the file structure.
-   - Run `python3 tools/update_index.py`.
-   - Run `python3 tools/validate_index.py`.
+   - Run `nf run update-index`.
+   - Run `nf run validate-index`.
 6. Fix validation issues until the validator passes.
 7. Run `./nina_audit.sh` to reconcile local drifts and identify stale artifacts.
 8. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
@@ -29,7 +29,7 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 ## 0.6. Capability Crystallization (Self-Upgrading)
 NINA is designed to be a self-developing platform. Every session must aim to leave `ninaflash` more capable than it started.
 - **Identify:** If a task requires complex cloud reasoning that will likely be repeated, don't just solve it—crystallize it.
-- **Register:** Turn the solution into a named command in the **Capability Registry** via `ninaflash register`.
+- **Register:** Turn the solution into a named command in the **Capability Registry** via `nf register`.
 - **Harvest:** Regularly review the "Stray Locals" in the Hygiene Dashboard for potential new tools to be governed and registered.
 To prevent governance decay without blocking roadmap progress, NINA uses a dual-track operational model. **Rule of thumb: For every feature PR merged, complete at least one Governance Quest.**
 
@@ -58,10 +58,10 @@ Larger, user-facing feature arcs (e.g., Proactive Reminder Engine, Email Triage)
 
 1. Perplexity diagnoses issue and writes precise spec
 2. Jules receives spec → builds in cloud async (no interaction after submit)
-3. ninaflash (local executor) handles urgent local fixes in parallel on its own worktree
+3. nf (local executor) handles urgent local fixes in parallel on its own worktree
 4. Jules opens PR when feature is complete
-5. ninaflash runs Guardian lint/compile checks on the PR diff
-6. ninaflash merges PR → runs `./nina_sync.sh` → deploys to systemd
+5. nf runs Guardian lint/compile checks on the PR diff
+6. nf merges PR → runs `./nina_sync.sh` → deploys to systemd
 7. Perplexity reviews result in a new thread
 
 **KEY RULES:**

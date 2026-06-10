@@ -25,15 +25,15 @@ Jules builds features asynchronously in the cloud. ninaflash reviews and merges 
 ## ninaflash — The Local Executor
 
 ninaflash is NINA's local muscle:
-- CLI tool at `bin/ninaflash` (Antigravity CLI, v1.0.5)
+- CLI tool at `bin/nf` (Antigravity CLI, v1.0.5)
 - Powered by Claude Sonnet 4.6 Thinking
 - Commands:
-  - `ninaflash status` — checks locks, git workspace, backlog
-  - `ninaflash pr merge <PR>` — lint check → merge → sync → backlog update
-  - `ninaflash dispatch <TASK_ID>` — locks files → IN_PROGRESS → sends to Jules API
-  - `ninaflash aider <TASK_ID>` — launches aider with task context
-  - `ninaflash doctor` — finds latest Python traceback in logs
-  - `ninaflash ninaloop` — activates continuous autonomous developer loop
+  - `nf status` — checks locks, git workspace, backlog
+  - `nf pr merge <PR>` — lint check → merge → sync → backlog update
+  - `nf dispatch <TASK_ID>` — locks files → IN_PROGRESS → sends to Jules API
+  - `nf aider <TASK_ID>` — launches aider with task context
+  - `nf doctor` — finds latest Python traceback in logs
+  - `nf ninaloop` — activates continuous autonomous developer loop
 
 ## Universe-Mode Kernel (ninaflash v8.0)
 
@@ -74,7 +74,7 @@ NINA's memory orchestrator in `core/memory.py`:
 | Runtime | Python 3.14, asyncio-based |
 | OS | Ubuntu 26.04, systemd managed |
 | Primary UI | Telegram bot (Gatekeeper) |
-| CLI | `bin/ninaflash` |
+| CLI | `bin/nf` |
 | Local Models | Ollama: qwen2.5:1.5b, qwen2.5:7b |
 | Services | `nina.service`, `nina-dashboard.service` |
 | Dev Stack | Perplexity + Jules + ninaflash (parallel) |
@@ -173,7 +173,7 @@ NINA runs a strict, metadata-driven governance index. All agents and tools must 
 - **[Operational Governance Dashboard](docs/space/nina_governance_dashboard.md)**: View live metrics, missing tests, and purge candidates.
 
 - **Metadata Completeness:** 80.8% (Required: ≥75.0%)
-- **Test Coverage Audit:** 32 Python files are missing dedicated tests (see `python3 tools/validate_index.py` output).
+- **Test Coverage Audit:** 32 Python files are missing dedicated tests (see `nf run validate-index` output).
 ## Installation
 
 ```bash

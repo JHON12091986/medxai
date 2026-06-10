@@ -30,7 +30,7 @@ Skipping steps is not permitted. Writing code before step 7 is a violation.
 
 8. SELF-CHECK before committing:
    - Run: python3 -m py_compile <file> && pyflakes <file>
-   - Run: ninaflash check code <file>
+   - Run: nf check code <file>
    - Does it match the pattern from step 6?
    - Would this work if RAM is at 9.5GB? (nina hw gate)
 
@@ -40,16 +40,16 @@ Meta-instruction (inject into every agent system prompt):
 When writing code for NINA: reason before you act.
 State what already exists. State what must not break.
 Write the error path first. Write the minimum solution.
-Then verify with ninaflash check code.
+Then verify with nf check code.
 Never write more than what was asked.
 
 
 ## YOU ARE THE LOCAL EXECUTOR
 
-This file is read by whichever local coding tool is active: ninaflash, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
+This file is read by whichever local coding tool is active: ninaflash (nf), Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
 - Read only the required context files first.
 - **Index-First Workflow (Mandatory Governance):**
-  1. Consult the **Repository Index** (`docs/space/nina_index.md` / `.json`) or use `python3 tools/query_index.py --path <file>` before creating or modifying governed artifacts. Check `role`, `governed`, `duplicate_cluster_id`, and `guardrails`.
+  1. Consult the **Repository Index** (`docs/space/nina_index.md` / `.json`) or use `nf run query-index --path <file>` before creating or modifying governed artifacts. Check `role`, `governed`, `duplicate_cluster_id`, and `guardrails`.
   2. **Obey Guardrails:**
      - If `high_risk_do_not_edit_directly`: Do not edit directly via CLI/script. Suggest a PR or request manual human review.
      - If `append_only`: Do not modify past content, only append to the end.
@@ -59,13 +59,13 @@ This file is read by whichever local coding tool is active: ninaflash, Cursor, C
   5. If creating, moving, renaming, archiving, or deleting a governed file, you must run `python3 tools/update_index.py`.
   6. Run `python3 tools/validate_index.py`. No PR or task touching governed paths is "Done" unless this validator passes. The index is the single enforceable contract for doc/log/code inventory.
   7. Run `./nina_audit.sh` to reconcile the local filesystem with Git and check for stale files.
-  8. Run `python3 tools/generate_dashboard.py` to refresh the [Operational Governance Dashboard](docs/space/nina_governance_dashboard.md).
+  8. Run `nf run generate-dashboard` to refresh the [Operational Governance Dashboard](docs/space/nina_governance_dashboard.md).
 - **Capability Crystallization (Mandatory):**
   - Whenever you (the agent) build or discover a highly effective, repeatable, or critical technical procedure (e.g., a specific log parser, a complex data transformation, or a multi-step cleanup), you MUST evaluate it as a **Capability Candidate**.
   - If it is useful for the future:
     1.  Encapsulate the logic into a standalone tool in `tools/` or a script in `bin/`.
     2.  Add it to the **Repository Index** with its governance metadata.
-    3.  Register it as a permanent ninaflash command (e.g., `python3 tools/ninaflash.py register --tool <path>`).
+    3.  Register it as a permanent ninaflash command (e.g., `nf register --tool <path>`).
   - **Goal:** Every session should incrementally upgrade ninaflash's "physical memory," collapsing complex cloud reasoning into zero-token local commands.
 
 - Do not scan the whole repo before you know the task.
@@ -290,13 +290,13 @@ The following files must default to **local executor** or manual local handling 
 - If merge conflict: stop, report to Perplexity for re-spec, do not attempt blind resolution
 
 ### 9. Antigravity CLI Toolset (ninaflash)
-Every local executor should use the automated `ninaflash` CLI toolset (located at `bin/ninaflash`) to run standard workflows:
-- **`ninaflash status`**: Checks active file locks, git workspace, and backlog status.
-- **`ninaflash pr merge <PR_NUMBER>`**: Automatically runs syntax/linter checks on the PR, merges it, updates the backlog status to `DONE`, clears locks, and triggers the sync script.
-- **`ninaflash dispatch <TASK_ID>`**: Locks target files in `jules_lock.txt`, sets status to `IN_PROGRESS`, and sends task spec to the Jules API.
-- **`ninaflash aider <TASK_ID>`**: Launches `aider` preloaded with the task's files in the LLM context.
-- **`ninaflash doctor`**: Locates and prints the most recent Python traceback from NINA's logs or systemd journal.
-- **`ninaflash ninaloop`**: Activates the continuous autonomous developer loop.
+Every local executor should use the automated `ninaflash` CLI toolset (located at `bin/nf`) to run standard workflows:
+- **`nf status`**: Checks active file locks, git workspace, and backlog status.
+- **`nf pr merge <PR_NUMBER>`**: Automatically runs syntax/linter checks on the PR, merges it, updates the backlog status to `DONE`, clears locks, and triggers the sync script.
+- **`nf dispatch <TASK_ID>`**: Locks target files in `jules_lock.txt`, sets status to `IN_PROGRESS`, and sends task spec to the Jules API.
+- **`nf aider <TASK_ID>`**: Launches `aider` preloaded with the task's files in the LLM context.
+- **`nf doctor`**: Locates and prints the most recent Python traceback from NINA's logs or systemd journal.
+- **`nf ninaloop`**: Activates the continuous autonomous developer loop.
 
 ---
 
