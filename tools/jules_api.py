@@ -176,7 +176,7 @@ async def run(cmd: str) -> str:
     except requests.exceptions.RequestException as e:
         logger.error(f"jules_api_request_failed cmd={cmd!r} err={e}", extra={"log": "error.log", "tool_name": "jules_api"})
         return f"Jules API request failed: {e}"
-    except Exception as e:
+    except (OSError, ValueError, TypeError, KeyError) as e:
         logger.error(f"jules_api_failed cmd={cmd!r} err={e}", extra={"log": "error.log", "tool_name": "jules_api"})
         return f"Jules API error: {e}"
 
@@ -207,5 +207,6 @@ if __name__ == "__main__":
     try:
         res = asyncio.run(run(cmd_str))
         print(res)
-    except Exception as e:
+    except (OSError, ValueError, requests.exceptions.RequestException) as e:
+        logger.error(f"CLI Error: {e}", extra={"log": "error.log", "tool_name": "jules_api"})
         print(f"CLI Error: {e}")

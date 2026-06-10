@@ -96,11 +96,12 @@ async def test_discover_all_success(dummy_config):
 
 @pytest.mark.asyncio
 async def test_discover_all_error_fallback(dummy_config):
+    import httpx
     service = ModelDiscoveryService(dummy_config)
     service.save_cache = MagicMock()
 
     async def mock_get_error(*args, **kwargs):
-        raise Exception("API down")
+        raise httpx.RequestError("API down", request=MagicMock())
 
     with patch("httpx.AsyncClient.get", side_effect=mock_get_error):
         results = await service.discover_all()
@@ -115,7 +116,14 @@ async def test_discover_all_no_models_url(dummy_config):
     service = ModelDiscoveryService(dummy_config)
     service.save_cache = MagicMock()
 
-    with patch("httpx.AsyncClient.get"):
+    mock_response = MagicMock()
+    mock_response.raise_for_status.return_value = None
+    mock_response.json.return_value = {"models": []}
+
+    async def mock_get(*args, **kwargs):
+        return mock_response
+
+    with patch("httpx.AsyncClient.get", side_effect=mock_get):
         results = await service.discover_all()
 
         assert "COHERE" in results
