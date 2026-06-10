@@ -18,12 +18,15 @@ import argparse
 import asyncio
 import subprocess
 import json
+import time
 try:
     import dotenv
 except ImportError:
     dotenv = None
+
 import shutil
 import ast
+
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Optional, Tuple
@@ -835,6 +838,100 @@ def cmd_kernel_upgrade(args):
 # THE UNIFIED DISPATCHER
 # ------------------------------------------------------------------
 
+
+
+def cmd_code_symbol(args):
+    """[037] Extract source code of a specified class or function using AST."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                if node.name == args.name:
+                    print(ast.unparse(node))
+                    return
+        print(f"❌ Symbol '{args.name}' not found in {path}")
+    except Exception as e:
+        print(f"❌ Error parsing {path}: {e}")
+
+def cmd_find_symbol(args):
+    """[038] Recursively search the repository for a specified class or function definition."""
+    for py_file in _find_py_files():
+        try:
+            tree = ast.parse(py_file.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                    if node.name == args.name:
+                        try:
+                            rel_path = py_file.relative_to(REPO_ROOT)
+                        except ValueError:
+                            rel_path = py_file
+                        print(f"{rel_path}:{node.lineno}")
+        except Exception:
+            pass
+
+def cmd_code_sigs(args):
+    """[039] Generate a high-density map of all function and class signatures in a directory."""
+    dir_path = REPO_ROOT / args.dir
+    if not dir_path.exists() or not dir_path.is_dir():
+        print(f"❌ Directory not found: {dir_path}")
+        return
+    for py_file in dir_path.rglob("*.py"):
+        if any(skip in py_file.parts for skip in _SKIP_DIRS):
+            continue
+        try:
+            tree = ast.parse(py_file.read_text(encoding="utf-8"))
+            has_sigs = False
+            file_output = []
+            try:
+                rel_path = py_file.relative_to(REPO_ROOT)
+            except ValueError:
+                rel_path = py_file
+            file_output.append(f"--- {rel_path} ---")
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    doc = ast.get_docstring(node)
+                    prefix = "async def " if isinstance(node, ast.AsyncFunctionDef) else "def "
+                    args_str = ast.unparse(node.args) if node.args else ""
+                    sig = f"{prefix}{node.name}({args_str}):"
+                    if doc:
+                        sig += f" \"\"\"{doc}\"\"\""
+                    file_output.append(sig)
+                    has_sigs = True
+                elif isinstance(node, ast.ClassDef):
+                    doc = ast.get_docstring(node)
+                    sig = f"class {node.name}:"
+                    if doc:
+                        sig += f" \"\"\"{doc}\"\"\""
+                    file_output.append(sig)
+                    has_sigs = True
+            if has_sigs:
+                print("\n".join(file_output))
+        except Exception:
+            pass
+
+def cmd_code_doc(args):
+    """[040] Search for keywords only within docstrings."""
+    kw = args.keyword.lower()
+    for py_file in _find_py_files():
+        try:
+            tree = ast.parse(py_file.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Module)):
+                    doc = ast.get_docstring(node)
+                    if doc and kw in doc.lower():
+                        try:
+                            rel_path = py_file.relative_to(REPO_ROOT)
+                        except ValueError:
+                            rel_path = py_file
+                        snippet = doc.splitlines()[0][:100] + "..." if len(doc) > 100 else doc.splitlines()[0]
+                        print(f"{rel_path}:{getattr(node, 'lineno', 1)} - {snippet}")
+        except Exception:
+            pass
+
 def main():
     parser = argparse.ArgumentParser(description="ninaflash AI Agent Kernel v6.0 — The 100-Function OS.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -869,6 +966,16 @@ def main():
     p_cd.add_argument("--stale",  action="store_true", default=False)
 
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
+    p_sym = p_cs.add_parser("symbol")
+    p_sym.add_argument("file")
+    p_sym.add_argument("name")
+    p_sigs = p_cs.add_parser("sigs")
+    p_sigs.add_argument("dir")
+    p_doc = p_cs.add_parser("doc")
+    p_doc.add_argument("keyword")
+
+    p_fs = subparsers.add_parser("find-symbol")
+    p_fs.add_argument("name")
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
     p_cs.add_parser("index")
@@ -914,9 +1021,11 @@ def main():
 
     args = parser.parse_args()
     if args.command == "status": cmd_status(args)
+    elif args.command == "find-symbol": cmd_find_symbol(args)
     elif args.command == "log":
         if args.sub == "find-id": cmd_log_find_id(args)
     elif args.command == "help-ai": cmd_help_ai(args)
+
     elif args.command == "stats": cmd_stats(args)
     elif args.command == "capability-map": cmd_capability_map(args)
     elif args.command == "register": cmd_register_capability(args)
@@ -935,6 +1044,10 @@ def main():
         if args.sub == "outline": cmd_code_outline(args)
         elif args.sub == "dep-map": cmd_code_dep_map(args)
         elif args.sub == "index": cmd_code_index(args)
+        elif args.sub == "symbol": cmd_code_symbol(args)
+        elif args.sub == "sigs": cmd_code_sigs(args)
+        elif args.sub == "doc": cmd_code_doc(args)
+
     elif args.command == "pr":
         if args.sub == "merge-surgical": cmd_pr_merge_surgical(args)
         elif args.sub == "reconcile": cmd_pr_reconcile(args)

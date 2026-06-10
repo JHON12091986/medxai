@@ -3,6 +3,7 @@ from typing import Optional, List
 import asyncio, json, logging, time
 from typing import Optional, List
 from pathlib import Path
+from typing import Optional, List
 
 logger = logging.getLogger("nina.capabilities")
 CAP_FILE = Path("data/capabilities.json")
