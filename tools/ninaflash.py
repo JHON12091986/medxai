@@ -270,6 +270,7 @@ def cmd_context_mini_gen(args):
 def _compress_diff(diff_text: str) -> str:
     """[015] Strip metadata from diffs to save tokens."""
     return "\n".join([l for l in diff_text.splitlines() if not l.startswith(('---','+++','@@'))])
+
 def cmd_log_find_id(args):
     """[037] Zero-token log parsing for specific task ID."""
     task_id = args.task_id
@@ -317,6 +318,75 @@ def _find_blockers(task_id: str) -> List[str]:
         m = re.search(r"(B-\d+|AG-[A-J]-\d+|R-\d+)", dep)
         if m: blockers.append(m.group(1))
     return blockers
+
+
+def cmd_backlog_summary(args):
+    """[100] Print a 5-line summary of the backlog."""
+    tasks = get_backlog_tasks()
+    c_ready = sum(1 for t in tasks if t.get('status') == 'READY')
+    c_prog = sum(1 for t in tasks if t.get('status') == 'IN_PROGRESS')
+    c_blocked = sum(1 for t in tasks if t.get('status') == 'BLOCKED')
+    c_done = sum(1 for t in tasks if t.get('status') == 'DONE')
+    print("Backlog Summary:")
+    print(f"  READY:       {c_ready}")
+    print(f"  IN_PROGRESS: {c_prog}")
+    print(f"  BLOCKED:     {c_blocked}")
+    print(f"  DONE:        {c_done}")
+
+
+def cmd_task_active(args):
+    """[101] List active tasks and their locked files."""
+    tasks = get_backlog_tasks()
+    active_tasks = [t for t in tasks if t.get('status') in ('IN_PROGRESS', 'IN_PR')]
+    locks = _get_locks()
+
+    print("Active Tasks:")
+    for t in active_tasks:
+        print(f"  {t.get('id')} - {t.get('title')} ({t.get('status')})")
+
+    print(f"\nLocked Files: {', '.join(locks) if locks else 'None'}")
+
+
+def _get_log_entries():
+    log_path = REPO_ROOT / "docs" / "logs" / "nina_update_log.md"
+    if not log_path.exists():
+        log_path = REPO_ROOT / "nina_update_log.md"
+    if not log_path.exists():
+        return ""
+    return log_path.read_text(encoding="utf-8")
+
+def cmd_log_tail(args):
+    """[102] Print the last <n> entries of the log."""
+    content = _get_log_entries()
+    if not content:
+        print("Log file not found.")
+        return
+    import re
+    # Split the content keeping "## Entry " at the start of each split
+    entries = re.split(r'(?=\n## Entry )', content)
+    # The first element is the header if the file doesn't start with "## Entry "
+    # We want to filter out only the actual entries
+    actual_entries = [e for e in entries if e.strip().startswith("## Entry")]
+    if not actual_entries:
+        print("No entries found.")
+        return
+    n = getattr(args, 'n', 5)
+    tail_entries = actual_entries[-n:]
+    for entry in tail_entries:
+        print(entry.strip() + "\n")
+
+def cmd_log_next_id(args):
+    """[103] Print the next available entry ID."""
+    content = _get_log_entries()
+    max_id = 0
+    import re
+    for line in content.splitlines():
+        m = re.match(r"^## Entry (\d+)", line)
+        if m:
+            entry_id = int(m.group(1))
+            if entry_id > max_id:
+                max_id = entry_id
+    print(max_id + 1)
 
 def cmd_backlog_triage(args):
     """[018] Promote BLOCKED tasks to READY if deps are DONE."""
@@ -1063,14 +1133,22 @@ def main():
 
     p_log = subparsers.add_parser("log"); p_ls = p_log.add_subparsers(dest="sub")
     p_ls.add_parser("summarize")
+    p_log_tail = p_ls.add_parser("tail")
+    p_log_tail.add_argument("n", type=int, default=5, nargs="?")
+    p_ls.add_parser("next-id")
+    p_lfind = p_ls.add_parser("find-id")
+    p_lfind.add_argument("task_id", help="Task ID to find in logs")
 
-    
     p_gen = subparsers.add_parser("gen"); p_gs = p_gen.add_subparsers(dest="sub")
     p_gs.add_parser("tool").add_argument("name")
     p_gs.add_parser("test")
     
-    # Backlog Subcommands (FIX 4)
+    # Task Subcommands
+    p_task = subparsers.add_parser("task"); p_ts = p_task.add_subparsers(dest="sub")
+    p_ts.add_parser("active")
+
     p_bl = subparsers.add_parser("backlog"); p_bs = p_bl.add_subparsers(dest="sub")
+    p_bs.add_parser("summary")
     p_bs.add_parser("triage")
     p_bs.add_parser("dag").add_argument("task_id", nargs="?")
     p_ba = p_bs.add_parser("add")
@@ -1082,10 +1160,6 @@ def main():
     p_bs.add_parser("archive")
     
     # Capability Subcommands
-    p_log = subparsers.add_parser("log"); p_ls = p_log.add_subparsers(dest="sub")
-    p_lfind = p_ls.add_parser("find-id")
-    p_lfind.add_argument("task_id", help="Task ID to find in logs")
-
     p_reg = subparsers.add_parser("register")
     p_reg.add_argument("--tool-path",   required=True, help="Path to the tool file")
     p_reg.add_argument("--name",        help="Optional name (default: filename)")
@@ -1099,10 +1173,7 @@ def main():
     args = parser.parse_args()
     if args.command == "status": cmd_status(args)
     elif args.command == "find-symbol": cmd_find_symbol(args)
-    elif args.command == "log":
-        if args.sub == "find-id": cmd_log_find_id(args)
     elif args.command == "help-ai": cmd_help_ai(args)
-
     elif args.command == "stats": cmd_stats(args)
     elif args.command == "capability-map": cmd_capability_map(args)
     elif args.command == "register": cmd_register_capability(args)
@@ -1124,12 +1195,19 @@ def main():
         elif args.sub == "symbol": cmd_code_symbol(args)
         elif args.sub == "sigs": cmd_code_sigs(args)
         elif args.sub == "doc": cmd_code_doc(args)
-
     elif args.command == "pr":
         if args.sub == "merge-surgical": cmd_pr_merge_surgical(args)
         elif args.sub == "reconcile": cmd_pr_reconcile(args)
+    elif args.command == "task":
+        if args.sub == "active": cmd_task_active(args)
+    elif args.command == "log":
+        if args.sub == "summarize": cmd_log_summarize(args)
+        elif args.sub == "tail": cmd_log_tail(args)
+        elif args.sub == "next-id": cmd_log_next_id(args)
+        elif args.sub == "find-id": cmd_log_find_id(args)
     elif args.command == "backlog":
-        if args.sub == "triage": cmd_backlog_triage(args)
+        if args.sub == "summary": cmd_backlog_summary(args)
+        elif args.sub == "triage": cmd_backlog_triage(args)
         elif args.sub == "dag": cmd_backlog_dag(args)
         elif args.sub == "add": cmd_backlog_add(args)
         elif args.sub == "archive": cmd_backlog_archive(args)
@@ -1138,8 +1216,9 @@ def main():
         elif args.sub == "vram": cmd_ops_vram(args)
         elif args.sub == "compress-logs": cmd_ops_compress_logs(args)
         elif args.sub == "rotate-logs": cmd_ops_rotate_logs(args)
-    elif args.command == "log":
-        if args.sub == "summarize": cmd_log_summarize(args)
+    elif args.command == "gen":
+        if args.sub == "tool": cmd_gen_tool(args)
+        elif args.sub == "test": cmd_gen_test(args)
 
 
 if __name__ == "__main__":
