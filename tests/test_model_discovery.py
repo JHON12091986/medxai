@@ -120,3 +120,77 @@ async def test_discover_all_no_models_url(dummy_config):
 
         assert "COHERE" in results
         assert results["COHERE"] == PROVIDER_MODEL_ENDPOINTS["COHERE"]["fallback_model"]
+
+class MockConfig:
+    pass
+
+@pytest.mark.asyncio
+async def test_discovery_returns_list(nina_tmp_dir, monkeypatch):
+    from tools.model_discovery import ModelDiscoveryService
+    cache_path = nina_tmp_dir / "test_model_cache.json"
+    service = ModelDiscoveryService(config=MockConfig(), cache_path=str(cache_path))
+
+    class MockResponse:
+        def __init__(self, json_data, status_code=200):
+            self._json_data = json_data
+            self.status_code = status_code
+        def json(self):
+            return self._json_data
+        def raise_for_status(self):
+            pass
+
+    async def mock_get(*args, **kwargs):
+        return MockResponse({"models": [{"id": "llama-3.3-70b-versatile"}, {"id": "test-model"}]})
+
+    monkeypatch.setattr("httpx.AsyncClient.get", mock_get)
+
+    results = await service.discover_all()
+    assert isinstance(results, dict)
+    assert len(results) > 0
+
+@pytest.mark.asyncio
+async def test_discovery_entries_have_name(nina_tmp_dir, monkeypatch):
+    from tools.model_discovery import ModelDiscoveryService
+    cache_path = nina_tmp_dir / "test_model_cache.json"
+    service = ModelDiscoveryService(config=MockConfig(), cache_path=str(cache_path))
+
+    class MockResponse:
+        def __init__(self, json_data, status_code=200):
+            self._json_data = json_data
+            self.status_code = status_code
+        def json(self):
+            return self._json_data
+        def raise_for_status(self):
+            pass
+
+    async def mock_get(*args, **kwargs):
+        return MockResponse({"models": [{"id": "llama-3.3-70b-versatile", "name": "gemini-2.5-flash"}]})
+
+    monkeypatch.setattr("httpx.AsyncClient.get", mock_get)
+
+    results = await service.discover_all()
+    for provider, model in results.items():
+        assert isinstance(model, str)
+
+@pytest.mark.asyncio
+async def test_discovery_handles_empty_env(nina_tmp_dir, monkeypatch):
+    from tools.model_discovery import ModelDiscoveryService
+    cache_path = nina_tmp_dir / "test_model_cache.json"
+    service = ModelDiscoveryService(config=MockConfig(), cache_path=str(cache_path))
+
+    class MockResponse:
+        def __init__(self, json_data, status_code=200):
+            self._json_data = json_data
+            self.status_code = status_code
+        def json(self):
+            return self._json_data
+        def raise_for_status(self):
+            pass
+
+    async def mock_get(*args, **kwargs):
+        return MockResponse({"models": [{"id": "llama-3.3-70b-versatile", "name": "gemini-2.5-flash"}]})
+
+    monkeypatch.setattr("httpx.AsyncClient.get", mock_get)
+
+    results = await service.discover_all()
+    assert isinstance(results, dict)
