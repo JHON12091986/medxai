@@ -24,6 +24,30 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 5. Fix validation issues until the validator passes.
 6. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
 
+## 0.5. The Dual-Track Operating Model
+To prevent governance decay without blocking roadmap progress, NINA uses a dual-track operational model. **Rule of thumb: For every feature PR merged, complete at least one Governance Quest.**
+
+### Lane A: Governance Quests (Continuous)
+Small, repeatable tasks driven entirely by `docs/space/nina_governance_dashboard.md`.
+1. **Quest: Missing Tests x3**
+   - Pick the top 3 files from "Missing-Test Hotspots".
+   - Add minimal unit tests (happy path + one failure path) to `tests/`.
+   - Run validators and `tools/generate_dashboard.py`. Done when the files disappear from the hotspot list.
+2. **Quest: Metadata Polish x3**
+   - Pick the 3 lowest-scoring entries from the dashboard.
+   - Improve their summary, tags, and retention policy via `tools/update_index.py`.
+3. **Quest: Duplicate Cluster Triage x1**
+   - Pick the largest duplicate cluster from the dashboard.
+   - Confirm the canonical path; adjust retention/lifecycle for non-canonical members (e.g., mark as `purge_candidate`).
+4. **Quest: Purge Execution (Dry-Run)**
+   - Run `python3 tools/cleanup_by_index.py`, review the commands, and manually execute safe deletions.
+
+### Lane B: Feature Work (Phase 1 Backlog)
+Larger, user-facing feature arcs (e.g., Proactive Reminder Engine, Email Triage).
+- Always start by querying the index for target files to identify guardrails.
+- Implement in small batches.
+- At natural stopping points, switch to Lane A for a cool-down quest.
+
 ## The Full Parallel Loop (Jules + agynina Pipeline)
 
 1. Perplexity diagnoses issue and writes precise spec
