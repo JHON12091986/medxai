@@ -17,6 +17,10 @@ def validate():
     errors = 0
     warnings = 0
     
+    # Metrics for quality scoring
+    total_files = 0
+    total_score = 0
+    
     # 1. Check if index entries resolve to real files and validate schema
     for file_obj in data["files"]:
         path_str = file_obj["path"]
@@ -30,6 +34,27 @@ def validate():
             if key not in file_obj:
                 print(f"❌ Schema error: '{key}' missing from entry {path_str}")
                 errors += 1
+                
+        # Test coverage validation
+        if file_obj.get("requires_tests"):
+            p = Path(path_str)
+            # Try basic mappings like core/router.py -> tests/test_router.py
+            test_path = repo_root / "tests" / f"test_{p.stem}.py"
+            # Some tests are combined (e.g. test_finance_market.py) so we don't throw hard errors, just warnings
+            if not test_path.exists() and not any(p.stem in t for t in os.listdir(repo_root / "tests")):
+                warnings += 1
+                print(f"⚠️ Test Coverage: {path_str} requires tests but no obvious test_{p.stem}.py found.")
+                
+        # Metadata Quality Score calculation
+        score = 0
+        if file_obj.get("summary") and file_obj["summary"] != "Governed artifact.": score += 1
+        if file_obj.get("role"): score += 1
+        if file_obj.get("origin"): score += 1
+        if file_obj.get("retention_policy"): score += 1
+        if file_obj.get("tags"): score += 1
+        
+        total_score += (score / 5.0)
+        total_files += 1
                 
     # 2. Check for "unmanaged but probably governed" files
     ignore_dirs = {".git", ".venv", "venv", "__pycache__", ".agent", ".jules", ".pytest_cache", ".mypy_cache"}
@@ -48,7 +73,9 @@ def validate():
         print(f"\n❌ Validation FAILED with {errors} errors and {warnings} warnings.")
         return False
         
+    quality_pct = (total_score / total_files) * 100 if total_files else 0
     print(f"\n✅ Index validation PASSED ({warnings} warnings).")
+    print(f"📊 Metadata Quality Score: {quality_pct:.1f}%")
     return True
 
 if __name__ == "__main__":

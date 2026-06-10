@@ -263,7 +263,7 @@ The following clusters contain identical content. Consolidate to the canonical s
 - **Cluster `dup-0225`**: Canonical is `data/gpuconfig.json`. Members: `upgrades/backups/memory20260522120550/facts.json`, `data/gpuconfig.json`, `data/modeldiscovery.json`
 
 ## 4. Governance Rules & Index-First Workflow
-1. **Check the Index:** Check `docs/space/nina_index.md` for the file's entry (path, role, lifecycle).
+1. **Check the Index:** `python3 tools/query_index.py --path <file>`
 2. **Duplicate Clusters:** When writing to a path that belongs to a duplicate cluster, you MUST only write to the `canonical_path`.
 3. **Index Modification:** If creating/moving a governed file:
    - Run `python3 tools/update_index.py`.

@@ -57,17 +57,41 @@ def scan():
             elif category == "incident": retention_policy = "purge_candidate"
             elif category == "export": retention_policy = "ephemeral"
             
+            # Series tracking
+            series_id = None
+            series_type = None
+            if category in ["backup", "incident"]:
+                series_type = category
+                parts = Path(path_str).parts
+                if len(parts) >= 3:
+                    series_id = parts[2]
+            
+            # Test & Doc Requirements
+            requires_tests = False
+            if category == "code" and lifecycle == "active" and not path_str.startswith("tests/") and not path_str.startswith("ninagate/"):
+                if path_str.startswith("core/") or path_str.startswith("tools/") or path_str.startswith("crons/") or path_str.startswith("interfaces/"):
+                    if not path_str.endswith("__init__.py"):
+                        requires_tests = True
+                        
+            doc_required = False
+            if category == "code" and lifecycle == "active":
+                doc_required = True
+            
             governed_files.append({
                 "path": path_str,
                 "category": category,
                 "role": role,
                 "governed": True,
-                "canonical": True, # Updated below
+                "canonical": True,
                 "lifecycle": lifecycle,
                 "retention_policy": retention_policy,
                 "origin": origin,
                 "owner": "system" if origin != "manual" else "engineering",
                 "duplicate_cluster_id": None,
+                "series_id": series_id,
+                "series_type": series_type,
+                "requires_tests": requires_tests,
+                "doc_required": doc_required,
                 "summary": "",
                 "tags": [category, role, lifecycle],
                 "hash": get_hash(full_path)
@@ -97,13 +121,14 @@ summaries = {
     "docs/space/nina_index.md": "Canonical repository index (this document).",
     "docs/space/nina_index.json": "Machine-readable repository index companion.",
     "tools/validate_index.py": "Automated validator for repository index consistency.",
-    "tools/update_index.py": "Utility to regenerate the repository index."
+    "tools/update_index.py": "Utility to regenerate the repository index.",
+    "tools/query_index.py": "Agent API to query file governance status.",
+    "tools/cleanup_by_index.py": "Safe dry-run cleanup planner based on retention policies.",
 }
 
 def generate_index():
     files = scan()
     
-    # Identify duplicate clusters
     hash_map = {}
     for f in files:
         h = f["hash"]
@@ -119,17 +144,15 @@ def generate_index():
             cluster_id = f"dup-{cluster_counter:04d}"
             cluster_counter += 1
             
-            # Determine canonical (prefer root, or shortest path, or active lifecycle)
             active_members = sorted([m for m in members if m["lifecycle"] == "active"], key=lambda x: len(x["path"]))
             canonical_path = active_members[0]["path"] if active_members else members[0]["path"]
             
-            # Update files
             for m in members:
                 m["duplicate_cluster_id"] = cluster_id
                 if m["path"] != canonical_path:
                     m["canonical"] = False
                     if m["lifecycle"] == "active":
-                        m["lifecycle"] = "deprecated" # Demote redundant active copies
+                        m["lifecycle"] = "deprecated"
                         
             duplicate_clusters.append({
                 "cluster_id": cluster_id,
@@ -139,11 +162,11 @@ def generate_index():
             })
 
     for f in files:
-        del f["hash"] # Remove hash from output payload to keep it clean
+        del f["hash"] 
         f["summary"] = summaries.get(f["path"], summaries.get(f["path"].split("/")[0] + "/", "Governed artifact."))
 
     index_data = {
-        "version": "1.1",
+        "version": "1.2",
         "updated": "2026-06-10",
         "governed_scope": "All docs under docs/ and docs/space/, shims/scripts under tools/, configs (*.service, requirements.txt, .env.example), exported snapshots in exports/ and logs. Excludes temp data and cache.",
         "files": files,
@@ -190,7 +213,7 @@ The following clusters contain identical content. Consolidate to the canonical s
 
     md_content += """
 ## 4. Governance Rules & Index-First Workflow
-1. **Check the Index:** Check `docs/space/nina_index.md` for the file's entry (path, role, lifecycle).
+1. **Check the Index:** `python3 tools/query_index.py --path <file>`
 2. **Duplicate Clusters:** When writing to a path that belongs to a duplicate cluster, you MUST only write to the `canonical_path`.
 3. **Index Modification:** If creating/moving a governed file:
    - Run `python3 tools/update_index.py`.
