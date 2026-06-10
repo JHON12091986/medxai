@@ -3,6 +3,15 @@
 import logging, time, zipfile
 from pathlib import Path
 
+from crons.registry import CronJob
+CRON_JOB = CronJob(
+    id='backup_jobs',
+    name='Backup Jobs',
+    schedule='30 2 * * *',
+    module='crons.backup_jobs',
+    description='Runs memory and python codebase backups'
+)
+
 logger = logging.getLogger("nina.scheduler")
 
 BACKUP_ROOT = Path("upgrades/backups")
@@ -27,3 +36,6 @@ async def run_py_backup(nina_os):
         logger.info(f"py_backup_ok dest={dest}", extra={"cron_module": "cron", "job_id": "py_backup"})
     except Exception as e:
         logger.warning(f"py_backup_failed {e}", extra={"cron_module": "cron", "job_id": "py_backup"})
+
+def run():
+    pass  # TODO: wire existing logic here
