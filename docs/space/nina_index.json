@@ -73,29 +73,6 @@
       ]
     },
     {
-      "path": "patch_obs2.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "pytest.ini",
       "category": "other",
       "role": "source_of_truth",
@@ -162,29 +139,6 @@
       "summary": "Governed artifact.",
       "tags": [
         "other",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "patch_obs.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
         "source_of_truth",
         "active"
       ]
@@ -374,29 +328,6 @@
       ]
     },
     {
-      "path": "patch_tests_2.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "nina_update_log.md",
       "category": "doc",
       "role": "system_of_record",
@@ -463,52 +394,6 @@
       "summary": "High-level system design and logic flow map.",
       "tags": [
         "doc",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "patch_tests_3.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "repro_r77.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
         "source_of_truth",
         "active"
       ]
@@ -693,29 +578,6 @@
       "summary": "Governed artifact.",
       "tags": [
         "other",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "patch_tests.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
         "source_of_truth",
         "active"
       ]
@@ -1024,29 +886,6 @@
       ]
     },
     {
-      "path": "patch_backlog.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": ".env.save",
       "category": "other",
       "role": "source_of_truth",
@@ -1134,29 +973,6 @@
       "summary": "Human-facing project overview, agent model, and installation guide.",
       "tags": [
         "doc",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "patch_task_store.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
         "source_of_truth",
         "active"
       ]
@@ -39189,6 +39005,75 @@
       ]
     },
     {
+      "path": "bin/patch_obs2.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/patch_obs.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/patch_tests_2.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "bin/agynina",
       "category": "other",
       "role": "source_of_truth",
@@ -39207,6 +39092,75 @@
       "summary": "Governed artifact.",
       "tags": [
         "other",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/patch_tests_3.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/repro_r77.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/patch_tests.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
         "source_of_truth",
         "active"
       ]
@@ -39253,6 +39207,52 @@
       "summary": "Governed artifact.",
       "tags": [
         "other",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/patch_backlog.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/patch_task_store.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
         "source_of_truth",
         "active"
       ]

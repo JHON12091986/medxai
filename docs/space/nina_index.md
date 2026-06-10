@@ -38,7 +38,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `nina-dashboard.service` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `nina.service` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `nina_aider.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `nina_cleanup.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `nina_cleanup.sh` | source_of_truth | active | keep | Permanent wrapper script for safe redundancy cleanup execution. | ✅ YES |
 | `nina_codebase_backup.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `nina_context.md` | source_of_truth | active | keep | AI session grounding profile & architecture context. Attach to new threads. | ✅ YES |
 | `nina_docbase_backup.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -49,16 +49,8 @@ This index tracks all governed artifacts in the NINA repository.
 | `nina_update_log.md` | system_of_record | active | keep | Canonical live activity log (Entry 001-167). Newest entries at top. | ✅ YES |
 | `ninagate_load_test.log` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `ninagate_load_test.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `patch_backlog.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `patch_obs.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `patch_obs2.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `patch_task_store.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `patch_tests.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `patch_tests_2.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `patch_tests_3.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pr_desc.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pytest.ini` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `repro_r77.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `requirements.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test.lock` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools.log` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
