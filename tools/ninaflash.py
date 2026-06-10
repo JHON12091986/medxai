@@ -27,6 +27,7 @@ except ImportError:
 import shutil
 import ast
 
+
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Optional, Tuple
@@ -834,6 +835,77 @@ def cmd_kernel_upgrade(args):
     """[032] Self-evolution command."""
     print("Kernel upgrade initialized.")
 
+
+# ------------------------------------------------------------------
+# MODULE 11: LOG COMPRESSION & ROTATION
+# ------------------------------------------------------------------
+
+def cmd_log_summarize(args):
+    """[037] Sliding window summarizer for nina_update_log.md."""
+    log_path = REPO_ROOT / "nina_update_log.md"
+    if not log_path.exists():
+        log_path = REPO_ROOT / "docs/logs/nina_update_log.md"
+        if not log_path.exists():
+            print("❌ nina_update_log.md not found.")
+            return
+
+    content = log_path.read_text(encoding="utf-8")
+    pattern = re.compile(r'(?m)^## Entry \d+.*?(?=\n## Entry |\Z)', re.DOTALL)
+    entries = list(pattern.finditer(content))
+
+    if not entries:
+        print("No entries found.")
+        return
+
+    keep_n = 10
+    summarized = 0
+    new_content = content[:entries[0].start()]
+
+    for i, match in enumerate(entries):
+        entry_text = match.group(0)
+        # Collapse older entries that are automated syncs
+        if i < len(entries) - keep_n:
+            if "D-sync Post-session sync" in entry_text or "nina_sync.sh v4 automated run" in entry_text:
+                header = entry_text.splitlines()[0]
+                entry_text = f"{header}\n\n_Collapsed auto-sync entry_\n\n"
+                summarized += 1
+        new_content += entry_text
+
+    if summarized > 0:
+        log_path.write_text(new_content, encoding="utf-8")
+        print(f"✅ Summarized {summarized} log entries. Log compressed.")
+    else:
+        print("✅ No log entries required summarization.")
+
+def cmd_ops_rotate_logs(args):
+    """[038] Compress and rotate tool logs."""
+    import gzip
+    import shutil
+
+    logs_dir = REPO_ROOT / "logs"
+    archive_dir = logs_dir / "archive"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+
+    rotated = 0
+    if logs_dir.exists():
+        for log_file in logs_dir.glob("*.log"):
+            if not log_file.is_file():
+                continue
+            # Skip if already gzipped or empty
+            if log_file.stat().st_size == 0:
+                continue
+
+            archive_path = archive_dir / f"{log_file.name}.gz"
+            with open(log_file, "rb") as f_in:
+                with gzip.open(archive_path, "wb") as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+
+            # Clear original file
+            log_file.write_text("")
+            rotated += 1
+
+    print(f"✅ Rotated and compressed {rotated} log files to {archive_dir.relative_to(REPO_ROOT)}/")
+
 # ------------------------------------------------------------------
 # THE UNIFIED DISPATCHER
 # ------------------------------------------------------------------
@@ -987,6 +1059,11 @@ def main():
     p_ops = subparsers.add_parser("ops"); p_os = p_ops.add_subparsers(dest="sub")
     p_os.add_parser("thermal"); p_os.add_parser("vram")
     p_os.add_parser("compress-logs").add_argument("--log-file", required=True)
+    p_os.add_parser("rotate-logs")
+
+    p_log = subparsers.add_parser("log"); p_ls = p_log.add_subparsers(dest="sub")
+    p_ls.add_parser("summarize")
+
     
     p_gen = subparsers.add_parser("gen"); p_gs = p_gen.add_subparsers(dest="sub")
     p_gs.add_parser("tool").add_argument("name")
@@ -1060,6 +1137,10 @@ def main():
         if args.sub == "thermal": cmd_ops_thermal(args)
         elif args.sub == "vram": cmd_ops_vram(args)
         elif args.sub == "compress-logs": cmd_ops_compress_logs(args)
+        elif args.sub == "rotate-logs": cmd_ops_rotate_logs(args)
+    elif args.command == "log":
+        if args.sub == "summarize": cmd_log_summarize(args)
+
 
 if __name__ == "__main__":
     main()

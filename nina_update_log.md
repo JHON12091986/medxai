@@ -9,13 +9,7 @@
 
 ## Entry 094 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 095 — 2026-06-06 · nina_sync.sh Step 8 rewritten — single fixed output nina_latest.md
 
@@ -38,36 +32,17 @@
 - `git checkout HEAD -- nina_sync.sh nina_update_log.md`
 
 ---
-
 ## Entry 096 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 097 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 098 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 099 — 2026-06-06 · nina_sync.sh Step 8 — full master export (docs+code+shell+json) into nina_latest.md
 
@@ -89,16 +64,9 @@
 - `git checkout HEAD -- nina_sync.sh nina_update_log.md`
 
 ---
-
 ## Entry 100 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 101 — 2026-06-06 · rclone Google Drive auto-upload wired into nina_sync.sh Step 8
 
@@ -123,36 +91,17 @@
 - `git checkout HEAD -- nina_sync.sh nina_update_log.md`
 
 ---
-
 ## Entry 102 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 103 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 104 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 105 — 2026-06-06 · DEV 5.9 — All Jules PRs superseded by live sync, pyflakes pre-existing advisory warnings noted, runtime verified
 
@@ -174,16 +123,9 @@
 - `git checkout HEAD -- nina_update_log.md tests/`
 
 ---
-
 ## Entry 106 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v4 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,tests/__init__.py,tests/test_smoke.py,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 107 — 2026-06-06 · D-13 REVERTED — nina_sync.sh hard block removed, D-12 soft warning retained
 
@@ -203,16 +145,9 @@
 - `git checkout HEAD -- nina_update_log.md`
 
 ---
-
 ## Entry 108 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 109 — 2026-06-06 · D-07/D-08/D-09/D-10 MD file audit fixes — AGENTS dedup, nina_context stale items, error_register shell.allowlist closed, update_log renumbered
 
@@ -235,16 +170,9 @@
 - `git checkout HEAD -- AGENTS.md nina_context.md docs/space/nina_context.md docs/space/nina_error_register.md && cp upgrades/backups/nina_update_log.bak.* logs/nina_update_log.md`
 
 ---
-
 ## Entry 109 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 110 — 2026-06-06 · D-14 jules_lock.txt created — agy/Jules file territory system
 
@@ -263,36 +191,17 @@
 - `rm jules_lock.txt && git checkout HEAD -- AGENTS.md`
 
 ---
-
 ## Entry 111 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,jules_lock.txt,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 112 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 113 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 114 — 2026-06-06 · D-15 Learn Jules Tools Reference and Examples
 
@@ -309,16 +218,9 @@
 - `git checkout HEAD -- nina_update_log.md`
 
 ---
-
 ## Entry 115 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 116 — 2026-06-06 · D-16 Pushed main to origin after PR status verification
 
@@ -335,26 +237,13 @@
 - `git checkout HEAD -- nina_update_log.md`
 
 ---
-
 ## Entry 117 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 118 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 119 — 2026-06-06 · D-17 fetch prune and final verification
 
@@ -371,16 +260,9 @@
 - `git checkout HEAD -- nina_update_log.md`
 
 ---
-
 ## Entry 120 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 121 — 2026-06-06 · D-18 Fix nina_sync.sh Jules PR branch push check logic
 
@@ -399,17 +281,9 @@
 - `git checkout HEAD -- nina_sync.sh nina_update_log.md`
 
 ---
-
 ## Entry 122 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_update_log.md,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 123 — 2026-06-06 · chore: Consolidated docs/space/ from 10 files to 3
 
@@ -433,17 +307,9 @@
 - `git checkout HEAD -- nina_sync.sh docs/space/ nina_update_log.md`
 
 ---
-
 ## Entry 032 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/capabilities.json,docs/space/facts.json,docs/space/nina_context.md,docs/space/nina_error_register.md,docs/space/nina_phase1_roadmap.md,docs/space/nina_problem_log.md,docs/space/nina_update_log.md,docs/space/nina_v12_blueprint.md,docs/space/requirements.txt,nina_sync.sh,nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,docs/space/nina_state.md,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 124 — 2026-06-06 · docs:(D-17) optimize ninalatest context export for size and signal
 
@@ -463,17 +329,9 @@
 - `git checkout HEAD -- nina_sync.sh nina_update_log.md && rm tools/compact_exporter.py`
 
 ---
-
 ## Entry 034 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_sync.sh,nina_update_log.md,tools/compact_exporter.py,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 125 — 2026-06-06 · docs:(D-18) add NINA Tool Routing Policy v2 for Perplexity agy Jules
 
@@ -494,16 +352,9 @@
 - `git checkout HEAD -- AGENTS.md docs/space/AGENTS.md docs/space/nina_state.md tools/compact_exporter.py nina_update_log.md`
 
 ---
-
 ## Entry 036 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,nina_update_log.md,tools/compact_exporter.py,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 126 — 2026-06-06 · docs:(D-19) revalidate open blocker board against live code and guardian evidence
 
@@ -526,16 +377,9 @@
 - `git checkout HEAD -- docs/space/nina_error_register.md docs/space/nina_state.md guardian tools/compact_exporter.py nina_update_log.md`
 
 ---
-
 ## Entry 038 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 127 — 2026-06-06 · fix:(D-20) harden Telegram interface masking handler order parse_mode
 
@@ -557,234 +401,98 @@
 - `git checkout HEAD -- interfaces/telegram_interface.py docs/space/nina_error_register.md docs/space/nina_state.md nina_update_log.md`
 
 ---
-
 ## Entry 040 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 041 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 042 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 043 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 044 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 045 — 2026-06-06 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 046 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 047 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,.jules_tasks/,append_log.py,append_log_d02.py,append_log_d03.py,docs/archive/,exports/,gen.py,nina_master_export.sh,nina_v12_blueprint.md,patch_telegram.py,shrink_roadmap.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 048 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/AGENTS.md,nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 049 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 050 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/AGENTS.md,nina_update_log.md,docs/space/WORKFLOW.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 051 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/compact_exporter.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 052 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 053 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** WORKFLOW.md,docs/space/WORKFLOW.md,docs/space/nina_exporter_contract.md,exports/nina_latest.md,nina_sync.sh,nina_update_log.md,tools/compact_exporter.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 054 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 055 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 056 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 057 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 058 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 059 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 060 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/AGENTS.md,nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 061 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 062 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
+_Collapsed auto-sync entry_
 
-**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
 ## Entry 063 — 2026-06-07 · feat(identity): B-3 F-03 — agentic identity directive in system prompt, AGENTS.md, nina_state.md
 
 **Triggered by:** User request.
@@ -806,24 +514,14 @@
 ---
 
 ---
-
 ## Entry 064 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** AGENTS.md,core/nina.py,docs/space/AGENTS.md,docs/space/nina_state.md,nina_sync.sh,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service activating
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 065 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
+_Collapsed auto-sync entry_
 
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
 ## Entry 066 — 2026-06-07 · feat(cli): G-01 — add interfaces/cli_interface.py and bin/nina
 
 **Triggered by:** User request.
@@ -844,24 +542,14 @@
 ---
 
 ---
-
 ## Entry 067 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** bin/nina,data/model_cache.json,interfaces/cli_interface.py,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 068 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
+_Collapsed auto-sync entry_
 
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service activating
 ## Entry 069 — 2026-06-07 · feat(ops): install aider-chat and configure OpenRouter
 
 **Triggered by:** User request.
@@ -882,14 +570,10 @@
 ---
 
 ---
-
 ## Entry 070 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
+_Collapsed auto-sync entry_
 
-**Files changed:** .aider.conf.yml,nina_aider.sh,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service activating
 ## Entry 071 — 2026-06-07 · docs(policy): G-02 — register aider-chat in four-tool routing policy
 
 **Triggered by:** User request.
@@ -910,14 +594,10 @@
 ---
 
 ---
-
 ## Entry 072 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
+_Collapsed auto-sync entry_
 
-**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service activating
 ## Entry 073 — 2026-06-07 · docs(policy): G-03 — make AGENTS.md tool-agnostic for IDE switching and update routing policy to four-tool
 
 **Triggered by:** User request.
@@ -938,34 +618,18 @@
 ---
 
 ---
-
 ## Entry 074 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** AGENTS.md,docs/space/AGENTS.md,docs/space/nina_state.md,jules_lock.txt,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service activating
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 075 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/compact_exporter.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 076 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
+_Collapsed auto-sync entry_
 
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service activating
 ## Entry 077 — 2026-06-07 · docs(policy): G-04 — make NINA docs tool-agnostic for IDE switching and update routing policy to four-tool
 
 **Triggered by:** User request.
@@ -986,64 +650,30 @@
 ---
 
 ---
-
 ## Entry 078 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service activating
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 079 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service activating
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 080 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** crons/backup_jobs.py,crons/manager.py,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 081 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 082 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,bin/ninaflash,tools/ninaflash.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 083 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
+_Collapsed auto-sync entry_
 
-**Files changed:** AGENTS.md,WORKFLOW.md,bin/ninaflash,docs/space/AGENTS.md,docs/space/WORKFLOW.md,tools/ninaflash.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
 ## Entry 084 — 2026-06-07 · docs: rename agy references to ninaflash across the workspace
 
 **Triggered by:** User request.
@@ -1075,806 +705,325 @@
 ---
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 ---
-
 ## Entry 085 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 086 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 087 — 2026-06-07 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 088 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 089 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 090 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 091 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 092 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 093 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 094 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 095 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 096 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 097 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 098 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 099 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 100 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** .gitignore,jules_lock.txt,tools/ninaflash.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 101 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/compact_exporter.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 102 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 103 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 104 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 105 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 106 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 107 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 108 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 109 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 110 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,jules_lock.txt,nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 111 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/AGENTS.md,docs/space/jules_backlog.md,jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 112 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 113 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 114 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 115 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 116 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** jules_lock.txt,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 117 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 118 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** core/router.py,data/model_cache.json,docs/space/jules_backlog.md,docs/space/jules_task_tracker.md,jules_lock.txt,tests/test_router.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 119 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** core/config.py,core/router.py,jules_lock.txt,tests/test_router.py,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 120 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 121 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,docs/space/jules_task_tracker.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 122 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,docs/space/jules_task_tracker.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 123 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,docs/space/jules_task_tracker.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 124 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_backlog.md,docs/space/jules_task_tracker.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 125 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/jules_task_tracker.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 126 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 127 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 128 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/nina_state.md,nina.service,nina_context.md,nina_problem_log.md,tools/nina_dashboard.py,nina-dashboard.service,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 129 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_sync.sh,tools/compact_exporter.py,nina-dashboard.service,upgrades/.guardian_handoff.json,upgrades/guardian_baseline.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 130 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/nina_dashboard.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 131 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** data/tasks.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 132 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/AGENTS.md,data/tasks.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 133 — 2026-06-08 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** data/tasks.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 134 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** data/tasks.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 135 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_sync.sh,data/tasks.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 136 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** data/tasks.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 137 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** data/tasks.json
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 138 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/ninaflash.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 139 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/ninaflash.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 140 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/ninaflash.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 141 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/ninaflash.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 142 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/ninaflash.py,kernel_generator.py,tools/kernel/
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 143 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** tools/ninaflash.py,kernel_generator.py,tools/kernel/
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 001 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/AGENTS.md,docs/space/WORKFLOW.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 145 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 146 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** core/router.py,docs/logs/nina_update_log.md,docs/space/ninaflash_task_tracker.md,docs/space/jules_backlog.md,tests/test_router.py,nina_update_log.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 147 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/ninaflash_task_tracker.md,nina_update_log.md,repro_r77.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 148 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** ninagate/main.py,tools/ninaflash.py,nina_update_log.md,repro_r77.py
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 149 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/AGENTS.md
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 150 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_sync.sh,data/circuit_state.json,nina_codebase_backup.sh,nina_docbase_backup.sh,nina_logbase_backup.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 151 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** data/circuit_state.json,nina_codebase_backup.sh,nina_docbase_backup.sh,nina_logbase_backup.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 152 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_sync.sh,data/circuit_state.json,generate_backups.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 153 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_codebase_backup.sh,nina_docbase_backup.sh,nina_logbase_backup.sh,nina_sync.sh,data/circuit_state.json,generate_backups.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 154 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,data/circuit_state.json,generate_backups.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 155 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,data/circuit_state.json,generate_backups.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 156 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,data/circuit_state.json,generate_backups.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 157 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** data/circuit_state.json,generate_backups.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 158 — 2026-06-09 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** bin/ninagate,data/circuit_state.json,generate_backups.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 159 — 2026-06-10 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** bin/ninagate,data/circuit_state.json,generate_backups.sh,ninagate_load_test.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 160 — 2026-06-10 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** bin/ninagate,data/circuit_state.json,generate_backups.sh,ninagate_load_test.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 161 — 2026-06-10 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_update_log.md,data/circuit_state.json,generate_backups.sh,ninagate_load_test.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 162 — 2026-06-10 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** data/circuit_state.json,generate_backups.sh,ninagate_load_test.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 163 — 2026-06-10 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** docs/space/AGENTS.md,data/circuit_state.json,generate_backups.sh,ninagate_load_test.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 164 — 2026-06-10 · D-sync Post-session sync
 
-**Triggered by:** nina_sync.sh v5 automated run
-
-**Files changed:** nina_sync.sh,data/circuit_state.json,docs/space/claude_feed.md,generate_backups.sh,ninagate_load_test.sh
-
-**Verification:** git push OK, nina.service active
-
----
+_Collapsed auto-sync entry_
 
 ## Entry 165 — 2026-06-10 · D-sync Post-session sync
 
@@ -1885,7 +1034,6 @@
 **Verification:** git push OK, nina.service active
 
 ---
-
 ## Entry 166 — 2026-06-10 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v5 automated run
@@ -1895,7 +1043,6 @@
 **Verification:** git push OK, nina.service active
 
 ---
-
 ## Entry 167 — 2026-06-10 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v5 automated run
@@ -1905,7 +1052,6 @@
 **Verification:** git push OK, nina.service active
 
 ---
-
 ## Entry 168 — 2026-06-11 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v5 automated run
@@ -1915,7 +1061,6 @@
 **Verification:** git push OK, nina.service active
 
 ---
-
 ## Entry 169 — 2026-06-11 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v5 automated run
@@ -1925,7 +1070,6 @@
 **Verification:** git push OK, nina.service active
 
 ---
-
 ## Entry 170 — 2026-06-11 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v5 automated run
@@ -1935,7 +1079,6 @@
 **Verification:** git push OK, nina.service active
 
 ---
-
 ## Entry 171 — 2026-06-11 · D-sync Post-session sync
 
 **Triggered by:** nina_sync.sh v5 automated run
@@ -1945,7 +1088,6 @@
 **Verification:** git push OK, nina.service active
 
 ---
-
 ## Entry 172 — 2026-06-11 · docs: fix and integrate Throughput Maximizer + Token Reduction MEGA-TASKs
 
 **Triggered by:** User request to fix and add Jules specs for optimization.
@@ -1964,7 +1106,6 @@
 - `git checkout HEAD -- docs/space/jules_backlog.md nina_update_log.md && rm docs/space/jules_spec_throughput_maximizer.md docs/space/jules_spec_token_surgical.md`
 
 ---
-
 ## Entry 173 — 2026-06-11 · docs: create 10 token-saving MEGA-TASK specs for Jules
 
 **Triggered by:** User request to optimize Gemini CLI token usage.
@@ -1982,7 +1123,6 @@
 - `git checkout HEAD -- docs/space/jules_backlog.md nina_update_log.md && rm docs/space/jules_spec_*.md`
 
 ---
-
 ## Entry 174 — 2026-06-11 · docs: integrate 71 new token-saving MEGA-TASKs into Jules backlog
 
 **Triggered by:** User request to maximize throughput and minimize token usage.
