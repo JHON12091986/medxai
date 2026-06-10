@@ -3,17 +3,17 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-10 17:00 +06
-- Git HEAD: 6dfac82ee6eaa39e6e731fc0ad1bc3d477fee46e
-- Last commit: docs: post-session sync 2026-06-10 16:21
+- Generated: 2026-06-10 23:19 +06
+- Git HEAD: be20c176b366d320f21173bc953ef2729438d87f
+- Last commit: docs: post-session sync 2026-06-10 23:18
 - Service: active
 
 ## 2. Active Jules Sessions (live)
-#1 Developer Tooling Hardening: Jules API, Shell Allowlist & Model Discovery — COMPLETED — https://github.com/aibony/nina/pull/84
-#2 Centralized Cron Registry & Result Logging — COMPLETED — https://github.com/aibony/nina/pull/79
-#3 Agent Loop Refactor: THINK-PLAN-ACT Extraction — COMPLETED — https://github.com/aibony/nina/pull/82
-#4 Finance & Market Tools Hardening: Retry Logic & Structured Returns — COMPLETED — https://github.com/aibony/nina/pull/86
-#5 Telegram Interface Hardening: Rate Limiting & Error Handling — COMPLETED — https://github.com/aibony/nina/pull/81
+#1 Implement Robust SSRF Protection in tools/browser.py — COMPLETED — no PR yet
+#2 Enriching NINA User Context in facts.json — COMPLETED — https://github.com/aibony/nina/pull/89
+#3 Unit Tests for MemorySystem (core/memory.py) — COMPLETED — https://github.com/aibony/nina/pull/87
+#4 Create Initial Plan Templates for NINA — COMPLETED — https://github.com/aibony/nina/pull/88
+#5 Implement Environment Variable Validation in NinaConfig — COMPLETED — https://github.com/aibony/nina/pull/92
 
 ## 3. Locked Files (do not touch in new specs)
 ```
@@ -37,11 +37,11 @@ _Directory: `tests/`_
 
 ## 5. Last 5 Completions
 ```
-6dfac82 docs: post-session sync 2026-06-10 16:21
-04163f8 Merge branch 'main' into jules/cohere-01-cleanup-10589089363743115113
-f636563 docs: post-session sync 2026-06-10 16:17
-a4b4df8 refactor: modular healthcheck and loguru integration
-2acb5a4 chore: resolve conflict in requirements.txt
+be20c17 docs: post-session sync 2026-06-10 23:18
+f5d6dd6 chore(docs): date-stamp nina_master_backup to 2026-06-10
+c662338 chore(gitignore): stop tracking exports/nina_latest.md in git history
+b4f1906 chore(docs): archive nina_problem_log.md — superseded by nina_error_register.md
+801e8f3 chore(docs): consolidate nina_update_log.md and nina_context.md to root canonical
 ```
 
 ## 6. Open Blockers
@@ -51,6 +51,7 @@ a4b4df8 refactor: modular healthcheck and loguru integration
 - | AG-F-03 | `tools/agents/expense_agent.py` | ExpenseAgent — monitors Telegram messages for expense patterns, auto-logs to finance tool | `NEEDS_SPEC` | AG-F-01 |
 - | AG-J-06 | `tests/test_market_agent.py` | Unit tests for MarketAgent: mock price feed, threshold crossing, alert emission | `NEEDS_SPEC` | AG-F-02 |
 - AG-F-01 → AG-F-02            ← BaseAgent + MarketAgent (first real autonomous agent)
+- | F-02 | memory: deterministic personal_context | E-sync | — | 2026-06-09 |
 
 ## 7. File Ownership Cheatsheet
 | File | Purpose | Risk |
@@ -75,4 +76,4 @@ a4b4df8 refactor: modular healthcheck and loguru integration
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 
 ---
-_Feed size: 4020 bytes_
+_Feed size: 4093 bytes_

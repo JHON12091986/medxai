@@ -181,7 +181,8 @@ The following clusters contain identical content. Consolidate to the canonical s
 - **Cluster `dup-0144`**: Canonical is `upgrades/backups/memory20260606023000/facts.json`. Members: `upgrades/backups/memory20260606023000/facts.json`, `upgrades/backups/memory20260609023000/facts.json`
 - **Cluster `dup-0145`**: Canonical is `data/memory/facts.json`. Members: `upgrades/backups/memory20260611023000/facts.json`, `data/memory/facts.json`
 - **Cluster `dup-0146`**: Canonical is `data/memory/chromadb/chroma.sqlite3`. Members: `upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3`, `data/memory/chromadb/chroma.sqlite3`
-- **Cluster `dup-0147`**: Canonical is `data/gpuconfig.json`. Members: `data/gpuconfig.json`, `data/modeldiscovery.json`
+- **Cluster `dup-0147`**: Canonical is `bin/nk`. Members: `bin/nk`, `bin/ninaflash`
+- **Cluster `dup-0148`**: Canonical is `data/gpuconfig.json`. Members: `data/gpuconfig.json`, `data/modeldiscovery.json`
 
 ## 4. Governance Rules & Index-First Workflow
 1. **Check the Index:** `python3 tools/query_index.py --path <file>`

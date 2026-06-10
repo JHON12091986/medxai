@@ -37801,6 +37801,29 @@
       ]
     },
     {
+      "path": "docs/ninaflash.md",
+      "category": "doc",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, agynina).",
+      "tags": [
+        "doc",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "docs/guardian.md",
       "category": "doc",
       "role": "source_of_truth",
@@ -37850,29 +37873,6 @@
     },
     {
       "path": "docs/router.md",
-      "category": "doc",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, agynina).",
-      "tags": [
-        "doc",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "docs/agynina.md",
       "category": "doc",
       "role": "source_of_truth",
       "governed": true,
@@ -38104,29 +38104,6 @@
       ]
     },
     {
-      "path": "docs/space/agynina_task_tracker.md",
-      "category": "doc",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, agynina).",
-      "tags": [
-        "doc",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "docs/space/nina_repo_hygiene_dashboard.md",
       "category": "doc",
       "role": "source_of_truth",
@@ -38270,6 +38247,29 @@
     },
     {
       "path": "docs/space/claude_feed.md",
+      "category": "doc",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, agynina).",
+      "tags": [
+        "doc",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "docs/space/ninaflash_task_tracker.md",
       "category": "doc",
       "role": "source_of_truth",
       "governed": true,
@@ -38982,7 +38982,7 @@
       ]
     },
     {
-      "path": "bin/agynina",
+      "path": "bin/nk",
       "category": "other",
       "role": "source_of_truth",
       "governed": true,
@@ -38991,7 +38991,30 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": null,
+      "duplicate_cluster_id": "dup-0147",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "other",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "bin/ninaflash",
+      "category": "other",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": false,
+      "lifecycle": "deprecated",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": "dup-0147",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -40109,6 +40132,29 @@
       ]
     },
     {
+      "path": "tools/ninaflash.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": true,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Capability kernel and domain-specific action modules (agynina nucleus).",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "tools/upgradepipeline.py",
       "category": "code",
       "role": "source_of_truth",
@@ -40551,29 +40597,6 @@
     },
     {
       "path": "tools/create_pr.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": true,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Capability kernel and domain-specific action modules (agynina nucleus).",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "tools/agynina.py",
       "category": "code",
       "role": "source_of_truth",
       "governed": true,
@@ -41458,7 +41481,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0147",
+      "duplicate_cluster_id": "dup-0148",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -41504,7 +41527,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0147",
+      "duplicate_cluster_id": "dup-0148",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -44640,6 +44663,15 @@
     },
     {
       "cluster_id": "dup-0147",
+      "canonical_path": "bin/nk",
+      "members": [
+        "bin/nk",
+        "bin/ninaflash"
+      ],
+      "reason": "exact_md5_duplicate"
+    },
+    {
+      "cluster_id": "dup-0148",
       "canonical_path": "data/gpuconfig.json",
       "members": [
         "data/gpuconfig.json",
