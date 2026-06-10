@@ -294,3 +294,41 @@ and urgency nudge all activate. Zero code required.
 ---
 
 *Last updated: 2026-06-05 — Blueprint updated, Space Instructions rewritten (snake_case enforcement, nina_sync.sh correction)*
+
+
+---
+
+## Logging Shape
+
+For NINA, logging in non-core modules (tools and crons) should include structured context to make logs easily searchable. Instead of modifying core logger configurations, we reuse existing logger instances and inject contextual fields such as `tool_name`, `job_id`, or `task_id` into the `extra` argument of the logger calls (e.g. `logger.info("message", extra={"log":"tools.log", "tool_name": "search"})`). It's also important to maintain a reasonable log volume by avoiding tight loops that log per iteration.
+
+---
+
+---
+
+# NINA Proactive Reminder Engine
+
+The NINA proactive reminder engine is an internal API designed to store and surface reminders, fulfilling requirement F-06.
+
+---
+
+## Internal API Methods
+
+The API is exposed via the NINA `MemorySystem`:
+
+* `await nina.memory.add_reminder(text: str, due_time: float) -> str`
+  Adds a new reminder and returns its unique ID.
+
+* `await nina.memory.get_due_reminders(now: float) -> list`
+  Returns a list of reminder dictionaries that are pending and whose `due_time` is less than or equal to `now`.
+
+* `await nina.memory.mark_reminder_done(rem_id: str)`
+  Updates the status of the specified reminder to "done" and persists the change.
+
+---
+
+## Future Telegram UI Wiring
+
+In the future, Telegram UI commands (e.g., `/remind`) can be wired up by simply calling `await self.memory.add_reminder(text, due_time)` within `interfaces/telegram_interface.py` or agent actions, without needing to implement the persistence or timing logic.
+
+---
