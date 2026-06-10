@@ -179,7 +179,9 @@ The following clusters contain identical content. Consolidate to the canonical s
 - **Cluster `dup-0142`**: Canonical is `upgrades/backups/guardian_auto_20260523_013333/core/logger.py.bak`. Members: `upgrades/backups/guardian_auto_20260523_013333/core/logger.py.bak`, `upgrades/backups/guardian_auto_20260523_013508/core/logger.py.bak`, `upgrades/backups/guardian_auto_20260523_012934/core/logger.py.bak`, `upgrades/backups/core_cleanup/logger.py.bak`
 - **Cluster `dup-0143`**: Canonical is `upgrades/backups/archive/NINA Development Policy.md`. Members: `upgrades/backups/archive/NINA Development Policy.md`, `upgrades/backups/archive/nina_dev_policy.md`
 - **Cluster `dup-0144`**: Canonical is `upgrades/backups/memory20260606023000/facts.json`. Members: `upgrades/backups/memory20260606023000/facts.json`, `upgrades/backups/memory20260609023000/facts.json`
-- **Cluster `dup-0145`**: Canonical is `data/gpuconfig.json`. Members: `data/gpuconfig.json`, `data/modeldiscovery.json`
+- **Cluster `dup-0145`**: Canonical is `data/memory/facts.json`. Members: `upgrades/backups/memory20260611023000/facts.json`, `data/memory/facts.json`
+- **Cluster `dup-0146`**: Canonical is `data/memory/chromadb/chroma.sqlite3`. Members: `upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3`, `data/memory/chromadb/chroma.sqlite3`
+- **Cluster `dup-0147`**: Canonical is `data/gpuconfig.json`. Members: `data/gpuconfig.json`, `data/modeldiscovery.json`
 
 ## 4. Governance Rules & Index-First Workflow
 1. **Check the Index:** `python3 tools/query_index.py --path <file>`

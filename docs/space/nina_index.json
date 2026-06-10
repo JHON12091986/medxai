@@ -36582,6 +36582,52 @@
       ]
     },
     {
+      "path": "upgrades/backups/memory20260611023000/facts.json",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": false,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": "dup-0145",
+      "series_id": "memory20260611023000",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": false,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": "dup-0146",
+      "series_id": "memory20260611023000",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/memory20260609023000/facts.json",
       "category": "backup",
       "role": "archive",
@@ -41573,7 +41619,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0145",
+      "duplicate_cluster_id": "dup-0147",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -41619,7 +41665,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0145",
+      "duplicate_cluster_id": "dup-0147",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -41780,7 +41826,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": null,
+      "duplicate_cluster_id": "dup-0145",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -41805,7 +41851,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": null,
+      "duplicate_cluster_id": "dup-0146",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -44737,6 +44783,24 @@
     },
     {
       "cluster_id": "dup-0145",
+      "canonical_path": "data/memory/facts.json",
+      "members": [
+        "upgrades/backups/memory20260611023000/facts.json",
+        "data/memory/facts.json"
+      ],
+      "reason": "exact_md5_duplicate"
+    },
+    {
+      "cluster_id": "dup-0146",
+      "canonical_path": "data/memory/chromadb/chroma.sqlite3",
+      "members": [
+        "upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3",
+        "data/memory/chromadb/chroma.sqlite3"
+      ],
+      "reason": "exact_md5_duplicate"
+    },
+    {
+      "cluster_id": "dup-0147",
       "canonical_path": "data/gpuconfig.json",
       "members": [
         "data/gpuconfig.json",
