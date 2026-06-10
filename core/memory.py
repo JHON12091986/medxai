@@ -108,7 +108,12 @@ class MemorySystem:
 
         parts = [pc_block]
         if docs:
-            parts.append("Recent context:\n" + "\n".join(docs))
+            # Simple truncation to stay under 4000 total (prevents context overflow)
+            budget = 3800 - len(pc_block)
+            context_str = "\n".join(docs)
+            if len(context_str) > budget:
+                context_str = context_str[:budget] + "... [truncated]"
+            parts.append("Recent context:\n" + context_str)
 
         return "\n\n".join(parts)
 

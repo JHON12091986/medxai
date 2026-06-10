@@ -183,12 +183,12 @@ async def test_7_build_context_nonempty(mock_paths, mock_chromadb):
 
 @pytest.mark.asyncio
 async def test_8_add_memory(mock_paths, mock_chromadb):
-    # MemorySystem.add() stores to ChromaDB without exception
+    # MemorySystem.save_turn() stores to ChromaDB without exception
     _, mock_col = mock_chromadb
     mem = MemorySystem()
     await mem.initialize()
 
-    await mem.add("test doc", {"meta": "data"})
+    await mem.save_turn("user", "test content")
 
     assert mock_col.add.called
 

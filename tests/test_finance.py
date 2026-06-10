@@ -14,8 +14,8 @@ def test_run_expenditure_report_happy_path():
 2023-11-05,100.00,Utilities,Electric bill
 2023-10-20,30.00,Groceries,Snacks
 """
-    result_str = run_expenditure_report(csv_data)
-    result = json.loads(result_str)
+    res = run_expenditure_report(csv_data)
+    result = json.loads(res.data)
 
     # Check that report structure is correct
     assert "2023-10" in result["report"]
@@ -30,13 +30,13 @@ def test_run_expenditure_report_happy_path():
     assert "0 errors" in result["summary"]
 
 def test_run_expenditure_report_empty_input():
-    result_str = run_expenditure_report("")
-    result = json.loads(result_str)
+    res = run_expenditure_report("")
+    result = json.loads(res.data)
     assert result["summary"] == "No expenditure data provided."
     assert result["report"] == {}
 
-    result_str = run_expenditure_report("   \n  ")
-    result = json.loads(result_str)
+    res = run_expenditure_report("   \n  ")
+    result = json.loads(res.data)
     assert result["summary"] == "No expenditure data provided."
     assert result["report"] == {}
 
@@ -47,8 +47,8 @@ bad_row_no_commas
 2023-10-15,not_a_number,Groceries,Shopping
 2023-11-05,100.00,Utilities,Electric bill
 """
-    result_str = run_expenditure_report(csv_data)
-    result = json.loads(result_str)
+    res = run_expenditure_report(csv_data)
+    result = json.loads(res.data)
 
     # Should only process 2 valid rows
     assert "Processed 2 expenses" in result["summary"]
@@ -64,8 +64,8 @@ def test_run_expenditure_report_plain_text():
 2023-01-02, 20.5, Commute, Train
 2023-01-03, 5, Coffee
 """
-    result_str = run_expenditure_report(text_data)
-    result = json.loads(result_str)
+    res = run_expenditure_report(text_data)
+    result = json.loads(res.data)
 
     assert "Processed 3 expenses" in result["summary"]
     assert result["report"]["2023-01"]["Commute"] == 30.5
