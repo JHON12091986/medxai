@@ -25,13 +25,23 @@ class MemorySystem:
     async def initialize(self):
         CHROMA_DIR.mkdir(parents=True, exist_ok=True)
         FACTS_FILE.parent.mkdir(parents=True, exist_ok=True)
-        self.client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-        ef = embedding_functions.OllamaEmbeddingFunction(
-            url="http://localhost:11434/api/embeddings",
-            model_name="nomic-embed-text"
-        )
-        self.col = self.client.get_or_create_collection("ninamemory", embedding_function=ef)
-        raw = json.loads(FACTS_FILE.read_text()) if FACTS_FILE.exists() else {}
+        try:
+            self.client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+            ef = embedding_functions.OllamaEmbeddingFunction(
+                url="http://localhost:11434/api/embeddings",
+                model_name="nomic-embed-text"
+            )
+            self.col = self.client.get_or_create_collection("ninamemory", embedding_function=ef)
+        except Exception as e:
+            logger.warning(f"ChromaDB initialization failed: {e}")
+            self.client = None
+            self.col = None
+        raw = {}
+        if FACTS_FILE.exists():
+            try:
+                raw = json.loads(FACTS_FILE.read_text())
+            except Exception as e:
+                logger.critical(f"Failed to load facts.json: {e}")
         for k, v in raw.items():
             if isinstance(v, dict) and "value" in v:
                 self.facts[k] = v
@@ -48,10 +58,13 @@ class MemorySystem:
         else:
             self.reminders = []
 
-        logger.info(f"MemorySystem ready conversations={self.col.count()} facts={len(self.facts)} reminders={len(self.reminders)}")
+        conv_count = self.col.count() if self.col else 0
+        logger.info(f"MemorySystem ready conversations={conv_count} facts={len(self.facts)} reminders={len(self.reminders)}")
 
     async def build_context(self, query: str, n: int = 5) -> str:
         try:
+            if not self.col:
+                return "(none)"
             nresults = min(n, self.col.count())
             if nresults > 0:
                 res = await asyncio.to_thread(
@@ -105,6 +118,8 @@ class MemorySystem:
 
     async def save_turn(self, role: str, content: str):
         try:
+            if not self.col:
+                return
             uid = f"{role}{int(time.time()*1000)}_{uuid.uuid4().hex[:6]}"
             await asyncio.to_thread(
                 self.col.add,
@@ -203,13 +218,19 @@ class MemorySystem:
             "ts": time.time(),
             "tags": ",".join(tags) if tags else ""
         }
-        await asyncio.to_thread(
-            self.col.add,
-            documents=[text],
-            ids=[entry_id],
-            metadatas=[metadata]
-        )
-        return entry_id
+        try:
+            if not self.col:
+                return ""
+            await asyncio.to_thread(
+                self.col.add,
+                documents=[text],
+                ids=[entry_id],
+                metadatas=[metadata]
+            )
+            return entry_id
+        except Exception as e:
+            logger.warning(f"kb_add_entry failed: {e}")
+            return ""
 
     async def kb_search(self, tag: str = None, query: str = None, limit: int = 5) -> list[dict]:
         """
@@ -217,50 +238,55 @@ class MemorySystem:
         F-08 primitive.
         """
         results = []
-        nresults = min(limit, self.col.count())
-        if nresults == 0:
-            return results
+        try:
+            if not self.col:
+                return results
+            nresults = min(limit, self.col.count())
+            if nresults == 0:
+                return results
 
-        if query:
-            if tag:
-                # We can't do string containment natively in basic Chroma without contains operator if not supported,
-                # but we'll try an exact tag match or just fetch and filter. For simplicity and reliability,
-                # we fetch by type and filter below if needed, or if we assume strict tag equality we could use it.
-                pass
-            res = await asyncio.to_thread(
-                self.col.query,
-                query_texts=[query],
-                n_results=nresults,
-                where={"type": "kb_entry"},
-                include=["documents", "metadatas"]
-            )
-            raw_docs = res.get("documents", [[]])[0]
-            raw_metas = res.get("metadatas", [[]])[0]
-            raw_ids = res.get("ids", [[]])[0]
+            if query:
+                if tag:
+                    # We can't do string containment natively in basic Chroma without contains operator if not supported,
+                    # but we'll try an exact tag match or just fetch and filter. For simplicity and reliability,
+                    # we fetch by type and filter below if needed, or if we assume strict tag equality we could use it.
+                    pass
+                res = await asyncio.to_thread(
+                    self.col.query,
+                    query_texts=[query],
+                    n_results=nresults,
+                    where={"type": "kb_entry"},
+                    include=["documents", "metadatas"]
+                )
+                raw_docs = res.get("documents", [[]])[0]
+                raw_metas = res.get("metadatas", [[]])[0]
+                raw_ids = res.get("ids", [[]])[0]
 
-            for i, m, d in zip(raw_ids, raw_metas, raw_docs):
-                if tag and tag not in m.get("tags", "").split(","):
-                    continue
-                results.append({"id": i, "text": d, "tags": m.get("tags", "").split(","), "source": m.get("source", "unknown"), "ts": m.get("ts", 0.0)})
-        else:
-            # If no text query, we have to fetch entries. Chroma's get() supports where.
-            res = await asyncio.to_thread(
-                self.col.get,
-                where={"type": "kb_entry"},
-                include=["documents", "metadatas"]
-            )
-            raw_docs = res.get("documents", [])
-            raw_metas = res.get("metadatas", [])
-            raw_ids = res.get("ids", [])
+                for i, m, d in zip(raw_ids, raw_metas, raw_docs):
+                    if tag and tag not in m.get("tags", "").split(","):
+                        continue
+                    results.append({"id": i, "text": d, "tags": m.get("tags", "").split(","), "source": m.get("source", "unknown"), "ts": m.get("ts", 0.0)})
+            else:
+                # If no text query, we have to fetch entries. Chroma's get() supports where.
+                res = await asyncio.to_thread(
+                    self.col.get,
+                    where={"type": "kb_entry"},
+                    include=["documents", "metadatas"]
+                )
+                raw_docs = res.get("documents", [])
+                raw_metas = res.get("metadatas", [])
+                raw_ids = res.get("ids", [])
 
-            for i, m, d in zip(raw_ids, raw_metas, raw_docs):
-                if tag and tag not in m.get("tags", "").split(","):
-                    continue
-                results.append({"id": i, "text": d, "tags": m.get("tags", "").split(","), "source": m.get("source", "unknown"), "ts": m.get("ts", 0.0)})
+                for i, m, d in zip(raw_ids, raw_metas, raw_docs):
+                    if tag and tag not in m.get("tags", "").split(","):
+                        continue
+                    results.append({"id": i, "text": d, "tags": m.get("tags", "").split(","), "source": m.get("source", "unknown"), "ts": m.get("ts", 0.0)})
 
-            # Sort by timestamp desc and limit
-            results.sort(key=lambda x: x["ts"], reverse=True)
-            results = results[:limit]
+                # Sort by timestamp desc and limit
+                results.sort(key=lambda x: x["ts"], reverse=True)
+                results = results[:limit]
+        except Exception as e:
+            logger.warning(f"kb_search failed: {e}")
 
         return results
 
@@ -274,3 +300,41 @@ class MemorySystem:
     @property
     def fact_count(self):
         return len(self.facts)
+
+class MemoryHealth:
+    @classmethod
+    def check(cls) -> dict:
+        health = {
+            "chromadb_ok": False,
+            "facts_ok": False,
+            "collection_count": 0,
+            "last_error": None
+        }
+
+        # Check facts.json
+        try:
+            if FACTS_FILE.exists():
+                json.loads(FACTS_FILE.read_text())
+            health["facts_ok"] = True
+        except Exception as e:
+            health["last_error"] = str(e)
+
+        # Check ChromaDB
+        try:
+            client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+            col = client.get_collection("ninamemory")
+            health["collection_count"] = col.count()
+            health["chromadb_ok"] = True
+        except Exception as e:
+            if health["last_error"]:
+                health["last_error"] += f" | {e}"
+            else:
+                health["last_error"] = str(e)
+
+        try:
+            from core.observability import get_hub
+            get_hub().emit_log()
+        except ImportError:
+            pass
+
+        return health

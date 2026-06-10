@@ -70,6 +70,10 @@ class AgentLoop:
     )
 
     async def _inner(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
+        # AG-LOOP: structured phase logging
+        from core.agent_loop import AgentLoop as _AL
+        import logging as _log
+        _log.getLogger("nina.agent").debug(f"agent input received: {goal!r}")
         session_history = list(session_history)
 
         ram = await system.get_ram_used_gb()
