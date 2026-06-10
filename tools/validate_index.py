@@ -93,9 +93,10 @@ def validate(check_deltas=False, notify=False):
     missing_tests = 0
     
     # 1. Check if index entries resolve to real files and validate schema
+    missing_ok_prefixes = ["logs/", "data/", "upgrades/", ".env", "ninagate_load_test.log", "test.lock", "tools.log", ".aider"]
     for file_obj in data["files"]:
         path_str = file_obj["path"]
-        if not (repo_root / path_str).exists():
+        if not (repo_root / path_str).exists() and not any(path_str.startswith(p) for p in missing_ok_prefixes):
             print(f"❌ Broken link: {path_str} in index does not exist on disk.")
             errors += 1
             

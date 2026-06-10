@@ -82,9 +82,8 @@ def _print_pulse():
     log_path = REPO_ROOT / "nina_update_log.md"
     sync_time = "UNKNOWN"
     if log_path.exists():
-        import datetime
         mtime = log_path.stat().st_mtime
-        sync_time = datetime.datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
+        sync_time = datetime.fromtimestamp(mtime).strftime("%Y-%m-%d %H:%M:%S")
     print(f"3. Sync: {sync_time}")
 
     locks = _get_locks()
