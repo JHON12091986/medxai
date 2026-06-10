@@ -4,7 +4,7 @@ from pathlib import Path
 def check_doc_deltas(data, repo_root):
     try:
         # Check against HEAD~1 for push, or origin/main for PR. 
-        base = os.environ.get("GITHUB_BASE_REF")
+        base = os.environ.get("GITHUB_BASE_REF") or "master"
         if base:
             cmd = ["git", "diff", "--name-only", f"origin/{base}...HEAD"]
         else:
@@ -71,7 +71,7 @@ def notify_telegram(message, repo_root):
         print(f"❌ Exception sending Telegram notification: {e}")
 
 def validate(check_deltas=False, notify=False):
-    repo_root = Path("/home/aibony/nina")
+    repo_root = Path.cwd()
     index_path = repo_root / "docs/space/nina_index.json"
 
     
