@@ -79,3 +79,63 @@ Merging Jules PRs blindly will frequently overwrite critical files
 "Never merge a Jules PR that touches AGENTS.md, nina_sync.sh, or
 nina_update_log.md without first backing up the current main version
 and restoring it if the merge introduces a regression."
+
+## 1. Four-Tool Operating Model — Parallel Execution
+
+NINA uses three tools running IN PARALLEL as the standard operating mode:
+
+| Tool | Role | Execution Mode |
+|------|------|---------------|
+| Perplexity Enterprise Pro | ARCHITECT + OVERWATCH | Active throughout — specs before, reviews after, unblocks during |
+| Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
+| Local Executor (ninaflash, Cursor, Claude Code, Cline, aider) | LOCAL MUSCLE | Sync local executor — edits, merges Jules PRs, deploys to service |
+
+THE FULL PARALLEL LOOP:
+1. Perplexity diagnoses + writes precise spec
+2. Jules receives spec → builds in cloud async (no interaction after submit)
+3. The local executor handles any urgent local fixes in parallel on its own worktree
+4. Jules opens PR when done
+5. The local executor reviews Jules PR diff, runs lint/compile checks, merges to main
+6. The local executor runs ./nina_sync.sh to deploy and export
+7. Perplexity reviews result (attach nina_latest.md to new thread)
+
+KEY DISTINCTION: The local executor is NOT just a fixer — it is the local merge and deploy executor.
+Jules does NOT merge its own PRs — the local executor always performs the merge after review.
+Perplexity is NOT idle during coding — it remains available for unblocking and mid-task review.
+
+## 2. Task Routing Matrix
+| Task / Scenario | Default Tool | Rationale | What NOT to Use |
+|:---|:---:|:---|:---|
+| Unclear bug / root-cause analysis | **Perplexity** | Deep context synthesis and cross-reference. | local executor or Jules (prone to blind code edits). |
+| Blocker in high-risk runtime file | **local executor** | Immediate local safety checking and execution. | Jules (PR delay and merge conflict risk). |
+| Single-file local fix | **local executor** | Fast local cycle, zero branch overhead. | Jules (too heavy for a quick patch). |
+| Multi-file feature work | **Jules** | Syncs edits across multiple files via PRs. | local executor (risk of staging broad uncoordinated diffs). |
+| Large refactor | **Jules** | Manages PR review process for high impact. | local executor (context limits on local CLI). |
+| Post-change review | **Perplexity** | Objective validation against baseline design. | local executor or Jules. |
+| Production-sensitive patch | **local executor** | Keeps secrets and banking parameters local. | Cloud providers or Jules. |
+
+## Tool Routing Policy (2026-06-08)
+
+### Always-On Autocomplete (never disable)
+- **Codeium** — VSCode extension, unlimited completions
+- **Amazon Q Developer** — VSCode extension, unlimited inline
+
+### Decision Tree
+1. Architecture / spec / GitHub MCP → **Perplexity** (Space)
+2. Single-file scoped fix, urgent → **agy** (preserves other quotas)
+3. Gemini CLI exhausted → **Qwen Code CLI** (Qwen3-Coder-480B, smarter model)
+4. Async multi-module PR, can wait → **Jules** (Gemini 3.1 Pro, best quality)
+5. All local quota gone → **Cursor Hobby** (50/month reserve)
+6. Everything gone / offline → **Ollama + Continue.dev** (unlimited)
+
+### Quota Reference
+| Tool | Model | Daily Quota | Reset |
+|------|-------|-------------|-------|
+| agy | Gemini Flash | ~5h rolling | Rolling |
+| Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
+| Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
+| Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |
+| Copilot Free | GPT-4o | 50 chat/month | Monthly |
+
+### Quota Cascade Rule
+Gemini CLI exhausted → Qwen Code → agy → Cursor → Jules (async) → Ollama
