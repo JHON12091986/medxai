@@ -23,3 +23,4 @@ data/nina.pid
 data/.guardian_hash
 data/healthcheck_registry.txt
 .aider*
+exports/nina_latest.md
