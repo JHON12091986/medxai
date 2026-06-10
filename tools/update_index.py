@@ -137,7 +137,10 @@ summaries = {
     "tools/prune_duplicates.py": "Active redundancy pruner for incident and backup duplicates.",
     "nina_cleanup.sh": "Permanent wrapper script for safe redundancy cleanup execution.",
     "tools/generate_dashboard.py": "Generates the operational governance dashboard.",
-    "docs/space/nina_governance_dashboard.md": "Auto-generated operational governance dashboard."
+    "docs/space/nina_governance_dashboard.md": "Auto-generated operational governance dashboard.",
+    "tools/audit_repo_hygiene.py": "Deep repository audit tool for Git vs FS reconciliation.",
+    "nina_audit.sh": "Permanent wrapper script for the repository hygiene audit.",
+    "docs/space/nina_repo_hygiene_dashboard.md": "Auto-generated repository hygiene dashboard."
 }
 
 def generate_index():

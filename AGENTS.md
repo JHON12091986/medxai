@@ -58,7 +58,8 @@ This file is read by whichever local coding tool is active: agynina, Cursor, Cla
   4. If the file is part of a `duplicate_cluster_id`, you MUST ONLY write to the `canonical_path`.
   5. If creating, moving, renaming, archiving, or deleting a governed file, you must run `python3 tools/update_index.py`.
   6. Run `python3 tools/validate_index.py`. No PR or task touching governed paths is "Done" unless this validator passes. The index is the single enforceable contract for doc/log/code inventory.
-  7. Run `python3 tools/generate_dashboard.py` to refresh the [Operational Governance Dashboard](docs/space/nina_governance_dashboard.md).
+  7. Run `./nina_audit.sh` to reconcile the local filesystem with Git and check for stale files.
+  8. Run `python3 tools/generate_dashboard.py` to refresh the [Operational Governance Dashboard](docs/space/nina_governance_dashboard.md).
 - Do not scan the whole repo before you know the task.
 - Check juleslock.txt before editing.
 - Follow the verify → log → sync workflow.

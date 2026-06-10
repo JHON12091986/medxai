@@ -23,7 +23,8 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
    - Run `python3 tools/update_index.py`.
    - Run `python3 tools/validate_index.py`.
 6. Fix validation issues until the validator passes.
-7. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
+7. Run `./nina_audit.sh` to reconcile local drifts and identify stale artifacts.
+8. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
 
 ## 0.5. The Dual-Track Operating Model
 To prevent governance decay without blocking roadmap progress, NINA uses a dual-track operational model. **Rule of thumb: For every feature PR merged, complete at least one Governance Quest.**

@@ -5,6 +5,8 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly on Sunday
 
 jobs:
   validate-index:
@@ -18,3 +20,7 @@ jobs:
       - name: Validate Index
         run: |
           python3 tools/validate_index.py --check-deltas
+      - name: Audit Repository Hygiene
+        run: |
+          chmod +x nina_audit.sh
+          ./nina_audit.sh --strict
