@@ -56,13 +56,16 @@ Larger, user-facing feature arcs (e.g., Proactive Reminder Engine, Email Triage)
 
 ## The Full Parallel Loop (Jules + ninaflash Pipeline)
 
-1. Perplexity diagnoses issue and writes precise spec
-2. Jules receives spec → builds in cloud async (no interaction after submit)
-3. nf (local executor) handles urgent local fixes in parallel on its own worktree
-4. Jules opens PR when feature is complete
-5. nf runs Guardian lint/compile checks on the PR diff
-6. nf merges PR → runs `./nina_sync.sh` → deploys to systemd
-7. Perplexity reviews result in a new thread
+1. Perplexity diagnoses issue and writes precise spec.
+2. Jules receives spec → builds in cloud async. 
+   - **MANDATORY:** Jules MUST update `nina_update_log.md` (root) in the same PR.
+3. ninaflash (local executor) handles urgent local fixes in parallel on its own worktree.
+4. Jules opens PR when feature is complete.
+5. ninaflash runs Guardian lint/compile checks on the PR diff.
+   - **GOVERNANCE CHECK:** ninaflash verifies `nina_update_log.md` is updated. If missing, PR is rejected.
+6. ninaflash merges PR → runs `./nina_sync.sh` → deploys to systemd.
+7. Perplexity reviews result in a new thread.
+
 
 **KEY RULES:**
 - ninaflash is NOT just a fixer — it is the local merge and deploy executor.

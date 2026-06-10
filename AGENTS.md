@@ -106,6 +106,11 @@ Python 3.14, asyncio-based. Repo: github.com/aibony/nina
 - guardian.sh + guardian_engine.py — forensic health check
 
 ## Rules for Jules
+- **Documentation Mandate (CRITICAL):** Jules is strictly forbidden from opening a PR that only contains code. Every PR MUST include:
+  1. An entry in the root **`nina_update_log.md`** (System of Record).
+  2. An update to **`docs/space/jules_backlog.md`** (Set status to `IN_PR`).
+  3. If fixing a bug, an update to **`docs/space/nina_error_register.md`** (Set status to `✅ FIXED`).
+- **Enforcement:** The **Doc Delta CI Check** will automatically FAIL any PR that changes core logic but omits these documentation updates.
 - Do NOT pause for confirmation at any point. Complete all batches sequentially without asking for feedback. Open the PR when done.
 - Proceed immediately to the next batch without waiting for approval.
 - Never use `git add .` — stage specific files only
@@ -147,7 +152,7 @@ cd ~/nina && source venv/bin/activate && python3 -m py_compile <changed_file> &&
 
 ## Mandatory Rules — After Every Task (Local Sync & Export)
 
-- Append a log entry to `docs/logs/nina_update_log.md` using **Python only** — never heredoc, never bash echo
+- Append a log entry to **`nina_update_log.md`** (root) using **Python only** — never heredoc, never bash echo
   - Auto-detect the next entry number from the file
   - Include: entry number, date, title, what changed, what was verified, rollback path
 - Run `cd ~/nina && ./nina_sync.sh` — no exceptions
