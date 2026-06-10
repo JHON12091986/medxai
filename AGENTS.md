@@ -49,10 +49,14 @@ Never write more than what was asked.
 This file is read by whichever local coding tool is active: agynina, Cursor, Claude Code, Cline, or aider. Regardless of which tool is active, your job is identical:
 - Read only the required context files first.
 - **Index-First Workflow (Mandatory Governance):**
-  1. Consult the **Repository Index** (`docs/space/nina_index.md` / `.json`) before creating or modifying governed artifacts. Check `role`, `governed`, and `duplicate_cluster_id`.
-  2. If the file is part of a `duplicate_cluster_id`, you MUST ONLY write to the `canonical_path`.
-  3. If creating, moving, renaming, archiving, or deleting a governed file, you must run `python3 tools/update_index.py`.
-  4. Run `python3 tools/validate_index.py`. No PR or task touching governed paths is "Done" unless this validator passes. The index is the single enforceable contract for doc/log/code inventory.
+  1. Consult the **Repository Index** (`docs/space/nina_index.md` / `.json`) or use `python3 tools/query_index.py --path <file>` before creating or modifying governed artifacts. Check `role`, `governed`, `duplicate_cluster_id`, and `guardrails`.
+  2. **Obey Guardrails:**
+     - If `high_risk_do_not_edit_directly`: Do not edit directly via CLI/script. Suggest a PR or request manual human review.
+     - If `append_only`: Do not modify past content, only append to the end.
+     - If `read_only_for_agents`: Strictly read-only for all automated tools. Do not write to these files.
+  3. If the file is part of a `duplicate_cluster_id`, you MUST ONLY write to the `canonical_path`.
+  4. If creating, moving, renaming, archiving, or deleting a governed file, you must run `python3 tools/update_index.py`.
+  5. Run `python3 tools/validate_index.py`. No PR or task touching governed paths is "Done" unless this validator passes. The index is the single enforceable contract for doc/log/code inventory.
 - Do not scan the whole repo before you know the task.
 - Check juleslock.txt before editing.
 - Follow the verify → log → sync workflow.

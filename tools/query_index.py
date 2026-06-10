@@ -13,6 +13,8 @@ def query(path):
             print(f"  - Governed:   {file_obj.get('governed')}")
             print(f"  - Retention:  {file_obj.get('retention_policy')}")
             print(f"  - Tests Req:  {file_obj.get('requires_tests', False)}")
+            if file_obj.get("guardrails"):
+                print(f"  - Guardrails: {', '.join(file_obj.get('guardrails'))}")
             if file_obj.get("series_id"):
                 print(f"  - Series ID:  {file_obj.get('series_id')} ({file_obj.get('series_type')})")
             if file_obj.get("duplicate_cluster_id"):

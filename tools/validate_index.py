@@ -20,6 +20,7 @@ def validate():
     # Metrics for quality scoring
     total_files = 0
     total_score = 0
+    missing_tests = 0
     
     # 1. Check if index entries resolve to real files and validate schema
     for file_obj in data["files"]:
@@ -43,6 +44,7 @@ def validate():
             # Some tests are combined (e.g. test_finance_market.py) so we don't throw hard errors, just warnings
             if not test_path.exists() and not any(p.stem in t for t in os.listdir(repo_root / "tests")):
                 warnings += 1
+                missing_tests += 1
                 print(f"⚠️ Test Coverage: {path_str} requires tests but no obvious test_{p.stem}.py found.")
                 
         # Metadata Quality Score calculation
@@ -69,14 +71,22 @@ def validate():
                     print(f"⚠️ Unmanaged but probably governed: {rel_path} is missing from the index.")
                     warnings += 1
 
+    quality_pct = (total_score / total_files) * 100 if total_files else 0
+    if quality_pct < 75.0:
+        print(f"❌ Metadata Quality Score ({quality_pct:.1f}%) is below the required 75.0% threshold.")
+        errors += 1
+
     if errors > 0:
         print(f"\n❌ Validation FAILED with {errors} errors and {warnings} warnings.")
+        print(f"📊 Metadata Quality Score: {quality_pct:.1f}%")
+        print(f"🧪 Missing Tests: {missing_tests}")
         return False
         
-    quality_pct = (total_score / total_files) * 100 if total_files else 0
     print(f"\n✅ Index validation PASSED ({warnings} warnings).")
     print(f"📊 Metadata Quality Score: {quality_pct:.1f}%")
+    print(f"🧪 Missing Tests: {missing_tests}")
     return True
+
 
 if __name__ == "__main__":
     if not validate():

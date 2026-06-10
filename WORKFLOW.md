@@ -14,14 +14,15 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 
 ## 0. Discovery & Governance (New)
 **Index-First Workflow:**
-1. Check `docs/space/nina_index.md` for the file's entry (path, role, lifecycle).
-2. If modifying a file within a `duplicate_cluster_id`, edit the `canonical_path` only.
-3. If creating, moving, renaming, archiving, or deleting a governed file:
+1. Check `python3 tools/query_index.py --path <file>` for the file's entry (path, role, lifecycle, guardrails).
+2. **Obey Guardrails:** Strictly adhere to tags like `high_risk_do_not_edit_directly`, `append_only`, and `read_only_for_agents`.
+3. If modifying a file within a `duplicate_cluster_id`, edit the `canonical_path` only.
+4. If creating, moving, renaming, archiving, or deleting a governed file:
    - Update the file structure.
    - Run `python3 tools/update_index.py`.
    - Run `python3 tools/validate_index.py`.
-4. Fix validation issues until the validator passes.
-5. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
+5. Fix validation issues until the validator passes.
+6. No PR is "Done" and no local task is complete unless `validate_index.py` passes cleanly. The index is the single enforceable contract for inventory.
 
 ## The Full Parallel Loop (Jules + agynina Pipeline)
 

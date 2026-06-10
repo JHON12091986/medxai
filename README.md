@@ -167,6 +167,13 @@ nina/
 └── nina-dashboard.service     # systemd dashboard unit
 ```
 
+## Governance Status
+
+NINA runs a strict, metadata-driven governance index. All agents and tools must consult this index.
+
+- **Metadata Completeness:** 80.7% (Required: ≥75.0%)
+- **Test Coverage Audit:** 31 Python files are missing dedicated tests (see `python3 tools/validate_index.py` output).
+
 ## Installation
 
 ```bash

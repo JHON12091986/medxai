@@ -1,0 +1,20 @@
+name: Governance Index Validation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11' # Matches the script requirements
+      - name: Validate Index
+        run: |
+          python3 tools/validate_index.py

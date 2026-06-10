@@ -76,6 +76,15 @@ def scan():
             doc_required = False
             if category == "code" and lifecycle == "active":
                 doc_required = True
+                
+            # Guardrails definition
+            guardrails = []
+            if path_str in ["main.py", "guardian_engine.py", "core/router.py", "interfaces/telegram_interface.py", ".env", "tools/shell.py", "tools/browser.py"]:
+                guardrails.append("high_risk_do_not_edit_directly")
+            if path_str in ["nina_update_log.md", "docs/space/nina_error_register.md"]:
+                guardrails.append("append_only")
+            if path_str in ["data/memory/facts.json", "docs/nina_v12_blueprint.md", "docs/space/nina_index.md", "docs/space/nina_index.json"]:
+                guardrails.append("read_only_for_agents")
             
             governed_files.append({
                 "path": path_str,
@@ -92,6 +101,7 @@ def scan():
                 "series_type": series_type,
                 "requires_tests": requires_tests,
                 "doc_required": doc_required,
+                "guardrails": guardrails,
                 "summary": "",
                 "tags": [category, role, lifecycle],
                 "hash": get_hash(full_path)
