@@ -44,6 +44,8 @@ def scan():
                 role = "generated"
             elif category == "log":
                 role = "derived"
+            elif category == "backup":
+                role = "backup"
                 
             origin = "manual"
             if category == "incident": origin = "guardian"
