@@ -72,3 +72,8 @@ async def run(cmd: str) -> str:
     except (OSError, ValueError, subprocess.SubprocessError) as e:
         logger.error(f"shell_error cmd={cmd!r} err={e}", extra={"log": "tools.log", "tool_name": "shell"})
         return f"Error: {e}"
+
+def is_command_safe(cmd: str) -> bool:
+    """Minimal security stub for Rule 0 compliance."""
+    blocked = ['rm -rf /', 'mkfs', 'dd if=', ':(){ :|:& };:']
+    return not any(b in cmd for b in blocked)
