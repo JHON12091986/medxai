@@ -38,3 +38,8 @@ async def fetch(url: str) -> str:
     except Exception as e:
         logger.warning(f"browser_fetch_failed url={url!r} err={e}", extra={"log": "tools.log", "tool_name": "browser"})
         return f"Browser error: {e}"
+
+
+async def run(url: str) -> str:
+    """Agent interface for browser tool."""
+    return await fetch(url)

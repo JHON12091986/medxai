@@ -19,6 +19,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) — newe
 
 ---
 
+## [13.1.0] — 2026-06-11
+
+### Added
+- **NINA-Evolve Protocol (v4.0):** Defined a new autonomous self-optimization framework. This "Vicious Cycle" enables NINA to monitor its own performance (tokens, time, throughput), identify bottlenecks, and autonomously implement code upgrades.
+- **Surgical Tool Standard:** Implemented a unified `async def run(input: str) -> str` interface across all core tools (`search.py`, `browser.py`, `system.py`). This ensures the `AgentLoop` can invoke any tool with a consistent pattern.
+- **Performance Monitor v2.0:** Added requirements for visible CPU/GPU resource "bumps" in `tools/monitor.py` to provide empirical proof of local execution.
+- **Persistent Conversational Memory:** Formalized a "Session Bridge" requirement to ensure Gemini CLI remembers project facts and past decisions across sessions using `AGENTS.md` and `MEMORY.md`.
+
+### Fixed
+- **nina.service Crash Loop:** Resolved a `ModuleNotFoundError` in `core/nina.py` caused by a broken dynamic import of `tools.searchtool`. Fixed by standardizing on `tools.search`.
+- **Tool Interface Compliance:** Added missing `run` wrappers to `search`, `browser`, and `system` tools, preventing runtime errors during agentic tool use.
+- **Repository Hygiene:** Pruned 6 stale Jules branches from remote and local to restore repo clarity.
+
+---
+
 ## [13.0.0] — 2026-06-11
 
 ### Added

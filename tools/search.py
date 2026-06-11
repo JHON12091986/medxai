@@ -67,3 +67,8 @@ async def search(query: str, max_results: int = 5) -> str:
     except Exception as e:
         logger.warning(f"ddg_failed {e}")
         return f"Search failed: {e}"
+
+
+async def run(query: str) -> str:
+    """Agent interface for search tool."""
+    return await search(query)

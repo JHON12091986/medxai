@@ -98,3 +98,12 @@ async def tune() -> str:
     logger.info(f"gputuner fast={fast_layers} heavy={heavy_layers} free_vram={free_mb}MB",
                 extra={"log":"tools.log", "tool_name": "system"})
     return f"GPU tuned — LOCALFAST: {fast_layers} layers, LOCALHEAVY: {heavy_layers} layers ({free_mb}MB free VRAM)"
+
+
+async def run(cmd: str = "status") -> str:
+    """Agent interface for system tool."""
+    from core.config import load_config
+    config = load_config()
+    if cmd == "tune":
+        return await tune()
+    return await get_status(config)

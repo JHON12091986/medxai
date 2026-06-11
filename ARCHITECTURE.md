@@ -69,6 +69,9 @@ The forensic safety layer for autonomous self-patching. Residing in `guardian_en
 **Memory System:**
 NINA's dual-tier memory orchestrator. It uses ChromaDB as a semantic vector store for episodic recall of past events, enabling NINA to "remember" history. It also relies on a hardcoded, unmodifiable `facts.json` to anchor NINA's identity and core knowledge, preventing long-term context drift or personality alteration.
 
+### 4. NINA-Evolve Protocol (v4.0 - Self-Optimization)
+The "Vicious Cycle" of autonomous improvement. NINA monitors its own performance metrics (tokens, latency, throughput) and identifies bottlenecks via `tools/evolve.py`. When an optimization is identified, the system generates a proposal, implements the code change, validates it via automated testing, and merges the upgrade—all without user intervention. This recursive learning ensures NINA becomes more robust and efficient as time passes.
+
 ## Data Flow
 
 A typical operation begins when a command is received via Telegram. It passes through the `telegram_interface.py` which acts as the authenticated gateway. The request enters the `AgentLoop`, which synthesizes intent and coordinates action. The loop utilizes the `HybridRouter` to select an appropriate LLM provider for the reasoning. The generated response/action is executed—often utilizing local op-codes if handled by ninaflash—and the result is returned back through the interface to the user.
