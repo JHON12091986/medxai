@@ -1990,9 +1990,6 @@ def main():
     p_edit.add_argument("file", help="File to edit")
     p_edit.add_argument("edits", help="JSON list of edits")
 
-    p_git = subparsers.add_parser("git", help="NinaFlash git ops")
-    p_git.add_argument("subcmd", choices=["status", "diff", "commit"], help="Git operation")
-
     p_status = subparsers.add_parser("status")
     p_status.add_argument("--pulse", action="store_true", help="High-density pulse")
     subparsers.add_parser("help-ai")

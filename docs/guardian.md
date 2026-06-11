@@ -13,12 +13,12 @@ The Guardian Gate is composed of two primary elements:
 ## Verification Pipeline
 
 Whenever a change is proposed (such as through a pull request merge or automated local patch), the Guardian Gate enforces the following strict pipeline:
-1. **AST Scan:** Analyzes the Abstract Syntax Tree of the modified code to check for prohibited behaviors (e.g., unauthorized `shell=True` use) and ensure the logic structure remains safe.
-2. **Baseline Drift Check:** Compares the structural and logical footprint of NINA against `upgrades/guardian_baseline.json` to detect anomalous deviations or corruption of core logic.
-3. **`py_compile`:** Compiles the updated `.py` files into bytecode to catch fatal syntax errors immediately.
-4. **`python3 -m pyflakes`:** Lints the Python codebase to catch logical errors (like undefined names or syntax warnings) that py_compile might miss.
-5. **Log:** Records successful verifications or fatal rejections in `nina_update_log.md` (now located in `docs/logs/nina_update_log.md`).
-6. **Sync:** After successful validation, triggers `nina_sync.sh` to restart the `systemd` service and apply the changes cleanly.
+1. **AST Scan:** Analyzes the Abstract Syntax Tree of the modified code to check for prohibited behaviors.
+2. **Baseline Drift Check:** Compares the structural and logical footprint against `upgrades/guardian_baseline.json`.
+3. **`py_compile` + `pyflakes`:** Performs immediate syntax and linting verification.
+4. **[NEW] Autonomous Self-Fix Loop:** If a syntax error is detected during verification, the Guardian autonomously re-routes the error back to the agent in `core/agent.py`. The agent is given up to 2 attempts to surgically fix the error (e.g., using `sed` or a Python script) and re-verify the patch.
+5. **Log:** Records successful verifications or fatal rejections in `docs/logs/nina_update_log.md`.
+6. **Sync:** After successful validation, triggers `nina_sync.sh` to apply the changes and restart the systemd service.
 
 ## Guardian Baseline
 

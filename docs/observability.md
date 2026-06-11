@@ -24,26 +24,21 @@ The health status represents the overall readiness and stability of NINA based o
 - **DEGRADED:** NINA is experiencing a high rate of errors. (0.2 < error_rate <= 0.5)
 - **CRITICAL:** NINA has encountered severe failures and requires immediate attention. (error_rate > 0.5)
 
-## Dashboard Endpoint
-A new endpoint is exposed on the dashboard to easily observe NINA's metrics on demand.
-**Endpoint:** `GET /health`
+## Dashboard Endpoints
+- **Metrics JSON:** `GET /health` (standard health metrics)
+- **Live Visual UI:** `GET /dashboard` (renders `dashboard/ninaui.html`)
 
-**Example JSON Response:**
-```json
-{
-  "uptime_seconds": 120.5,
-  "tasks_total": 10,
-  "tasks_ok": 9,
-  "tasks_fail": 1,
-  "router_calls": 5,
-  "last_sync_ts": "2023-10-24T12:00:00Z",
-  "last_health_check_ts": "2023-10-24T12:05:00Z",
-  "active_providers": ["Ollama", "OpenAI"],
-  "error_rate": 0.1,
-  "memory_mb": 150.0,
-  "status": "HEALTHY"
-}
-```
+## [NEW] Live Visual Telemetry (v2.0)
+The visual dashboard provides a real-time Pulse of NINA's infrastructure. It is designed to provide empirical proof of local execution by visualizing:
+- **Resource "Bumps":** Real-time CPU/RAM spikes corresponding to local NinaFlash/Ollama activity.
+- **Routing Efficiency:** A live graph of Local vs. Cloud request ratios.
+- **Parallelism Indicator:** A gauge showing the number of concurrent `AgentLoop` tool tasks in flight.
+
+## [NEW] Parallel Tool Monitoring
+With the introduction of the **Parallel Tool Hub**, NINA now tracks:
+- **`parallel_tool_executions`:** Count of tool calls executed concurrently via `asyncio.gather`.
+- **`overlap_latency_savings`:** Estimated time saved by running tools in parallel vs. sequential execution.
+- **`scout_success_rate`:** Success rate of speculative "Scout" patterns.
 
 ## Wiring
 The observability core is deeply integrated into various parts of NINA to update the central metrics cache.

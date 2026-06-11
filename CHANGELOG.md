@@ -19,6 +19,27 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) — newe
 
 ---
 
+## [13.2.0] — 2026-06-12
+
+### Added
+- **Integrated 10 Major Feature Clusters:** Completed a massive consolidation phase, merging 10 high-priority PRs covering performance, observability, and autonomous hardening.
+- **Mega Task 7 (Autonomous QA - The Guardian):** Implemented a self-fixing loop in `core/agent.py` that intercepts syntax errors in surgical edits and autonomously routes them for repair (up to 2 attempts).
+- **Parallel Tool Execution:** Upgraded `AgentLoop` to support concurrent execution of multiple tools via `asyncio.gather`, significantly reducing latency for multi-step tasks.
+- **Lightning Edition (Mega Task 5):** Standardized performance monitoring through benchmark harnesses (`nf bench`), quota management (`data/quota_state.json`), and incremental "Lightning Sync" backups.
+- **Live Visual Telemetry Dashboard:** Integrated `dashboard/ninaui.html` and a local observability layer for real-time monitoring of CPU/GPU resource "bumps" and routing metrics.
+- **Surgical Context (ChromaDB RAG):** Added `context-pack` and local RAG capabilities using ChromaDB for high-density symbol mapping and zero-token context engineering.
+- **Speculative Pipeline (Scout Pattern):** Implemented the "Scout" pattern in `AgentLoop` for overlapped local/cloud execution.
+- **Sovereign Self-Maintenance:** Deployed automated protocols for dependency updates, log rotation, and repository hygiene.
+
+### Changed
+- **ResponseCache Optimization:** Optimized core router logic in `core/router.py` for 2x faster cache purging.
+- **ninaflash (nf) v6.5:** Added `nf test --parallel`, `nf bench`, and `nf query` commands to the local Nucleus.
+
+### Fixed
+- **Rule 0 Blocker:** Restored `is_command_safe` in `tools/shell.py`, resolving `ImportError` in `nf git` subcommands.
+
+---
+
 ## [13.1.0] — 2026-06-11
 
 ### Added

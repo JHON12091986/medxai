@@ -24,6 +24,7 @@ This ensures that NINA routes heavily toward providers that are currently fast, 
 NinaGate features a **Live Quota Tracker** to protect cloud API limits and automate routing shifts:
 - **Monitoring:** Tracks total requests per provider (e.g., Gemini Flash).
 - **Auto-Downgrade:** When a limit (e.g., 900 req/day) is approached, NinaGate automatically skips that provider and routes to local NinaFlash (Ollama) or next-tier cloud models.
+- **[NEW] Quota Gate (Forced Fallback):** `core/router.py` now monitors `data/quota_state.json`. If a provider is marked as exhausted, the router autonomously forces `force_local=True` for all incoming requests until the next daily reset, bypassing cloud reasoning to ensure zero-token continuity.
 - **Daily Reset:** Quotas reset automatically at **1 PM BD** (Midnight PT), ensuring continuous operation without manual intervention.
 
 ## CircuitBreaker Pattern

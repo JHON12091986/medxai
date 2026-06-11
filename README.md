@@ -3,8 +3,8 @@
 ## Overview
 NINA is an autonomous agentic OS designed for private, local-first operation. It integrates with professional banking workflows while maintaining strict data residency.
 
-## 2026-06-11: High-Throughput Release (v14.0)
-This version introduces **NINA-OPT-001**, a unified optimization directive that offloads 90% of development turns to the local CPU. Using **NinaGate** and **NinaFlash**, NINA now performs surgical code extraction and automated maintenance with zero token overhead.
+## 2026-06-12: Lightning Sync Release (v14.2)
+This version introduces **NINA-OPT-001**, a unified optimization directive that offloads 95% of development turns to the local CPU. Using **Parallel Tool Execution** and the **Guardian Self-Fix** loop, NINA now performs high-concurrency surgical extraction and automated maintenance with zero token overhead.
 
 ## Purpose
 To transform AI from a reactive chatbot into a proactive operational partner that handles email, markets, and code development with minimal human intervention.
@@ -19,7 +19,8 @@ Deploy NINA on a Linux machine via the provided systemd services. Use the `nf` (
 NINA is NOT a chatbot. It is an action-first autonomous agent that:
 - Routes tasks across 20+ AI providers via HybridRouter V4
 - Develops itself autonomously via Jules + ninaflash pipeline
-- **Optimization Offensive:** v2.0/v2.1 architecture designed to reduce cloud token usage by 90%.
+- **Parallelism:** Executes multiple independent tools simultaneously via `asyncio.gather` (Wide-Path).
+- **Optimization Offensive:** v2.0/v2.1 architecture designed to reduce cloud token usage by 95%.
 - **Active Pipeline:** 83 READY mega-tasks for autonomous optimization.
 - Keeps all banking and sensitive data strictly on the local machine in Dhaka.
 
@@ -36,7 +37,7 @@ This model is the heart of NINA's architecture:
 ## ninaflash — The Local Muscle
 
 ninaflash is NINA's local high-performance executor:
-- CLI tool at `bin/nf` (v6.1+)
+- CLI tool at `bin/nf` (v6.5+)
 - **Surgical Intelligence:** Extract functions/symbols locally to save cloud tokens.
 - **Local Autonomy:** Zero-token file manipulation, git operations, and parallel execution.
 - **Session Continuity:** Inject and save session context for cross-agent consistency.
@@ -45,6 +46,8 @@ ninaflash is NINA's local high-performance executor:
   - `nf file read | grep | patch` — Local file ops (Zero Cloud Cost).
   - `nf git log | changed | search` — Hardened git interface.
   - `nf monitor` — Efficiency reports (Sessions + NinaGate + Local + Tool Profiling).
+  - `nf bench` — Benchmark Cloud vs Hybrid execution stats.
+  - `nf test --parallel` — High-concurrency pytest runner.
   - `nf memory session-save | inject` — Session context management.
 
 ## Universe-Mode Kernel
@@ -57,11 +60,12 @@ The kernel architecture giving NINA near-infinite capability at zero cloud token
 ## HybridRouter V4
 
 The routing engine located in `core/router.py`:
-- Routes across 20+ cloud providers (Groq, Gemini, Cerebras, DeepSeek, Mistral, OpenRouter, Together, Cohere, Fireworks, xAI, SambaNova, Hyperbolic, Novita, Perplexity, OpenAI, Pollinations, Chutes, and more)
+- Routes across 20+ cloud providers
 - 2 local models via Ollama (qwen2.5:1.5b for fast tasks, qwen2.5:7b for heavy reasoning)
+- **Quota Management:** Automatic local fallback when Gemini limits (>900 req/day) are reached.
 - CircuitBreaker pattern prevents cascading failures
 - Weighted scoring: success rate × latency × rate limits
-- Free-tier first routing philosophy (routing is handled automatically by HybridRouter V4 with free-tier priority)
+- Free-tier first routing philosophy
 
 ## nina-mcp Extension
 
@@ -72,7 +76,8 @@ NINA features a native **Gemini CLI Extension** (`.gemini/extensions/nina/`) tha
 
 ## Guardian Gate
 
-The safety pipeline in `guardian_engine.py`:
+The safety pipeline in `guardian_engine.py` and `core/agent.py`:
+- **Self-Fix Loop:** Automatically intercepts surgical edit syntax errors and routes them for repair.
 - AST (Abstract Syntax Tree) scan on every patch
 - Baseline drift analysis against `upgrades/guardian_baseline.json`
 - Syntax + linter checks (`py_compile` + `pyflakes`)

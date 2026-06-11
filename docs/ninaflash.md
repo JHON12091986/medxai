@@ -48,6 +48,13 @@ ninaflash v6.1+ features a "Surgical Code Intelligence" layer designed for extre
   - Use `nf monitor --tools` to profile tool usage frequency and estimated token costs per tool.
 - `nf batch --cmds "c1|c2"` — Parallel execution of sub-commands using a local thread pool.
 
+### [NEW] High-Velocity Verification (v14.2)
+
+- **`nf bench`** — The "Cloud vs Hybrid" benchmark harness. Runs a standardized reasoning task twice (once pure cloud, once hybrid with local offloading) and reports empirical delta in time, cost, and tokens.
+- **`nf test --parallel`** — High-concurrency test runner. Executes the full `pytest` suite using all available CPU cores via `pytest-xdist`, providing real-time resource "bump" metrics (CPU/RAM spikes).
+- **`nf query`** — Capability mapping tool. Lists all registered `cmd_` handlers and their documentation to help agents identify local offload opportunities.
+- **`nf maintenance pr <pr_id>`** — Surgical PR merging with automated log entry generation and health check verification.
+
 ### [NEW] Structured Logging
 
 Every `nf` command execution is now recorded in `logs/ninaflash.log` in a machine-readable JSON format. This log captures:
