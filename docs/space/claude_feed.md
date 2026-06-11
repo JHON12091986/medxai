@@ -3,12 +3,22 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-11 23:21 +06
-- Git HEAD: ef1d7c1de5efa45c57e36a643224623b7b650959
-- Last commit: docs: post-session sync 2026-06-11 23:20
+- Generated: 2026-06-11 23:29 +06
+- Git HEAD: 3d72bda9b00c9a3ac030cf1f3de598625aa30b8c
+- Last commit: docs: post-session sync 2026-06-11 23:28
 - Service: activating
 unknown
-
+```
+● nina.service - NINA Autonomous Agent
+     Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
+     Active: activating (auto-restart) (Result: exit-code) since Thu 2026-06-11 23:29:41 +06; 2s ago
+ Invocation: 36a5f275a0f845d2ae1a639c93fd4002
+    Process: 102730 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
+   Main PID: 102730 (code=exited, status=1/FAILURE)
+   Mem peak: 27.5M
+        CPU: 249ms
+unavailable
+```
 ## 2. Active Jules Sessions (live)
 Active Jules Sessions:
 #1 [358132093278995322] System Bug Fixes and Agent Optimization — FAILED — no PR yet
@@ -210,11 +220,11 @@ _Focus: Absolute minimum context overhead_
 
 ## 5. Last 5 Completions
 ```
+3d72bda docs: post-session sync 2026-06-11 23:28
+29e8543 feat(sync): claude_feed service detail + PR merge list
 ef1d7c1 docs: post-session sync 2026-06-11 23:20
 26675d4 fix(ninagate): classifier expansion, async race fix, quota save non-blocking, fast-fail timeout, rglob depth cap
 648ddc1 docs: post-session sync 2026-06-11 23:11
-73255d3 docs: post-session sync 2026-06-11 22:47
-12e86df docs: post-session sync 2026-06-11 22:44
 ```
 
 ## 6. Open Blockers
@@ -251,6 +261,17 @@ ef1d7c1 docs: post-session sync 2026-06-11 23:20
 | idleloop.py | IdleProposalLoop, IMPACT briefs | LOW |
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
+## 8. PRs Ready to Merge (agy merge candidates)
+#115 feat(core): implement mega task 5 lightning edition [jules-17892297084289591100-7a514cf9]
+#114 Mega Task 7: Autonomous QA (The Guardian Hardening) [feat/autonomous-qa-guardian-1909469007448016875]
+#113 Implement Surgical Context with context-pack and ChromaDB RAG [jules-6823805920751039478-4fa46e96]
+#112 feat(maintenance): implement Sovereign Self-Maintenance Protocol [jules-7396398476427288048-4a94a9ca]
+#111 feat(evolve): Implement functional NINA-Evolve Protocol with real log parsing and safe execution [feature/nina-evolve-protocol-9390249204279541291]
+#110 feat: NINA Observability & Memory Upgrade v2.0 [jules-5693617654071384777-a898bda6]
+#109 Implement Speculative Pipeline in AgentLoop [jules-agent-loop-scout-12486530914500192869]
+#108 feat(dashboard): implement live visual telemetry dashboard [feat/visual-telemetry-dashboard-729439358701133165]
+#107 NINA Observability & Memory Upgrade (Observable Local Execution Layer) [jules/opt-observable-local-layer-14109430478887759619]
+
 
 ---
-_Feed size: 17244 bytes_
+_Feed size: 18786 bytes_
