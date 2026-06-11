@@ -248,6 +248,13 @@ if [ "$UNCOVERED" -gt 0 ]; then
   echo ""
   echo "  → Add them to SPACE_FILES array in nina_sync.sh if needed."
 fi
+echo "[8.0/8] Auto-regenerating docs from live source..."
+if [ "$DRY_RUN" = false ]; then
+  python3 "$NINA/tools/doc_autogen.py" && echo " ✅ Docs auto-patched" || echo " ⚠️ Doc autogen failed (non-fatal)"
+else
+  echo "  (dry-run: skipping)"
+fi
+
 echo "[8/8] Full master export for Perplexity Space..."
 if [ "$DRY_RUN" = true ]; then
   echo "  (dry-run: skipping)"
