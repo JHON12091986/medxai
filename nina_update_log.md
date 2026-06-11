@@ -1953,3 +1953,13 @@
 **Files changed:** docs/space/jules_backlog.md,nina_update_log.md
 
 **Verification:** git push OK, nina.service activating
+
+---
+
+## Entry 173 — 2026-06-11 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,docs/space/nina_repo_hygiene_dashboard.md,.gemini/
+
+**Verification:** git push OK, nina.service activating
