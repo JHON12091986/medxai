@@ -8,7 +8,7 @@ def get_hash(path):
         return None
 
 def scan():
-    repo_root = Path.cwd()
+    repo_root = Path(__file__).parent.parent.resolve()
     governed_files = []
     ignore_dirs = {".git", ".venv", "venv", "__pycache__", ".agent", ".jules", ".pytest_cache", ".mypy_cache"}
     

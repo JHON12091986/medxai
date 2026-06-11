@@ -98,6 +98,29 @@
       ]
     },
     {
+      "path": "tools.log",
+      "category": "other",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "other",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": ".env.example",
       "category": "other",
       "role": "source_of_truth",
@@ -1507,29 +1530,6 @@
       ]
     },
     {
-      "path": "docs/archive/jules_backlog_archive.md",
-      "category": "doc",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": false,
-      "lifecycle": "deprecated",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": "dup-0001",
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, ninaflash).",
-      "tags": [
-        "doc",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "docs/agent-memory/workflow.md",
       "category": "doc",
       "role": "source_of_truth",
@@ -2226,6 +2226,29 @@
       ]
     },
     {
+      "path": "docs/logs/nina_update_log.md",
+      "category": "doc",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, ninaflash).",
+      "tags": [
+        "doc",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "core/memory.py",
       "category": "code",
       "role": "source_of_truth",
@@ -2651,7 +2674,30 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": null,
+      "duplicate_cluster_id": "dup-0001",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "config",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "data/circuit_state.json",
+      "category": "config",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": false,
+      "lifecycle": "deprecated",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": "dup-0001",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -2952,7 +2998,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0001",
+      "duplicate_cluster_id": "dup-0003",
       "series_id": null,
       "series_type": null,
       "requires_tests": true,
@@ -2975,7 +3021,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0001",
+      "duplicate_cluster_id": "dup-0003",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -3777,6 +3823,52 @@
       ]
     },
     {
+      "path": "logs/nina_sync.log",
+      "category": "log",
+      "role": "derived",
+      "governed": true,
+      "canonical": false,
+      "lifecycle": "deprecated",
+      "retention_policy": "rotate",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": "dup-0003",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "log",
+        "derived",
+        "active"
+      ]
+    },
+    {
+      "path": "logs/agent_actions.log",
+      "category": "log",
+      "role": "derived",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "rotate",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "log",
+        "derived",
+        "active"
+      ]
+    },
+    {
       "path": "tests/test_finance.py",
       "category": "code",
       "role": "source_of_truth",
@@ -4085,7 +4177,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0001",
+      "duplicate_cluster_id": "dup-0003",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -4407,7 +4499,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0003",
+      "duplicate_cluster_id": "dup-0004",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -4430,7 +4522,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0003",
+      "duplicate_cluster_id": "dup-0004",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -4499,7 +4591,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0001",
+      "duplicate_cluster_id": "dup-0003",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -4568,7 +4660,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0001",
+      "duplicate_cluster_id": "dup-0003",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -4591,7 +4683,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0001",
+      "duplicate_cluster_id": "dup-0003",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -4608,15 +4700,10 @@
   "duplicate_clusters": [
     {
       "cluster_id": "dup-0001",
-      "canonical_path": "agent/context.py",
+      "canonical_path": "data/tasks.json",
       "members": [
-        "docs/archive/jules_backlog_archive.md",
-        "interfaces/api.py",
-        "interfaces/__init__.py",
-        "tests/__init__.py",
-        "crons/__init__.py",
-        "agent/__init__.py",
-        "agent/context.py"
+        "data/tasks.json",
+        "data/circuit_state.json"
       ],
       "reason": "exact_md5_duplicate"
     },
@@ -4631,6 +4718,20 @@
     },
     {
       "cluster_id": "dup-0003",
+      "canonical_path": "agent/context.py",
+      "members": [
+        "interfaces/api.py",
+        "interfaces/__init__.py",
+        "logs/nina_sync.log",
+        "tests/__init__.py",
+        "crons/__init__.py",
+        "agent/__init__.py",
+        "agent/context.py"
+      ],
+      "reason": "exact_md5_duplicate"
+    },
+    {
+      "cluster_id": "dup-0004",
       "canonical_path": "bin/nf",
       "members": [
         "bin/nf",
