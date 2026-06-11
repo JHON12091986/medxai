@@ -25,19 +25,17 @@ def extract_facts():
                 facts["NINAGATE_PORT"] = match.group(1)
     except Exception as e:
         print(f"Error extracting NINAGATE_PORT: {e}")
-# 3. PROVIDER_COUNT from core/router.py
-facts["PROVIDER_COUNT"] = 0
-try:
-    with open("core/router.py", "r") as f:
-        content = f.read()
-        # A provider usually has a base_url or model_discovery URL
-        # Let's count "base_url": in the whole file
-        count = len(re.findall(r"\"base_url\":", content))
-        # Subtract 1 if "ollama" is counted twice or something, 
-        # but let's just use literal count of "base_url"
-        facts["PROVIDER_COUNT"] = count
-except Exception as e:
-    print(f"Error extracting PROVIDER_COUNT: {e}")
+
+    # 3. PROVIDER_COUNT from core/router.py
+    facts["PROVIDER_COUNT"] = 0
+    try:
+        with open("core/router.py", "r") as f:
+            content = f.read()
+            # Count "base_url": in the whole file as a proxy for provider count
+            count = len(re.findall(r"\"base_url\":", content))
+            facts["PROVIDER_COUNT"] = count
+    except Exception as e:
+        print(f"Error extracting PROVIDER_COUNT: {e}")
 
     # 4. DATE
     facts["DATE"] = datetime.now().strftime("%Y-%m-%d")
@@ -53,8 +51,6 @@ def patch_file(file_path, pattern, replacement, facts):
         with open(file_path, "r") as f:
             content = f.read()
         
-        # Use lambda for replacement to avoid group reference disambiguation issues
-        # Or use \g<1> syntax.
         final_replacement = replacement.format(**facts)
         
         if not re.search(pattern, content, re.MULTILINE | re.DOTALL):
@@ -77,30 +73,26 @@ def main():
     patched = []
 
     # ARCHITECTURE.md updates
-    # 1. NinaGate Proxy section - Model
     if patch_file("ARCHITECTURE.md", 
                   r"(### 3\. NinaGate Proxy.*?Gemini\s+)(.*?)(?=\s+usage)", 
                   r"\g<1>{MODEL}", facts):
         patched.append("ARCHITECTURE.md (Model)")
     
-    # 2. NinaGate Proxy section - Port
     if patch_file("ARCHITECTURE.md", 
                   r"(### 3\. NinaGate Proxy.*?port\s+)(\d+)", 
                   r"\g<1>{NINAGATE_PORT}", facts):
         patched.append("ARCHITECTURE.md (Port)")
 
     # README.md updates
-    # 1. Three-Tier Agent Model table row for ninaflash
     if patch_file("README.md", 
                   r"(\| ninaflash \(nf\) \| Local Muscle \| )(.*?)(\s+\|)", 
                   r"\g<1>{MODEL}\g<3>", facts):
         patched.append("README.md (Model-Table)")
 
-    # 2. Tool Quota Cascade table row for ninaflash
     if patch_file("README.md", 
                   r"(\| ninaflash \(agy\) \| )(.*?)(\s+\|)", 
                   r"\g<1>{MODEL}\g<3>", facts):
-        patched.append("README.append (Model-Quota)")
+        patched.append("README.md (Model-Quota)")
 
     # docs/nina_proxy_usage.md updates
     if patch_file("docs/nina_proxy_usage.md", 
