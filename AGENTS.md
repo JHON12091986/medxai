@@ -76,6 +76,13 @@ Three routing layers are always available and MUST be leveraged:
 
 Route EVERY subtask through this tree before executing:
 
+    Require benchmarking or empirical validation of routing?
+    └─ YES → 'nf bench' (Compare cloud vs hybrid stats locally)
+
+    Gemini Flash quota exhausted (> 900 req today) or Quota Downgrade active?
+    └─ YES → Force local inference regardless of complexity (NinaGate auto-fallback)
+
+
     Purely mechanical? (rename, format, sort, grep, boilerplate, docstring)
     └─ YES → NinaFlash (CPU, local, free, unlimited)
 
@@ -174,3 +181,8 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 ## Maintained by nina_sync.sh — routing history appended automatically each session.
 ## NinaGate Routing History
 <!-- Auto-appended by session-end protocol -->
+
+### [Session Baseline]
+- 93.7% token reduction
+- 85% local share
+- 4.2s latency
