@@ -28,6 +28,17 @@ async def get_temps() -> dict:
 async def get_ram_used_gb() -> float:
     return psutil.virtual_memory().used / 1e9
 
+
+async def get_vram_used_mb() -> int:
+    try:
+        r = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"],
+            capture_output=True, text=True, timeout=5
+        )
+        return int(r.stdout.strip())
+    except Exception:
+        return 0
+
 async def get_disk_used_pct() -> float:
     return psutil.disk_usage("/").percent
 

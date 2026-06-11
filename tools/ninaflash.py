@@ -743,13 +743,16 @@ def cmd_session_resume(args):
 def cmd_verify_all(args):
     """[024] Atomic verification suite."""
     print("Verifying integrity...")
-
 def cmd_check_code(args):
     """[033] Quality gate: run py_compile + pyflakes + ruff on target file."""
     path = _path_resolve(args.file)
     if not path.exists():
         print(f"❌ File not found: {path}")
         return
+
+    # Phase 1 Consolidation: Preview diff logic if this was a write
+    # We rely on tools.files for actual file operations, making ninaflash the CLI entry point
+    # that standardizes the interface without reinventing diffing.
 
     if getattr(args, 'fix', False):
         print("── ninaflash fix code ──────────────────")
