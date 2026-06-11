@@ -25,21 +25,19 @@ def extract_facts():
                 facts["NINAGATE_PORT"] = match.group(1)
     except Exception as e:
         print(f"Error extracting NINAGATE_PORT: {e}")
-
-    # 3. PROVIDER_COUNT from core/router.py
-    facts["PROVIDER_COUNT"] = 0
-    try:
-        with open("core/router.py", "r") as f:
-            content = f.read()
-            count = 0
-            for block_name in ["PROVIDERS_TIER1", "PROVIDERS_TIER2", "PROVIDERS_TIER3"]:
-                block_match = re.search(fr"{block_name} = \{{(.*?)\}}", content, re.DOTALL)
-                if block_match:
-                    items = re.findall(r"\"[A-Z0-9]+\": \{", block_match.group(1))
-                    count += len(items)
-            facts["PROVIDER_COUNT"] = count
-    except Exception as e:
-        print(f"Error extracting PROVIDER_COUNT: {e}")
+# 3. PROVIDER_COUNT from core/router.py
+facts["PROVIDER_COUNT"] = 0
+try:
+    with open("core/router.py", "r") as f:
+        content = f.read()
+        # A provider usually has a base_url or model_discovery URL
+        # Let's count "base_url": in the whole file
+        count = len(re.findall(r"\"base_url\":", content))
+        # Subtract 1 if "ollama" is counted twice or something, 
+        # but let's just use literal count of "base_url"
+        facts["PROVIDER_COUNT"] = count
+except Exception as e:
+    print(f"Error extracting PROVIDER_COUNT: {e}")
 
     # 4. DATE
     facts["DATE"] = datetime.now().strftime("%Y-%m-%d")
