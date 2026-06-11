@@ -3,20 +3,20 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-12 01:24 +06
-- Git HEAD: fe315ad0efc8fa86056f95e7f81cc17a33b559e7
-- Last commit: docs: post-session sync 2026-06-12 01:24
+- Generated: 2026-06-12 01:27 +06
+- Git HEAD: def347382ca27f50795a63bae251d3ba4319d647
+- Last commit: docs: post-session sync 2026-06-12 01:26
 - Service: activating
 unknown
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 01:24:46 +06; 364ms ago
- Invocation: 0c4e9842e3cd472982c47a57b33620e4
-    Process: 208164 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
-   Main PID: 208164 (code=exited, status=1/FAILURE)
+     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 01:27:40 +06; 726ms ago
+ Invocation: 58e5308ef56b46f4a7878c5a4c55f68c
+    Process: 214575 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
+   Main PID: 214575 (code=exited, status=1/FAILURE)
    Mem peak: 27.5M
-        CPU: 231ms
+        CPU: 215ms
 unavailable
 ```
 ## 2. Active Jules Sessions (live)
@@ -220,11 +220,11 @@ _Focus: Absolute minimum context overhead_
 
 ## 5. Last 5 Completions
 ```
+def3473 docs: post-session sync 2026-06-12 01:26
+b15003a docs(agents): remove obsolete reference to GEMINI.md
 fe315ad docs: post-session sync 2026-06-12 01:24
 2495615 ops(agents): consolidate tool mandate into AGENTS.md Rule 0, delete GEMINI.md
 85110be docs: post-session sync 2026-06-12 01:15
-884b478 ops(mandate): data-driven tool override — 66% substitution target, precise allow/ban lists
-e2e92d6 docs: post-session sync 2026-06-12 01:12
 ```
 
 ## 6. Open Blockers
@@ -275,4 +275,4 @@ e2e92d6 docs: post-session sync 2026-06-12 01:12
 
 
 ---
-_Feed size: 18913 bytes_
+_Feed size: 18875 bytes_
