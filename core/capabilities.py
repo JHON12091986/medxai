@@ -1,9 +1,7 @@
-"""
-from typing import Optional, ListNINA v12 — CapabilityRegistry (Stage 6.8)"""
+from typing import Optional, List
+"""NINA v12 — CapabilityRegistry (Stage 6.8)"""
 import asyncio, json, logging, time
-from typing import Optional, List
 from pathlib import Path
-from typing import Optional, List
 
 logger = logging.getLogger("nina.capabilities")
 CAP_FILE = Path("data/capabilities.json")

@@ -100,14 +100,22 @@ class AgentLoop:
         max_steps  = STEP_BUDGETS.get(task.task_type, DEFAULT_MAX_STEPS)
         context    = await self.memory.build_context(goal)
         # System frame injected once — never repeated in step loop
-        system_frame = (
-            f"Goal: {goal}\n"
-            f"Memory: {context}\n"
-            "THINK -> PLAN -> ACT each step.\n"
-            "TOOL:web INPUT:query | TOOL:browser INPUT:url | TOOL:shell INPUT:cmd | TOOL:system INPUT:status\n"
-            "FINAL:answer when done.\n"
-            "RULE: live data/prices/news — MUST use TOOL:web first."
-        )
+        # F-03x: Strip redundant instructions if routing through NinaGate (AG-M-10)
+        from urllib.parse import urlparse
+        api_base = getattr(self.config, "onebrain_api_base", "") or ""
+        parsed_url = urlparse(api_base)
+
+        if parsed_url.port == 8765 or "8765" in api_base:
+            system_frame = f"Goal: {goal}\nMemory: {context}"
+        else:
+            system_frame = (
+                f"Goal: {goal}\n"
+                f"Memory: {context}\n"
+                "THINK -> PLAN -> ACT each step.\n"
+                "TOOL:web INPUT:query | TOOL:browser INPUT:url | TOOL:shell INPUT:cmd | TOOL:system INPUT:status\n"
+                "FINAL:answer when done.\n"
+                "RULE: live data/prices/news — MUST use TOOL:web first."
+            )
         # F-03d: inject Bangla override as a system-role message so providers treat it
         # as a system instruction, not user content (fixes F-03c goal-prepend approach)
         bangla_sys = ([{"role": "system", "content": self._BANGLA_OVERRIDE.strip()}]
