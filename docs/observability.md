@@ -50,3 +50,8 @@ The observability core is deeply integrated into various parts of NINA to update
 - `healthcheck.py`: Calls `get_hub().set_health_ts()` at the end of the health checks (via `get_prometheus_metrics` / `Final report`).
 - `tools/nina_sync.py`: Calls `get_hub().set_sync_ts()` exactly after performing a push and logging the push event.
 - `tools/nina_dashboard.py`: Exposes `get_hub().to_dict()` natively at `/health`.
+
+## [NEW] Local Performance Monitoring
+While the `ObservabilityHub` tracks high-level system state, `ninaflash` provides surgical performance monitoring:
+- **Command:** `nf monitor`
+- **Function:** Parses the last 200 requests from `ninagate.log` to calculate local/cloud ratios, average latencies per tier, and estimated tokens saved via local execution and caching.

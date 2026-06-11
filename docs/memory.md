@@ -27,6 +27,12 @@ To prevent Context Window Overflow and ensure reliable model performance, `core/
 - **Budget:** The total context injected by the memory system is capped (default: 4000 characters).
 - **Prioritization:** The deterministic "Personal Context" (from `facts.json`) is always preserved in full. Episodic docs from ChromaDB are truncated to fit the remaining budget, ensuring NINA never loses its identity even when history is deep.
 
+### [NEW] Session Memory (ninaflash)
+For cross-agent and cross-session continuity, ninaflash provides standardized session capture:
+- `nf memory session-save --summary "TEXT"` — Appends the current session summary and git state to `data/session_memory.jsonl`.
+- `nf memory inject` — Generates a formatted context block of recent sessions to be pasted at the start of a new Gemini CLI session.
+- `nf memory session-recall` — Recalls the last N session summaries for quick reference.
+
 ## Recommended Enhancements
 
 - **Short-Term Working Memory / Scratchpad:** Currently, NINA relies heavily on the full memory orchestrator. A recommended enhancement is the implementation of a volatile, short-term scratchpad layer for the `AgentLoop`. This would allow NINA to hold in-flight state or intermediate logic steps during complex, multi-stage reasoning without permanently embedding that noise into the ChromaDB vector store.

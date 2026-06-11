@@ -6,6 +6,9 @@ The NINA proxy provides an OpenAI-compatible FastAPI endpoint that routes your l
 
 NinaGate uses an asynchronous parallel pipeline. Every inbound request triggers a cloud connection immediately. In parallel, a local classification determines if the task is a simple/mechanical change. If classified as simple, the cloud request is cleanly cancelled and the response is generated locally via NinaFlash, saving token quotas without blocking or introducing double-hop latency.
 
+### Performance Telemetry
+Every request handled by NinaGate is logged to `ninagate/logs/ninagate.log` with detailed metadata (provider, tokens, latency, cache status). This enables the `nf monitor` tool to provide live efficiency analytics.
+
 ## Bypass / Session Modes
 
 To avoid proxy overhead entirely during interactive sessions with the Gemini CLI, use the environment-level toggle standard:

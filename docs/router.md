@@ -50,3 +50,13 @@ To further minimize token usage and latency, HybridRouter V4 includes a persiste
 - **Persistence:** Unlike standard in-memory caches, NINA's cache is persisted to `data/router_cache.json`. This ensures that cached responses survive service restarts and system reboots.
 - **TTL Management:** Cache entries have specific Time-To-Live (TTL) values based on task type (e.g., `coding` tasks may be cached for 6 hours, while `quick` tasks are cached for 1 hour). Sensitive tasks are never cached.
 - **Automatic Purging:** The cache periodically purges expired entries during idle periods to maintain a lean storage footprint.
+
+## Performance Telemetry (v14.0)
+
+Every routing decision and completion is logged to `ninagate/logs/ninagate.log` in JSON format. This log includes:
+- **provider**: The model provider used (local or cloud).
+- **input_tokens / output_tokens**: Consumed token counts.
+- **total_ms**: Round-trip latency.
+- **cached**: Boolean indicating if the response was served from the cache.
+
+This data is used by `nf monitor` to provide real-time efficiency reports.

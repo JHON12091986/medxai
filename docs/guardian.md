@@ -16,7 +16,7 @@ Whenever a change is proposed (such as through a pull request merge or automated
 1. **AST Scan:** Analyzes the Abstract Syntax Tree of the modified code to check for prohibited behaviors (e.g., unauthorized `shell=True` use) and ensure the logic structure remains safe.
 2. **Baseline Drift Check:** Compares the structural and logical footprint of NINA against `upgrades/guardian_baseline.json` to detect anomalous deviations or corruption of core logic.
 3. **`py_compile`:** Compiles the updated `.py` files into bytecode to catch fatal syntax errors immediately.
-4. **`pyflakes`:** Lints the Python codebase to catch logical errors (like undefined names or syntax warnings) that py_compile might miss.
+4. **`python3 -m pyflakes`:** Lints the Python codebase to catch logical errors (like undefined names or syntax warnings) that py_compile might miss.
 5. **Log:** Records successful verifications or fatal rejections in `nina_update_log.md` (now located in `docs/logs/nina_update_log.md`).
 6. **Sync:** After successful validation, triggers `nina_sync.sh` to restart the `systemd` service and apply the changes cleanly.
 
