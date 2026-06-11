@@ -34,6 +34,34 @@ Three routing layers are always available and MUST be leveraged:
 
 ## PART 2 — OPERATING RULES (enforce on every subtask, every session)
 
+### RULE 0 — SURGICAL TOOL FIRST (mandatory, check before every file/git operation):
+
+Before using ANY shell read_file, cat, git log, git diff, or grep tool call,
+check this lookup table and use the nf command instead:
+
+| WANT TO... | USE THIS INSTEAD |
+| :--- | :--- |
+| Read part of a file | `nf file read <file> --start N --end N` |
+| Find a function/class | `nf code symbol <file> <name>` |
+| Search text across files | `nf file grep <pattern> --dir <dir>` |
+| See what changed | `nf git changed` |
+| Read recent log entries | `nf log tail 5` |
+| Find next log ID | `nf log next-id` |
+| Get git history | `nf git log --n 10` |
+| Search commit messages | `nf git search <keyword>` |
+| Get function signatures only | `nf code sigs <dir>` |
+| See file diff only | `nf file diff <file>` |
+| Edit one string in a file | `nf file patch <file> --find "x" --replace "y"` |
+| Get directory structure | `nf code index` (JSON map, no file reads) |
+
+Only escalate to direct shell cat/read_file when:
+- nf command returns empty/error
+- File type is binary or non-text
+- Operation requires full file context (architectural reasoning)
+
+Violating this rule wastes cloud tokens and increases latency.
+Every nf command runs locally in <1s with zero token cost.
+
 ### Token Reduction
 1. CLASSIFY FIRST — Before any cloud call, use `nf query "<task>"` to check if it can be handled locally.
    Mechanical tasks (rename, format, grep, boilerplate, docstrings, type hints) → NinaFlash always.

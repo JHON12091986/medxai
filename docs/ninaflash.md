@@ -4,6 +4,27 @@
 
 ninaflash is NINA's dedicated Local Executor. Far more than just a utility script, it serves as the critical local engine responsible for deploying changes, managing urgent hotfixes, and merging pull requests created by asynchronous cloud builders like Jules. It functions as NINA's internal muscle, handling all logic requiring local system interaction while seamlessly integrating with external processes.
 
+## THE PRIME DIRECTIVE: SURGICAL TOOL FIRST (RULE 0)
+
+To maximize token efficiency and minimize latency, all NINA agents must prioritize local surgical tools over direct shell commands. Consult this mandate before every file or git operation:
+
+| WANT TO... | USE THIS INSTEAD |
+| :--- | :--- |
+| Read part of a file | `nf file read <file> --start N --end N` |
+| Find a function/class | `nf code symbol <file> <name>` |
+| Search text across files | `nf file grep <pattern> --dir <dir>` |
+| See what changed | `nf git changed` |
+| Read recent log entries | `nf log tail 5` |
+| Find next log ID | `nf log next-id` |
+| Get git history | `nf git log --n 10` |
+| Search commit messages | `nf git search <keyword>` |
+| Get function signatures only | `nf code sigs <dir>` |
+| See file diff only | `nf file diff <file>` |
+| Edit one string in a file | `nf file patch <file> --find "x" --replace "y"` |
+| Get directory structure | `nf code index` (JSON map, no file reads) |
+
+**Mandate:** Only escalate to direct shell `cat`, `read_file`, or `grep` when the `nf` command fails, returns an error, or the operation requires full file context for complex architectural reasoning.
+
 ## Surgical Code Intelligence (v14.0)
 
 ninaflash v6.1+ features a "Surgical Code Intelligence" layer designed for extreme token efficiency. It uses local AST (Abstract Syntax Tree) parsing to extract only what is needed:
