@@ -5,6 +5,7 @@ import logging
 import os
 import time
 import datetime
+from pathlib import Path
 from collections import deque
 from contextlib import asynccontextmanager
 
@@ -26,10 +27,15 @@ PROVIDERS_FILE = os.path.join(os.path.dirname(__file__), "providers.json")
 providers = []
 available_models_cache = [{"id": "auto", "object": "model", "owned_by": "ninagate"}]
 
-def write_log(entry, log_path="logs/ninagate.log"):
+def write_log(entry, log_path=None):
     """Appends a log entry to the specified JSON log file."""
+    if log_path is None:
+        log_path = Path(__file__).parent.parent / "logs" / "ninagate.log"
+    else:
+        log_path = Path(log_path)
+        
     try:
-        os.makedirs(os.path.dirname(log_path), exist_ok=True)
+        log_path.parent.mkdir(parents=True, exist_ok=True)
         entry["ts"] = datetime.datetime.now().isoformat()
         with open(log_path, "a") as f:
             f.write(json.dumps(entry) + "\n")
