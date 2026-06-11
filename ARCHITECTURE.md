@@ -45,7 +45,7 @@ NINA is a three-tier autonomous agentic OS. It is not a chatbot. It is an action
 ## Component Deep-Dives
 
 **ninaflash (nf):**
-The "Local Muscle" of NINA. A high-performance CLI executor (v6.0+) that offloads research, validation, and project management from the cloud. It features a "Surgical Code Intelligence" engine that uses local AST parsing to extract function signatures and symbols, avoiding expensive full-file reads. ninaflash maintains a strict 100-function core Nucleus to ensure high "attention" and reliability during autonomous execution.
+The "Local Muscle" of NINA. A high-performance CLI executor (v6.1+) that offloads research, validation, and project management from the cloud. It features a "Surgical Code Intelligence" engine, zero-token file/git manipulation, and parallel execution. It maintains a strict 100-function core Nucleus to ensure high "attention" and absolute reliability. ninaflash now includes session memory injection for cross-agent context continuity.
 
 ### 3. NinaGate Proxy (Local Acceleration)
 A lightweight OpenAI-compatible API proxy (`ninagate/main.py`) running on port 8080. It implements an **Async Non-Blocking Pipeline** (v3.0): cloud requests are initiated immediately, while a heuristic classification runs in parallel. If a task is identified as `SIMPLE`, the cloud request is cancelled and offloaded to local Ollama models (Qwen2.5-Coder), saving tokens without blocking the user.

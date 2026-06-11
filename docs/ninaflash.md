@@ -8,15 +8,31 @@ ninaflash is NINA's dedicated Local Executor. Far more than just a utility scrip
 
 ninaflash v6.1+ features a "Surgical Code Intelligence" layer designed for extreme token efficiency. It uses local AST (Abstract Syntax Tree) parsing to extract only what is needed:
 
-- `nf code pack <file>` — Distills a large Python file into a "Context Pack": a skeletal summary containing only class/function signatures and docstrings. Cuts token usage by 90% for codebase exploration.
+- `nf code pack <file>` — Distill a large Python file into a token-efficient skeletal summary.
 - `nf code symbol --file <f> --name <n>` — Extracts the exact implementation of a specific class or function.
-- `nf query "<task>"` — A local capability introspection tool. It checks if a task (e.g., "format code") can be handled locally by your CPU before wasting tokens on cloud reasoning.
+- `nf query "<task>"` — Local capability introspection tool.
+
+### [NEW] File & Git Operations (Zero Cloud Cost)
+
+- `nf file read | grep | patch | insert | diff` — Local file manipulation without cloud escalation.
+- `nf git log | changed | search | blame | stash-quick` — Hardened git interface with security blocklist (prevents accidental push/force).
+
+### [NEW] Performance & Parallelism
+
+- `nf monitor` — Parses NinaGate logs to show local vs. cloud routing efficiency, tokens saved, and avg latency.
+- `nf batch --cmds "c1|c2"` — Parallel execution of sub-commands using a local thread pool.
+
+### [NEW] Session & Memory Management
+
+- `nf memory session-save --summary "TEXT"` — Standardized end-of-session learning capture.
+- `nf memory inject` — Bootstrap command to load last session context into active reasoning.
 
 ## Atomic Maintenance (Maintainer Mode)
 
 The `maintain` module handles the high-turn "Daily Maintenance" loop automatically:
 
 - `nf maintain pr <id> --task <id> --title <t> --summary <s>` — Atomically rebases a PR, surgically resolves documentation regressions (preserving v13+ headers locally), marks the backlog task as DONE, and appends the update log.
+- **Improved Verification:** All code checks now use `python3 -m pyflakes` for reliable venv-isolated validation, regardless of system PATH.
 
 ## Telemetry & User Visibility (v14.0)
 

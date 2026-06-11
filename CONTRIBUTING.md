@@ -37,7 +37,7 @@ NINA uses a lock file system to coordinate concurrent agent execution. Before mo
 
 You must validate all changed files before committing your work.
 
-1. **Syntax Checking**: Run `python3 -m py_compile <file>` and `pyflakes <file>` on every changed file.
+1. **Syntax Checking**: Run `python3 -m py_compile <file>` and `python3 -m pyflakes <file>` on every changed file.
 2. **Helper Commands**: Alternatively, use the optional developer helper commands:
    ```bash
    make check

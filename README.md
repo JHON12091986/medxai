@@ -36,14 +36,16 @@ This model is the heart of NINA's architecture:
 ## ninaflash — The Local Muscle
 
 ninaflash is NINA's local high-performance executor:
-- CLI tool at `bin/nf` (v6.0+)
+- CLI tool at `bin/nf` (v6.1+)
 - **Surgical Intelligence:** Extract functions/symbols locally to save cloud tokens.
-- **Auto-Hygiene:** Local syntax fixing and document auto-formatting.
+- **Local Autonomy:** Zero-token file manipulation, git operations, and parallel execution.
+- **Session Continuity:** Inject and save session context for cross-agent consistency.
 - Commands:
   - `nf status` — Pulse heartbeat of git, env, and backlog.
-  - `nf code outline` — Zero-token signature mapping.
-  - `nf check code --fix` — Automated local linting/fixing.
-  - `nf backlog summary` — High-density project state.
+  - `nf file read | grep | patch` — Local file ops (Zero Cloud Cost).
+  - `nf git log | changed | search` — Hardened git interface.
+  - `nf monitor` — Real-time performance metrics (NinaGate).
+  - `nf memory session-save | inject` — Session context management.
 
 ## Universe-Mode Kernel
 
