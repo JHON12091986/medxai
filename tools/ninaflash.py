@@ -22,11 +22,12 @@ try:
     import dotenv
 except ImportError:
     dotenv = None
+import time
 import shutil
 import ast
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Tuple
+from typing import List, Dict, Any, Optional, Set, Tuple
 
 # --- KERNEL INITIALIZATION ---
 REPO_ROOT = Path(__file__).parent.parent.resolve()
@@ -676,7 +677,7 @@ def cmd_run_capability(args):
     code, out, err = run_cmd(cmd)
     if code == 0:
         print(out)
-        print("✅ Success.")
+        print(f"✅ Success.")
     else:
         print(f"❌ Failed (exit {code}): {err}")
 
