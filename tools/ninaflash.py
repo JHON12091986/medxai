@@ -1345,6 +1345,110 @@ def cmd_git_stash_quick(args):
     code, out, _ = safe_run_cmd(f"git stash push -m '{label}'")
     print(out)
 
+def cmd_monitor_tools(sessions_dir, limit):
+    """Parse Gemini CLI sessions: tool call frequency + token cost per tool."""
+    import glob, json
+    from pathlib import Path
+
+    # Token cost estimates per tool invocation (Gemini Flash blended rate)
+    TOOL_TOKEN_COST = {
+        "read_file":          {"avg_in": 800,  "avg_out": 50,  "replaceable": "nf file read / nf code symbol"},
+        "search_files":       {"avg_in": 1200, "avg_out": 80,  "replaceable": "nf file smart-search"},
+        "grep_search":        {"avg_in": 600,  "avg_out": 40,  "replaceable": "nf file grep"},
+        "list_directory":     {"avg_in": 200,  "avg_out": 30,  "replaceable": "nf code index"},
+        "run_shell_command":  {"avg_in": 400,  "avg_out": 60,  "replaceable": "nf file/git/log/code commands"},
+        "write_file":         {"avg_in": 1000, "avg_out": 100, "replaceable": "nf file patch / nf file insert"},
+        "replace":            {"avg_in": 300,  "avg_out": 50,  "replaceable": "nf file patch"},
+        "update_topic":       {"avg_in": 100,  "avg_out": 20,  "replaceable": "NOT REPLACEABLE (internal)"},
+        "save_memory":        {"avg_in": 150,  "avg_out": 20,  "replaceable": "nf memory session-save"},
+        "web_search":         {"avg_in": 200,  "avg_out": 100, "replaceable": "NOT REPLACEABLE"},
+        "glob":               {"avg_in": 150,  "avg_out": 30,  "replaceable": "nf code index"},
+    }
+    PRICE_IN  = 0.075 / 1_000_000   # Gemini Flash input
+    PRICE_OUT = 0.30  / 1_000_000   # Gemini Flash output
+
+    tool_counts = {}
+    tool_shell_cmds = {}   # track shell subcommands specifically
+    session_files = sorted(
+        sessions_dir.rglob("*.jsonl"),
+        key=lambda x: x.stat().st_mtime, reverse=True
+    )
+    parsed = 0
+    for sf in session_files[:limit]:
+        try:
+            for line in sf.read_text(encoding="utf-8").splitlines():
+                try:
+                    row = json.loads(line)
+                except Exception:
+                    continue
+                
+                # Use the same logic as cmd_monitor for consistent parsing
+                msgs = row.get("$set", {}).get("messages", [])
+                if not msgs and row.get("type") in ("user", "gemini"):
+                    msgs = [row]
+                
+                for msg in msgs:
+                    t_calls = msg.get("toolCalls", [])
+                    for tc in t_calls:
+                        name = tc.get("name", "unknown")
+                        tool_counts[name] = tool_counts.get(name, 0) + 1
+                        # capture shell subcommands
+                        if "shell" in name.lower():
+                            args_dict = tc.get("args", {})
+                            cmd_text = str(args_dict.get("command", ""))
+                            first_word = cmd_text.strip().split()[0] if cmd_text.strip() else "?"
+                            key = f"  shell:{first_word}"
+                            tool_shell_cmds[key] = tool_shell_cmds.get(key, 0) + 1
+            parsed += 1
+        except Exception:
+            continue
+
+    if not tool_counts:
+        print("No tool call data found in session files.")
+        print(f"Checked: {sessions_dir}")
+        return
+
+    # Calculate costs
+    rows = []
+    for tool, count in sorted(tool_counts.items(), key=lambda x: -x[1]):
+        meta = TOOL_TOKEN_COST.get(tool, {"avg_in": 300, "avg_out": 40, "replaceable": "UNKNOWN"})
+        est_tokens = (meta["avg_in"] + meta["avg_out"]) * count
+        est_cost   = (meta["avg_in"] * PRICE_IN + meta["avg_out"] * PRICE_OUT) * count
+        replaceable = meta["replaceable"]
+        rows.append((tool, count, est_tokens, est_cost, replaceable))
+
+    total_tokens = sum(r[2] for r in rows)
+    total_cost   = sum(r[3] for r in rows)
+    replaceable_tokens = sum(r[2] for r in rows if "NOT REPLACEABLE" not in r[4])
+    replaceable_cost   = sum(r[3] for r in rows if "NOT REPLACEABLE" not in r[4])
+
+    print("=" * 68)
+    print("  GEMINI CLI TOOL USAGE PROFILE")
+    print(f"  Sessions analyzed: {parsed} | Source: {sessions_dir}")
+    print("=" * 68)
+    print(f"  {'TOOL':<26} {'CALLS':>6}  {'~TOKENS':>9}  {'~COST':>8}  REPLACE WITH")
+    print(f"  {'-'*26} {'-'*6}  {'-'*9}  {'-'*8}  {'-'*20}")
+    for tool, count, tokens, cost, replaceable in rows:
+        flag = "✅" if "NOT REPLACEABLE" not in replaceable else "🔒"
+        print(f"  {flag} {tool:<24} {count:>6}  {tokens:>9,}  ${cost:>7.4f}  {replaceable}")
+        # print shell subcommands under run_shell_command
+        if "shell" in tool.lower():
+            for scmd, scnt in sorted(tool_shell_cmds.items(), key=lambda x: -x[1])[:8]:
+                print(f"    {scmd:<28} {scnt:>4}x")
+    print(f"  {'-'*68}")
+    print(f"  TOTAL                          {sum(r[1] for r in rows):>6}  {total_tokens:>9,}  ${total_cost:>7.4f}")
+    print()
+    print(f"  REPLACEABLE with nf commands:  {replaceable_tokens:>9,} tokens  ${replaceable_cost:.4f}")
+    pct = replaceable_tokens / total_tokens * 100 if total_tokens else 0
+    print(f"  Optimization potential:        {pct:.0f}% of tool tokens eliminable")
+    print()
+    print("  MANDATE RECOMMENDATION:")
+    replaceable_tools = [r[0] for r in rows if "NOT REPLACEABLE" not in r[4] and r[1] >= 3]
+    for t in replaceable_tools:
+        meta = TOOL_TOKEN_COST.get(t, {})
+        print(f"  Ban: {t:<24} → Use: {meta.get('replaceable','nf command')}")
+    print("=" * 68)
+
 # --- ADD 3: NinaGate Performance Monitor ---
 def cmd_monitor(args):
     """Parse real Gemini CLI session data + NinaGate logs for savings report."""
@@ -1355,6 +1459,15 @@ def cmd_monitor(args):
     full_mode = getattr(args, 'full', False)
     sessions_dir = Path.home() / ".gemini" / "tmp" / "nina" / "chats"
     ninagate_log = REPO_ROOT / "logs" / "ninagate.log"
+
+    # parse last 3 sessions by default, all if --full
+    session_files = sorted(sessions_dir.glob("session-*.jsonl"),
+                           key=lambda x: x.stat().st_mtime, reverse=True)
+    limit = len(session_files) if full_mode else min(3, len(session_files))
+
+    if getattr(args, 'tools', False):
+        cmd_monitor_tools(sessions_dir, limit)
+        return
 
     # === PART 1: Parse Gemini CLI session files (.jsonl) ===
     total_input = 0
@@ -1681,6 +1794,9 @@ def main():
     p_monitor = subparsers.add_parser("monitor")
     p_monitor.add_argument("--full", action="store_true",
                            default=False, help="Parse all sessions, not just last 3")
+    p_monitor.add_argument("--tools", action="store_true",
+                           default=False,
+                           help="Show tool call frequency + token cost breakdown")
     
     p_batch = subparsers.add_parser("batch")
     p_batch.add_argument("--cmds", required=True, help="Piped commands: 'c1|c2'")
