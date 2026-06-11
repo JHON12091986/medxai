@@ -95,7 +95,11 @@ def validate(check_deltas=False, notify=False):
     # 1. Check if index entries resolve to real files and validate schema
     for file_obj in data["files"]:
         path_str = file_obj["path"]
-        if not (repo_root / path_str).exists():
+
+        # Don't throw a hard error for missing backups, logs, or dynamically generated files
+        skip_existence_check = any(p in path_str for p in ["upgrades/backups", "upgrades/incidents", "upgrades/deploy.log", "logs/", "data/", "exports/", ".env", ".aider", ".log", ".lock", ".save", "history"])
+
+        if not (repo_root / path_str).exists() and not skip_existence_check:
             print(f"❌ Broken link: {path_str} in index does not exist on disk.")
             errors += 1
             
