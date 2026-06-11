@@ -197,8 +197,10 @@ _SKIP_DIRS = {".git", "venv", ".venv", "env", "virtualenv", "__pycache__",
               "node_modules", ".mypy_cache", ".pytest_cache", "dist", "build"}
 
 def _find_py_files() -> List[Path]:
-    """[008] Find all .py files excluding standard ignore dirs."""
-    return [p for p in REPO_ROOT.rglob("*.py") if not any(skip in p.parts for skip in _SKIP_DIRS)]
+    """[008] Find all .py files excluding standard ignore dirs with depth cap."""
+    return [p for p in REPO_ROOT.rglob("*.py")
+            if not any(skip in p.parts for skip in _SKIP_DIRS)
+            and len(p.relative_to(REPO_ROOT).parts) <= 8]
 
 def _find_md_files() -> List[Path]:
     """[009] Find all .md files excluding standard ignore dirs."""

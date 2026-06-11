@@ -140,7 +140,7 @@ class QuotaManager:
         self.check_reset()
         if provider in self.quotas:
             self.quotas[provider] += 1
-            self.save()
+            asyncio.get_event_loop().run_in_executor(None, self.save)
 
     def is_available(self, provider, limit=900):
         self.check_reset()
@@ -191,7 +191,7 @@ http_client: httpx.AsyncClient = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global http_client
-    http_client = httpx.AsyncClient(timeout=60.0)
+    http_client = httpx.AsyncClient(timeout=httpx.Timeout(60.0, connect=3.0))
     watcher_task = asyncio.create_task(watch_providers())
     model_fetch_task = asyncio.create_task(fetch_models_background())
     yield
@@ -218,9 +218,17 @@ async def classify_request(payload):
     messages = payload.get("messages", [])
     if not messages: return "SIMPLE"
     last_content = messages[-1].get("content", "")
-    if len(last_content) < 50: return "SIMPLE"
     text = last_content.lower()
-    if any(x in text for x in ["fix", "rename", "format", "docstring", "type hint", "boilerplate", "grep", "sort"]):
+    
+    SIMPLE_KEYWORDS = [
+        "fix", "rename", "format", "docstring", "type hint", "boilerplate",
+        "grep", "sort", "read", "show", "list", "print", "check", "verify",
+        "compile", "status", "outline", "symbol", "signature", "log", "tail",
+        "sync", "commit", "diff", "import", "lint", "echo"
+    ]
+    if any(x in text for x in SIMPLE_KEYWORDS):
+        return "SIMPLE"
+    if len(last_content) < 200:
         return "SIMPLE"
     return "COMPLEX"
 
@@ -324,9 +332,9 @@ async def proxy_chat_completions(request: Request):
     task_type = await classification_task
     
     if task_type == "SIMPLE" and local_providers and not target_provider_name:
+        cloud_task.cancel()
         local_response, lh, l_start, l_name = await forward_to_provider(payload, local_providers, is_stream)
         if local_response:
-            cloud_task.cancel()
             logger.info(f"SIMPLE task -> local ({l_name})")
             if is_stream: return StreamingResponse(stream_response(local_response, lh, l_start), status_code=local_response.status_code)
             else:
