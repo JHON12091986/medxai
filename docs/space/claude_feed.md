@@ -3,20 +3,20 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-12 00:56 +06
-- Git HEAD: 33972834531d54c7afb7e50fd78e153b8fcc15c3
-- Last commit: docs: post-session sync 2026-06-12 00:55
+- Generated: 2026-06-12 01:12 +06
+- Git HEAD: e2e92d67c6fc4271b2b99122d84ffedd288431bd
+- Last commit: docs: post-session sync 2026-06-12 01:12
 - Service: activating
 unknown
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 00:56:38 +06; 2s ago
- Invocation: 08f4d34075ea494c92e5c59e614e7a5a
-    Process: 186775 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
-   Main PID: 186775 (code=exited, status=1/FAILURE)
-   Mem peak: 27.6M
-        CPU: 214ms
+     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 01:12:50 +06; 3s ago
+ Invocation: 0be40673cc78473aadfe734b2dafcad8
+    Process: 194574 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
+   Main PID: 194574 (code=exited, status=1/FAILURE)
+   Mem peak: 27.5M
+        CPU: 243ms
 unavailable
 ```
 ## 2. Active Jules Sessions (live)
@@ -220,11 +220,11 @@ _Focus: Absolute minimum context overhead_
 
 ## 5. Last 5 Completions
 ```
+e2e92d6 docs: post-session sync 2026-06-12 01:12
+b75a910 ops(agents): data-driven tool override mandate from 27-session lifetime audit
 3397283 docs: post-session sync 2026-06-12 00:55
 d912fb0 docs: post-session sync 2026-06-12 00:51
 b31dc71 feat(ninaflash): nf monitor --tools profiles real tool usage + token cost
-573bddd docs: post-session sync 2026-06-12 00:43
-9ef5589 docs: post-session sync 2026-06-12 00:38
 ```
 
 ## 6. Open Blockers
@@ -275,4 +275,4 @@ b31dc71 feat(ninaflash): nf monitor --tools profiles real tool usage + token cos
 
 
 ---
-_Feed size: 18856 bytes_
+_Feed size: 18893 bytes_
