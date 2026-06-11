@@ -45,6 +45,7 @@ ninaflash v6.1+ features a "Surgical Code Intelligence" layer designed for extre
   - **NinaGate Logs:** Reports local vs. cloud routing ratios, average latency, and estimated cost savings.
   - **NinaFlash Logs:** Tracks local command execution frequency, timing, and cumulative token savings.
   - Use `nf monitor --full` to parse all historical data instead of just the last 3 sessions.
+  - Use `nf monitor --tools` to profile tool usage frequency and estimated token costs per tool.
 - `nf batch --cmds "c1|c2"` — Parallel execution of sub-commands using a local thread pool.
 
 ### [NEW] Structured Logging

@@ -3,20 +3,20 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-12 00:44 +06
-- Git HEAD: 573bddda8ab5157e774fec95c622cb1fee8ae58f
-- Last commit: docs: post-session sync 2026-06-12 00:43
+- Generated: 2026-06-12 00:52 +06
+- Git HEAD: d912fb0f4c99d3f5f16023c67ca963c99503df4f
+- Last commit: docs: post-session sync 2026-06-12 00:51
 - Service: activating
 unknown
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 00:44:36 +06; 1s ago
- Invocation: e9ccd1fb802b4532bf9d61b1626d7e99
-    Process: 173165 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
-   Main PID: 173165 (code=exited, status=1/FAILURE)
-   Mem peak: 27.7M
-        CPU: 251ms
+     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 00:52:36 +06; 4s ago
+ Invocation: ad30ba3ab04644c684770d31c5e8247a
+    Process: 180177 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
+   Main PID: 180177 (code=exited, status=1/FAILURE)
+   Mem peak: 27.8M
+        CPU: 223ms
 unavailable
 ```
 ## 2. Active Jules Sessions (live)
@@ -220,11 +220,11 @@ _Focus: Absolute minimum context overhead_
 
 ## 5. Last 5 Completions
 ```
+d912fb0 docs: post-session sync 2026-06-12 00:51
+b31dc71 feat(ninaflash): nf monitor --tools profiles real tool usage + token cost
 573bddd docs: post-session sync 2026-06-12 00:43
 9ef5589 docs: post-session sync 2026-06-12 00:38
 dd1c858 fix(ninagate): correct log path to ~/nina/logs/ninagate.log
-6579c2c docs: post-session sync 2026-06-12 00:33
-cd8acd3 docs: post-session sync 2026-06-12 00:30
 ```
 
 ## 6. Open Blockers
@@ -275,4 +275,4 @@ cd8acd3 docs: post-session sync 2026-06-12 00:30
 
 
 ---
-_Feed size: 18842 bytes_
+_Feed size: 18875 bytes_
