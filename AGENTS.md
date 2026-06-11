@@ -34,42 +34,90 @@ Three routing layers are always available and MUST be leveraged:
 
 ## PART 2 — OPERATING RULES (enforce on every subtask, every session)
 
-### RULE 0 — SURGICAL TOOL FIRST (mandatory, check before every file/git operation):
+### RULE 0 — SURGICAL TOOL MANDATE
+## Source: 27-session lifetime audit | 45,700+ tool calls analyzed
+## Realistic optimization: 66% of calls → local nf (zero tokens, zero quota)
 
-#### BANNED — Never use these for the listed operations:
+### BEFORE EVERY TOOL CALL — run this mental check:
+1. Is this cat / grep / ls / find / head / tail / git log / git diff / git status?
+   → USE nf instead. Never call run_shell_command for these.
+2. Is this read_file on an existing text file?
+   → USE nf file read <file> --start N --end N
+3. Is this replace for a single string?
+   → USE nf file patch <file> --find "X" --replace "Y"
+4. Is this grep_search?
+   → USE nf file grep <pattern> --dir <dir> --ext .py,.md,.sh
+5. Is this list_directory or glob on a code directory?
+   → USE nf code index
 
-| Shell sub-command        | Use instead                              |
-|--------------------------|------------------------------------------|
-| cat <file>               | nf file read <file> --start 0 --end 60   |
-| grep / grep -r           | nf file grep <pattern> --dir <dir>       |
-| git log                  | nf git log --n 10                        |
-| git diff <file>          | nf file diff <file>                      |
-| git status          | nf git changed                           |
-| git blame                | nf git blame <file> --start N --end N    |
-| ls / ls -la              | nf code index                            |
-| find . -name "*.py"      | nf code index                            |
+### BANNED TOOL DISPATCH TABLE:
 
-| Pattern (read_file)      | Use instead                             |
-|--------------------------|-----------------------------------------|
-| Reading whole file       | nf file read <file> --start N --end N   |
-| Finding a function       | nf code symbol <file> <name>            |
-| Getting file outline     | nf code outline <file>                  |
+| Banned call                         | Use instead                                 |
+|-------------------------------------|---------------------------------------------|
+| run_shell_command: cat <file>        | nf file read <file> --start 0 --end 60     |
+| run_shell_command: grep / grep -r    | nf file grep <pattern> --dir <dir>         |
+| run_shell_command: git log           | nf git log --n 10                          |
+| run_shell_command: git diff <file>   | nf file diff <file>                        |
+| run_shell_command: git status        | nf git changed                             |
+| run_shell_command: git blame <file>  | nf git blame <file> --start N --end N      |
+| run_shell_command: ls / ls -la       | nf code index                              |
+| run_shell_command: find . -name      | nf code index                              |
+| run_shell_command: head/tail/wc -l   | nf file read <file> --start N --end N      |
+| read_file (existing file)            | nf file read <file> --start 0 --end 60     |
+| read_file (find a function)          | nf code symbol <file> <name>               |
+| read_file (file outline)             | nf code outline <file>                     |
+| read_file (log lines)                | nf log tail N                              |
+| replace (single string)              | nf file patch --find "X" --replace "Y"     |
+| replace (insert after anchor)        | nf file insert --after "ANCHOR" --text "…" |
+| grep_search (any pattern)            | nf file grep <pattern> --dir <dir>         |
+| list_directory / glob (code dirs)    | nf code index                              |
 
-| Pattern (replace)        | Use instead                                         |
-|--------------------------|-----------------------------------------------------|
-| Single string replace    | nf file patch <file> --find "X" --replace "Y"       |
-| Insert after anchor      | nf file insert <file> --after "ANCHOR" --text "..."  |
+### ALLOWED — These native calls are always legitimate:
 
-Only escalate to direct shell cat/read_file when:
-- nf command returns empty/error
-- File type is binary or non-text
-- Operation requires full file context (architectural reasoning)
+run_shell_command KEEP list:
+- python3 -m py_compile <file>     (validation)
+- python3 tools/ninaflash.py ...   (nf execution)
+- python3 <any script>             (legitimate execution)
+- ./nina_sync.sh                   (mandatory sync — no exceptions)
+- sudo systemctl restart/status    (service management)
+- git add / git commit / git push  (committing and pushing)
+- git pull / git checkout / git merge  (remote and branch ops)
+- ollama serve / ollama pull       (model management)
+- curl http://localhost:...        (health checks)
+- sudo ln -sf                      (system symlinks)
+- pip install / apt install        (package management)
+- mkdir / cp / mv / rm             (filesystem ops with no nf equiv)
 
-LIFETIME AUDIT (27 sessions): 33,000+ run_shell_command calls.
-66% substitutable with nf. Target: <20 banned calls per session.
+write_file — KEEP for:
+- Creating new files from scratch  (no nf equivalent)
+- Writing generated content        (no nf equivalent)
 
-Violating this rule wastes cloud tokens and increases latency.
-Every nf command runs locally in <1s with zero token cost.
+replace — KEEP for:
+- Multi-block or multi-line edits  (nf file patch is single-string only)
+- Structural rewrites
+
+Always KEEP — never substitute:
+- update_topic                     (Gemini CLI internal state)
+- invoke_agent                     (Jules/agy workflow — core)
+- enter_plan_mode / exit_plan_mode (planning UI)
+- google_web_search                (external lookup)
+- web_fetch                        (URL fetching)
+- list_background_processes        (system monitoring)
+- read_background_output           (async task output)
+
+### COMPLIANCE — End-of-task self-audit:
+If any banned tool was used when an nf equivalent existed, report:
+  "RULE0 VIOLATION: used [tool] [N]x — should have used [nf command]"
+Per-session target: fewer than 20 banned tool calls total.
+
+### WHY THIS EXISTS (real numbers from 27-session audit):
+- run_shell_command: 33,000+ lifetime calls (avg 1,200/session)
+- read_file:          5,000+ lifetime calls
+- replace:            5,000+ lifetime calls
+- Substitutable:     ~30,190 of 45,700 calls (66%) → zero-cost nf
+- Irreplaceable:     ~15,510 calls (update_topic, invoke_agent, new file writes, etc.)
+- Each nf call: <1s, zero tokens, zero quota
+--- END RULE 0 ---
 
 ### Token Reduction
 1. CLASSIFY FIRST — Before any cloud call, use `nf query "<task>"` to check if it can be handled locally.
