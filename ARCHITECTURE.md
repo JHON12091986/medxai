@@ -90,3 +90,9 @@ NINA prioritizes local hardware. Every subtask is routed through the **NinaGate*
 1. **Local-First:** NinaFlash (Qwen-2.5-Coder:7B) handles mechanical tasks and small edits for $0.
 2. **Surgical Retrieval:** Files >100 lines are surgically retrieved via AST (Abstract Syntax Tree) primitives in `ninaflash`.
 3. **Unified Directive:** A single source of truth (`AGENTS.md`) governs all coders, ensuring zero context drift.
+
+## VISIBILITY & TELEMETRY (Glass Box Architecture)
+NINA eliminates "Black Box" reasoning through mandatory telemetry:
+- **Granular Topic Updates:** Every discrete sub-goal triggers a status update.
+- **Thought-Streaming:** Internal reasoning intent is mirrored to `logs/agent_thoughts.log`.
+- **Heartbeat Protocol:** Automated status turns during high-latency operations.
