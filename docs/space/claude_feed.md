@@ -3,24 +3,21 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-12 01:52 +06
-- Git HEAD: 8ad82bf81af4b3fcfd24d087d773f7c5d6ac71e4
-- Last commit: docs: post-session sync 2026-06-12 01:52
-- Service: active
+- Generated: 2026-06-12 01:57 +06
+- Git HEAD: 2b662305ab9f01c42ccafdb1d5f2bef75ea94588
+- Last commit: docs: post-session sync 2026-06-12 01:56
+- Service: activating
+unknown
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Fri 2026-06-12 01:52:47 +06; 175ms ago
- Invocation: 06461650737741cab34143e094e82c5a
-   Main PID: 230309 (python)
-      Tasks: 1 (limit: 15177)
-     Memory: 19.8M (peak: 19.8M)
-        CPU: 165ms
-     CGroup: /system.slice/nina.service
-             └─230309 /home/aibony/nina/venv/bin/python main.py
-
-Jun 12 01:52:47 aibony-VivoBook-ASUSLaptop-X530FN-S530FN systemd[1]: nina.service: Scheduled restart job, restart counter is at 2883.
-Jun 12 01:52:47 aibony-VivoBook-ASUSLaptop-X530FN-S530FN systemd[1]: Started nina.service - NINA Autonomous Agent.
+     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 01:57:51 +06; 3s ago
+ Invocation: c585f10d049e48df9461e57ff513a817
+    Process: 237298 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
+   Main PID: 237298 (code=exited, status=1/FAILURE)
+   Mem peak: 27.8M
+        CPU: 210ms
+unavailable
 ```
 ## 2. Active Jules Sessions (live)
 Active Jules Sessions:
@@ -223,11 +220,11 @@ _Focus: Absolute minimum context overhead_
 
 ## 5. Last 5 Completions
 ```
+2b66230 docs: post-session sync 2026-06-12 01:56
 8ad82bf docs: post-session sync 2026-06-12 01:52
 b38ec6b Merge remote-tracking branch 'origin/jules/opt-observable-local-layer-14109430478887759619'
 94882f0 Merge remote-tracking branch 'origin/jules-agent-loop-scout-12486530914500192869'
 7513cb1 Merge remote-tracking branch 'origin/jules-7396398476427288048-4a94a9ca'
-a9b0ae9 Merge remote-tracking branch 'origin/jules-6823805920751039478-4fa46e96'
 ```
 
 ## 6. Open Blockers
@@ -278,4 +275,4 @@ a9b0ae9 Merge remote-tracking branch 'origin/jules-6823805920751039478-4fa46e96'
 
 
 ---
-_Feed size: 19205 bytes_
+_Feed size: 18952 bytes_

@@ -10,5 +10,6 @@
 - **2026-06-08:** O-05: FastAPI REST endpoints (api.py) — Phase 2, deferred
 
 ## Current Focus
-- AG1 agentic pipeline
-- P0 items: B-002, B-003, B-004
+- v14.2 Lightning Sync Release — Consolidation and high-throughput operations.
+- Parallel execution monitoring and telemetry verification.
+- **2026-06-12:** Unified 10 major PR clusters into a single stable kernel.
