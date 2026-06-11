@@ -217,6 +217,7 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 
 0. Inject session context:
    nf memory inject
+   nf monitor           ← zero-token local efficiency report
 
 1. Verify NinaGate is active:
    curl -s http://localhost:8080/health || (cd ~/nina/ninagate && python3 ninagate.py &)

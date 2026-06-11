@@ -1323,42 +1323,122 @@ def cmd_git_stash_quick(args):
 
 # --- ADD 3: NinaGate Performance Monitor ---
 def cmd_monitor(args):
-    """[053] Parse NinaGate logs for performance metrics."""
-    log_path = REPO_ROOT / "ninagate/logs/ninagate.log"
-    if not log_path.exists():
-        print("NinaGate not active or no requests logged yet.")
-        return
-    lines = log_path.read_text(encoding="utf-8").splitlines()[-200:]
-    stats = {"local": {"count": 0, "ms": []}, "cloud": {"count": 0, "ms": []}, "cached": 0, "tokens": 0, "providers": {}}
-    for line in lines:
+    """Parse real Gemini CLI session data + NinaGate logs for savings report."""
+    import glob, json
+    from pathlib import Path
+    from datetime import datetime
+
+    full_mode = getattr(args, 'full', False)
+    sessions_dir = Path.home() / ".gemini" / "tmp" / "nina" / "chats"
+    ninagate_log = REPO_ROOT / "logs" / "ninagate.log"
+
+    # === PART 1: Parse Gemini CLI session files (.jsonl) ===
+    total_input = 0
+    total_output = 0
+    total_cached = 0
+    total_turns = 0
+    tool_calls = {}
+    nf_calls = 0
+    session_files = sorted(sessions_dir.glob("session-*.jsonl"),
+                           key=lambda x: x.stat().st_mtime, reverse=True)
+    # parse last 3 sessions by default, all if --full
+    limit = len(session_files) if full_mode else min(3, len(session_files))
+    for sf in session_files[:limit]:
         try:
-            d = json.loads(line)
-            prov = d.get("provider", "").upper()
-            ms = d.get("total_ms", 0)
-            if d.get("cached"): stats["cached"] += 1
-            elif prov in ("OLLAMA", "NINAFLASH", "LOCAL"):
-                stats["local"]["count"] += 1
-                stats["local"]["ms"].append(ms)
-                stats["tokens"] += 2500
-            else:
-                stats["cloud"]["count"] += 1
-                stats["cloud"]["ms"].append(ms)
-            p_name = d.get("provider", "unknown")
-            stats["providers"][p_name] = stats["providers"].get(p_name, 0) + 1
-        except: continue
-    total = stats["local"]["count"] + stats["cloud"]["count"] + stats["cached"]
-    avg_l = sum(stats["local"]["ms"])/len(stats["local"]["ms"]) if stats["local"]["ms"] else 0
-    avg_c = sum(stats["cloud"]["ms"])/len(stats["cloud"]["ms"]) if stats["cloud"]["ms"] else 0
-    ratio = (stats["local"]["count"] / total * 100) if total else 0
-    saved = stats["tokens"] + (stats["cached"] * 1500)
-    top = max(stats["providers"], key=stats["providers"].get) if stats["providers"] else "None"
-    print(f"=== NinaGate Performance (last {len(lines)} requests) ===")
-    print(f"Local (NinaFlash):  {stats['local']['count']} requests | avg {avg_l:.1f}ms")
-    print(f"Cloud (Gemini):     {stats['cloud']['count']} requests | avg {avg_c:.1f}ms")
-    print(f"Cached:             {stats['cached']} requests")
-    print(f"Local/Cloud ratio:  {ratio:.1f}%")
-    print(f"Est. tokens saved:  {saved} (local * 2500 + cached * 1500)")
-    print(f"Top provider:       {top}")
+            for line in sf.read_text(encoding="utf-8").splitlines():
+                row = json.loads(line)
+                
+                # Option A: Message updates (with $set)
+                msgs = row.get("$set", {}).get("messages", [])
+                # Option B: Direct message rows (flat JSONL)
+                if not msgs and row.get("type") in ("user", "gemini"):
+                    msgs = [row]
+                
+                for msg in msgs:
+                    # token counts
+                    usage = msg.get("tokens", {}) or msg.get("usageMetadata", {})
+                    if usage:
+                        total_input += usage.get("input", usage.get("promptTokenCount", 0))
+                        total_output += usage.get("output", usage.get("candidatesTokenCount", 0))
+                        total_cached += usage.get("cached", usage.get("cachedContentTokenCount", 0))
+                        total_turns += 1
+                    
+                    # tool call tracking
+                    t_calls = msg.get("toolCalls", [])
+                    for tc in t_calls:
+                        name = tc.get("name", "unknown")
+                        tool_calls[name] = tool_calls.get(name, 0) + 1
+                        # Check if it's an nf call
+                        args_dict = tc.get("args", {})
+                        cmd_text = str(args_dict.get("command", ""))
+                        if "ninaflash" in cmd_text or cmd_text.strip().startswith("nf "):
+                            nf_calls += 1
+        except Exception:
+            continue
+
+    # === PART 2: Parse NinaGate log ===
+    ng_local = 0
+    ng_cloud = 0
+    ng_cached = 0
+    ng_tokens_saved = 0
+    ng_total_latency = 0
+    ng_count = 0
+    if ninagate_log.exists():
+        for line in ninagate_log.read_text().splitlines()[-500:]:
+            try:
+                d = json.loads(line)
+                prov = d.get("provider", "").upper()
+                if d.get("cached"):
+                    ng_cached += 1
+                    ng_tokens_saved += d.get("input_tokens", 0) + d.get("output_tokens", 0)
+                elif prov in ("OLLAMA", "NINAFLASH", "LOCAL"):
+                    ng_local += 1
+                    ng_tokens_saved += d.get("input_tokens", 0) + d.get("output_tokens", 0)
+                else:
+                    ng_cloud += 1
+                ng_total_latency += d.get("total_ms", 0)
+                ng_count += 1
+            except Exception:
+                continue
+
+    # === REPORT ===
+    print("=" * 56)
+    print("  NINA EFFICIENCY REPORT — Real Data")
+    mode_label = "ALL sessions" if full_mode else f"Last {limit} session(s)"
+    print(f"  Source: Gemini CLI sessions ({mode_label})")
+    print("=" * 56)
+    print(f"\n  GEMINI CLI TOKEN USAGE")
+    print(f"  Input tokens:       {total_input:>12,}")
+    print(f"  Output tokens:      {total_output:>12,}")
+    print(f"  Cached tokens:      {total_cached:>12,}")
+    print(f"  Total turns:        {total_turns:>12,}")
+    print(f"  nf tool calls:      {nf_calls:>12,}  ← zero-token local ops")
+
+    if tool_calls:
+        print(f"\n  TOP TOOL CALLS")
+        for name, count in sorted(tool_calls.items(), key=lambda x: -x[1])[:8]:
+            marker = " ← NinaFlash" if ("shell" in name.lower() and nf_calls > 0) else ""
+            print(f"  {name:<30} {count:>4}x{marker}")
+
+    print(f"\n  NINAGATE ROUTING (last 500 log entries)")
+    if ng_count > 0:
+        ratio = ng_local / ng_count * 100
+        avg_lat = ng_total_latency / ng_count if ng_count else 0
+        print(f"  Local (NinaFlash):  {ng_local:>6,}  ({ratio:.0f}% of requests)")
+        print(f"  Cloud:              {ng_cloud:>6,}")
+        print(f"  Cached:             {ng_cached:>6,}")
+        print(f"  Avg latency:        {avg_lat:>6.0f} ms")
+        print(f"  Tokens offloaded:   {ng_tokens_saved:>6,}  (local + cached, $0 cost)")
+        cost_saved = ng_tokens_saved / 1_000_000 * 0.19
+        print(f"  Est. cost saved:    ${cost_saved:.4f}  (@ Gemini Flash blended rate)")
+    else:
+        print("  NinaGate log empty or not found.")
+        print("  Ensure NinaGate is running and requests are being logged.")
+
+    print(f"\n  HOW TO GET MORE DATA")
+    print(f"  /stats model         — inside Gemini CLI, live session totals")
+    print(f"  nf monitor --full    — parse ALL historical sessions")
+    print("=" * 56)
 
 # --- ADD 4: Parallel NF Execution ---
 def cmd_batch(args):
@@ -1541,7 +1621,9 @@ def main():
     subparsers.add_parser("help-ai")
     subparsers.add_parser("capability-map")
     subparsers.add_parser("stats")
-    subparsers.add_parser("monitor")
+    p_monitor = subparsers.add_parser("monitor")
+    p_monitor.add_argument("--full", action="store_true",
+                           default=False, help="Parse all sessions, not just last 3")
     
     p_batch = subparsers.add_parser("batch")
     p_batch.add_argument("--cmds", required=True, help="Piped commands: 'c1|c2'")
