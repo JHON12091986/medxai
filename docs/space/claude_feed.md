@@ -3,19 +3,19 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-12 00:34 +06
-- Git HEAD: 6579c2ce41ece83a0cc4aaad8f68627cff4e29c6
-- Last commit: docs: post-session sync 2026-06-12 00:33
+- Generated: 2026-06-12 00:38 +06
+- Git HEAD: 9ef5589acf5a4c942c54998841763af3f2efffbd
+- Last commit: docs: post-session sync 2026-06-12 00:38
 - Service: activating
 unknown
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 00:34:40 +06; 3s ago
- Invocation: a46f4a8ba9b04f11acd87f3b21c8bdb2
-    Process: 159733 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
-   Main PID: 159733 (code=exited, status=1/FAILURE)
-   Mem peak: 27.5M
+     Active: activating (auto-restart) (Result: exit-code) since Fri 2026-06-12 00:38:48 +06; 1s ago
+ Invocation: 16c77fa92a074515a677de773ed27642
+    Process: 166389 ExecStart=/home/aibony/nina/venv/bin/python main.py (code=exited, status=1/FAILURE)
+   Main PID: 166389 (code=exited, status=1/FAILURE)
+   Mem peak: 27.8M
         CPU: 223ms
 unavailable
 ```
@@ -220,11 +220,11 @@ _Focus: Absolute minimum context overhead_
 
 ## 5. Last 5 Completions
 ```
+9ef5589 docs: post-session sync 2026-06-12 00:38
+dd1c858 fix(ninagate): correct log path to ~/nina/logs/ninagate.log
 6579c2c docs: post-session sync 2026-06-12 00:33
 cd8acd3 docs: post-session sync 2026-06-12 00:30
 c97a8ef feat(ninaflash): structured JSON log with timing + token savings per command
-1c1159c docs: post-session sync 2026-06-12 00:23
-4ee7253 feat(ninaflash): nf monitor reads real Gemini CLI session + NinaGate log data
 ```
 
 ## 6. Open Blockers
@@ -275,4 +275,4 @@ c97a8ef feat(ninaflash): structured JSON log with timing + token savings per com
 
 
 ---
-_Feed size: 18896 bytes_
+_Feed size: 18878 bytes_

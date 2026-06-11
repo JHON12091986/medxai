@@ -53,7 +53,7 @@ To further minimize token usage and latency, HybridRouter V4 includes a persiste
 
 ## Performance Telemetry (v14.0)
 
-Every routing decision and completion is logged to `ninagate/logs/ninagate.log` in JSON format. This log includes:
+Every routing decision and completion is logged to `logs/ninagate.log` in JSON format. This log includes:
 - **provider**: The model provider used (local or cloud).
 - **input_tokens / output_tokens**: Consumed token counts.
 - **total_ms**: Round-trip latency.
