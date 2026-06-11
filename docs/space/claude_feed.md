@@ -3,39 +3,40 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-11 22:49 +06
-- Git HEAD: 73255d31e9c417c772114741bc27394937db8a00
-- Last commit: docs: post-session sync 2026-06-11 22:47
+- Generated: 2026-06-11 23:12 +06
+- Git HEAD: 648ddc1e4dfce5ea8237a47e1713da020df21ce8
+- Last commit: docs: post-session sync 2026-06-11 23:11
 - Service: activating
 unknown
 
 ## 2. Active Jules Sessions (live)
 Active Jules Sessions:
-#1 [15353880579548246468] NINA Mega Task 5: Stability, Observability, and Context Hygiene — AWAITING_USER_FEEDBACK — no PR yet
-#2 [7396398476427288048] Mega Task 10: NINA Sovereign Self-Maintenance Protocol — COMPLETED — https://github.com/aibony/nina/pull/112
-#3 [12486530914500192869] Mega Task 9: Speculative Execution & Scout Agents — COMPLETED — https://github.com/aibony/nina/pull/109
-#4 [729439358701133165] Mega Task 8: The Glass Box Dashboard — COMPLETED — https://github.com/aibony/nina/pull/108
-#5 [1909469007448016875] Autonomous QA & Self-Fixing Implementation — COMPLETED — https://github.com/aibony/nina/pull/114
-#6 [6823805920751039478] Surgical Context Optimization (Mega Task 6) — COMPLETED — https://github.com/aibony/nina/pull/113
-#7 [17892297084289591100] NINA Mega Task 5: Lightning Edition Implementation — COMPLETED — https://github.com/aibony/nina/pull/115
-#8 [9390249204279541291] NINA-Evolve: Autonomous Self-Optimization Protocol — COMPLETED — https://github.com/aibony/nina/pull/111
-#9 [10948090147375231066] NINA v3.0: Lightning Observability & Persistent Memory — COMPLETED — no PR yet
-#10 [5693617654071384777] NINA v2.0: Observable Local Engine & Memory Upgrade — COMPLETED — https://github.com/aibony/nina/pull/110
-#11 [14109430478887759619] NINA Observability & Memory Upgrade — COMPLETED — https://github.com/aibony/nina/pull/107
-#12 [6517172233685149283] Implement AG-N-01: Global Symbol Indexer in ninaflash.py — COMPLETED — https://github.com/aibony/nina/pull/97
-#13 [9570975373503583765] Implement AG-M-12: NF-SESSIONS Checkpoint & Resume per docs/ — COMPLETED — https://github.com/aibony/nina/pull/100
-#14 [13185833759609299904] Implement AG-M-11: NF-LOG Sliding Window Summarizer per docs — COMPLETED — https://github.com/aibony/nina/pull/103
-#15 [10135412826971545639] Implement AG-M-10: GATE-PROMPT System Prompt Templating per  — COMPLETED — https://github.com/aibony/nina/pull/105
-#16 [7537211368798200186] Implement AG-M-09: NF-ARCHIVE Historical Offloading per docs — COMPLETED — https://github.com/aibony/nina/pull/98
-#17 [5503859994610952764] Implement AG-M-08: NF-STATUS High-Density Pulse per docs/spa — COMPLETED — https://github.com/aibony/nina/pull/96
-#18 [16853848519420810103] Implement AG-M-07: NF-CLEAN Automated Hygiene per docs/space — COMPLETED — https://github.com/aibony/nina/pull/106
-#19 [8261678623607038143] Implement AG-M-06: SEC-IGNORE Global Context Filtering per d — AWAITING_USER_FEEDBACK — no PR yet
-#20 [18219510094834116674] Implement AG-M-05: NF-BACKLOG Incremental State per docs/spa — COMPLETED — https://github.com/aibony/nina/pull/104
-#21 [4898120370834123044] Implement AG-M-04: DOC-COMP Instruction Compression per docs — COMPLETED — https://github.com/aibony/nina/pull/101
-#22 [15969685038089350386] Implement AG-M-03: NF-EXT Surgical Code Intelligence per doc — COMPLETED — https://github.com/aibony/nina/pull/102
-#23 [5225035707782933030] Implement AG-M-02: Token-Surgical Architecture (v2.1) per do — COMPLETED — https://github.com/aibony/nina/pull/99
-#24 [16087617206011709240] Implement AG-M-01: NINA Throughput Maximizer (v2.0 Architect — AWAITING_USER_FEEDBACK — no PR yet
-#25 [10138180872701920532] ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+#1 [358132093278995322] System Bug Fixes and Agent Optimization — IN_PROGRESS — no PR yet
+#2 [15353880579548246468] NINA Mega Task 5: Stability, Observability, and Context Hygiene — AWAITING_USER_FEEDBACK — no PR yet
+#3 [7396398476427288048] Mega Task 10: NINA Sovereign Self-Maintenance Protocol — COMPLETED — https://github.com/aibony/nina/pull/112
+#4 [12486530914500192869] Mega Task 9: Speculative Execution & Scout Agents — COMPLETED — https://github.com/aibony/nina/pull/109
+#5 [729439358701133165] Mega Task 8: The Glass Box Dashboard — COMPLETED — https://github.com/aibony/nina/pull/108
+#6 [1909469007448016875] Autonomous QA & Self-Fixing Implementation — COMPLETED — https://github.com/aibony/nina/pull/114
+#7 [6823805920751039478] Surgical Context Optimization (Mega Task 6) — COMPLETED — https://github.com/aibony/nina/pull/113
+#8 [17892297084289591100] NINA Mega Task 5: Lightning Edition Implementation — COMPLETED — https://github.com/aibony/nina/pull/115
+#9 [9390249204279541291] NINA-Evolve: Autonomous Self-Optimization Protocol — COMPLETED — https://github.com/aibony/nina/pull/111
+#10 [10948090147375231066] NINA v3.0: Lightning Observability & Persistent Memory — COMPLETED — no PR yet
+#11 [5693617654071384777] NINA v2.0: Observable Local Engine & Memory Upgrade — COMPLETED — https://github.com/aibony/nina/pull/110
+#12 [14109430478887759619] NINA Observability & Memory Upgrade — COMPLETED — https://github.com/aibony/nina/pull/107
+#13 [6517172233685149283] Implement AG-N-01: Global Symbol Indexer in ninaflash.py — COMPLETED — https://github.com/aibony/nina/pull/97
+#14 [9570975373503583765] Implement AG-M-12: NF-SESSIONS Checkpoint & Resume per docs/ — COMPLETED — https://github.com/aibony/nina/pull/100
+#15 [13185833759609299904] Implement AG-M-11: NF-LOG Sliding Window Summarizer per docs — COMPLETED — https://github.com/aibony/nina/pull/103
+#16 [10135412826971545639] Implement AG-M-10: GATE-PROMPT System Prompt Templating per  — COMPLETED — https://github.com/aibony/nina/pull/105
+#17 [7537211368798200186] Implement AG-M-09: NF-ARCHIVE Historical Offloading per docs — COMPLETED — https://github.com/aibony/nina/pull/98
+#18 [5503859994610952764] Implement AG-M-08: NF-STATUS High-Density Pulse per docs/spa — COMPLETED — https://github.com/aibony/nina/pull/96
+#19 [16853848519420810103] Implement AG-M-07: NF-CLEAN Automated Hygiene per docs/space — COMPLETED — https://github.com/aibony/nina/pull/106
+#20 [8261678623607038143] Implement AG-M-06: SEC-IGNORE Global Context Filtering per d — AWAITING_USER_FEEDBACK — no PR yet
+#21 [18219510094834116674] Implement AG-M-05: NF-BACKLOG Incremental State per docs/spa — COMPLETED — https://github.com/aibony/nina/pull/104
+#22 [4898120370834123044] Implement AG-M-04: DOC-COMP Instruction Compression per docs — COMPLETED — https://github.com/aibony/nina/pull/101
+#23 [15969685038089350386] Implement AG-M-03: NF-EXT Surgical Code Intelligence per doc — COMPLETED — https://github.com/aibony/nina/pull/102
+#24 [5225035707782933030] Implement AG-M-02: Token-Surgical Architecture (v2.1) per do — COMPLETED — https://github.com/aibony/nina/pull/99
+#25 [16087617206011709240] Implement AG-M-01: NINA Throughput Maximizer (v2.0 Architect — AWAITING_USER_FEEDBACK — no PR yet
+#26 [10138180872701920532] ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 ✦ This is a high-impact list of 20 "Token-Surgical" upgrades. These are designed to collapse high-token cloud reasoning into zero-token local commands within ninaflash.
 
   ⚡ The "Token-Surgical" Action Plan (20 Upgrades)
@@ -99,31 +100,30 @@ Active Jules Sessions:
    22 - All new `nf` commands must be registered in the `ninaflash` help menu.
 
  — COMPLETED — no PR yet
-#26 [12472411724478378253] NINA: Token-Surgical Architecture (v2.1) — COMPLETED — no PR yet
-#27 [9366433283406156154] Implement Self-Healing Foundation: Governance Task Feed and Safe Idleloop Integration — COMPLETED — no PR yet
-#28 [611206915375312400] NINA v2.0: High-Velocity Autonomous Control Plane & Throughput Maximizer — COMPLETED — no PR yet
-#29 [1275031342912292988] Bolt: Performance Optimization Agent — AWAITING_USER_FEEDBACK — no PR yet
-#30 [1574419446092272855] Sentinel: Security Vulnerability Protection Agent — AWAITING_USER_FEEDBACK — no PR yet
-#31 [10160574285881231440] Bolt ⚡ Performance Optimization Agent — COMPLETED — https://github.com/aibony/nina/pull/95
-#32 [7268677664812904161] Implement Robust SSRF Protection in tools/browser.py — COMPLETED — no PR yet
-#33 [17152236090245737003] Enriching NINA User Context in facts.json — COMPLETED — https://github.com/aibony/nina/pull/89
-#34 [4387163849844491775] Unit Tests for MemorySystem (core/memory.py) — COMPLETED — https://github.com/aibony/nina/pull/87
-#35 [10909349624388531776] Create Initial Plan Templates for NINA — COMPLETED — https://github.com/aibony/nina/pull/88
-#36 [2263125060445490680] Implement Environment Variable Validation in NinaConfig — COMPLETED — https://github.com/aibony/nina/pull/92
-#37 [15140647001143967458] Implement timeouts for subprocesses in compact_exporter.py — COMPLETED — https://github.com/aibony/nina/pull/90
-#38 [11879535673965449416] Inject Deterministic Personal Context into Memory System — COMPLETED — https://github.com/aibony/nina/pull/93
-#39 [7077821852816108419] Implement Semantic Scoring and Numeric Assertions in core/verifier.py — COMPLETED — https://github.com/aibony/nina/pull/91
-#40 [6894265727609131811] Comprehensive Unit Tests for TaskStore — COMPLETED — https://github.com/aibony/nina/pull/94
-#41 [10700815354040855410] Enhance TaskStore Schema, Indexing, and Archiving (AG-B-02, AG-B-04, AG-B-08) — AWAITING_USER_FEEDBACK — no PR yet
-#42 [7979733904089825750] Developer Tooling Hardening: Jules API, Shell Allowlist & Model Discovery — COMPLETED — https://github.com/aibony/nina/pull/84
-#43 [7958652979132541763] Centralized Cron Registry & Result Logging — COMPLETED — https://github.com/aibony/nina/pull/79
-#44 [10120257988537896914] Agent Loop Refactor: THINK-PLAN-ACT Extraction — COMPLETED — https://github.com/aibony/nina/pull/82
-#45 [14446618339490913116] Finance & Market Tools Hardening: Retry Logic & Structured Returns — COMPLETED — https://github.com/aibony/nina/pull/86
-#46 [13000109120090282729] Telegram Interface Hardening: Rate Limiting & Error Handling — COMPLETED — https://github.com/aibony/nina/pull/81
-#47 [14124915954782378145] Memory System Hardening: ChromaDB Resilience and Scratchpad Layer — COMPLETED — https://github.com/aibony/nina/pull/83
-#48 [3956940177468171330] NINA Initial Test Suite and Loop Resilience — COMPLETED — https://github.com/aibony/nina/pull/80
-#49 [13392071392650141737] Implement Unified Observability & Health Layer — COMPLETED — https://github.com/aibony/nina/pull/78
-#50 [653826523759490805] NINA AG1 Phase 1: Task Schema, Planning Layer, and Verifier Extensions — COMPLETED — no PR yet
+#27 [12472411724478378253] NINA: Token-Surgical Architecture (v2.1) — COMPLETED — no PR yet
+#28 [9366433283406156154] Implement Self-Healing Foundation: Governance Task Feed and Safe Idleloop Integration — COMPLETED — no PR yet
+#29 [611206915375312400] NINA v2.0: High-Velocity Autonomous Control Plane & Throughput Maximizer — COMPLETED — no PR yet
+#30 [1275031342912292988] Bolt: Performance Optimization Agent — AWAITING_USER_FEEDBACK — no PR yet
+#31 [1574419446092272855] Sentinel: Security Vulnerability Protection Agent — AWAITING_USER_FEEDBACK — no PR yet
+#32 [10160574285881231440] Bolt ⚡ Performance Optimization Agent — COMPLETED — https://github.com/aibony/nina/pull/95
+#33 [7268677664812904161] Implement Robust SSRF Protection in tools/browser.py — COMPLETED — no PR yet
+#34 [17152236090245737003] Enriching NINA User Context in facts.json — COMPLETED — https://github.com/aibony/nina/pull/89
+#35 [4387163849844491775] Unit Tests for MemorySystem (core/memory.py) — COMPLETED — https://github.com/aibony/nina/pull/87
+#36 [10909349624388531776] Create Initial Plan Templates for NINA — COMPLETED — https://github.com/aibony/nina/pull/88
+#37 [2263125060445490680] Implement Environment Variable Validation in NinaConfig — COMPLETED — https://github.com/aibony/nina/pull/92
+#38 [15140647001143967458] Implement timeouts for subprocesses in compact_exporter.py — COMPLETED — https://github.com/aibony/nina/pull/90
+#39 [11879535673965449416] Inject Deterministic Personal Context into Memory System — COMPLETED — https://github.com/aibony/nina/pull/93
+#40 [7077821852816108419] Implement Semantic Scoring and Numeric Assertions in core/verifier.py — COMPLETED — https://github.com/aibony/nina/pull/91
+#41 [6894265727609131811] Comprehensive Unit Tests for TaskStore — COMPLETED — https://github.com/aibony/nina/pull/94
+#42 [10700815354040855410] Enhance TaskStore Schema, Indexing, and Archiving (AG-B-02, AG-B-04, AG-B-08) — AWAITING_USER_FEEDBACK — no PR yet
+#43 [7979733904089825750] Developer Tooling Hardening: Jules API, Shell Allowlist & Model Discovery — COMPLETED — https://github.com/aibony/nina/pull/84
+#44 [7958652979132541763] Centralized Cron Registry & Result Logging — COMPLETED — https://github.com/aibony/nina/pull/79
+#45 [10120257988537896914] Agent Loop Refactor: THINK-PLAN-ACT Extraction — COMPLETED — https://github.com/aibony/nina/pull/82
+#46 [14446618339490913116] Finance & Market Tools Hardening: Retry Logic & Structured Returns — COMPLETED — https://github.com/aibony/nina/pull/86
+#47 [13000109120090282729] Telegram Interface Hardening: Rate Limiting & Error Handling — COMPLETED — https://github.com/aibony/nina/pull/81
+#48 [14124915954782378145] Memory System Hardening: ChromaDB Resilience and Scratchpad Layer — COMPLETED — https://github.com/aibony/nina/pull/83
+#49 [3956940177468171330] NINA Initial Test Suite and Loop Resilience — COMPLETED — https://github.com/aibony/nina/pull/80
+#50 [13392071392650141737] Implement Unified Observability & Health Layer — COMPLETED — https://github.com/aibony/nina/pull/78
 
 ## 3. Locked Files (do not touch in new specs)
 ```
@@ -210,11 +210,11 @@ _Focus: Absolute minimum context overhead_
 
 ## 5. Last 5 Completions
 ```
+648ddc1 docs: post-session sync 2026-06-11 23:11
 73255d3 docs: post-session sync 2026-06-11 22:47
 12e86df docs: post-session sync 2026-06-11 22:44
 8ace479 docs: post-session sync 2026-06-11 22:41
 70b518b docs: post-session sync 2026-06-11 22:39
-fe24338 docs: post-session sync 2026-06-11 22:35
 ```
 
 ## 6. Open Blockers
@@ -253,4 +253,4 @@ fe24338 docs: post-session sync 2026-06-11 22:35
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 
 ---
-_Feed size: 17206 bytes_
+_Feed size: 17177 bytes_
