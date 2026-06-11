@@ -95,7 +95,17 @@ Route EVERY subtask through this tree before executing:
 
 ---
 
-## PART 4 — HARDCODED RULES (never override, never skip)
+## PART 4 — TELEMETRY & USER VISIBILITY (MANDATORY)
+
+To prevent "Black Box" reasoning (thinking without stimuli):
+1. **Granular Topics:** Call `update_topic` for every discrete subgoal. Never take >3 turns without a topic update.
+2. **Heartbeats:** If a reasoning cycle or sub-agent call (e.g. `generalist`) is expected to take >5 minutes, provide an immediate "Intent Update" turn.
+3. **Thought-Streaming:** For complex refactors, write high-level intent to `logs/agent_thoughts.log`. The user can `tail -f` this to see real-time progress.
+4. **Explicit Failure:** If a tool hangs or stalls, do not silently retry. Report the stall and ask for a diagnostic path.
+
+---
+
+## PART 5 — HARDCODED RULES (never override, never skip)
 
 1. HIGH-RISK FILES always require cloud LLM review regardless of task size:
    interfaces/telegram_interface.py | .env | core/router.py | main.py |
@@ -118,17 +128,17 @@ Route EVERY subtask through this tree before executing:
 
 ---
 
-## PART 5 — SESSION-END AUTO-UPDATE PROTOCOL (mandatory, no user prompt needed)
+## PART 6 — SESSION-END AUTO-UPDATE PROTOCOL (mandatory, no user prompt needed)
 
 At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST:
 
-### 5A. Capture Learnings
+### 6A. Capture Learnings
 - Which cloud calls could have been NinaFlash? → label: OFFLOAD_OPPORTUNITY
 - Which NinaFlash outputs needed cloud escalation and why? → label: ESCALATION_TRIGGER
 - Which routing decisions were optimal? → label: ROUTING_WIN
 - New file patterns affecting chunking strategy? → label: CONTEXT_HINT
 
-### 5B. Append to AGENTS.md — "## NinaGate Routing History" section
+### 6B. Append to AGENTS.md — "## NinaGate Routing History" section
 ```
 ### [2026-06-11] Session Update — [tool used]
 - OFFLOAD_OPPORTUNITY: [task type] → route to NinaFlash next time
@@ -137,14 +147,14 @@ At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST
 - CONTEXT_HINT: [file/boundary] for optimal chunking
 ```
 
-### 5C. Run Sync (mandatory, no exceptions)
+### 6C. Run Sync (mandatory, no exceptions)
 cd ~/nina && ./nina_sync.sh
 Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 → Perplexity ARCHITECT OVERWATCH picks up learnings in next thread.
 
 ---
 
-## PART 6 — BOOTSTRAP CHECKLIST (Gemini CLI session start)
+## PART 7 — BOOTSTRAP CHECKLIST (Gemini CLI session start)
 
 1. Verify NinaGate is active:
    curl -s http://localhost:8080/health || (cd ~/nina/ninagate && python3 ninagate.py &)
