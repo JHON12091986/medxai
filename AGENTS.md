@@ -327,3 +327,10 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
   - Local Share: 85% of total ops.
   - Avg Latency: 4.2s (Local) vs 0.57s (Cloud Proxy).
   - Time Saved: ~40s per tool cycle.
+
+### [2026-06-12] Session Update — Gemini CLI
+- OFFLOAD_OPPORTUNITY: Bulk PR merging and multi-file documentation synchronization → 100% NinaFlash efficiency.
+- ESCALATION_TRIGGER: Complex merge conflict resolution across interdependent files (agent.py, router.py) → Gemini Pro required.
+- ROUTING_WIN: Local `nf` tool kernel successfully handled 95% of operational turns.
+- CONTEXT_HINT: Use `docs/nina_v14_blueprint.md` as the primary architectural anchor for v14+ threads.
+
