@@ -83,7 +83,7 @@ def scan():
                 guardrails.append("high_risk_do_not_edit_directly")
             if path_str in ["nina_update_log.md", "docs/space/nina_error_register.md"]:
                 guardrails.append("append_only")
-            if path_str in ["data/memory/facts.json", "docs/nina_v12_blueprint.md", "docs/space/nina_index.md", "docs/space/nina_index.json"]:
+            if path_str in ["data/memory/facts.json", "docs/nina_v14_blueprint.md", "docs/space/nina_index.md", "docs/space/nina_index.json"]:
                 guardrails.append("read_only_for_agents")
             
             governed_files.append({
