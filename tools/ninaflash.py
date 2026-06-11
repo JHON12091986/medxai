@@ -14,7 +14,6 @@ import argparse
 import asyncio
 import subprocess
 import json
-import time
 try:
     import dotenv
 except ImportError:
@@ -25,7 +24,7 @@ import ast
 
 
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Dict, Any, Optional, Tuple
 
 # --- KERNEL INITIALIZATION ---
@@ -82,9 +81,9 @@ def _append_update_log(task_id: str, title: str, summary: str):
     
     today = datetime.now().strftime("%Y-%m-%d")
     entry = f"\n---\n\n## Entry {next_num:03d} — {today} · merge: {task_id} {title}\n"
-    entry += f"**Triggered by:** nf maintain automation.\n\n"
+    entry += "**Triggered by:** nf maintain automation.\n\n"
     entry += f"**What changed:**\n- {summary}\n\n"
-    entry += f"**Rollback:** `git revert -m 1 HEAD`\n"
+    entry += "**Rollback:** `git revert -m 1 HEAD`\n"
     
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(entry)
@@ -1308,6 +1307,38 @@ def cmd_code_doc(args):
         except Exception:
             pass
 
+
+def cmd_test(args):
+    """[043] Test Runner: Execute pytest suite."""
+    import time
+    import psutil
+
+    cmd = ["pytest"]
+    if getattr(args, "parallel", False):
+        print("🚀 Running tests in parallel...")
+        cmd.extend(["-n", "auto"])
+
+    ram_before = psutil.virtual_memory().used / 1e9
+    cpu_before = psutil.cpu_percent(interval=0.1)
+
+    print(f"Metrics Before: RAM {ram_before:.1f}GB | CPU {cpu_before}%")
+
+    start_time = time.time()
+    code, out, err = run_cmd(cmd)
+    end_time = time.time()
+
+    ram_after = psutil.virtual_memory().used / 1e9
+    cpu_after = psutil.cpu_percent(interval=0.1)
+
+    print(f"Metrics After: RAM {ram_after:.1f}GB | CPU {cpu_after}%")
+    print(f"Resource Spike: RAM {ram_after - ram_before:+.1f}GB | CPU {cpu_after - cpu_before:+.1f}%")
+    print(f"Duration: {end_time - start_time:.2f}s")
+
+    if code == 0:
+        print("✅ All tests passed.")
+    else:
+        print(f"❌ Tests failed.\n{out}\n{err}")
+
 def main():
     parser = argparse.ArgumentParser(description="ninaflash AI Agent Kernel v6.0 — The 100-Function OS.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -1392,6 +1423,8 @@ def main():
     p_lfind = p_ls.add_parser("find-id")
     p_lfind.add_argument("task_id", help="Task ID to find in logs")
 
+    p_test = subparsers.add_parser("test")
+    p_test.add_argument("--parallel", action="store_true", help="Run tests in parallel")
     p_gen = subparsers.add_parser("gen"); p_gs = p_gen.add_subparsers(dest="sub")
     p_gs.add_parser("tool").add_argument("name")
     p_gs.add_parser("test")
@@ -1481,6 +1514,8 @@ def main():
     elif args.command == "gen":
         if args.sub == "tool": cmd_gen_tool(args)
         elif args.sub == "test": cmd_gen_test(args)
+    elif args.command == "test":
+        cmd_test(args)
 
 
 if __name__ == "__main__":
