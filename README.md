@@ -31,7 +31,7 @@ This model is the heart of NINA's architecture:
 |---|---|---|---|
 | Perplexity Enterprise Pro | Architect + Overwatch | Claude Sonnet 4.6 | Strategic direction, specs, post-execution review |
 | Jules (jules.google.com) | Async Cloud Coder | Gemini 3.1 Pro | Multi-file feature builds, 14 concurrent session limit |
-| ninaflash (nf) | Local Muscle | Gemini Flash | Local research, syntax fixing, PR merges, triage |
+| ninaflash (nf) | Local Muscle | Gemini 3 Flash | Local research, syntax fixing, PR merges, triage |
 
 ## ninaflash — The Local Muscle
 
@@ -55,11 +55,18 @@ The kernel architecture giving NINA near-infinite capability at zero cloud token
 ## HybridRouter V4
 
 The routing engine located in `core/router.py`:
-- Routes across 19+ cloud providers (Groq, Gemini, Cerebras, DeepSeek, Mistral, OpenRouter, Together, Cohere, Fireworks, xAI, SambaNova, Hyperbolic, Novita, Perplexity, OpenAI, Pollinations, Chutes, and more)
+- Routes across 20+ cloud providers (Groq, Gemini, Cerebras, DeepSeek, Mistral, OpenRouter, Together, Cohere, Fireworks, xAI, SambaNova, Hyperbolic, Novita, Perplexity, OpenAI, Pollinations, Chutes, and more)
 - 2 local models via Ollama (qwen2.5:1.5b for fast tasks, qwen2.5:7b for heavy reasoning)
 - CircuitBreaker pattern prevents cascading failures
 - Weighted scoring: success rate × latency × rate limits
 - Free-tier first routing philosophy (routing is handled automatically by HybridRouter V4 with free-tier priority)
+
+## nina-mcp Extension
+
+NINA features a native **Gemini CLI Extension** (`.gemini/extensions/nina/`) that provides:
+- **MCP Server:** Local JSON-RPC server for tool execution.
+- **Custom Slash Commands:** `/nf`, `/status`, `/sync` directly in Gemini CLI.
+- **Native Intelligence:** Pre-packaged playbooks for architecture and operating laws.
 
 ## Guardian Gate
 
@@ -92,7 +99,7 @@ NINA's memory orchestrator in `core/memory.py`:
 
 | Tool | Model | Daily Quota | Reset |
 |---|---|---|---|
-| ninaflash (agy) | Gemini Flash | ~5h rolling | Rolling |
+| ninaflash (agy) | Gemini 3 Flash | ~5h rolling | Rolling |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
 | Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |
