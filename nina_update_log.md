@@ -2017,3 +2017,21 @@
 
 **Rollback path:**
 - `git checkout HEAD -- nina_context.md README.md ARCHITECTURE.md nina_update_log.md`
+
+---
+
+## Entry 176 — 2026-06-11 · merge: PR #98 AG-M-09 (NF-ARCHIVE)
+
+**Triggered by:** PR #98 merge.
+
+**What changed:**
+- Implemented historical offloading for backlog and error register.
+- Added `nf backlog archive` and `nf error archive` to `tools/ninaflash.py`.
+- Created `docs/archive/jules_backlog_archive.md` and `exports/nina_error_register_archive.md`.
+
+**What was verified:**
+- Python syntax verified.
+- Non-fast-forward merge successful.
+
+**Rollback path:**
+- `git revert -m 1 HEAD`

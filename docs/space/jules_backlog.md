@@ -377,7 +377,7 @@ _Dependency: AG-B-01 and AG-B-02 must be DONE first_
 | AG-M-06 | `.geminiignore` | 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiignore` for automated context pruning. | `READY` | — |
 | AG-M-07 | `ninaflash.py` | 🧹 NF-CLEAN: Automated Hygiene — Add `nf check code --fix` and `nf doc check --fix` for local error resolution. | `READY` | — |
 | AG-M-08 | `ninaflash.py` | 💓 NF-STATUS: High-Density Pulse — Implement `nf status --pulse` and `nf log next-id` for 10-line project heartbeats. | `READY` | — |
-| AG-M-09 | `ninaflash.py` | 📦 NF-ARCHIVE: Historical Offloading — Implement `nf backlog archive` to move `DONE` tasks to historical storage. | `READY` | — |
+| AG-M-09 | `ninaflash.py` | 📦 NF-ARCHIVE: Historical Offloading — Implement `nf backlog archive` to move `DONE` tasks to historical storage. | `DONE` | — |
 | AG-M-10 | `ninagate/` | 📡 GATE-PROMPT: System Prompt Templating — Move `AGENTS.md` into cached NinaGate system prompts. | `READY` | AG-M-04 |
 | AG-M-11 | `ninaflash.py` | 📉 NF-LOG: Sliding Window Summarizer — Implement log compression and `nf log summarize` for noisy update logs. | `READY` | — |
 | AG-M-12 | `ninaflash.py` | 📦 NF-SESSIONS: Checkpoint & Resume — Add `nf session checkpoint` to preserve task state across restarts. | `READY` | — |
