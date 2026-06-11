@@ -59,6 +59,9 @@ Only escalate to direct shell cat/read_file when:
 - File type is binary or non-text
 - Operation requires full file context (architectural reasoning)
 
+LIFETIME AUDIT: 33,000+ run_shell_command calls identified. Every shell call
+that has an nf equivalent is a quota violation.
+
 Violating this rule wastes cloud tokens and increases latency.
 Every nf command runs locally in <1s with zero token cost.
 
