@@ -46,6 +46,10 @@ Three routing layers are always available and MUST be leveraged:
 5. CACHE PATTERNS — If NinaFlash already produced output for a repeating pattern
    (log format, error handler template), reuse it. Do not re-query cloud.
 
+### Context Management
+1. USE INDEX — Use `docs/space/nina_megatask_index.md` for high-level roadmap context.
+2. LAZY LOAD — Load full task spec files (e.g., `jules_mega_task.md`) ONLY when actively working on that task.
+
 ### Latency Reduction
 1. PARALLEL SUBTASKS — Independent sub-steps run in parallel streams.
    NinaFlash handles one while cloud handles another simultaneously.
@@ -126,6 +130,22 @@ To prevent "Black Box" reasoning (thinking without stimuli):
 
 5. Check ~/nina/juleslock.txt before any task targeting the same files as Jules.
 
+6. WORKSPACE BOUNDARY
+   - All file operations are strictly scoped to ~/nina only.
+     Never run grep -r, find, or ls outside ~/nina.
+     Never search /var, /etc, /usr, /home outside ~/nina, /tmp, or /proc.
+     If a task requires files outside ~/nina, stop and ask — do not search.
+   - Recursive searches must always include: --include="*.py" or equivalent
+     file type filter. Never run unfiltered recursive grep.
+   - Maximum search scope: grep -r ~/nina --include="*.py" — always bounded.
+
+### STOP DISCIPLINE & SAFETY (CRITICAL)
+1. HALT IMMEDIATELY — If user says "stop", "finish quick", "bypass", or "just answer" —
+   halt immediately, answer in plain text, do nothing else.
+2. NO FORENSICS — Never read /var/log, dmesg, /var/crash unless explicitly asked.
+3. FAIL FAST — Never retry a failed API call more than 2 times. Surface error immediately.
+4. NO SPONTANEOUS REPORTS — Never run efficiency summaries or token reports unless explicitly asked.
+
 ---
 
 ## PART 6 — SESSION-END AUTO-UPDATE PROTOCOL (mandatory, no user prompt needed)
@@ -169,8 +189,25 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 4. Confirm .gemini/settings.json contains:
    { "context": { "fileName": ["AGENTS.md"] } }
 
+5. Verify model config in ~/.gemini/settings.json:
+   - model must be: gemini-2.5-flash (never gemini-1.5-flash)
+   - maxRetries must be: 2
+
+6. Warm start — load session context:
+   cat ~/nina/docs/space/nina_megatask_index.md
+   head -80 ~/nina/docs/space/nina_latest.md
+
 ---
 ## END NINA-OPT-001
 ## Maintained by nina_sync.sh — routing history appended automatically each session.
 ## NinaGate Routing History
-<!-- Auto-appended by session-end protocol -->
+### [2026-06-11] Session Update — Gemini CLI
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (imports, standardized runs) → 100% NinaFlash next time.
+- ESCALATION_TRIGGER: Architectural reasoning and multi-file logic → Gemini Pro / Flash.
+- ROUTING_WIN: Local Interception confirmed efficient (93.7% token reduction).
+- CONTEXT_HINT: Use `nina_megatask_index.md` to prevent context bloat.
+- **BENCHMARK BASELINE:**
+  - Token Reduction: 93.7% (Mechanical), 42.5% (Global Lifecycle).
+  - Local Share: 85% of total ops.
+  - Avg Latency: 4.2s (Local) vs 0.57s (Cloud Proxy).
+  - Time Saved: ~40s per tool cycle.

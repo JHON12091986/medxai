@@ -1071,7 +1071,7 @@ def cmd_capability_map(args):
 
 # FIX 7: get_repo_stats
 def cmd_stats(args):
-    """[031] Show ninaflash file stats and function count."""
+    """[031] Show ninaflash file stats and function count, plus efficiency metrics."""
     src = Path(__file__).read_text()
     try:
         tree = ast.parse(src)
@@ -1085,6 +1085,44 @@ def cmd_stats(args):
     print(f"Repo .py files: {len(_find_py_files())}")
     cap_status = "✅ UNDER CAP" if fn_count <= 100 else f"🚨 OVER CAP by {fn_count - 100}"
     print(f"Function cap (100): {cap_status}")
+
+    # PROBLEM 1: Efficiency metrics from structured logs
+    print("\n--- NINA EFFICIENCY REPORT ---")
+    total_local, total_cloud, total_cached = 0, 0, 0
+    total_tokens_in, total_tokens_out = 0, 0
+    total_lat_ms = 0
+    
+    log_paths = [REPO_ROOT / "logs/router.log", REPO_ROOT / "logs/ninagate.log"]
+    for lp in log_paths:
+        if not lp.exists(): continue
+        for line in lp.read_text().splitlines():
+            try:
+                d = json.loads(line)
+                prov = d.get("provider", "").upper()
+                if d.get("cached"):
+                    total_cached += 1
+                elif prov in ("OLLAMA", "NINAFLASH", "LOCAL", "LOCALFAST", "LOCALHEAVY"):
+                    total_local += 1
+                else:
+                    total_cloud += 1
+                    total_tokens_in += d.get("input_tokens", 0)
+                    total_tokens_out += d.get("output_tokens", 0)
+                total_lat_ms += d.get("total_ms", 0)
+            except: continue
+
+    saved = (total_local * 2500) + (total_cached * 1500)
+    actual = total_tokens_in + total_tokens_out
+    reduction = (saved / (saved + actual) * 100) if (saved + actual) > 0 else 0
+    ratio = (total_local / (total_local + total_cloud) * 100) if (total_local + total_cloud) > 0 else 0
+    
+    report = {
+        "token_reduction_pct": round(reduction, 1),
+        "local_vs_cloud_ratio": f"{round(ratio, 1)}%",
+        "tokens_saved": saved,
+        "cloud_tokens_used": actual,
+        "avg_latency_s": round((total_lat_ms / (total_local + total_cloud + total_cached) / 1000), 2) if (total_local + total_cloud + total_cached) > 0 else 0
+    }
+    print(json.dumps(report, indent=2))
 
 def cmd_kernel_upgrade(args):
     """[032] Self-evolution command."""

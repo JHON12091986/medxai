@@ -1822,3 +1822,12 @@ echo "================================================"
 - **Full Error Register Archive:** `exports/nina_error_register_archive.md` (Contains all historically FIXED entries)
 - **Exports Directory:** `exports/` (Contains backups and problem log archives)
 - **Handoff/Baseline Configurations:** `upgrades/.guardian_handoff.json` and `upgrades/guardian_baseline.json`
+
+## Mega-Task Index
+
+| v# | Codename | Status | Summary |
+|:---|:---|:---|:---|
+| 4.0 | NINA-Evolve | 🔄 ACTIVE | Autonomous self-optimization loop via performance metrics. |
+| 5.0 | Lightning Sync | 🔄 ACTIVE | Incremental backup system reducing sync latency by 60%. |
+| 6.0 | Ghost Context | ⏳ PENDING | Symbol maps and diffs to eliminate context tax. |
+| 10.0 | Sovereign NINA | ⏳ PENDING | Total autonomous self-maintenance and weekly reporting. |

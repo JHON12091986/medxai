@@ -356,6 +356,12 @@ async def proxy_chat_completions(request: Request):
                     
                     logger.warning(f"Provider {provider_name} failed with status {response.status_code}: {error_body[:100]}")
                     h.record_failure()
+                    write_log({
+                        "provider": provider_name, "task_type": "proxy",
+                        "input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0,
+                        "ttf_ms": 0, "total_ms": 0, "status": "failure",
+                        "error": f"http_{response.status_code}", "source": "ninagate"
+                    }, log_path="logs/ninagate.log")
                     await response.aclose()
                     break # Try next provider in cascade
 
@@ -418,3 +424,4 @@ async def update_providers_config(request: Request):
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
+="0.0.0.0", port=8080)

@@ -566,7 +566,12 @@ class HybridRouter:
             try:
                 text, in_t, out_t, lat = await self.call_provider(pid, messages, task)
                 h.record_success(lat, in_t + out_t)
-                self.cost.record(pid, task.task_type, in_t, out_t, 0.0, lat, lat, req_id=req_id)
+                write_log({
+                    "provider": pid, "task_type": task.task_type,
+                    "input_tokens": in_t, "output_tokens": out_t, "cost_usd": 0.0,
+                    "ttf_ms": int(lat), "total_ms": int(lat), "req_id": req_id,
+                    "status": "success"
+                })
                 self.cache.set(prompt, task.task_type, text, pid, messages)
                 logger.info("router_success req_id=%s provider=%s task=%s ms=%s", req_id, pid, task.task_type, int(lat), extra={"log": "router.log"})
                 return text
@@ -713,6 +718,11 @@ class HybridRouter:
             lines.append(
                 f"{pid:<14} {state:<18} score={h.composite_score(pid):.2f}"
                 f" lat={h.avg_latency_ms():.0f}ms sr={h.success_rate()*100:.0f}%"
+                f" tok={h.tokens_today}"
+            )
+        lines.append(f"  today ${self.cost.daily_cost_usd:.4f}")
+        return "\n".join(lines)
+_latency_ms():.0f}ms sr={h.success_rate()*100:.0f}%"
                 f" tok={h.tokens_today}"
             )
         lines.append(f"  today ${self.cost.daily_cost_usd:.4f}")

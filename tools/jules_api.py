@@ -5,6 +5,7 @@ import logging
 import asyncio
 import json
 import requests
+import time
 
 logger = logging.getLogger("nina.tools")
 
@@ -31,216 +32,146 @@ def parse_arguments(cmd: str):
     arg = parts[1].strip() if len(parts) > 1 else ""
     return action, arg
 
+async def make_request_with_retry(method: str, url: str, headers: dict, params: dict = None, json_data: dict = None, retries: int = 2):
+    """Makes a request with a retry limit and immediate error surfacing."""
+    last_exc = None
+    for attempt in range(retries):
+        try:
+            def sync_req():
+                return requests.request(method, url, headers=headers, params=params, json=json_data, timeout=30)
+            
+            response = await asyncio.to_thread(sync_req)
+            if response.status_code == 404:
+                return {"error": "not_found", "status_code": 404, "text": response.text}
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            last_exc = e
+            if attempt < retries - 1:
+                await asyncio.sleep(1)
+                continue
+            raise e
+    raise last_exc
+
+async def get_task_status(session_id: str) -> str:
+    """Returns the activity status for a specific Jules session."""
+    api_key = get_api_key()
+    base_url = "https://jules.googleapis.com/v1alpha"
+    headers = {"X-Goog-Api-Key": api_key, "Content-Type": "application/json"}
+    
+    if session_id.startswith("sessions/"):
+        session_id = session_id[len("sessions/"):]
+        
+    url = f"{base_url}/sessions/{session_id}/activities"
+    try:
+        data = await make_request_with_retry("GET", url, headers, params={"pageSize": 30})
+        if isinstance(data, dict) and data.get("error") == "not_found":
+            return f"Session {session_id} not found (404)."
+            
+        activities = data.get("activities", [])
+        if not activities:
+            return f"No activities found for session {session_id}."
+            
+        lines = [f"Status for Session {session_id}:"]
+        for act in activities[-5:]:
+            act_type = act.get("type") or act.get("originator") or "UNKNOWN"
+            act_content = act.get("content")
+            if isinstance(act_content, dict):
+                act_content = act_content.get("text") or act_content.get("message") or json.dumps(act_content)
+            elif act_content is None:
+                act_content = act.get("description") or ""
+            trimmed = str(act_content)[:120]
+            lines.append(f"{act_type}: {trimmed}")
+        return "\n".join(lines)
+    except Exception as e:
+        return f"Failed to get status for {session_id}: {e}"
+
+async def list_active_tasks() -> str:
+    """Returns a list of current active Jules sessions."""
+    api_key = get_api_key()
+    base_url = "https://jules.googleapis.com/v1alpha"
+    headers = {"X-Goog-Api-Key": api_key, "Content-Type": "application/json"}
+    
+    url = f"{base_url}/sessions"
+    try:
+        data = await make_request_with_retry("GET", url, headers, params={"pageSize": 50})
+        sessions = data.get("sessions", [])
+        if not sessions:
+            return "No sessions found."
+            
+        lines = ["Active Jules Sessions:"]
+        for idx, session in enumerate(sessions, 1):
+            s_title = session.get("title", "Untitled")
+            s_state = session.get("state", "UNKNOWN")
+            s_id = session.get("name", "").split("/")[-1]
+            pr_url = "no PR yet"
+            for output in session.get("outputs", []):
+                pr = output.get("pullRequest")
+                if pr and pr.get("url"):
+                    pr_url = pr.get("url")
+                    break
+            lines.append(f"#{idx} [{s_id}] {s_title} — {s_state} — {pr_url}")
+        return "\n".join(lines)
+    except Exception as e:
+        return f"Failed to list tasks: {e}"
+
 async def run(cmd: str) -> str:
     """Handles the /jules Telegram commands and calls the Jules REST API."""
     try:
         action, arg = parse_arguments(cmd)
         if not action:
-            return (
-                "Usage:\n"
-                "/jules dispatch <task>\n"
-                "/jules status\n"
-                "/jules status <session_id>\n"
-                "/jules sources"
-            )
+            return "Usage: /jules [dispatch|status|benefits|sources]"
 
-        api_key = get_api_key()
-        base_url = "https://jules.googleapis.com/v1alpha"
-        headers = {
-            "X-Goog-Api-Key": api_key,
-            "Content-Type": "application/json"
-        }
+        if action == "status":
+            if arg and not arg.startswith("-"):
+                return await get_task_status(arg)
+            else:
+                return await list_active_tasks()
 
         if action == "dispatch":
-            if not arg:
-                return "Error: task description required for dispatch"
-            
-            title = arg[:60]
+            if not arg: return "Error: task description required"
+            api_key = get_api_key()
+            headers = {"X-Goog-Api-Key": api_key, "Content-Type": "application/json"}
+            url = "https://jules.googleapis.com/v1alpha/sessions"
             body = {
                 "prompt": arg,
-                "sourceContext": {
-                    "source": "sources/github/aibony/nina",
-                    "githubRepoContext": {
-                        "startingBranch": "main"
-                    }
-                },
+                "sourceContext": {"source": "sources/github/aibony/nina", "githubRepoContext": {"startingBranch": "main"}},
                 "automationMode": "AUTO_CREATE_PR",
-                "title": title
+                "title": arg[:60]
             }
-            url = f"{base_url}/sessions"
-            
-            def make_request():
-                return requests.post(url, headers=headers, json=body, timeout=30)
-                
-            response = await asyncio.to_thread(make_request)
-            if response.status_code >= 400:
-                logger.error(f"Jules API error response: {response.text}")
-                return f"Jules API request failed ({response.status_code}): {response.text}"
-            response.raise_for_status()
-            data = response.json()
-            
-            session_id = data.get("id") or (data.get("name", "").split("/")[-1] if data.get("name") else "unknown")
-            res_title = data.get("title", title)
-            return f"Jules task started\nSession: {session_id}\nTitle: {res_title}"
+            data = await make_request_with_retry("POST", url, headers, json_data=body)
+            s_id = data.get("id") or (data.get("name", "").split("/")[-1] if data.get("name") else "unknown")
+            return f"Jules task started\nSession: {s_id}\nTitle: {data.get('title')}"
 
-        elif action == "status":
-            if arg and not arg.startswith("-"):
-                # Detail for specific session
-                session_id = arg
-                if session_id.startswith("sessions/"):
-                    session_id = session_id[len("sessions/"):]
-                url = f"{base_url}/sessions/{session_id}/activities"
-                params = {"pageSize": 30}
-                
-                def make_request():
-                    return requests.get(url, headers=headers, params=params, timeout=30)
-                
-                response = await asyncio.to_thread(make_request)
-                if response.status_code == 404:
-                    return f"Session {session_id} not found (404)."
-                response.raise_for_status()
-                data = response.json()
-                
-                activities = data.get("activities", [])
-                if not activities:
-                    return f"No activities found for session {session_id}."
-                
-                lines = [f"Status for Session {session_id}:"]
-                for act in activities[-5:]:
-                    act_type = act.get("type") or act.get("originator") or "UNKNOWN"
-                    act_content = act.get("content")
-                    if isinstance(act_content, dict):
-                        act_content = (
-                            act_content.get("text") or 
-                            act_content.get("message") or 
-                            act_content.get("description") or 
-                            json.dumps(act_content)
-                        )
-                    elif act_content is None:
-                        act_content = act.get("description") or ""
-                    else:
-                        act_content = str(act_content)
-                    trimmed = act_content[:120]
-                    lines.append(f"{act_type}: {trimmed}")
-                return "\n".join(lines)
-            else:
-                # Get last 50 sessions
-                url = f"{base_url}/sessions"
-                params = {"pageSize": 50}
-                
-                def make_request():
-                    return requests.get(url, headers=headers, params=params, timeout=30)
-                
-                response = await asyncio.to_thread(make_request)
-                response.raise_for_status()
-                data = response.json()
-                
-                sessions = data.get("sessions", [])
-                if not sessions:
-                    return "No sessions found."
-                
-                if arg == "--mini":
-                    summary = {"total": len(sessions), "states": {}}
-                    for s in sessions:
-                        state = s.get("state", "UNKNOWN")
-                        summary["states"][state] = summary["states"].get(state, 0) + 1
-                    states_str = ", ".join([f"{k}:{v}" for k,v in summary["states"].items()])
-                    return f"Jules Status: {summary['total']} total sessions | {states_str}"
-
-                lines = []
-                for idx, session in enumerate(sessions, 1):
-                    s_title = session.get("title", "Untitled")
-                    s_state = session.get("state", "UNKNOWN")
-                    s_id = session.get("name", "").split("/")[-1]
-                    pr_url = "no PR yet"
-                    for output in session.get("outputs", []):
-                        pr = output.get("pullRequest")
-                        if pr and pr.get("url"):
-                            pr_url = pr.get("url")
-                            break
-                    lines.append(f"#{idx} [{s_id}] {s_title} — {s_state} — {pr_url}")
-                return "\n".join(lines)
-
-        elif action == "benefits":
+        if action == "benefits":
             return (
                 "JULES PERFORMANCE & BENEFITS REPORT (NINA v14.0)\n"
                 "-------------------------------------------------\n"
                 "Total Tasks Merged: 12 (PR #96 to #107)\n"
-                "Total Lines Contributed: ~4,200 LOC\n"
-                "Key Structural Improvements:\n"
-                "  - Standardized TaskStore & Verifier system (AG-B-01, AG-D-01).\n"
-                "  - High-Density status pulse for ninaflash (AG-M-08).\n"
-                "  - Automated hygiene and doc compression (AG-M-07, AG-M-04).\n"
-                "  - Enabled Surgical Context Architecture (AG-M-02, v2.1).\n\n"
-                "Efficiency Gains (since v13.0 baseline):\n"
-                "  - Token Usage: 93.7% reduction for mechanical tasks.\n"
-                "  - Local Interception: 85% of ops handled by NinaFlash ($0 cost).\n"
-                "  - Latency: ~40s saved per tool cycle via local execution.\n"
-                "  - Resource Proof: Visible CPU/GPU load bumps confirm local work.\n\n"
-                "Status: Jules is now a synchronized local-execution force multiplier."
+                "Efficiency Gains: 93.7% token reduction for mechanical tasks.\n"
+                "Local Interception: 85% handled by NinaFlash ($0 cost).\n"
+                "Latency: ~40s saved per tool cycle."
             )
 
-        elif action == "sources":
-            url = f"{base_url}/sources"
-            
-            def make_request():
-                return requests.get(url, headers=headers, timeout=30)
-            
-            response = await asyncio.to_thread(make_request)
-            if response.status_code >= 400:
-                logger.error(f"Jules API error response: {response.text}")
-                return f"Jules API request failed ({response.status_code}): {response.text}"
-            response.raise_for_status()
-            data = response.json()
-            
+        if action == "sources":
+            api_key = get_api_key()
+            headers = {"X-Goog-Api-Key": api_key}
+            url = "https://jules.googleapis.com/v1alpha/sources"
+            data = await make_request_with_retry("GET", url, headers)
             sources = data.get("sources", [])
-            lines = ["Available sources:"]
-            for src in sources:
-                if isinstance(src, dict):
-                    name = src.get("name") or src.get("source")
-                else:
-                    name = str(src)
-                if name:
-                    lines.append(f"- {name}")
-            return "\n".join(lines)
+            return "Available sources:\n" + "\n".join([f"- {s.get('name') if isinstance(s, dict) else s}" for s in sources])
             
-        else:
-            return f"Unknown action: {action}. Supported: dispatch, status, sources"
+        return f"Unknown action: {action}"
 
-    except requests.exceptions.RequestException as e:
-        logger.error(f"jules_api_request_failed cmd={cmd!r} err={e}", extra={"log": "error.log", "tool_name": "jules_api"})
-        return f"Jules API request failed: {e}"
-    except (OSError, ValueError, TypeError, KeyError) as e:
+    except Exception as e:
         logger.error(f"jules_api_failed cmd={cmd!r} err={e}", extra={"log": "error.log", "tool_name": "jules_api"})
         return f"Jules API error: {e}"
 
 class JulesAPI:
-    """Class matching NINA's tool pattern for UpgradePipeline."""
-    def __init__(self, config=None, router=None):
-        self.config = config
-        self.router = router
-
-    async def run(self, cmd: str) -> str:
-        return await run(cmd)
-
-class JulesAPITool(JulesAPI):
-    pass
-
-class JulesTool(JulesAPI):
-    pass
-
-__all__ = ["run", "JulesAPI", "JulesAPITool", "JulesTool"]
+    def __init__(self, config=None, router=None): pass
+    async def run(self, cmd: str) -> str: return await run(cmd)
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) < 2:
-        print("Usage: python3 -m tools.jules_api <command>")
-        sys.exit(1)
-    
-    cmd_str = " ".join(sys.argv[1:])
-    try:
-        res = asyncio.run(run(cmd_str))
-        print(res)
-    except (OSError, ValueError, requests.exceptions.RequestException) as e:
-        logger.error(f"CLI Error: {e}", extra={"log": "error.log", "tool_name": "jules_api"})
-        print(f"CLI Error: {e}")
+    cmd_str = " ".join(sys.argv[1:]) if len(sys.argv) > 1 else "status"
+    print(asyncio.run(run(cmd_str)))
