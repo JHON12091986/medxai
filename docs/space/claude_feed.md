@@ -3,15 +3,15 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-11 23:12 +06
-- Git HEAD: 648ddc1e4dfce5ea8237a47e1713da020df21ce8
-- Last commit: docs: post-session sync 2026-06-11 23:11
+- Generated: 2026-06-11 23:21 +06
+- Git HEAD: ef1d7c1de5efa45c57e36a643224623b7b650959
+- Last commit: docs: post-session sync 2026-06-11 23:20
 - Service: activating
 unknown
 
 ## 2. Active Jules Sessions (live)
 Active Jules Sessions:
-#1 [358132093278995322] System Bug Fixes and Agent Optimization — IN_PROGRESS — no PR yet
+#1 [358132093278995322] System Bug Fixes and Agent Optimization — FAILED — no PR yet
 #2 [15353880579548246468] NINA Mega Task 5: Stability, Observability, and Context Hygiene — AWAITING_USER_FEEDBACK — no PR yet
 #3 [7396398476427288048] Mega Task 10: NINA Sovereign Self-Maintenance Protocol — COMPLETED — https://github.com/aibony/nina/pull/112
 #4 [12486530914500192869] Mega Task 9: Speculative Execution & Scout Agents — COMPLETED — https://github.com/aibony/nina/pull/109
@@ -210,11 +210,11 @@ _Focus: Absolute minimum context overhead_
 
 ## 5. Last 5 Completions
 ```
+ef1d7c1 docs: post-session sync 2026-06-11 23:20
+26675d4 fix(ninagate): classifier expansion, async race fix, quota save non-blocking, fast-fail timeout, rglob depth cap
 648ddc1 docs: post-session sync 2026-06-11 23:11
 73255d3 docs: post-session sync 2026-06-11 22:47
 12e86df docs: post-session sync 2026-06-11 22:44
-8ace479 docs: post-session sync 2026-06-11 22:41
-70b518b docs: post-session sync 2026-06-11 22:39
 ```
 
 ## 6. Open Blockers
@@ -253,4 +253,4 @@ _Focus: Absolute minimum context overhead_
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 
 ---
-_Feed size: 17177 bytes_
+_Feed size: 17244 bytes_
