@@ -178,6 +178,7 @@ At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST
 ```
 
 ### 6C. Run Sync (mandatory, no exceptions)
+nf memory session-save --summary "<one line of what was done>"
 cd ~/nina && ./nina_sync.sh
 Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 → Perplexity ARCHITECT OVERWATCH picks up learnings in next thread.
@@ -185,6 +186,9 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 ---
 
 ## PART 7 — BOOTSTRAP CHECKLIST (Gemini CLI session start)
+
+0. Inject session context:
+   nf memory inject
 
 1. Verify NinaGate is active:
    curl -s http://localhost:8080/health || (cd ~/nina/ninagate && python3 ninagate.py &)

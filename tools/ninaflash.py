@@ -50,6 +50,13 @@ def run_cmd(cmd, cwd=str(REPO_ROOT), timeout=60) -> Tuple[int, str, str]:
         return res.returncode, res.stdout.strip(), res.stderr.strip()
     except subprocess.TimeoutExpired: return -1, "", "Command timed out"
 
+def safe_run_cmd(cmd: str, timeout=60) -> Tuple[int, str, str]:
+    """[NEW] Hardened execution with blocklist for git push/force."""
+    if any(x in cmd for x in ["git push", "git force", "--force"]):
+         print(f"❌ SECURITY: Command '{cmd}' blocked.")
+         return 1, "", "Blocked"
+    return _safe_run(cmd, timeout=timeout)
+
 def _safe_run(cmd: str, timeout=60) -> Tuple[int, str, str]:
     """[002] Hardened execution with NINA security policy enforcement."""
     from tools.shell import is_command_safe
@@ -1221,6 +1228,184 @@ def cmd_log_summarize(args):
     else:
         print("✅ No log entries required summarization.")
 
+# --- ADD 1: File Operations ---
+def cmd_file_read(args):
+    """[043] Read file lines N to M."""
+    path = _path_resolve(args.file)
+    if not path.exists(): print(f"❌ File not found: {path}"); return
+    lines = path.read_text(encoding="utf-8").splitlines()
+    start, end = getattr(args, "start", 0) or 0, getattr(args, "end", 50) or 50
+    for i, line in enumerate(lines[start:end], start=start):
+        print(f"{i:4d} | {line}")
+
+def cmd_file_grep(args):
+    """[044] Regex search across files."""
+    pattern = args.pattern
+    dir_path = REPO_ROOT / (getattr(args, "dir", ".") or ".")
+    extensions = (getattr(args, "ext", ".py,.md,.txt,.log") or ".py,.md,.txt,.log").split(",")
+    for root, dirs, files in os.walk(dir_path):
+        dirs[:] = [d for d in dirs if d not in _SKIP_DIRS]
+        for file in files:
+            if any(file.endswith(ext) for ext in extensions):
+                path = Path(root) / file
+                try:
+                    lines = path.read_text(encoding="utf-8").splitlines()
+                    for i, line in enumerate(lines, 1):
+                        if re.search(pattern, line):
+                            print(f"{path.relative_to(REPO_ROOT)}:{i}: {line.strip()}")
+                except Exception: pass
+
+def cmd_file_patch(args):
+    """[045] Replace first occurrence of exact string."""
+    path = _path_resolve(args.file)
+    if not path.exists(): print(f"❌ File not found: {path}"); return
+    content = path.read_text(encoding="utf-8")
+    if args.find not in content: print(f"❌ Exact string not found."); return
+    lines = content.splitlines()
+    for i, line in enumerate(lines):
+        if args.find in line:
+            print(f"BEFORE: {line}")
+            new_line = line.replace(args.find, args.replace, 1)
+            print(f"AFTER : {new_line}")
+            content = content.replace(args.find, args.replace, 1)
+            path.write_text(content, encoding="utf-8")
+            if path.suffix == ".py": run_cmd(f"python3 -m py_compile {path}")
+            return
+
+def cmd_file_insert(args):
+    """[046] Insert line after anchor."""
+    path = _path_resolve(args.file)
+    if not path.exists(): print(f"❌ File not found: {path}"); return
+    lines = path.read_text(encoding="utf-8").splitlines()
+    new_lines, inserted = [], False
+    for line in lines:
+        new_lines.append(line)
+        if not inserted and args.after in line:
+            new_lines.append(args.text); inserted = True
+    if inserted:
+        path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
+        print(f"✅ Line inserted after anchor.")
+    else: print(f"❌ Anchor not found.")
+
+def cmd_file_diff(args):
+    """[047] Show git diff for file."""
+    code, out, _ = run_cmd(f"git diff HEAD -- {args.file}")
+    print(out if out else "(no uncommitted changes)")
+
+# --- ADD 2: Git Operations ---
+def cmd_git_log(args):
+    """[048] git log --oneline -N."""
+    n = getattr(args, "n", 10) or 10
+    code, out, _ = safe_run_cmd(f"git log --oneline -{n}")
+    print(out)
+
+def cmd_git_changed(args):
+    """[049] git diff --name-only HEAD."""
+    code, out, _ = safe_run_cmd("git diff --name-only HEAD")
+    print(out if out else "(no changes)")
+
+def cmd_git_search(args):
+    """[050] git log --oneline --grep=<keyword>."""
+    code, out, _ = safe_run_cmd(f"git log --oneline --grep='{args.keyword}'")
+    print(out if out else "(no matches)")
+
+def cmd_git_blame(args):
+    """[051] git blame -L N,M <file>."""
+    start, end = getattr(args, "start", 1) or 1, getattr(args, "end", 20) or 20
+    code, out, _ = safe_run_cmd(f"git blame -L {start},{end} {args.file}")
+    print(out)
+
+def cmd_git_stash_quick(args):
+    """[052] git stash push -m LABEL."""
+    label = getattr(args, "label", "quick-stash") or "quick-stash"
+    code, out, _ = safe_run_cmd(f"git stash push -m '{label}'")
+    print(out)
+
+# --- ADD 3: NinaGate Performance Monitor ---
+def cmd_monitor(args):
+    """[053] Parse NinaGate logs for performance metrics."""
+    log_path = REPO_ROOT / "ninagate/logs/ninagate.log"
+    if not log_path.exists():
+        print("NinaGate not active or no requests logged yet.")
+        return
+    lines = log_path.read_text(encoding="utf-8").splitlines()[-200:]
+    stats = {"local": {"count": 0, "ms": []}, "cloud": {"count": 0, "ms": []}, "cached": 0, "tokens": 0, "providers": {}}
+    for line in lines:
+        try:
+            d = json.loads(line)
+            prov = d.get("provider", "").upper()
+            ms = d.get("total_ms", 0)
+            if d.get("cached"): stats["cached"] += 1
+            elif prov in ("OLLAMA", "NINAFLASH", "LOCAL"):
+                stats["local"]["count"] += 1
+                stats["local"]["ms"].append(ms)
+                stats["tokens"] += 2500
+            else:
+                stats["cloud"]["count"] += 1
+                stats["cloud"]["ms"].append(ms)
+            p_name = d.get("provider", "unknown")
+            stats["providers"][p_name] = stats["providers"].get(p_name, 0) + 1
+        except: continue
+    total = stats["local"]["count"] + stats["cloud"]["count"] + stats["cached"]
+    avg_l = sum(stats["local"]["ms"])/len(stats["local"]["ms"]) if stats["local"]["ms"] else 0
+    avg_c = sum(stats["cloud"]["ms"])/len(stats["cloud"]["ms"]) if stats["cloud"]["ms"] else 0
+    ratio = (stats["local"]["count"] / total * 100) if total else 0
+    saved = stats["tokens"] + (stats["cached"] * 1500)
+    top = max(stats["providers"], key=stats["providers"].get) if stats["providers"] else "None"
+    print(f"=== NinaGate Performance (last {len(lines)} requests) ===")
+    print(f"Local (NinaFlash):  {stats['local']['count']} requests | avg {avg_l:.1f}ms")
+    print(f"Cloud (Gemini):     {stats['cloud']['count']} requests | avg {avg_c:.1f}ms")
+    print(f"Cached:             {stats['cached']} requests")
+    print(f"Local/Cloud ratio:  {ratio:.1f}%")
+    print(f"Est. tokens saved:  {saved} (local * 2500 + cached * 1500)")
+    print(f"Top provider:       {top}")
+
+# --- ADD 4: Parallel NF Execution ---
+def cmd_batch(args):
+    """[054] Parallel execution of multiple nf commands."""
+    from concurrent.futures import ThreadPoolExecutor
+    cmds = args.cmds.split("|")
+    def run_nf(c):
+        code, out, err = run_cmd(f"python3 {__file__} {c}")
+        return c, out
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        results = list(executor.map(run_nf, cmds))
+    for c, out in results: print(f"[{c}]\n{out}\n")
+
+# --- ADD 5: Conversational Memory additions ---
+def cmd_memory_session_save(args):
+    """[055] Save current session summary."""
+    summary = getattr(args, "summary", "No summary provided") or "No summary provided"
+    _, sha, _ = run_cmd("git rev-parse HEAD")
+    _, branch, _ = run_cmd("git rev-parse --abbrev-ref HEAD")
+    entry = {"ts": datetime.now().isoformat(), "summary": summary, "git_head": sha, "branch": branch}
+    mem_path = REPO_ROOT / "data/session_memory.jsonl"
+    mem_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(mem_path, "a") as f: f.write(json.dumps(entry) + "\n")
+    print(f"✅ Session saved.")
+
+def cmd_memory_session_recall(args):
+    """[056] Recall last N session entries."""
+    n = getattr(args, "n", 5) or 5
+    mem_path = REPO_ROOT / "data/session_memory.jsonl"
+    if not mem_path.exists(): print("No session memory found."); return
+    lines = mem_path.read_text().splitlines()[-n:]
+    for line in lines:
+        d = json.loads(line)
+        print(f"[{d['ts'][:10]}] {d['branch']}: {d['summary']}")
+
+def cmd_memory_inject(args):
+    """[057] Inject session context for Gemini CLI bootstrap."""
+    mem_path = REPO_ROOT / "data/session_memory.jsonl"
+    if not mem_path.exists(): return
+    lines = mem_path.read_text().splitlines()[-3:]
+    print("=== NINA SESSION CONTEXT ===")
+    for line in reversed(lines):
+        d = json.loads(line)
+        print(f"Last session ({d['ts'][:10]}): {d['summary']}")
+        print(f"Branch: {d['branch']} | HEAD: {d['git_head'][:7]}")
+    print("===========================")
+
 def cmd_ops_rotate_logs(args):
     """[038] Compress and rotate tool logs."""
     import gzip
@@ -1356,7 +1541,25 @@ def main():
     subparsers.add_parser("help-ai")
     subparsers.add_parser("capability-map")
     subparsers.add_parser("stats")
+    subparsers.add_parser("monitor")
     
+    p_batch = subparsers.add_parser("batch")
+    p_batch.add_argument("--cmds", required=True, help="Piped commands: 'c1|c2'")
+
+    p_file = subparsers.add_parser("file"); p_fs_f = p_file.add_subparsers(dest="sub")
+    p_fr = p_fs_f.add_parser("read"); p_fr.add_argument("file"); p_fr.add_argument("--start", type=int); p_fr.add_argument("--end", type=int)
+    p_fg = p_fs_f.add_parser("grep"); p_fg.add_argument("pattern"); p_fg.add_argument("--dir"); p_fg.add_argument("--ext")
+    p_fp = p_fs_f.add_parser("patch"); p_fp.add_argument("file"); p_fp.add_argument("--find", required=True); p_fp.add_argument("--replace", required=True)
+    p_fi = p_fs_f.add_parser("insert"); p_fi.add_argument("file"); p_fi.add_argument("--after", required=True); p_fi.add_argument("--text", required=True)
+    p_fd = p_fs_f.add_parser("diff"); p_fd.add_argument("file")
+
+    p_git = subparsers.add_parser("git"); p_gs_g = p_git.add_subparsers(dest="sub")
+    p_gl = p_gs_g.add_parser("log"); p_gl.add_argument("--n", type=int)
+    p_gs_g.add_parser("changed")
+    p_gs_s = p_gs_g.add_parser("search"); p_gs_s.add_argument("keyword")
+    p_gb = p_gs_g.add_parser("blame"); p_gb.add_argument("file"); p_gb.add_argument("--start", type=int); p_gb.add_argument("--end", type=int)
+    p_gsq = p_gs_g.add_parser("stash-quick"); p_gsq.add_argument("--label")
+
     p_hw = subparsers.add_parser("hw"); p_hs = p_hw.add_subparsers(dest="sub")
     p_hg = p_hs.add_parser("gate")
     p_hg.add_argument("--json", action="store_true", help="Output as JSON")
@@ -1369,6 +1572,9 @@ def main():
     p_memory = subparsers.add_parser("memory"); p_ms = p_memory.add_subparsers(dest="sub")
     p_ms_stash = p_ms.add_parser("stash")
     p_ms_stash.add_argument("text", help="Text to stash in working memory")
+    p_mss = p_ms.add_parser("session-save"); p_mss.add_argument("--summary")
+    p_msr = p_ms.add_parser("session-recall"); p_msr.add_argument("--n", type=int)
+    p_ms.add_parser("inject")
 
     p_check = subparsers.add_parser("check"); p_cks = p_check.add_subparsers(dest="sub")
 
@@ -1469,6 +1675,20 @@ def main():
     elif args.command == "find-symbol": cmd_find_symbol(args)
     elif args.command == "help-ai": cmd_help_ai(args)
     elif args.command == "stats": cmd_stats(args)
+    elif args.command == "monitor": cmd_monitor(args)
+    elif args.command == "batch": cmd_batch(args)
+    elif args.command == "file":
+        if args.sub == "read": cmd_file_read(args)
+        elif args.sub == "grep": cmd_file_grep(args)
+        elif args.sub == "patch": cmd_file_patch(args)
+        elif args.sub == "insert": cmd_file_insert(args)
+        elif args.sub == "diff": cmd_file_diff(args)
+    elif args.command == "git":
+        if args.sub == "log": cmd_git_log(args)
+        elif args.sub == "changed": cmd_git_changed(args)
+        elif args.sub == "search": cmd_git_search(args)
+        elif args.sub == "blame": cmd_git_blame(args)
+        elif args.sub == "stash-quick": cmd_git_stash_quick(args)
     elif args.command == "capability-map": cmd_capability_map(args)
     elif args.command == "register": cmd_register_capability(args)
     elif args.command == "run": cmd_run_capability(args)
@@ -1479,6 +1699,9 @@ def main():
         elif args.sub == "resume": cmd_session_resume(args)
     elif args.command == "memory":
         if args.sub == "stash": cmd_memory_stash(args)
+        elif args.sub == "session-save": cmd_memory_session_save(args)
+        elif args.sub == "session-recall": cmd_memory_session_recall(args)
+        elif args.sub == "inject": cmd_memory_inject(args)
     elif args.command == "hw":
         if args.sub == "gate": cmd_hw_gate(args)
     elif args.command == "check":

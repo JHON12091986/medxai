@@ -336,28 +336,63 @@ async def proxy_chat_completions(request: Request):
         local_response, lh, l_start, l_name = await forward_to_provider(payload, local_providers, is_stream)
         if local_response:
             logger.info(f"SIMPLE task -> local ({l_name})")
-            if is_stream: return StreamingResponse(stream_response(local_response, lh, l_start), status_code=local_response.status_code)
+            total_ms = (time.time() - l_start) * 1000
+            if is_stream:
+                # For streaming, we can't easily get tokens here, but we can log provider and latency
+                write_log({"provider": l_name, "total_ms": total_ms, "cached": False, "task_type": "SIMPLE"})
+                return StreamingResponse(stream_response(local_response, lh, l_start), status_code=local_response.status_code)
             else:
                 data = local_response.json()
                 lh.record_success()
+                usage = data.get("usage", {})
+                write_log({
+                    "provider": l_name, 
+                    "input_tokens": usage.get("prompt_tokens", 0),
+                    "output_tokens": usage.get("completion_tokens", 0),
+                    "total_ms": total_ms,
+                    "cached": False,
+                    "task_type": "SIMPLE"
+                })
                 return JSONResponse(status_code=local_response.status_code, content=data)
 
     response, h, start_time, provider_name = await cloud_task
     if response:
         logger.info(f"Forwarded to {provider_name}")
-        if is_stream: return StreamingResponse(stream_response(response, h, start_time), status_code=response.status_code)
+        total_ms = (time.time() - start_time) * 1000
+        if is_stream:
+            write_log({"provider": provider_name, "total_ms": total_ms, "cached": False})
+            return StreamingResponse(stream_response(response, h, start_time), status_code=response.status_code)
         else:
             data = response.json()
             h.record_success()
+            usage = data.get("usage", {})
+            write_log({
+                "provider": provider_name,
+                "input_tokens": usage.get("prompt_tokens", 0),
+                "output_tokens": usage.get("completion_tokens", 0),
+                "total_ms": total_ms,
+                "cached": False
+            })
             return JSONResponse(status_code=response.status_code, content=data)
 
     if local_providers:
         response, h, start_time, provider_name = await forward_to_provider(payload, local_providers, is_stream)
         if response:
-            if is_stream: return StreamingResponse(stream_response(response, h, start_time), status_code=response.status_code)
+            total_ms = (time.time() - start_time) * 1000
+            if is_stream:
+                write_log({"provider": provider_name, "total_ms": total_ms, "cached": False})
+                return StreamingResponse(stream_response(response, h, start_time), status_code=response.status_code)
             else:
                 data = response.json()
                 h.record_success()
+                usage = data.get("usage", {})
+                write_log({
+                    "provider": provider_name,
+                    "input_tokens": usage.get("prompt_tokens", 0),
+                    "output_tokens": usage.get("completion_tokens", 0),
+                    "total_ms": total_ms,
+                    "cached": False
+                })
                 return JSONResponse(status_code=response.status_code, content=data)
 
     return JSONResponse(status_code=503, content={"error": "All providers exhausted"})
