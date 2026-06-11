@@ -145,6 +145,16 @@ To prevent "Black Box" reasoning (thinking without stimuli):
 2. NO FORENSICS — Never read /var/log, dmesg, /var/crash unless explicitly asked.
 3. FAIL FAST — Never retry a failed API call more than 2 times. Surface error immediately.
 4. NO SPONTANEOUS REPORTS — Never run efficiency summaries or token reports unless explicitly asked.
+5. MODE SELECTION — declare at every session start:
+   Interactive sessions (user present): unset GOOGLE_GEMINI_BASE_URL
+   Background/batch tasks (Jules, agy, cron): export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
+   Never run interactive Gemini CLI sessions through NinaGate proxy.
+6. TIME BUDGET — enforce hard limits per task scope:
+   Single-file edit: 3 min max
+   Multi-file edit up to 5 files: 8 min max
+   Multi-file edit 6+ files: 15 min max
+   If budget exceeded: stop immediately, report what is done and what remains.
+   Never silently continue past the time budget.
 
 ---
 
