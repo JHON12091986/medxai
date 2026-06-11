@@ -25,3 +25,4 @@ data/healthcheck_registry.txt
 .aider*
 exports/nina_latest.md
 data/circuit_state.json
+ninagate/quotas.json
