@@ -2343,3 +2343,6 @@
 **Files changed:** docs/space/claude_feed.md,.gemini/,core/utils.py,data/router_cache.json,jules_mega_task.md,tools/nina_mcp_server.py
 
 **Verification:** git push OK, nina.service activating
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
