@@ -11,8 +11,9 @@ from contextlib import asynccontextmanager
 import httpx
 import uvicorn
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse, StreamingResponse
+import psutil
 from watchfiles import awatch
 
 # Set up logging
@@ -415,6 +416,73 @@ async def update_providers_config(request: Request):
     except Exception as e:
         logger.error(f"Failed to update providers: {e}")
         return JSONResponse(status_code=500, content={"error": str(e)})
+
+@app.websocket("/v1/ws/telemetry")
+async def websocket_telemetry(websocket: WebSocket):
+    await websocket.accept()
+    log_path = os.path.join(os.path.dirname(__file__), '..', 'logs', 'router.log')
+    last_pos = 0
+
+    try:
+        while True:
+            metrics = {
+                "cpu_percent": psutil.cpu_percent(interval=None),
+                "gpu_memory_used_mb": 0,
+                "router_events": []
+            }
+
+            # Try to get GPU usage
+            try:
+                proc = await asyncio.create_subprocess_exec(
+                    "nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits",
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE
+                )
+                stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=2.0)
+                if proc.returncode == 0:
+                    metrics["gpu_memory_used_mb"] = int(stdout.decode().strip())
+            except Exception:
+                pass
+
+            # Read new lines from router.log
+            if os.path.exists(log_path):
+                try:
+                    with open(log_path, 'r') as f:
+                        f.seek(0, 2)
+                        current_size = f.tell()
+
+                        if current_size < last_pos:
+                            last_pos = 0 # Log rotated
+
+                        if current_size > last_pos:
+                            f.seek(last_pos)
+                            new_lines = f.readlines()
+                            last_pos = current_size
+
+                            for line in new_lines:
+                                try:
+                                    # Expected format: JSON line or regex extraction if needed
+                                    # Our log is formatted by setup_logging but core/router.py does: logger.info("router_success...", extra={"log": "router.log"})
+                                    # Actually, NINA writes structured JSON lines to router.log due to loguru or json handler.
+                                    # We can try to parse the line as JSON or just pass the string to the frontend to parse.
+                                    # Let's try JSON first, otherwise send raw.
+                                    try:
+                                        data = json.loads(line)
+                                        metrics["router_events"].append(data)
+                                    except json.JSONDecodeError:
+                                        metrics["router_events"].append({"raw": line.strip()})
+                                except Exception:
+                                    pass
+                except Exception as e:
+                    logger.error(f"Error reading router.log: {e}")
+
+            await websocket.send_json(metrics)
+            await asyncio.sleep(0.5)
+
+    except WebSocketDisconnect:
+        logger.info("Telemetry WebSocket disconnected")
+    except Exception as e:
+        logger.error(f"Telemetry WebSocket error: {e}")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8080)
