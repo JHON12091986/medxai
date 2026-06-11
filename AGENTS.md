@@ -3,7 +3,7 @@
 # Gemini CLI loads this via .gemini/settings.json → "context": { "fileName": ["AGENTS.md"] }
 # Jules reads this automatically before every task submission
 # agy reads this automatically — all rules apply to every session
-# DO NOT maintain a separate GEMINI.md — this file is the only context file.
+# This file is the only context file.
 
 ---
 
