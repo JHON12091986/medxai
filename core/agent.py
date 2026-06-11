@@ -71,7 +71,6 @@ class AgentLoop:
 
     async def _inner(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
         # AG-LOOP: structured phase logging
-        from core.agent_loop import AgentLoop as _AL
         import logging as _log
         _log.getLogger("nina.agent").debug(f"agent input received: {goal!r}")
         session_history = list(session_history)
@@ -155,6 +154,39 @@ class AgentLoop:
                         logger.warning(f"agent_skipped_unhealthy tool={tool_name}")
                     elif tool:
                         obs = await tool.run(tool_input)
+
+                        if tool_name == "shell" and ".py" in tool_input:
+                            for attempt in range(2):
+                                import subprocess
+                                git_cmd = subprocess.run(["git", "diff", "--name-only"], capture_output=True, text=True)
+                                py_files = [f for f in git_cmd.stdout.splitlines() if f.endswith('.py')]
+
+                                errors = []
+                                for pf in py_files:
+                                    syn = subprocess.run(["python3", "-m", "py_compile", pf], capture_output=True, text=True)
+                                    if syn.returncode != 0: errors.append(syn.stderr)
+                                    pfl = subprocess.run(["pyflakes", pf], capture_output=True, text=True)
+                                    if pfl.returncode != 0: errors.append(pfl.stdout)
+
+                                if not errors:
+                                    if attempt > 0:
+                                        obs += "\n\n[INFO] Surgical edit syntax verified automatically after self-fix."
+                                    break
+
+                                fix_prompt = f"The surgical edit resulted in syntax errors:\n{chr(10).join(errors)}\nPlease output a TOOL:shell command with sed or python to fix this exact error. FINAL: when done."
+                                fix_msgs = msgs + [{"role": "user", "content": fix_prompt}]
+                                fix_resp = await self.router.route(goal, fix_msgs, task, force_local=force_local)
+
+                                match_fix = _re.search(r'TOOL:\s*([^\s:]+)(?:\s+INPUT:\s*([^\n]*)|[ \t]+([^\n]*))?', _re.sub(r'[*_`]', '', _re.sub(r'^\[Step \d+/\d+\]\s*', '', fix_resp, flags=_re.MULTILINE)))
+                                if match_fix:
+                                    fix_tool_name = match_fix.group(1).strip(":- ").lower()
+                                    fix_tool_input = (match_fix.group(2) or match_fix.group(3) or '').strip().strip('\'"')
+                                    fix_tool = self.tools.get(fix_tool_name)
+                                    if fix_tool:
+                                        await fix_tool.run(fix_tool_input)
+
+                            if errors:
+                                obs += f"\n\n[WARNING] Syntax errors remain after 2 self-fix attempts:\n{errors[0][:200]}"
                     else:
                         obs = f"Unknown tool: {tool_name}"
                     scratchpad.append(f"[{tool_name}] -> {obs[:300]}")
