@@ -78,7 +78,7 @@ Before starting any new Perplexity thread:
 1. Start from clean `main` in `~/nina`.
 2. Run `./nina_sync.sh`.
 3. Create branch + worktree for each task.
-4. Record claimed files in the centralized `~/nina/jules_lock.txt`.
+4. Record claimed files in the centralized `~/nina/juleslock.txt`.
 5. Launch local executor and Jules only after territories are confirmed non-overlapping.
 
 ## Session Close Checklist (ninaflash)
@@ -109,6 +109,7 @@ Never run parallel agent tasks from the same working directory.
 
 | Tool | Model | Daily Quota | Reset |
 |------|-------|-------------|-------|
+| NinaFlash (Ollama local) | qwen2.5-coder:7b | Unlimited | Never |
 | ninaflash (agy) | Gemini Flash | ~5h rolling | Rolling |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |

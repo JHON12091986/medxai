@@ -61,7 +61,7 @@ A cross-cutting optimization layer designed to reduce cloud token consumption by
 NINA's model routing engine located in `core/router.py`. It intelligently routes queries across 19+ cloud AI providers and local Ollama instances based on a weighted scoring mechanism (success rate × latency × rate limits). The router integrates a CircuitBreaker to prevent cascading failures when a provider drops, prioritizing free-tier options first while safeguarding performance.
 
 **AgentLoop (THINK-PLAN-ACT):**
-The core processing loop that transforms intent into execution. It runs continuously, receiving input (e.g., from Telegram) and breaking tasks down using a THINK-PLAN-ACT cadence. It ensures state is maintained during complex tasks and provides a thermal guard to prevent runaway loops or resource exhaustion.
+The core processing loop that transforms intent into execution. It runs continuously, receiving input (e.g., from Telegram) and breaking tasks down using a THINK-PLAN-ACT cadence. It ensures state is maintained during complex tasks and provides a thermal guard to prevent runaway loops or resource exhaustion. Workspace boundary enforcement is governed by AGENTS.md Part 5 Rule 6 — all file operations are strictly scoped to ~/nina only.
 
 **Guardian Gate:**
 The forensic safety layer for autonomous self-patching. Residing in `guardian_engine.py` and `guardian` script, it runs AST scans and baseline drift analysis on every patch applied. It ensures no code runs without py_compile and pyflakes validation, logging all updates locally to provide safety, accountability, and preventing agent conflicts via file locking.
