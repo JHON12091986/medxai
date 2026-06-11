@@ -38,10 +38,30 @@ ninaflash v6.1+ features a "Surgical Code Intelligence" layer designed for extre
 - `nf file read | grep | patch | insert | diff` — Local file manipulation without cloud escalation.
 - `nf git log | changed | search | blame | stash-quick` — Hardened git interface with security blocklist (prevents accidental push/force).
 
-### [NEW] Performance & Parallelism
+### [NEW] Performance & Metrics (Real Data)
 
-- `nf monitor` — Parses NinaGate logs to show local vs. cloud routing efficiency, tokens saved, and avg latency.
+- `nf monitor` — Comprehensive efficiency report parsing real data from:
+  - **Gemini CLI Sessions:** Extracts token usage and turn counts from `.jsonl` session files.
+  - **NinaGate Logs:** Reports local vs. cloud routing ratios, average latency, and estimated cost savings.
+  - **NinaFlash Logs:** Tracks local command execution frequency, timing, and cumulative token savings.
+  - Use `nf monitor --full` to parse all historical data instead of just the last 3 sessions.
 - `nf batch --cmds "c1|c2"` — Parallel execution of sub-commands using a local thread pool.
+
+### [NEW] Structured Logging
+
+Every `nf` command execution is now recorded in `logs/ninaflash.log` in a machine-readable JSON format. This log captures:
+- **Command/Subcommand:** Precisely what was executed.
+- **Duration:** Execution time in milliseconds (monotonic timing).
+- **Outcome:** Success state or specific error messages.
+- **Tokens Saved:** Estimated cloud tokens avoided by using the local executor.
+
+| Command Type | Est. Tokens Saved |
+| :--- | :--- |
+| `file` | 2000 |
+| `code` | 1500 |
+| `git` | 800 |
+| `find-symbol` | 1000 |
+| `batch` | 1200 |
 
 ### [NEW] Session & Memory Management
 

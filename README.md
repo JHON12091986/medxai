@@ -44,7 +44,7 @@ ninaflash is NINA's local high-performance executor:
   - `nf status` — Pulse heartbeat of git, env, and backlog.
   - `nf file read | grep | patch` — Local file ops (Zero Cloud Cost).
   - `nf git log | changed | search` — Hardened git interface.
-  - `nf monitor` — Real-time performance metrics (NinaGate).
+  - `nf monitor` — Real-time efficiency report (Sessions + NinaGate + Local).
   - `nf memory session-save | inject` — Session context management.
 
 ## Universe-Mode Kernel
