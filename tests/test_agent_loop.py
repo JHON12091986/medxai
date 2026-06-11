@@ -45,11 +45,12 @@ def test_act_records_to_hub():
 @patch("core.agent_loop.think")
 @patch("core.agent_loop.plan")
 @patch("core.agent_loop.act")
-def test_agent_loop_run_end_to_end(mock_act, mock_plan, mock_think):
+@pytest.mark.asyncio
+async def test_agent_loop_run_end_to_end(mock_act, mock_plan, mock_think):
     mock_think.return_value = ThinkResult(intent="search", confidence=0.8, raw_input="test input")
     mock_plan.return_value = PlanResult(steps=[], tool="shell", estimated_tokens=10)
     mock_act.return_value = ActResult(ok=True, output="", error=None, tokens_used=5)
 
     loop = AgentLoop(router=MagicMock(), tools=['shell'])
-    res = loop.run("test input")
+    res = await loop.run("test input")
     assert isinstance(res, ActResult)

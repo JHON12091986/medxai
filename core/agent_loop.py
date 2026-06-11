@@ -26,6 +26,8 @@ class ActResult:
     output: str
     error: Optional[str]
     tokens_used: int
+    pre_flight_summary: Optional[str] = None
+    scaffold_code: Optional[str] = None
 
 def think(input: str, context: dict) -> ThinkResult:
     try:
@@ -79,13 +81,58 @@ class AgentLoop:
         self.tools = tools
         self.logger = logging.getLogger("nina.agent")
 
-    def run(self, input: str, context: dict = None) -> ActResult:
+    async def run(self, input: str, context: dict = None) -> ActResult:
         if context is None:
             context = {}
-        t_res = think(input, context)
-        self.logger.debug(f"THINK: {t_res}")
-        p_res = plan(t_res, self.tools)
-        self.logger.debug(f"PLAN: {p_res}")
-        a_res = act(p_res, context)
-        self.logger.debug(f"ACT: {a_res}")
+
+        import asyncio
+
+        async def scout_task() -> str:
+            # Run blocking file operations in a thread pool
+            def _scout():
+                try:
+                    import glob
+                    files = glob.glob("**/*.py", recursive=True)[:3]
+                    summary = []
+                    for f in files:
+                        with open(f, "r") as file_obj:
+                            summary.append(f"File {f}: {len(file_obj.read())} bytes")
+                    return "Pre-Flight Summary:\n" + "\n".join(summary)
+                except Exception as e:
+                    return f"Pre-Flight Summary failed: {e}"
+            return await asyncio.to_thread(_scout)
+
+        async def scaffold_task() -> str:
+            # Start local tool scaffolding (imports, docstrings)
+            def _scaffold():
+                return 'import os\nimport sys\n\n"""\nAuto-generated scaffolding.\n"""\n'
+            return await asyncio.to_thread(_scaffold)
+
+        async def cloud_task(scout_future) -> ActResult:
+            # We must wait for the scout to provide the summary to the agent
+            pre_flight_summary = await scout_future
+
+            # Inject the pre_flight_summary into the context
+            local_context = context.copy()
+            local_context["pre_flight_summary"] = pre_flight_summary
+
+            def _cloud():
+                t_res = think(input, local_context)
+                self.logger.debug(f"THINK: {t_res}")
+                p_res = plan(t_res, self.tools)
+                self.logger.debug(f"PLAN: {p_res}")
+                a_res = act(p_res, local_context)
+                self.logger.debug(f"ACT: {a_res}")
+                return a_res
+            return await asyncio.to_thread(_cloud)
+
+        scout_future = asyncio.create_task(scout_task())
+        scaffold_future = asyncio.create_task(scaffold_task())
+        cloud_future = asyncio.create_task(cloud_task(scout_future))
+
+        results = await asyncio.gather(cloud_future, scaffold_future)
+
+        a_res = results[0]
+        a_res.pre_flight_summary = scout_future.result()
+        a_res.scaffold_code = results[1]
         return a_res
