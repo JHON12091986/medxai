@@ -22,7 +22,7 @@ async def startup_event():
     config = load_config()
     router = HybridRouter(config)
     await router.initialize()
-    logger.info({"event": "nina_proxy_start", "port": 8765, "router": "ready"})
+    logger.info({"event": "nina_proxy_start", "port": 8080, "router": "ready"})
 
 @app.post("/v1/chat/completions")
 async def chat_completions(request: Request):
@@ -103,4 +103,4 @@ async def get_models():
     }
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8765)
+    uvicorn.run(app, host="127.0.0.1", port=8080)

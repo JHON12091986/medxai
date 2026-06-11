@@ -17,7 +17,7 @@ systemctl enable --now ninagate
 ## Configuring BYOK Tools
 
 Configure your BYOK tool (e.g. Cursor, Aider) with:
-- **base_url:** `http://localhost:8765/v1`
+- **base_url:** `http://localhost:8080/v1`
 - **api_key:** `ninagate`
 - **model:** `auto` (or leave blank)
 

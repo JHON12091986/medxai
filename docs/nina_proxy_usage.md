@@ -10,7 +10,7 @@ To manually start the proxy:
 python3 tools/nina_proxy.py
 ```
 
-By default, the proxy runs on `http://127.0.0.1:8765`.
+By default, the proxy runs on `http://127.0.0.1:8080`.
 
 ## How to add as a systemd service
 
@@ -41,7 +41,7 @@ sudo systemctl enable --now nina_proxy.service
 ## Setup Guides
 
 ### Cursor Setup
-- **Base URL**: `http://localhost:8765/v1`
+- **Base URL**: `http://localhost:8080/v1`
 - **API Key**: `any-string` (Authentication is not validated for localhost connections)
 - **Model Name**: `nina-auto` (Type it into the box and press Add Model)
 
@@ -55,7 +55,7 @@ In your `~/.continue/config.json`, add the local NINA proxy to your models array
       "title": "NINA Auto",
       "provider": "openai",
       "model": "nina-auto",
-      "apiBase": "http://localhost:8765/v1",
+      "apiBase": "http://localhost:8080/v1",
       "apiKey": "nina"
     }
   ]
@@ -66,9 +66,9 @@ In your `~/.continue/config.json`, add the local NINA proxy to your models array
 Run Aider via the command line, pointing to the proxy:
 
 ```bash
-aider --openai-api-base http://localhost:8765/v1 --openai-api-key nina --model nina-auto
+aider --openai-api-base http://localhost:8080/v1 --openai-api-key nina --model nina-auto
 ```
 
 ### LM Studio Compatibility
 **Compatible:** Yes
-Any application that allows for an **OpenAI base URL override** will work with NINA proxy. Just set the URL to `http://localhost:8765/v1` and ensure the model string is `nina-auto`.
+Any application that allows for an **OpenAI base URL override** will work with NINA proxy. Just set the URL to `http://localhost:8080/v1` and ensure the model string is `nina-auto`.

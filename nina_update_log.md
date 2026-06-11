@@ -2023,3 +2023,13 @@
 **Files changed:** ARCHITECTURE.md,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,.gemini/
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 180 — 2026-06-11 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** ARCHITECTURE.md,CHANGELOG.md,README.md,bin/ninagate,core/agent.py,core/nina.py,dashboard/ninaui.html,docs/nina_proxy_usage.md,docs/ninaflash.md,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,nina_context.md,ninagate/README.md,ninagate/main.py,ninagate_load_test.sh,tools/nina_proxy.py,tools/ninaflash.py,.gemini/
+
+**Verification:** git push OK, nina.service activating

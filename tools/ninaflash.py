@@ -977,7 +977,13 @@ def cmd_hw_gate(args):
 def _get_hw_status() -> Tuple[str, str, dict]:
     """[034] Logic for hardware gate GO/HOLD/DEFER."""
     import psutil
-    from tools.system import get_temps
+    try:
+        from tools.system import get_temps
+    except ImportError:
+        try:
+            from system import get_temps
+        except ImportError:
+            def get_temps(): return {"cpu_temp": 0}
     
     # Defaults
     ram_guard = float(os.getenv("RAM_GUARD_GB", 10.5))

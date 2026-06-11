@@ -9,7 +9,7 @@ for i in {1..100}; do
     # without tearing down the proxy between requests.
     
     curl -s -w "\nHTTP_CODE: %{http_code}\nTIME_TOTAL: %{time_total}s\n" \
-      -X POST http://localhost:8765/v1/chat/completions \
+      -X POST http://localhost:8080/v1/chat/completions \
       -H "Content-Type: application/json" \
       -H "Authorization: Bearer ninagate" \
       -d "{

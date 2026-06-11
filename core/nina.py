@@ -143,7 +143,7 @@ class NinaOS:
         api_base = getattr(self.config, "onebrain_api_base", "") or ""
         parsed_url = urlparse(api_base)
 
-        if parsed_url.port == 8765 or "8765" in api_base:
+        if parsed_url.port == 8080 or "8080" in api_base:
             self.system_prompt = ""
             if hasattr(self.router, "http") and self.router.http:
                 self.router.http.headers["X-NINA-ROLE"] = "agent"

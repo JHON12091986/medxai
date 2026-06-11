@@ -24,7 +24,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) — newe
 ### Added
 - **Optimization Offensive:** Launched the major "Throughput Maximizer" initiative aimed at 90% cloud token reduction and 10x feature delivery acceleration.
 - **83-Task Backlog:** Expanded `docs/space/jules_backlog.md` with 83 "READY" mega-tasks grouped into 7 strategic clusters (Advanced Code Intelligence, QA Automation, Performance, Memory, Repository Hygiene, Interface, and Context Engineering).
-- **NinaGate Proxy:** Integrated an OpenAI-compatible proxy on port 8765 for local "Fast-Path" routing and boilerplate offloading to Ollama models.
+- **NinaGate Proxy:** Integrated an OpenAI-compatible proxy on port 8080 for local "Fast-Path" routing and boilerplate offloading to Ollama models.
 - **Surgical Code Intel:** Added `nf code outline` capability to `tools/ninaflash.py` for zero-token signature mapping using local AST parsing.
 - **Detailed Specifications:** Created 12 individual mega-task specifications in `docs/space/` covering Surgical Intel, Token Reduction, Backlog Monitoring, and Automated Hygiene.
 - **Concurrent Execution:** Dispatched 14 simultaneous high-priority optimization tasks to Jules API (system saturation limit).

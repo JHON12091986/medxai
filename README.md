@@ -49,7 +49,7 @@ ninaflash is NINA's local high-performance executor:
 
 The kernel architecture giving NINA near-infinite capability at zero cloud token cost:
 - **Nucleus:** Strict 100-function core (`tools/ninaflash.py`) for high reliability.
-- **Fast-Path:** Routing via `NinaGate` (port 8765) to local Ollama models.
+- **Fast-Path:** Routing via `NinaGate` (port 8080) to local Ollama models.
 - **Surgical Context:** Returning 40-line semantic chunks instead of full files.
 
 ## HybridRouter V4

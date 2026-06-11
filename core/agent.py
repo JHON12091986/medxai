@@ -105,7 +105,7 @@ class AgentLoop:
         api_base = getattr(self.config, "onebrain_api_base", "") or ""
         parsed_url = urlparse(api_base)
 
-        if parsed_url.port == 8765 or "8765" in api_base:
+        if parsed_url.port == 8080 or "8080" in api_base:
             system_frame = f"Goal: {goal}\nMemory: {context}"
         else:
             system_frame = (

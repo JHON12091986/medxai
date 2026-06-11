@@ -18,6 +18,13 @@ The `maintain` module handles the high-turn "Daily Maintenance" loop automatical
 
 - `nf maintain pr <id> --task <id> --title <t> --summary <s>` — Atomically rebases a PR, surgically resolves documentation regressions (preserving v13+ headers locally), marks the backlog task as DONE, and appends the update log.
 
+## Telemetry & User Visibility (v14.0)
+
+ninaflash and all NINA agents adhere to a strict **"Glass Box"** reasoning protocol:
+- **Topic Heartbeats:** Granular updates via `update_topic` for every sub-goal.
+- **Thought Streaming:** High-level reasoning intent is mirrored to `logs/agent_thoughts.log`.
+- **Diagnostic Transparency:** Explicit reporting of tool stalls or hardware constraints.
+
 ## Universe-Mode Kernel
 
 ninaflash operates on a highly optimized, dynamic system termed the Universe-Mode Kernel. It consists of three primary elements:

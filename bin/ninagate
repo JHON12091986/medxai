@@ -46,4 +46,4 @@ echo "✅ Proxy running. Launching Qwen Code..."
 echo "----------------------------------------"
 
 # Launch Qwen Code pointing to the local proxy
-"$QWEN_BIN" --auth-type openai --openai-base-url "http://localhost:8765/v1" --openai-api-key ninagate -m auto "$@"
+"$QWEN_BIN" --auth-type openai --openai-base-url "http://localhost:8080/v1" --openai-api-key ninagate -m auto "$@"

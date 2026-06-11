@@ -49,7 +49,7 @@ Local-first autonomous AI operator — not a chatbot. Runs 24/7 on owner's lapto
 - **Service:** systemd `nina.service` — Restart=always, depends on `ollama.service`, `ninagate.service`
 - **Local models:** Ollama — `qwen2.5-coder:1.5b` (LOCALFAST), `qwen2.5-coder:7b` (LOCALHEAVY), `deepseek-coder:1.3b`
 - **EWS:** webmail.basicbanklimited.com — Auth: NTLM — Domain: basic.bank
-- **NinaGate:** OpenAI-compatible proxy at `http://localhost:8765`
+- **NinaGate:** OpenAI-compatible proxy at `http://localhost:8080`
 
 ## Start / Stop / Restart
 
@@ -147,7 +147,7 @@ tools/
   upgradepipeline.py Gated patch — scan→sandbox→diff→approve→deploy
 
 ninagate/
-  main.py          API Proxy — rutas requests through priority cascade, port 8765
+  main.py          API Proxy — rutas requests through priority cascade, port 8080
 
 interfaces/
   telegram_interface.py  Security gate, 20 commands, NLP, streaming, flood control

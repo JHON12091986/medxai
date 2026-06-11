@@ -1014,7 +1014,7 @@ fetchNinaGateConfig();
 // ─── NINAGATE CONFIG ─────────────────────────────────────────
 async function fetchNinaGateConfig() {
   try {
-    const res = await fetch('http://localhost:8765/v1/config/providers');
+    const res = await fetch('http://localhost:8080/v1/config/providers');
     if (res.ok) {
       const data = await res.json();
       document.getElementById('ninagate-config-area').value = JSON.stringify(data, null, 2);
@@ -1022,7 +1022,7 @@ async function fetchNinaGateConfig() {
       document.getElementById('ninagate-config-area').value = 'Failed to load config. Is NinaGate running?';
     }
   } catch (e) {
-    document.getElementById('ninagate-config-area').value = 'Error: ' + e.message + '\nIs NinaGate running on port 8765?';
+    document.getElementById('ninagate-config-area').value = 'Error: ' + e.message + '\nIs NinaGate running on port 8080?';
   }
 }
 
@@ -1030,7 +1030,7 @@ async function saveNinaGateConfig() {
   const area = document.getElementById('ninagate-config-area');
   try {
     const data = JSON.parse(area.value);
-    const res = await fetch('http://localhost:8765/v1/config/providers', {
+    const res = await fetch('http://localhost:8080/v1/config/providers', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
