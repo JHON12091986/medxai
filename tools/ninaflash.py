@@ -22,12 +22,11 @@ try:
     import dotenv
 except ImportError:
     dotenv = None
-import time
 import shutil
 import ast
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Set, Tuple
+from typing import List, Dict, Any, Optional, Tuple
 
 # --- KERNEL INITIALIZATION ---
 REPO_ROOT = Path(__file__).parent.parent.resolve()
@@ -232,6 +231,29 @@ def cmd_code_dep_map(args):
     """[013] Map project dependencies excluding venv."""
     files = _find_py_files()
     print(f"Mapping {len(files)} files...")
+
+def cmd_code_index(args):
+    """[037] Global Symbol Indexer: Generate JSON map of all classes/functions."""
+    index = {}
+    for py_file in _find_py_files():
+        try:
+            rel_path = str(py_file.relative_to(REPO_ROOT))
+        except ValueError:
+            rel_path = str(py_file)
+
+        try:
+            tree = ast.parse(py_file.read_text(encoding="utf-8"))
+            symbols = []
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                    symbols.append(node.name)
+            if symbols:
+                index[rel_path] = symbols
+        except Exception:
+            pass
+
+    print(json.dumps(index, indent=2))
+
 
 # ------------------------------------------------------------------
 # MODULE 3: CONTEXT COMPRESSION
@@ -718,6 +740,7 @@ def main():
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
+    p_cs.add_parser("index")
     
     p_pr = subparsers.add_parser("pr"); p_ps = p_pr.add_subparsers(dest="sub")
     p_ps.add_parser("merge-surgical").add_argument("pr_number", type=int)
@@ -774,6 +797,7 @@ def main():
     elif args.command == "code":
         if args.sub == "outline": cmd_code_outline(args)
         elif args.sub == "dep-map": cmd_code_dep_map(args)
+        elif args.sub == "index": cmd_code_index(args)
     elif args.command == "pr":
         if args.sub == "merge-surgical": cmd_pr_merge_surgical(args)
         elif args.sub == "reconcile": cmd_pr_reconcile(args)
