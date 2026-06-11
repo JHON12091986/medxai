@@ -192,12 +192,36 @@ def get_backlog_tasks() -> List[Dict[str, Any]]:
     return tasks
 
 # FIX 2: Correct _log_agent_action
-def _log_agent_action(action: str):
-    """[007] Thread-safe-ish append to agent_actions.log."""
-    log_path = REPO_ROOT / "logs" / "agent_actions.log"
+def write_nf_log(command: str, subcommand: str = "", duration_ms: float = 0,
+                 tokens_saved: int = 0, outcome: str = "OK"):
+    """Structured JSON log entry for every nf command execution."""
+    log_path = REPO_ROOT / "logs" / "ninaflash.log"
     log_path.parent.mkdir(parents=True, exist_ok=True)
+    entry = {
+        "ts": datetime.now().isoformat(),
+        "command": command,
+        "subcommand": subcommand,
+        "duration_ms": round(duration_ms, 1),
+        "tokens_saved": tokens_saved,
+        "outcome": outcome,
+        "provider": "LOCAL"
+    }
     with open(log_path, "a") as f:
-        f.write(f"{datetime.now().isoformat()} | {action}\n")
+        f.write(json.dumps(entry) + "\n")
+
+NF_TOKEN_SAVINGS = {
+    "file":     2000,  # replaces full file read (~800 in + ~1200 context)
+    "code":     1500,  # replaces read_file + AST reasoning
+    "git":       800,  # replaces git shell + output parsing
+    "log":       600,  # replaces reading full update log
+    "backlog":   500,  # replaces reading full backlog table
+    "monitor":   300,
+    "batch":    1200,  # parallel = saves sequential overhead
+    "memory":    400,
+    "status":    200,
+    "check":     300,
+    "find-symbol": 1000,
+}
 
 # FIX 3: _SKIP_DIRS for finding files
 _SKIP_DIRS = {".git", "venv", ".venv", "env", "virtualenv", "__pycache__",
@@ -676,7 +700,7 @@ def cmd_check_code(args):
     verdict_emoji = "✅ PASS" if verdict == "PASS" else ("⚠️ WARN" if verdict == "WARN" else "❌ FAIL")
     print(f"Verdict: {verdict_emoji}")
 
-    _log_agent_action(f"check code {path} → {verdict}")
+    write_nf_log("check", "code", outcome=f"{path} → {verdict}")
 
 def cmd_check_doc(args):
     """[034] Doc quality gate: validate required sections and stale references."""
@@ -791,7 +815,7 @@ def cmd_check_doc(args):
     print("────────────────────────────────────────")
     if not args.stale:
         print(f"Verdict: {verdict}")
-    _log_agent_action(f"check doc {rel_path} → {v_word}")
+    write_nf_log("check", "doc", outcome=f"{rel_path} → {v_word}")
 
 
 def cmd_install_hooks(args):
@@ -1435,6 +1459,39 @@ def cmd_monitor(args):
         print("  NinaGate log empty or not found.")
         print("  Ensure NinaGate is running and requests are being logged.")
 
+    # === PART 3: Parse NinaFlash log ===
+    nf_log = REPO_ROOT / "logs" / "ninaflash.log"
+    nf_total_calls = 0
+    nf_total_tokens_saved = 0
+    nf_errors = 0
+    nf_cmd_counts = {}
+    if nf_log.exists():
+        for line in nf_log.read_text().splitlines()[-500:]:
+            try:
+                d = json.loads(line)
+                nf_total_calls += 1
+                nf_total_tokens_saved += d.get("tokens_saved", 0)
+                if "ERROR" in d.get("outcome", ""):
+                    nf_errors += 1
+                cmd = d.get("command", "unknown")
+                nf_cmd_counts[cmd] = nf_cmd_counts.get(cmd, 0) + 1
+            except Exception:
+                continue
+
+    print(f"\n  NINAFLASH LOCAL EXECUTION (last 500 log entries)")
+    if nf_total_calls > 0:
+        print(f"  Total nf calls:     {nf_total_calls:>6,}")
+        print(f"  Errors:             {nf_errors:>6,}")
+        print(f"  Tokens saved est:   {nf_total_tokens_saved:>6,}  (cloud calls avoided)")
+        cost = nf_total_tokens_saved / 1_000_000 * 0.19
+        print(f"  Est. cost saved:    ${cost:.4f}")
+        print(f"  Top commands:")
+        for cmd, count in sorted(nf_cmd_counts.items(), key=lambda x: -x[1])[:6]:
+            savings = NF_TOKEN_SAVINGS.get(cmd, 0) * count
+            print(f"    nf {cmd:<20} {count:>4}x  (~{savings:,} tokens saved)")
+    else:
+        print("  No NinaFlash log yet. Run any nf command to start logging.")
+
     print(f"\n  HOW TO GET MORE DATA")
     print(f"  /stats model         — inside Gemini CLI, live session totals")
     print(f"  nf monitor --full    — parse ALL historical sessions")
@@ -1753,79 +1810,92 @@ def main():
     p_run.add_argument("extra_args",    nargs=argparse.REMAINDER, help="Arguments passed to the tool")
 
     args = parser.parse_args()
-    if args.command == "status": cmd_status(args)
-    elif args.command == "find-symbol": cmd_find_symbol(args)
-    elif args.command == "help-ai": cmd_help_ai(args)
-    elif args.command == "stats": cmd_stats(args)
-    elif args.command == "monitor": cmd_monitor(args)
-    elif args.command == "batch": cmd_batch(args)
-    elif args.command == "file":
-        if args.sub == "read": cmd_file_read(args)
-        elif args.sub == "grep": cmd_file_grep(args)
-        elif args.sub == "patch": cmd_file_patch(args)
-        elif args.sub == "insert": cmd_file_insert(args)
-        elif args.sub == "diff": cmd_file_diff(args)
-    elif args.command == "git":
-        if args.sub == "log": cmd_git_log(args)
-        elif args.sub == "changed": cmd_git_changed(args)
-        elif args.sub == "search": cmd_git_search(args)
-        elif args.sub == "blame": cmd_git_blame(args)
-        elif args.sub == "stash-quick": cmd_git_stash_quick(args)
-    elif args.command == "capability-map": cmd_capability_map(args)
-    elif args.command == "register": cmd_register_capability(args)
-    elif args.command == "run": cmd_run_capability(args)
-    elif args.command == "maintain":
-        if args.sub == "pr": cmd_maintain_pr(args)
-    elif args.command == "session":
-        if args.sub == "checkpoint": cmd_session_checkpoint(args)
-        elif args.sub == "resume": cmd_session_resume(args)
-    elif args.command == "memory":
-        if args.sub == "stash": cmd_memory_stash(args)
-        elif args.sub == "session-save": cmd_memory_session_save(args)
-        elif args.sub == "session-recall": cmd_memory_session_recall(args)
-        elif args.sub == "inject": cmd_memory_inject(args)
-    elif args.command == "hw":
-        if args.sub == "gate": cmd_hw_gate(args)
-    elif args.command == "check":
-        if args.sub == "code": cmd_check_code(args)
-        elif args.sub == "doc": cmd_check_doc(args)
-    elif args.command == "doc":
-        if args.sub == "check": cmd_check_doc(args)
-        elif args.sub == "consolidate": cmd_doc_consolidate(args)
-    elif args.command == "install-hooks":
-        cmd_install_hooks(args)
-    elif args.command == "code":
-        if args.sub == "outline": cmd_code_outline(args)
-        elif args.sub == "dep-map": cmd_code_dep_map(args)
-        elif args.sub == "index": cmd_code_index(args)
-        elif args.sub == "symbol": cmd_code_symbol(args)
-        elif args.sub == "sigs": cmd_code_sigs(args)
-        elif args.sub == "doc": cmd_code_doc(args)
-        elif args.sub == "pack": cmd_context_pack(args)
-    elif args.command == "query": cmd_query_capability(args)
-    elif args.command == "pr":
-        if args.sub == "reconcile": cmd_pr_reconcile(args)
-    elif args.command == "task":
-        if args.sub == "active": cmd_task_active(args)
-    elif args.command == "log":
-        if args.sub == "summarize": cmd_log_summarize(args)
-        elif args.sub == "tail": cmd_log_tail(args)
-        elif args.sub == "next-id": cmd_log_next_id(args)
-        elif args.sub == "find-id": cmd_log_find_id(args)
-    elif args.command == "backlog":
-        if args.sub == "summary": cmd_backlog_summary(args)
-        elif args.sub == "triage": cmd_backlog_triage(args)
-        elif args.sub == "dag": cmd_backlog_dag(args)
-        elif args.sub == "add": cmd_backlog_add(args)
-        elif args.sub == "archive": cmd_backlog_archive(args)
-    elif args.command == "ops":
-        if args.sub == "thermal": cmd_ops_thermal(args)
-        elif args.sub == "vram": cmd_ops_vram(args)
-        elif args.sub == "compress-logs": cmd_ops_compress_logs(args)
-        elif args.sub == "rotate-logs": cmd_ops_rotate_logs(args)
-    elif args.command == "gen":
-        if args.sub == "tool": cmd_gen_tool(args)
-        elif args.sub == "test": cmd_gen_test(args)
+    import time as _time
+    _t0 = _time.monotonic()
+    _cmd = getattr(args, 'command', 'unknown')
+    _sub = getattr(args, 'sub', '') or ''
+    try:
+        if args.command == "status": cmd_status(args)
+        elif args.command == "find-symbol": cmd_find_symbol(args)
+        elif args.command == "help-ai": cmd_help_ai(args)
+        elif args.command == "stats": cmd_stats(args)
+        elif args.command == "monitor": cmd_monitor(args)
+        elif args.command == "batch": cmd_batch(args)
+        elif args.command == "file":
+            if args.sub == "read": cmd_file_read(args)
+            elif args.sub == "grep": cmd_file_grep(args)
+            elif args.sub == "patch": cmd_file_patch(args)
+            elif args.sub == "insert": cmd_file_insert(args)
+            elif args.sub == "diff": cmd_file_diff(args)
+        elif args.command == "git":
+            if args.sub == "log": cmd_git_log(args)
+            elif args.sub == "changed": cmd_git_changed(args)
+            elif args.sub == "search": cmd_git_search(args)
+            elif args.sub == "blame": cmd_git_blame(args)
+            elif args.sub == "stash-quick": cmd_git_stash_quick(args)
+        elif args.command == "capability-map": cmd_capability_map(args)
+        elif args.command == "register": cmd_register_capability(args)
+        elif args.command == "run": cmd_run_capability(args)
+        elif args.command == "maintain":
+            if args.sub == "pr": cmd_maintain_pr(args)
+        elif args.command == "session":
+            if args.sub == "checkpoint": cmd_session_checkpoint(args)
+            elif args.sub == "resume": cmd_session_resume(args)
+        elif args.command == "memory":
+            if args.sub == "stash": cmd_memory_stash(args)
+            elif args.sub == "session-save": cmd_memory_session_save(args)
+            elif args.sub == "session-recall": cmd_memory_session_recall(args)
+            elif args.sub == "inject": cmd_memory_inject(args)
+        elif args.command == "hw":
+            if args.sub == "gate": cmd_hw_gate(args)
+        elif args.command == "check":
+            if args.sub == "code": cmd_check_code(args)
+            elif args.sub == "doc": cmd_check_doc(args)
+        elif args.command == "doc":
+            if args.sub == "check": cmd_check_doc(args)
+            elif args.sub == "consolidate": cmd_doc_consolidate(args)
+        elif args.command == "install-hooks":
+            cmd_install_hooks(args)
+        elif args.command == "code":
+            if args.sub == "outline": cmd_code_outline(args)
+            elif args.sub == "dep-map": cmd_code_dep_map(args)
+            elif args.sub == "index": cmd_code_index(args)
+            elif args.sub == "symbol": cmd_code_symbol(args)
+            elif args.sub == "sigs": cmd_code_sigs(args)
+            elif args.sub == "doc": cmd_code_doc(args)
+            elif args.sub == "pack": cmd_context_pack(args)
+        elif args.command == "query": cmd_query_capability(args)
+        elif args.command == "pr":
+            if args.sub == "reconcile": cmd_pr_reconcile(args)
+        elif args.command == "task":
+            if args.sub == "active": cmd_task_active(args)
+        elif args.command == "log":
+            if args.sub == "summarize": cmd_log_summarize(args)
+            elif args.sub == "tail": cmd_log_tail(args)
+            elif args.sub == "next-id": cmd_log_next_id(args)
+            elif args.sub == "find-id": cmd_log_find_id(args)
+        elif args.command == "backlog":
+            if args.sub == "summary": cmd_backlog_summary(args)
+            elif args.sub == "triage": cmd_backlog_triage(args)
+            elif args.sub == "dag": cmd_backlog_dag(args)
+            elif args.sub == "add": cmd_backlog_add(args)
+            elif args.sub == "archive": cmd_backlog_archive(args)
+        elif args.command == "ops":
+            if args.sub == "thermal": cmd_ops_thermal(args)
+            elif args.sub == "vram": cmd_ops_vram(args)
+            elif args.sub == "compress-logs": cmd_ops_compress_logs(args)
+            elif args.sub == "rotate-logs": cmd_ops_rotate_logs(args)
+        elif args.command == "gen":
+            if args.sub == "tool": cmd_gen_tool(args)
+            elif args.sub == "test": cmd_gen_test(args)
+        
+        _dur = (_time.monotonic() - _t0) * 1000
+        _tokens = NF_TOKEN_SAVINGS.get(_cmd, 0)
+        write_nf_log(_cmd, _sub, _dur, tokens_saved=_tokens, outcome="OK")
+    except Exception as _e:
+        _dur = (_time.monotonic() - _t0) * 1000
+        write_nf_log(_cmd, _sub, _dur, tokens_saved=0, outcome=f"ERROR: {_e}")
+        raise
 
 
 if __name__ == "__main__":
