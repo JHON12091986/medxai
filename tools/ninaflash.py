@@ -29,7 +29,7 @@ import ast
 
 
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional, Tuple
 
 # --- KERNEL INITIALIZATION ---
@@ -585,6 +585,16 @@ def cmd_check_code(args):
         print(f"❌ File not found: {path}")
         return
 
+    if getattr(args, 'fix', False):
+        print("── ninaflash fix code ──────────────────")
+        if shutil.which("ruff"):
+            print("Running ruff --fix...")
+            run_cmd(f"ruff check --fix {path}")
+        if shutil.which("black"):
+            print("Running black...")
+            run_cmd(f"black {path}")
+        print("────────────────────────────────────────")
+
     # CHECK 1
     syntax_code, syntax_out, syntax_err = run_cmd(f"python3 -m py_compile {path}")
     syntax_label = "PASS" if syntax_code == 0 else f"FAIL — {syntax_err}"
@@ -633,6 +643,25 @@ def cmd_check_doc(args):
     if not target_path.exists():
         print("❌ File not found")
         return
+
+    if getattr(args, 'fix', False):
+        print("── ninaflash fix doc ─────────────────────")
+        print(f"Formatting {target_path}...")
+        try:
+            content_text = target_path.read_text(encoding="utf-8", errors="ignore")
+            import re
+            lines = content_text.splitlines()
+            fixed_lines = []
+            for line in lines:
+                if line.startswith("## Entry"):
+                    line = re.sub(r'\s+', ' ', line)
+                    line = line.replace(" - ", " — ").replace(" -- ", " — ")
+                fixed_lines.append(line)
+            target_path.write_text("\n".join(fixed_lines) + "\n", encoding="utf-8")
+            print("✅ Auto-formatting applied.")
+        except Exception as e:
+            print(f"⚠️ Warning: Auto-formatting failed: {e}")
+        print("────────────────────────────────────────")
 
     print("── ninaflash check doc ───────────────────")
     try:
@@ -723,6 +752,123 @@ def cmd_check_doc(args):
     _log_agent_action(f"check doc {rel_path} → {v_word}")
 
 
+def cmd_install_hooks(args):
+    """[037] Install pre-commit hook to prevent syntax errors."""
+    hook_dir = REPO_ROOT / ".git" / "hooks"
+    if not hook_dir.exists():
+        print("❌ .git/hooks directory not found.")
+        return
+
+    hook_path = hook_dir / "pre-commit"
+
+    hook_script = "#!/usr/bin/env bash\n" \
+"# NINA Auto-Generated Pre-Commit Hook\n\n" \
+"echo \"Running ninaflash code checks on staged files...\"\n" \
+"FILES=$(git diff --cached --name-only --diff-filter=ACM | grep \"\\.py$\")\n" \
+"if [ -z \"$FILES\" ]; then\n" \
+"    " + "exit 0\n" \
+"fi\n\n" \
+"for f in $FILES; do\n" \
+"    echo \"Checking $f...\"\n" \
+"    if ! python3 tools/ninaflash.py check code \"$f\" --strict; then\n" \
+"        echo \"❌ Code check failed for $f\"\n" \
+"        " + "exit 1\n" \
+"    fi\n" \
+"done\n\n" \
+"echo \"✅ All staged Python files passed ninaflash code checks.\"\n" \
+"" + "exit 0\n"
+
+    hook_path.write_text(hook_script, encoding="utf-8")
+    hook_path.chmod(0o755)
+    print(f"✅ Pre-commit hook installed at {hook_path}")
+
+
+def cmd_doc_consolidate(args):
+    """[038] Consolidate old entries from nina_update_log.md to archive."""
+    from datetime import datetime, timedelta
+
+    log_path = REPO_ROOT / "docs" / "space" / "nina_update_log.md"
+    if not log_path.exists():
+        log_path = REPO_ROOT / "nina_update_log.md"
+
+    if not log_path.exists():
+        print("❌ nina_update_log.md not found.")
+        return
+
+    archive_dir = REPO_ROOT / "exports"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    archive_path = archive_dir / "nina_update_log_archive.md"
+
+    print("── ninaflash doc consolidate ─────────────")
+    print(f"Target : {log_path.relative_to(REPO_ROOT) if log_path.is_relative_to(REPO_ROOT) else log_path}")
+
+    cutoff_date = datetime.now() - timedelta(days=30)
+
+    try:
+        content_text = log_path.read_text(encoding="utf-8", errors="ignore")
+        lines = content_text.splitlines()
+    except Exception as e:
+        print(f"❌ Failed to read log: {e}")
+        return
+
+    import re
+    header_regex = re.compile(r'^## Entry \d+ [—-] (\d{4}-\d{2}-\d{2})')
+
+    current_entry = []
+    current_date = None
+
+    new_log_lines = []
+    archive_lines = []
+
+    preamble_done = False
+
+    for line in lines:
+        if not preamble_done and not line.startswith("## Entry"):
+            new_log_lines.append(line)
+            continue
+
+        preamble_done = True
+
+        match = header_regex.match(line)
+        if match:
+            if current_entry:
+                if current_date and current_date < cutoff_date:
+                    archive_lines.extend(current_entry)
+                else:
+                    new_log_lines.extend(current_entry)
+
+            current_entry = [line]
+            date_str = match.group(1)
+            try:
+                current_date = datetime.strptime(date_str, "%Y-%m-%d")
+            except ValueError:
+                current_date = datetime.now()
+        else:
+            if current_entry:
+                current_entry.append(line)
+            else:
+                new_log_lines.append(line)
+
+    if current_entry:
+        if current_date and current_date < cutoff_date:
+            archive_lines.extend(current_entry)
+        else:
+            new_log_lines.extend(current_entry)
+
+    if not archive_lines:
+        print("✅ No entries older than 30 days found.")
+        return
+
+    log_path.write_text("\n".join(new_log_lines) + "\n", encoding="utf-8")
+
+    if archive_path.exists():
+        existing_archive = archive_path.read_text(encoding="utf-8", errors="ignore")
+        archive_path.write_text(existing_archive + "\n" + "\n".join(archive_lines) + "\n", encoding="utf-8")
+    else:
+        archive_path.write_text("# NINA Update Log Archive\n\n" + "\n".join(archive_lines) + "\n", encoding="utf-8")
+
+    print(f"✅ Moved {len([l for l in archive_lines if l.startswith('## Entry')])} entries to archive.")
+    print("────────────────────────────────────────")
 
 # ------------------------------------------------------------------
 # MODULE 7: SCAFFOLDING & BOILERPLATE
@@ -1101,11 +1247,20 @@ def main():
     p_cc = p_cks.add_parser("code")
     p_cc.add_argument("file")
     p_cc.add_argument("--strict", action="store_true", default=False)
+    p_cc.add_argument("--fix", action="store_true", default=False)
 
     p_cd = p_cks.add_parser("doc")
     p_cd.add_argument("file")
     p_cd.add_argument("--agents", action="store_true", default=False)
     p_cd.add_argument("--stale",  action="store_true", default=False)
+
+    p_doc = subparsers.add_parser("doc"); p_docs = p_doc.add_subparsers(dest="sub")
+    p_doc_check = p_docs.add_parser("check")
+    p_doc_check.add_argument("file", nargs="?", default="docs/space/nina_update_log.md")
+    p_doc_check.add_argument("--fix", action="store_true", default=False)
+    p_doc_check.add_argument("--agents", action="store_true", default=False)
+    p_doc_check.add_argument("--stale", action="store_true", default=False)
+    p_docs.add_parser("consolidate")
 
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
     p_sym = p_cs.add_parser("symbol")
@@ -1166,6 +1321,7 @@ def main():
     p_reg.add_argument("--description", help="Short summary of what it does")
     p_reg.add_argument("--role",        default="tool", help="Role (tool, script, task)")
 
+    subparsers.add_parser("install-hooks")
     p_run = subparsers.add_parser("run")
     p_run.add_argument("name",          help="Name of the capability to run")
     p_run.add_argument("extra_args",    nargs=argparse.REMAINDER, help="Arguments passed to the tool")
@@ -1188,6 +1344,11 @@ def main():
     elif args.command == "check":
         if args.sub == "code": cmd_check_code(args)
         elif args.sub == "doc": cmd_check_doc(args)
+    elif args.command == "doc":
+        if args.sub == "check": cmd_check_doc(args)
+        elif args.sub == "consolidate": cmd_doc_consolidate(args)
+    elif args.command == "install-hooks":
+        cmd_install_hooks(args)
     elif args.command == "code":
         if args.sub == "outline": cmd_code_outline(args)
         elif args.sub == "dep-map": cmd_code_dep_map(args)
