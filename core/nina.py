@@ -138,10 +138,19 @@ class NinaOS:
         self.scheduler = TaskScheduler(self)
         self.scheduler.start()
 
-        self.system_prompt = SYSTEM_PROMPT_TEMPLATE.format(
-            datetime=time.strftime("%Y-%m-%dT%H:%M:%S+0600"), memory_context="")
+        # If routing through NinaGate, strip redundant instructions
+        from urllib.parse import urlparse
+        api_base = getattr(self.config, "onebrain_api_base", "") or ""
+        parsed_url = urlparse(api_base)
 
-        self.system_prompt += """
+        if parsed_url.port == 8765 or "8765" in api_base:
+            self.system_prompt = ""
+            if hasattr(self.router, "http") and self.router.http:
+                self.router.http.headers["X-NINA-ROLE"] = "agent"
+        else:
+            self.system_prompt = SYSTEM_PROMPT_TEMPLATE.format(
+                datetime=time.strftime("%Y-%m-%dT%H:%M:%S+0600"), memory_context="")
+            self.system_prompt += """
 
 ## RESPONSE STYLE & FORMATTING (enforce always)
 - Lead directly with the core answer. No introduction, no conversational preamble.
