@@ -2344,5 +2344,12 @@
 
 **Verification:** git push OK, nina.service activating
 
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+---
+
+## Entry 212 — 2026-06-12 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** nina_update_log.md,.gemini/,core/utils.py,data/router_cache.json,jules_mega_task.md,merge_prs.sh,merge_remaining_prs.sh,merge_remaining_prs2.sh,merge_remaining_prs3.sh,resolve_conflicts_task5.py,resolve_ninaflash.py,resolve_task2.py,resolve_task6.py,tools/nina_mcp_server.py
+
+**Verification:** git push OK, nina.service activating
