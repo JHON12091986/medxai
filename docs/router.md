@@ -19,6 +19,13 @@ HybridRouter V4 does not just pick a model at random; it employs a weighted scor
 
 This ensures that NINA routes heavily toward providers that are currently fast, reliable, and well below their quota limits.
 
+## Live Quota Tracker (v14.0)
+
+NinaGate features a **Live Quota Tracker** to protect cloud API limits and automate routing shifts:
+- **Monitoring:** Tracks total requests per provider (e.g., Gemini Flash).
+- **Auto-Downgrade:** When a limit (e.g., 900 req/day) is approached, NinaGate automatically skips that provider and routes to local NinaFlash (Ollama) or next-tier cloud models.
+- **Daily Reset:** Quotas reset automatically at **1 PM BD** (Midnight PT), ensuring continuous operation without manual intervention.
+
 ## CircuitBreaker Pattern
 
 To prevent NINA from hanging or cascading into total failure when a specific provider experiences an outage, HybridRouter V4 implements a strict CircuitBreaker pattern. If a provider fails multiple times in rapid succession, the CircuitBreaker trips, temporarily removing that provider from the active pool. The router will automatically fallback to the next highest-scoring provider, ensuring seamless user experience.

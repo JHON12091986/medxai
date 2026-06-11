@@ -4,16 +4,19 @@
 
 ninaflash is NINA's dedicated Local Executor. Far more than just a utility script, it serves as the critical local engine responsible for deploying changes, managing urgent hotfixes, and merging pull requests created by asynchronous cloud builders like Jules. It functions as NINA's internal muscle, handling all logic requiring local system interaction while seamlessly integrating with external processes.
 
-## Command Line Interface (CLI)
+## Surgical Code Intelligence (v14.0)
 
-The `bin/ninaflash` interface (Antigravity CLI) allows execution of critical commands to maintain NINA's integrity:
+ninaflash v6.1+ features a "Surgical Code Intelligence" layer designed for extreme token efficiency. It uses local AST (Abstract Syntax Tree) parsing to extract only what is needed:
 
-- `ninaflash status` — Checks active file locks (`jules_lock.txt`), git workspace health, and task backlog status.
-- `ninaflash pr merge <PR_NUMBER>` — Executes the rigorous merge pipeline: runs Pyflakes linting and Py_compile checks, merges the specified PR into main, updates the backlog task status, clears locks, and triggers the `./nina_sync.sh` deployment script.
-- `ninaflash dispatch <TASK_ID>` — Locks the relevant target files to prevent concurrency issues, updates the backlog status to `IN_PROGRESS`, and securely transmits the task specification to the Jules asynchronous cloud API.
-- `ninaflash aider <TASK_ID>` — Launches the `aider` interactive pair-programming tool, preloading it with the relevant task context and files to facilitate safe local editing.
-- `ninaflash doctor` — Parses NINA's logs and systemd journals to locate, format, and display the most recent Python traceback to aid in rapid debugging.
-- `ninaflash ninaloop` — Activates the continuous autonomous developer loop, engaging NINA's self-improvement cycle.
+- `nf code pack <file>` — Distills a large Python file into a "Context Pack": a skeletal summary containing only class/function signatures and docstrings. Cuts token usage by 90% for codebase exploration.
+- `nf code symbol --file <f> --name <n>` — Extracts the exact implementation of a specific class or function.
+- `nf query "<task>"` — A local capability introspection tool. It checks if a task (e.g., "format code") can be handled locally by your CPU before wasting tokens on cloud reasoning.
+
+## Atomic Maintenance (Maintainer Mode)
+
+The `maintain` module handles the high-turn "Daily Maintenance" loop automatically:
+
+- `nf maintain pr <id> --task <id> --title <t> --summary <s>` — Atomically rebases a PR, surgically resolves documentation regressions (preserving v13+ headers locally), marks the backlog task as DONE, and appends the update log.
 
 ## Universe-Mode Kernel
 
