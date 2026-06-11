@@ -523,6 +523,19 @@ class HybridRouter:
 
     async def route(self, prompt: str, messages: list, task: ClassifiedTask, force_local: bool = False) -> str:
         req_id = uuid.uuid4().hex[:8]
+
+        # Check quota exhaustion
+        quota_file = "data/quota_state.json"
+        if not force_local and os.path.exists(quota_file):
+            try:
+                with open(quota_file, "r") as qf:
+                    q_data = json.load(qf)
+                    if q_data.get("quota_exhausted", False):
+                        logger.warning("QUOTA_GATE_ACTIVE -> Forcing Local Fallback", extra={"req_id": req_id})
+                        force_local = True
+            except Exception:
+                pass
+
         cached = self.cache.get(prompt, task.task_type, messages)
         if cached:
             self.cost.record("CACHE", task.task_type, 0, 0, 0.0, 0, 0, cached=True, req_id=req_id)

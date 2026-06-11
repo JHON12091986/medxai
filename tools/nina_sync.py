@@ -246,6 +246,16 @@ class NINASync:
 
             self._last_commit_time = time.time()
             self.log_event("push", commit=commit_msg, files=len(rel_files))
+
+            # Save the sync commit hash
+            try:
+                commit_hash = self._run_git(["rev-parse", "HEAD"]).strip()
+                last_commit_file = self.repo_path / "data" / ".last_sync_commit"
+                last_commit_file.parent.mkdir(exist_ok=True)
+                last_commit_file.write_text(commit_hash)
+            except Exception as e:
+                self.log_event("incremental_sync_error", msg=f"Failed to record last sync commit: {e}")
+
             from core.observability import get_hub
             get_hub().set_sync_ts()
 
@@ -345,6 +355,24 @@ class NINASync:
 
     def start(self):
         self.stop_requested = False
+
+        # Lightning Sync: Incremental backup logic
+        try:
+            last_commit_file = self.repo_path / "data" / ".last_sync_commit"
+            sync_base = "HEAD~1"
+            if last_commit_file.exists():
+                sync_base = last_commit_file.read_text().strip()
+
+            diff_out = self._run_git(["diff", "--name-only", sync_base, "HEAD"])
+            for line in diff_out.splitlines():
+                if line.strip():
+                    fpath = self.repo_path / line.strip()
+                    if fpath.exists():
+                        self._schedule_commit(str(fpath))
+            self.log_event("incremental_sync", msg=f"Scheduled {len(self._pending_files)} changed files from diff.")
+        except Exception as e:
+            self.log_event("incremental_sync_error", msg=f"Failed diff: {e}")
+
         self._save_state()
 
         self.observer = Observer()

@@ -165,6 +165,13 @@ Per-session target: fewer than 20 banned tool calls total.
 
 Route EVERY subtask through this tree before executing:
 
+    Require benchmarking or empirical validation of routing?
+    └─ YES → 'nf bench' (Compare cloud vs hybrid stats locally)
+
+    Gemini Flash quota exhausted (> 900 req today) or Quota Downgrade active?
+    └─ YES → Force local inference regardless of complexity (NinaGate auto-fallback)
+
+
     Purely mechanical? (rename, format, sort, grep, boilerplate, docstring)
     └─ YES → NinaFlash (CPU, local, free, unlimited)
 

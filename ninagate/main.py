@@ -126,8 +126,10 @@ class QuotaManager:
 
     def save(self):
         try:
+            os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
+            exhausted = any(v > 900 for v in self.quotas.values())
             with open(self.file_path, "w") as f:
-                json.dump({"quotas": self.quotas, "last_reset": self.last_reset}, f)
+                json.dump({"quotas": self.quotas, "last_reset": self.last_reset, "quota_exhausted": exhausted}, f)
         except Exception: pass
 
     def check_reset(self):
@@ -153,7 +155,7 @@ class QuotaManager:
         self.check_reset()
         return self.quotas.get(provider, 0) < limit
 
-QUOTA_FILE = os.path.join(os.path.dirname(__file__), "quotas.json")
+QUOTA_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "quota_state.json")
 quota_manager = QuotaManager(QUOTA_FILE)
 health_tracker = {}
 
