@@ -128,6 +128,7 @@ async def test_jules_api_smoke():
             mock_response = MagicMock()
             mock_response.status_code = 200
             mock_response.json.return_value = {"sources": [{"name": "mocked_source"}]}
+            mock_response.status_code = 200
             mock_get.return_value = mock_response
 
             result = await jules_api.run("/jules sources")

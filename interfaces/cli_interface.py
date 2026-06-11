@@ -128,6 +128,29 @@ async def run_cli():
         except Exception:
             return ""
 
+    # Session Bridge context load
+    memory_path = "data/memory/session_summaries.md"
+    try:
+        with open(memory_path, 'r') as mf:
+            session_summary = mf.read()
+            if session_summary.strip():
+                print(f"Context loaded from previous session:\n{session_summary.strip()}")
+    except FileNotFoundError:
+        pass
+
+    try:
+        with open("AGENTS.md", 'r') as af:
+            agent_ctx = af.read()
+    except FileNotFoundError: agent_ctx = ""
+
+    try:
+        with open("docs/memory.md", 'r') as dmf:
+            doc_ctx = dmf.read()
+    except FileNotFoundError: doc_ctx = ""
+
+    if session_summary or agent_ctx or doc_ctx:
+        task_str = f"SYSTEM FACT: Review AGENTS.md and memory.\n\n[SESSION SUMMARY]\n{session_summary}\n\n[AGENT CONTEXT]\n{agent_ctx}\n\n[MEMORY CONTEXT]\n{doc_ctx}\n\n{task_str}"
+
     # Classify the task
     task = await classify_task(task_str, local_fast)
 
@@ -139,6 +162,16 @@ async def run_cli():
         result = await agent.run(task_str, task, [])
         print(result)
     finally:
+        # Session-End Auto-Update Protocol
+        try:
+            summary_prompt = f"Summarize this session and capture actionable technical debt and routing failures.\nTask: {task_str}\nResult: {result}"
+            task_cls = ClassifiedTask("quick", 300, False, False)
+            summary_text, _, _, _ = await router._call_provider("LOCALFAST", [{"role":"user", "content": summary_prompt}], task_cls)
+            with open(memory_path, "a") as mf:
+                mf.write(f"\n## Session Summary\n{summary_text}\n")
+        except Exception:
+            pass
+
         # Clean up router connection
         await router.close()
 
