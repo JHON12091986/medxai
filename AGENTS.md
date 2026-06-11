@@ -117,7 +117,7 @@ To prevent "Black Box" reasoning (thinking without stimuli):
    → Escalate ALL changes to these files to at minimum Gemini 3 Flash.
 
 2. After ANY file edit, run immediately:
-   python3 -m py_compile <file> && pyflakes <file>
+   python3 -m py_compile <file> && python3 -m pyflakes <file>
    Fix with NinaFlash first. Escalate to cloud only if NinaFlash fails twice.
 
 3. Conventional commits always:

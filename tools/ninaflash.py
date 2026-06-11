@@ -642,7 +642,7 @@ def cmd_check_code(args):
     syntax_label = "PASS" if syntax_code == 0 else f"FAIL — {syntax_err}"
 
     # CHECK 2
-    pyflakes_code, pyflakes_out, pyflakes_err = run_cmd(f"pyflakes {path}")
+    pyflakes_code, pyflakes_out, pyflakes_err = run_cmd(f"python3 -m pyflakes {path}")
     pyflakes_label = "PASS" if pyflakes_code == 0 else f"FAIL — {pyflakes_out}"
 
     # CHECK 3
