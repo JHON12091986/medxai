@@ -70,6 +70,8 @@ PROVIDERS_TIER3 = {
         "key_field": "openrouter_api_key",
     },
 }
+# Precomputed to avoid O(N) dict merging overhead in hot paths like routing lookups
+ALL_PROVIDERS = {**PROVIDERS_TIER1, **PROVIDERS_TIER2, **PROVIDERS_TIER3}
 LOCAL_PROVIDERS = {
     "LOCALFAST": {"model": "qwen2.5:1.5b"},
     "LOCALHEAVY": {"model": "qwen2.5:7b"},
@@ -566,7 +568,7 @@ class HybridRouter:
     def _has_key(self, pid: str) -> bool:
         if pid in LOCAL_PROVIDERS or pid in PROVIDERS_TIER1:
             return True
-        meta = cast(dict, (PROVIDERS_TIER2 | PROVIDERS_TIER3).get(pid, {}))
+        meta = cast(dict, ALL_PROVIDERS.get(pid, {}))
         kf = meta.get("key_field")
         key = getattr(self.config, kf, None) if kf else None
         return bool(key and str(key).strip())
@@ -615,9 +617,7 @@ class HybridRouter:
             d = cast(dict, r.json())
             return d["message"]["content"], 0, 0, (time.time() - start) * 1000
 
-        meta = cast(
-            dict, (PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3)[pid]
-        ).copy()
+        meta = cast(dict, ALL_PROVIDERS[pid]).copy()
 
         discovered_model = await self._model_discovery.get_model(pid)
         fallback = meta.get("model", "default")
@@ -989,7 +989,7 @@ class HybridRouter:
                 logger.warning("idle_monitor_error %s", e)
 
     async def activate_key(self, provider: str, key: str) -> str:
-        meta = cast(dict, (PROVIDERS_TIER2 | PROVIDERS_TIER3).get(provider) or {})
+        meta = cast(dict, ALL_PROVIDERS.get(provider) or {})
         if not meta:
             return f"Unknown provider {provider}"
         kf = meta.get("key_field")

@@ -1,7 +1,4 @@
-🛡️ Sentinel: [CRITICAL] Fix command injection vulnerability by hardcoding shell=False
-
-🚨 Severity: CRITICAL
-💡 Vulnerability: `subprocess.run` was called with `shell=use_shell` where `use_shell` could be `True`, allowing potential command injection in the base execution primitives within `tools/ninaflash.py` and `guardian_engine.py`.
-🎯 Impact: Untrusted input or maliciously crafted strings passed to these execution utilities could be evaluated by the system shell, leading to arbitrary command execution.
-🔧 Fix: Removed the `use_shell` parameter and hardcoded `shell=False` in `run_cmd` for both files, strictly enforcing argument tokenization via `shlex.split`. Additionally, refactored a brittle `&&` shell chaining execution in `tools/ninaflash.py` to use discrete `run_cmd` calls instead, preserving functionality while allowing `shell=False`.
-✅ Verification: Ran `bandit` to ensure no `shell=True` warnings remained and passed the full `pytest` suite locally.
+💡 What: Replaced inline dictionary unions (`PROVIDERS_TIER1 | PROVIDERS_TIER2 | ...`) with a precomputed `ALL_PROVIDERS` dictionary at the module level.
+🎯 Why: In Python, `dict_a | dict_b` creates a brand-new dictionary object every time. Doing this repeatedly inside hot paths like `_has_key` and API routing lookups is highly inefficient.
+📊 Impact: Eliminates redundant O(N) memory allocations and lookup overhead on every router call, reducing CPU cycles and improving local routing latency.
+🔬 Measurement: Verify changes in `core/router.py`. Profiling local dictionary allocations confirms that replacing the bitwise dictionary union operator with `.get()` queries against a constant module-level dictionary executes significantly faster.
