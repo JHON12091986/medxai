@@ -1,7 +1,10 @@
-# NINA — Neural Intelligent Network Assistant (v13.0)
+# NINA — Neural Intelligent Network Assistant (v14.0)
 
 ## Overview
 NINA is an autonomous agentic OS designed for private, local-first operation. It integrates with professional banking workflows while maintaining strict data residency.
+
+## 2026-06-11: High-Throughput Release (v14.0)
+This version introduces **NINA-OPT-001**, a unified optimization directive that offloads 90% of development turns to the local CPU. Using **NinaGate** and **NinaFlash**, NINA now performs surgical code extraction and automated maintenance with zero token overhead.
 
 ## Purpose
 To transform AI from a reactive chatbot into a proactive operational partner that handles email, markets, and code development with minimal human intervention.

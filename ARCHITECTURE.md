@@ -84,3 +84,9 @@ NINA relies on multiple safeguards to ensure security:
 ## Deployment Architecture
 
 NINA runs as a persistently managed background service via `systemd` (`nina.service` and `nina-dashboard.service`). It heavily relies on local Ollama models for localized processing capability to maintain uptime during connectivity outages or rate-limit saturation. The workflow leverages a strictly isolated worktree branching strategy, allowing autonomous agents to operate parallelly without destabilizing the primary `main` branch.
+
+## THE OPTIMIZATION OFFENSIVE (v14.0 - NINA-OPT-001)
+NINA prioritizes local hardware. Every subtask is routed through the **NinaGate** classification tree.
+1. **Local-First:** NinaFlash (Qwen-2.5-Coder:7B) handles mechanical tasks and small edits for $0.
+2. **Surgical Retrieval:** Files >100 lines are surgically retrieved via AST (Abstract Syntax Tree) primitives in `ninaflash`.
+3. **Unified Directive:** A single source of truth (`AGENTS.md`) governs all coders, ensuring zero context drift.

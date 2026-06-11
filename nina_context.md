@@ -1,14 +1,17 @@
 ---
 title: NINA Context
-version: 13.0
+version: 14.0
 updated: 2026-06-11
-stage: "A✅ B✅ C(partial) M(optimization)🚀"
+stage: "A✅ B✅ C✅ M(high-throughput)🚀"
 ---
 
 # NINA Context — Attach to Every New Thread
 
 ## Overview
 A comprehensive state-of-the-union document for NINA, mapping her identity, environment, and development status. This is the canonical source for new agent threads to understand their context.
+
+## 2026-06-11 Update: Optimization Offensive (v14.0)
+NINA has entered the "High-Throughput" phase. All agents now operate under **NINA-OPT-001**, prioritizing local CPU/GPU execution (NinaFlash/NinaGate) to reduce cloud token costs by 90%. Unified context is now maintained exclusively in `AGENTS.md`.
 
 ## Purpose
 To provide instant alignment for AI agents (Jules, Perplexity, ninaflash) on project architecture, owner preferences, and the current phase of autonomous development.
