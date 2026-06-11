@@ -310,7 +310,12 @@ lines.append("## 1. Snapshot")
 lines.append(f"- Generated: {time.strftime('%Y-%m-%d %H:%M %Z')}")
 lines.append(f"- Git HEAD: {head[0] if head else 'unknown'}")
 lines.append(f"- Last commit: {head[1] if len(head)>1 else 'unknown'}")
-lines.append(f"- Service: {subprocess.getoutput('systemctl is-active nina 2>/dev/null || echo unknown')}\n")
+svc_status = subprocess.getoutput('systemctl is-active nina 2>/dev/null || echo unknown').strip()
+svc_detail = subprocess.getoutput('systemctl status nina --no-pager -n 5 2>/dev/null || echo unavailable')
+lines.append(f"- Service: {svc_status}")
+lines.append(f"```")
+lines.append(svc_detail.strip())
+lines.append(f"```")
 
 # 2. Active Jules sessions
 lines.append("## 2. Active Jules Sessions (live)")
@@ -387,6 +392,14 @@ cheatsheet = [
 ]
 for f,p,r in cheatsheet:
     lines.append(f"| {f} | {p} | {r} |")
+
+lines.append("## 8. PRs Ready to Merge (agy merge candidates)")
+pr_list = subprocess.getoutput(
+    "gh pr list --state open --json number,title,headRefName "
+    "--jq '.[] | \"#\\(.number) \\(.title) [\\(.headRefName)]\"' 2>/dev/null || echo 'gh CLI unavailable'"
+).strip()
+lines.append(pr_list if pr_list else "- No open PRs")
+lines.append("")
 
 size = len("\n".join(lines))
 lines.append(f"\n---\n_Feed size: {size} bytes_")
