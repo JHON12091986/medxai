@@ -31,7 +31,7 @@ This model is the heart of NINA's architecture:
 |---|---|---|---|
 | Perplexity Enterprise Pro | Architect + Overwatch | Claude Sonnet 4.6 | Strategic direction, specs, post-execution review |
 | Jules (jules.google.com) | Async Cloud Coder | Gemini 3.1 Pro | Multi-file feature builds, 14 concurrent session limit |
-| ninaflash (nf) | Local Muscle | Gemini 3 Flash | Local research, syntax fixing, PR merges, triage |
+| ninaflash (nf) | Local Muscle | gemini-3-flash-preview | Local research, syntax fixing, PR merges, triage |
 
 ## ninaflash — The Local Muscle
 
@@ -99,7 +99,7 @@ NINA's memory orchestrator in `core/memory.py`:
 
 | Tool | Model | Daily Quota | Reset |
 |---|---|---|---|
-| ninaflash (agy) | Gemini 3 Flash | ~5h rolling | Rolling |
+| ninaflash (agy) | gemini-3-flash-preview | ~5h rolling | Rolling |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
 | Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |

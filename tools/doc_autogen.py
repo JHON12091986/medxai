@@ -11,8 +11,6 @@ def extract_facts():
         with open(".gemini/settings.json", "r") as f:
             data = json.load(f)
             facts["MODEL"] = data.get("model", "unknown")
-            # If it's a preview name, clean it up for display if needed? 
-            # No, keep it literal as requested.
     except Exception as e:
         print(f"Error extracting MODEL: {e}")
         facts["MODEL"] = "unknown"
@@ -33,7 +31,6 @@ def extract_facts():
     try:
         with open("core/router.py", "r") as f:
             content = f.read()
-            # Count keys in provider dicts
             count = 0
             for block_name in ["PROVIDERS_TIER1", "PROVIDERS_TIER2", "PROVIDERS_TIER3"]:
                 block_match = re.search(fr"{block_name} = \{{(.*?)\}}", content, re.DOTALL)
@@ -58,19 +55,13 @@ def patch_file(file_path, pattern, replacement, facts):
         with open(file_path, "r") as f:
             content = f.read()
         
-        # Prepare replacement with facts
-        # Note: we use double backslashes for group references in re.sub
+        # Use lambda for replacement to avoid group reference disambiguation issues
+        # Or use \g<1> syntax.
         final_replacement = replacement.format(**facts)
         
         if not re.search(pattern, content, re.MULTILINE | re.DOTALL):
             print(f"SKIP: pattern not found in {file_path}")
             return False
-        
-        # Use lambda for replacement to avoid group reference issues with literal backslashes if any
-        # But here we want group references from the pattern.
-        # Actually, let's just use \1, \2 etc and hope for the best.
-        # The error "invalid group reference 18" was likely due to something in the format() call
-        # or the way re.sub handles backslashes.
         
         new_content = re.sub(pattern, final_replacement, content, flags=re.MULTILINE | re.DOTALL)
         
@@ -89,36 +80,34 @@ def main():
 
     # ARCHITECTURE.md updates
     # 1. NinaGate Proxy section - Model
-    # Pattern: ### 3. NinaGate Proxy ... Gemini ... usage
     if patch_file("ARCHITECTURE.md", 
                   r"(### 3\. NinaGate Proxy.*?Gemini\s+)(.*?)(?=\s+usage)", 
-                  r"\1{MODEL}", facts):
+                  r"\g<1>{MODEL}", facts):
         patched.append("ARCHITECTURE.md (Model)")
     
     # 2. NinaGate Proxy section - Port
     if patch_file("ARCHITECTURE.md", 
                   r"(### 3\. NinaGate Proxy.*?port\s+)(\d+)", 
-                  r"\1{NINAGATE_PORT}", facts):
+                  r"\g<1>{NINAGATE_PORT}", facts):
         patched.append("ARCHITECTURE.md (Port)")
 
     # README.md updates
     # 1. Three-Tier Agent Model table row for ninaflash
     if patch_file("README.md", 
                   r"(\| ninaflash \(nf\) \| Local Muscle \| )(.*?)(\s+\|)", 
-                  r"\1{MODEL}\3", facts):
+                  r"\g<1>{MODEL}\g<3>", facts):
         patched.append("README.md (Model-Table)")
 
     # 2. Tool Quota Cascade table row for ninaflash
     if patch_file("README.md", 
                   r"(\| ninaflash \(agy\) \| )(.*?)(\s+\|)", 
-                  r"\1{MODEL}\3", facts):
-        patched.append("README.md (Model-Quota)")
+                  r"\g<1>{MODEL}\g<3>", facts):
+        patched.append("README.append (Model-Quota)")
 
     # docs/nina_proxy_usage.md updates
-    # Find port in URL
     if patch_file("docs/nina_proxy_usage.md", 
                   r"(http://localhost:)(\d+)", 
-                  r"\1{NINAGATE_PORT}", facts):
+                  r"\g<1>{NINAGATE_PORT}", facts):
         patched.append("docs/nina_proxy_usage.md (Port)")
 
     # nina_update_log.md update
