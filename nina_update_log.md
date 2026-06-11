@@ -2383,3 +2383,13 @@
 **Files changed:** docs/space/nina_index.json,docs/space/nina_index.md,tools/update_index.py,.gemini/,data/router_cache.json,docs/nina_v14_blueprint.md,jules_mega_task.md
 
 **Verification:** git push OK, nina.service activating
+
+---
+
+## Entry 216 — 2026-06-12 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/nina_repo_hygiene_dashboard.md,.gemini/,data/router_cache.json,jules_mega_task.md
+
+**Verification:** git push OK, nina.service activating
