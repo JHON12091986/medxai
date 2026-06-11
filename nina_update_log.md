@@ -2001,6 +2001,7 @@
 
 ---
 
+
 ## Entry 175 — 2026-06-11 · docs: major v13.0 documentation refresh and quality alignment
 
 **Triggered by:** User request to update documentations and ensure alignment with the new optimization offensive.
@@ -2035,3 +2036,22 @@
 
 **Rollback path:**
 - `git revert -m 1 HEAD`
+---
+
+## Entry 177 — 2026-06-11 · docs: Implement AG-M-04 DOC-COMP Instruction Compression
+
+**Triggered by:** PR #101 merge (AG-M-04).
+
+**What changed:**
+- Compressed AGENTS.md into a high-density, token-efficient directive list using Goal/Restraint/Action format.
+- Moved verbose workflow procedures to `docs/agent-memory/workflow.md`.
+- Moved reusable logging and merge patterns to `docs/agent-memory/patterns.md`.
+- Reduced AGENTS.md size by >80%.
+
+**What was verified:**
+- Ran `wc -c` to verify file size reduction of AGENTS.md.
+- Manually checked AGENTS.md to confirm constraints and pointers are preserved.
+
+**Rollback path:**
+- `git checkout HEAD -- AGENTS.md nina_update_log.md`
+
