@@ -223,6 +223,10 @@ async def stream_response(response: httpx.Response, h: ProviderHealth, start_tim
 async def list_models():
     return JSONResponse(status_code=200, content={"object": "list", "data": available_models_cache})
 
+@app.get("/health")
+async def health():
+    return {"status": "ok", "timestamp": datetime.datetime.now().isoformat()}
+
 async def classify_request(payload):
     messages = payload.get("messages", [])
     if not messages: return "SIMPLE"

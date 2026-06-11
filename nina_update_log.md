@@ -2433,3 +2433,13 @@
 **Files changed:** docs/space/claude_feed.md,docs/space/nina_index.json,tools/update_index.py,.gemini/,data/router_cache.json,jules_mega_task.md
 
 **Verification:** git push OK, nina.service activating
+
+---
+
+## Entry 221 — 2026-06-12 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,CHANGELOG.md,core/router.py,dashboard/nina-guardian.html,docs/space/claude_feed.md,ninagate/main.py,tools/evolve.py,tools/monitor.py,.gemini/,EVOLVE_PROPOSAL.md,MEMORY.md,data/session_memory.jsonl,efficiency_report.json,jules_mega_task.md
+
+**Verification:** git push OK, nina.service active

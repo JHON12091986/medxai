@@ -781,6 +781,13 @@ class HybridRouter:
         else:
             provider_order = self._ordered_providers(task, force_local)
 
+        # Optimization: Parallel Pre-fetch for Complex Tasks
+        prefetch_task = None
+        if not force_local and task.task_type in ("coding", "research", "multilingual"):
+            local_pid = next((p for p in provider_order if p.startswith("LOCAL")), None)
+            if local_pid:
+                prefetch_task = asyncio.create_task(self.call_provider(local_pid, messages, task))
+
         for pid in provider_order:
             h = self.health[pid]
             rl = cast(dict, RATELIMITS).get(pid, {})
@@ -790,7 +797,13 @@ class HybridRouter:
                 if w > 0:
                     await asyncio.sleep(w)
             try:
-                text, in_t, out_t, lat = await self.call_provider(pid, messages, task)
+                # If this is the local provider we are already pre-fetching, wait for it
+                if prefetch_task and pid.startswith("LOCAL"):
+                    text, in_t, out_t, lat = await prefetch_task
+                    prefetch_task = None # Consumed
+                else:
+                    text, in_t, out_t, lat = await self.call_provider(pid, messages, task)
+                
                 h.record_success(lat, in_t + out_t)
                 self.cost.record(
                     pid, task.task_type, in_t, out_t, 0.0, lat, lat, req_id=req_id
@@ -1018,11 +1031,6 @@ class HybridRouter:
             lines.append(
                 f"{pid:<14} {state:<18} score={h.composite_score(pid):.2f}"
                 f" lat={h.avg_latency_ms():.0f}ms sr={h.success_rate()*100:.0f}%"
-                f" tok={h.tokens_today}"
-            )
-        lines.append(f"  today ${self.cost.daily_cost_usd:.4f}")
-        return "\n".join(lines)
-_latency_ms():.0f}ms sr={h.success_rate()*100:.0f}%"
                 f" tok={h.tokens_today}"
             )
         lines.append(f"  today ${self.cost.daily_cost_usd:.4f}")
