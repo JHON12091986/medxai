@@ -92,6 +92,64 @@ class ProviderHealth:
         self.failure_count += 1
         self.cb.record_failure(cooldown_s)
 
+class QuotaManager:
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.quotas = {"gemini": 0}
+        self.last_reset = 0.0
+        self.load()
+
+    def load(self):
+        if os.path.exists(self.file_path):
+            try:
+                with open(self.file_path, "r") as f:
+                    data = json.load(f)
+                    self.quotas = data.get("quotas", {"gemini": 0})
+                    self.last_reset = data.get("last_reset", 0.0)
+                self.check_reset()
+            except Exception: pass
+
+    def save(self):
+        try:
+            with open(self.file_path, "w") as f:
+                json.dump({"quotas": self.quotas, "last_reset": self.last_reset}, f)
+        except Exception: pass
+
+    def check_reset(self):
+        # Reset at 1PM BD (midnight PT approx). BD is UTC+6.
+        # Midnight PT is 7AM or 8AM UTC. Let's use 1PM BD (07:00 UTC).
+        now = time.time()
+        now_dt = datetime.datetime.fromtimestamp(now, datetime.timezone.utc)
+        reset_hour = 7 # 7AM UTC = 1PM BD
+        
+        # If last_reset was before the most recent 7AM UTC, reset.
+        last_reset_dt = datetime.datetime.fromtimestamp(self.last_reset, datetime.timezone.utc)
+        
+        # Find the most recent 7AM UTC
+        recent_reset = now_dt.replace(hour=reset_hour, minute=0, second=0, microsecond=0)
+        if now_dt < recent_reset:
+            recent_reset -= datetime.timedelta(days=1)
+            
+        if last_reset_dt < recent_reset:
+            logger.info("Quota reset triggered.")
+            for k in self.quotas: self.quotas[k] = 0
+            self.last_reset = now
+            self.save()
+
+    def increment(self, provider):
+        self.check_reset()
+        if provider in self.quotas:
+            self.quotas[provider] += 1
+            self.save()
+
+    def is_available(self, provider, limit=900):
+        self.check_reset()
+        return self.quotas.get(provider, 0) < limit
+
+import datetime
+QUOTA_FILE = os.path.join(os.path.dirname(__file__), "quotas.json")
+quota_manager = QuotaManager(QUOTA_FILE)
+
 health_tracker = {}
 
 def load_providers():
@@ -208,6 +266,12 @@ async def proxy_chat_completions(request: Request):
         if target_provider_name and p.get("name") != target_provider_name:
             continue
             
+        # 0. Quota Check (unless explicitly targeted)
+        if not target_provider_name and p.get("name") in quota_manager.quotas:
+            if not quota_manager.is_available(p["name"]):
+                logger.warning(f"Quota exceeded for {p['name']}, skipping.")
+                continue
+
         api_key = os.getenv(p.get("api_key_env", "")) if p.get("api_key_env") else None
         if not api_key and p.get("name") != "ollama":
             continue
@@ -296,6 +360,7 @@ async def proxy_chat_completions(request: Request):
                     break # Try next provider in cascade
 
                 logger.info(f"Provider {provider_name} succeeded in {(time.time() - start_time)*1000:.0f}ms.")
+                quota_manager.increment(provider_name)
                 if is_stream:
                     return StreamingResponse(
                         stream_response(response, h, start_time),

@@ -1085,6 +1085,55 @@ def cmd_kernel_upgrade(args):
     print("Kernel upgrade initialized.")
 
 
+def cmd_context_pack(args):
+    """[041] Context Pack: Distill a file into a token-efficient skeletal summary."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+
+    try:
+        content = path.read_text(encoding="utf-8")
+        tree = ast.parse(content)
+        
+        print(f"--- CONTEXT PACK: {path.name} ---")
+        print(f"Path: {path.relative_to(REPO_ROOT)}")
+        print(f"Size: {len(content)} bytes | {len(content.splitlines())} lines\n")
+
+        for node in ast.iter_child_nodes(tree):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                doc = ast.get_docstring(node)
+                sig = f"def {node.name}({ast.unparse(node.args)}):"
+                print(f"{sig} {'\"\"\"' + doc.splitlines()[0] + '...\"\"\"' if doc else '...'}")
+            elif isinstance(node, ast.ClassDef):
+                doc = ast.get_docstring(node)
+                print(f"class {node.name}: {'\"\"\"' + doc.splitlines()[0] + '...\"\"\"' if doc else '...'}")
+                for item in node.body:
+                    if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                        m_doc = ast.get_docstring(item)
+                        m_sig = f"    def {item.name}({ast.unparse(item.args)}):"
+                        print(f"{m_sig} {'\"\"\"' + m_doc.splitlines()[0] + '...\"\"\"' if m_doc else '...'}")
+
+        print("\n--- END PACK ---")
+    except Exception as e:
+        print(f"❌ Context Packing failed: {e}")
+
+def cmd_query_capability(args):
+    """[042] Query: Check if a task type can be handled locally by NinaFlash."""
+    mechanical_keywords = [
+        "format", "lint", "status", "backlog", "log", "symbol", "signature", 
+        "outline", "merge", "pr", "sync", "stats", "hardware", "temp"
+    ]
+    task = args.task.lower()
+    
+    can_handle = any(kw in task for kw in mechanical_keywords)
+    if can_handle:
+        print(f"✅ NinaFlash can handle '{args.task}' locally.")
+        print("Recommendation: Use 'nf' commands instead of cloud escalation.")
+    else:
+        print(f"❓ NinaFlash might not handle '{args.task}' natively.")
+        print("Recommendation: Escalate to Gemini Flash or Pro.")
+
 # ------------------------------------------------------------------
 # MODULE 11: LOG COMPRESSION & ROTATION
 # ------------------------------------------------------------------
@@ -1309,7 +1358,11 @@ def main():
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
     p_cs.add_parser("index")
+    p_cs.add_parser("pack").add_argument("file")
     
+    p_query = subparsers.add_parser("query")
+    p_query.add_argument("task", help="Description of the task to query")
+
     p_maintain = subparsers.add_parser("maintain"); p_mts = p_maintain.add_subparsers(dest="sub")
     p_mpr = p_mts.add_parser("pr")
     p_mpr.add_argument("pr_id", help="PR ID to merge")
@@ -1397,6 +1450,8 @@ def main():
         elif args.sub == "symbol": cmd_code_symbol(args)
         elif args.sub == "sigs": cmd_code_sigs(args)
         elif args.sub == "doc": cmd_code_doc(args)
+        elif args.sub == "pack": cmd_context_pack(args)
+    elif args.command == "query": cmd_query_capability(args)
     elif args.command == "pr":
         if args.sub == "reconcile": cmd_pr_reconcile(args)
     elif args.command == "task":

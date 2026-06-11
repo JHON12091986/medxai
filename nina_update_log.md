@@ -1973,3 +1973,13 @@
 **Files changed:** ARCHITECTURE.md,README.md,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,nina_context.md,.gemini/
 
 **Verification:** git push OK, nina.service activating
+
+---
+
+## Entry 175 — 2026-06-11 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,ninagate/main.py,tools/ninaflash.py,.gemini/,ninagate/quotas.json
+
+**Verification:** git push OK, nina.service activating
