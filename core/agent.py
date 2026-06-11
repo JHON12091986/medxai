@@ -139,25 +139,45 @@ class AgentLoop:
             if "TOOL:" in response:
                 try:
                     import re as _re
+                    import asyncio as _asyncio
+
                     # Strip markdown bold/italic and [Step N/M] so MISTRAL's **TOOL:web** works
                     clean_resp = _re.sub(r'[*_`]', '', response)
                     clean_resp = _re.sub(r'^\[Step \d+/\d+\]\s*', '', clean_resp, flags=_re.MULTILINE)
 
-                    match = _re.search(r'TOOL:\s*([^\s:]+)(?:\s+INPUT:\s*([^\n]*)|[ \t]+([^\n]*))?', clean_resp)
-                    if not match:
+                    matches = list(_re.finditer(r'TOOL:\s*([^\s:]+)(?:\s+INPUT:\s*([^\n]*)|[ \t]+([^\n]*))?', clean_resp))
+                    if not matches:
                         raise ValueError("Failed to parse TOOL from response")
 
-                    tool_name = match.group(1).strip(":- ").lower()
-                    tool_input = (match.group(2) or match.group(3) or '').strip().strip('\'"')
-                    tool = self.tools.get(tool_name)
-                    if not _registry.is_healthy(tool_name):
-                        obs = f"Tool {tool_name} unavailable (unhealthy)."
-                        logger.warning(f"agent_skipped_unhealthy tool={tool_name}")
-                    elif tool:
-                        obs = await tool.run(tool_input)
-                    else:
-                        obs = f"Unknown tool: {tool_name}"
-                    scratchpad.append(f"[{tool_name}] -> {obs[:300]}")
+                    tasks = []
+                    tool_names = []
+
+                    for match in matches:
+                        tool_name = match.group(1).strip(":- ").lower()
+                        tool_input = (match.group(2) or match.group(3) or '').strip().strip('\'"')
+                        tool = self.tools.get(tool_name)
+
+                        tool_names.append(tool_name)
+
+                        if not _registry.is_healthy(tool_name):
+                            async def fail_tool(name=tool_name): return f"Tool {name} unavailable (unhealthy)."
+                            logger.warning(f"agent_skipped_unhealthy tool={tool_name}")
+                            tasks.append(fail_tool())
+                        elif tool:
+                            tasks.append(tool.run(tool_input))
+                        else:
+                            async def unknown_tool(name=tool_name): return f"Unknown tool: {name}"
+                            tasks.append(unknown_tool())
+
+                    if len(tasks) > 0:
+                        logger.info(f"agent_step step={step} Executing {len(tasks)} parallel tools: {tool_names}", extra={"log":"agent.log"})
+                        results = await _asyncio.gather(*tasks, return_exceptions=True)
+                        for tname, res in zip(tool_names, results):
+                            if isinstance(res, Exception):
+                                scratchpad.append(f"[{tname}] -> [tool_error] {res}")
+                            else:
+                                scratchpad.append(f"[{tname}] -> {str(res)[:300]}")
+
                 except Exception as e:
                     scratchpad.append(f"[tool_error] {e}")
 

@@ -14,7 +14,6 @@ import argparse
 import asyncio
 import subprocess
 import json
-import time
 try:
     import dotenv
 except ImportError:
@@ -25,7 +24,7 @@ import ast
 
 
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Dict, Any, Optional, Tuple
 
 # --- KERNEL INITIALIZATION ---
@@ -60,6 +59,107 @@ def _path_resolve(rel_path: str) -> Path:
     """[003] Absolute path resolution from repo root."""
     return (REPO_ROOT / rel_path).resolve()
 
+
+def cmd_find(args):
+    import re
+    query = args.query
+    files_to_check = _find_py_files() + _find_md_files()
+    try:
+        files_to_check.extend([p for p in REPO_ROOT.rglob("*.txt") if p.is_file()])
+        files_to_check.extend([p for p in REPO_ROOT.rglob("*.log") if p.is_file()])
+        files_to_check.extend([p for p in REPO_ROOT.rglob("*.json") if p.is_file()])
+    except: pass
+
+    print(f"Searching for '{query}' in {len(files_to_check)} files...")
+    for p in files_to_check:
+        try:
+            text = p.read_text(errors="ignore")
+            if args.regex:
+                if re.search(query, text):
+                    print(f"MATCH: {p.relative_to(REPO_ROOT)}")
+            else:
+                if query in text:
+                    print(f"MATCH: {p.relative_to(REPO_ROOT)}")
+        except: pass
+
+
+def cmd_edit(args):
+    target = REPO_ROOT / args.file
+    if not target.exists():
+        print(f"File not found: {args.file}")
+        sys.exit(1)
+
+    import json
+    try:
+        edits = json.loads(args.edits)
+    except:
+        print("Edits must be valid JSON list of dicts: [{'search': 'old', 'replace': 'new'}]")
+        sys.exit(1)
+
+    text = target.read_text()
+    for e in edits:
+        if e['search'] in text:
+            text = text.replace(e['search'], e['replace'])
+        else:
+            print(f"Search string not found in {args.file}: {e['search']}")
+
+    target.write_text(text)
+    print(f"Updated {args.file}")
+
+    if target.suffix == '.py':
+        code, out, err = run_cmd(["python3", "-m", "py_compile", str(target)])
+        if code != 0:
+            print(f"py_compile failed:\n{err}")
+
+        code, out, err = run_cmd(["python3", "-m", "pyflakes", str(target)])
+        if code != 0:
+            print(f"pyflakes failed:\n{out}\n{err}")
+
+
+def cmd_git(args):
+    if args.subcmd == "status":
+        code, out, err = run_cmd(["git", "status", "-s"])
+        print(out)
+    elif args.subcmd == "diff":
+        code, out, err = run_cmd(["git", "diff"])
+        print(out[:4000])
+    elif args.subcmd == "commit":
+        code, diff_out, err = run_cmd(["git", "diff", "--cached"])
+        if not diff_out.strip():
+            print("No staged changes to commit.")
+            sys.exit(1)
+
+        prompt = f"Generate a conventional commit message for this diff:\n{diff_out[:3000]}"
+        print("Generating commit message via LOCALFAST...")
+
+        script = f'''import asyncio, sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent.resolve()))
+from core.router import HybridRouter, ClassifiedTask
+from core.config import NinaConfig
+async def run():
+    r = HybridRouter(NinaConfig(telegram_bot_token="test", authorized_user_id="test"))
+    await r.initialize()
+    task = ClassifiedTask("quick", 300, False, False)
+    msg, _, _, _ = await r._call_provider("LOCALFAST", [{{"role":"user", "content": {repr(prompt)}}}], task)
+    print(msg)
+asyncio.run(run())
+'''
+        import tempfile
+        with tempfile.NamedTemporaryFile('w', suffix='.py', delete=False) as tf:
+            tf.write(script)
+            tf_name = tf.name
+
+        code, msg_out, err = run_cmd(["python3", tf_name])
+        os.unlink(tf_name)
+
+        msg = msg_out.strip()
+        if not msg: msg = "chore: update files"
+
+        print(f"Commit message:\n{msg}\n")
+        code, out, err = run_cmd(["git", "commit", "-m", msg])
+        print(out)
+
 def cmd_status(args):
     """[004] Unified system health snapshot."""
     if getattr(args, 'pulse', False):
@@ -82,9 +182,9 @@ def _append_update_log(task_id: str, title: str, summary: str):
     
     today = datetime.now().strftime("%Y-%m-%d")
     entry = f"\n---\n\n## Entry {next_num:03d} — {today} · merge: {task_id} {title}\n"
-    entry += f"**Triggered by:** nf maintain automation.\n\n"
+    entry += "**Triggered by:** nf maintain automation.\n\n"
     entry += f"**What changed:**\n- {summary}\n\n"
-    entry += f"**Rollback:** `git revert -m 1 HEAD`\n"
+    entry += "**Rollback:** `git revert -m 1 HEAD`\n"
     
     with open(log_path, "a", encoding="utf-8") as f:
         f.write(entry)
@@ -1311,6 +1411,17 @@ def cmd_code_doc(args):
 def main():
     parser = argparse.ArgumentParser(description="ninaflash AI Agent Kernel v6.0 — The 100-Function OS.")
     subparsers = parser.add_subparsers(dest="command", required=True)
+    p_find = subparsers.add_parser("find", help="Find across code, docs, logs")
+    p_find.add_argument("query", help="Search query")
+    p_find.add_argument("--regex", action="store_true", help="Use regex")
+
+    p_edit = subparsers.add_parser("edit", help="Surgical line-based edits")
+    p_edit.add_argument("file", help="File to edit")
+    p_edit.add_argument("edits", help="JSON list of edits")
+
+    p_git = subparsers.add_parser("git", help="NinaFlash git ops")
+    p_git.add_argument("subcmd", choices=["status", "diff", "commit"], help="Git operation")
+
     p_status = subparsers.add_parser("status")
     p_status.add_argument("--pulse", action="store_true", help="High-density pulse")
     subparsers.add_parser("help-ai")
