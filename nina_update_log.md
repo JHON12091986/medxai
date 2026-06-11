@@ -2073,3 +2073,13 @@
 **Files changed:** ARCHITECTURE.md,WORKFLOW.md,docs/space/claude_feed.md,.gemini/,core/utils.py,data/router_cache.json,jules_mega_task.md
 
 **Verification:** git push OK, nina.service activating
+
+---
+
+## Entry 185 — 2026-06-11 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,core/router.py,docs/space/nina_repo_hygiene_dashboard.md,ninagate/main.py,ninagate/providers.json,.gemini/,core/utils.py,data/router_cache.json,jules_mega_task.md,tools/nina_mcp_server.py
+
+**Verification:** git push OK, nina.service activating

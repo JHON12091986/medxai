@@ -16,7 +16,7 @@ Three routing layers are always available and MUST be leveraged:
 - OpenAI-compatible reverse proxy at http://localhost:8080
 - Intercepts ALL outbound LLM requests, routes by task classification
 - Gemini CLI activation: export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
-- Routes: SIMPLE → NinaFlash | MEDIUM → Gemini Flash | COMPLEX → Gemini Pro / Qwen3-Coder
+- Routes: SIMPLE → NinaFlash | MEDIUM → Gemini 3 Flash | COMPLEX → Gemini Pro / Qwen3-Coder
 - Logs every routing decision: ~/nina/logs/ninagate.log
   Format: [timestamp] TASK_TYPE → MODEL | tokens_in | tokens_out | latency_ms
 
@@ -69,7 +69,7 @@ Three routing layers are always available and MUST be leveraged:
    commit messages for simple changes → always NinaFlash (zero cloud quota consumed).
 3. BATCH SMALL CHANGES — Collect small edits across files, send as one batched
    NinaFlash request instead of one request per file.
-4. QUOTA AWARENESS — When Gemini Flash > 900 req today, shift medium tasks to
+4. QUOTA AWARENESS — When Gemini 3 Flash > 900 req today, shift medium tasks to
    Qwen Code CLI (2000 req/day). When both exhausted → NinaFlash unconditionally.
 5. CPU THREAD TUNING — NinaFlash CPU inference uses num_thread=4 for decode-heavy
    tasks on the X530FN.
@@ -88,10 +88,10 @@ Route EVERY subtask through this tree before executing:
 
     Multi-file reasoning OR architectural understanding required?
     └─ YES → Can context be compressed to < 1500 tokens via NinaFlash summary?
-             ├─ YES → [NinaFlash: summarize] → [Gemini Flash: reason]
+             ├─ YES → [NinaFlash: summarize] → [Gemini 3 Flash: reason]
              └─ NO  → Gemini Pro / Qwen3-Coder-480B (full context, quality gate)
 
-    Gemini Flash quota exhausted (> 900 req today)?
+    Gemini 3 Flash quota exhausted (> 900 req today)?
     └─ YES → Qwen Code CLI → then NinaFlash local fallback
 
     Network unavailable?
@@ -114,7 +114,7 @@ To prevent "Black Box" reasoning (thinking without stimuli):
 1. HIGH-RISK FILES always require cloud LLM review regardless of task size:
    interfaces/telegram_interface.py | .env | core/router.py | main.py |
    guardian_engine.py | tools/shell.py
-   → Escalate ALL changes to these files to at minimum Gemini Flash.
+   → Escalate ALL changes to these files to at minimum Gemini 3 Flash.
 
 2. After ANY file edit, run immediately:
    python3 -m py_compile <file> && pyflakes <file>
@@ -182,15 +182,24 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 2. Verify NinaFlash (Ollama) is running:
    curl -s http://localhost:11434/api/tags | grep qwen || ollama pull qwen2.5-coder:7b
 
-3. Route Gemini CLI through NinaGate:
-   export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
+3. Route Gemini CLI:
+   # FAST MODE — direct cloud, no proxy (use during active Gemini CLI sessions)
+   unset GOOGLE_GEMINI_BASE_URL
+
+   # ECONOMY MODE — route through NinaGate (use for Jules, agy batch tasks)
+   # export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
+   
    export GEMINI_API_KEY="${GEMINI_API_KEY}"
 
 4. Confirm .gemini/settings.json contains:
-   { "context": { "fileName": ["AGENTS.md"] } }
+   { 
+     "model": "gemini-3-flash-preview",
+     "preview": true,
+     "context": { "fileName": ["AGENTS.md"] } 
+   }
 
-5. Verify model config in ~/.gemini/settings.json:
-   - model must be: gemini-2.5-flash (never gemini-1.5-flash)
+5. Verify model config:
+   - model must be: gemini-3-flash-preview (never gemini-2.5-flash)
    - maxRetries must be: 2
 
 6. Warm start — load session context:
