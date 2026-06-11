@@ -3,17 +3,126 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-11 03:43 +06
-- Git HEAD: 7d9e21a7d20ce956b5d64f00008e62824df3456f
-- Last commit: docs: post-session sync 2026-06-11 03:42
-- Service: active
+- Generated: 2026-06-11 12:53 +06
+- Git HEAD: 6a3d33457d77139a4b3c645ad2518410f92476af
+- Last commit: docs: post-session sync 2026-06-11 12:53
+- Service: activating
+unknown
 
 ## 2. Active Jules Sessions (live)
-#1 Bolt: Performance Optimization Agent — AWAITING_USER_FEEDBACK — no PR yet
-#2 Sentinel: Security Vulnerability Protection Agent — AWAITING_USER_FEEDBACK — no PR yet
-#3 Bolt ⚡ Performance Optimization Agent — COMPLETED — https://github.com/aibony/nina/pull/95
-#4 Implement Robust SSRF Protection in tools/browser.py — COMPLETED — no PR yet
-#5 Enriching NINA User Context in facts.json — COMPLETED — https://github.com/aibony/nina/pull/89
+#1 Implement AG-N-01: Global Symbol Indexer in ninaflash.py — COMPLETED — https://github.com/aibony/nina/pull/97
+#2 Implement AG-M-12: NF-SESSIONS Checkpoint & Resume per docs/ — COMPLETED — https://github.com/aibony/nina/pull/100
+#3 Implement AG-M-11: NF-LOG Sliding Window Summarizer per docs — COMPLETED — https://github.com/aibony/nina/pull/103
+#4 Implement AG-M-10: GATE-PROMPT System Prompt Templating per  — FAILED — https://github.com/aibony/nina/pull/105
+#5 Implement AG-M-09: NF-ARCHIVE Historical Offloading per docs — COMPLETED — https://github.com/aibony/nina/pull/98
+#6 Implement AG-M-08: NF-STATUS High-Density Pulse per docs/spa — COMPLETED — https://github.com/aibony/nina/pull/96
+#7 Implement AG-M-07: NF-CLEAN Automated Hygiene per docs/space — COMPLETED — https://github.com/aibony/nina/pull/106
+#8 Implement AG-M-06: SEC-IGNORE Global Context Filtering per d — AWAITING_USER_FEEDBACK — no PR yet
+#9 Implement AG-M-05: NF-BACKLOG Incremental State per docs/spa — COMPLETED — https://github.com/aibony/nina/pull/104
+#10 Implement AG-M-04: DOC-COMP Instruction Compression per docs — COMPLETED — https://github.com/aibony/nina/pull/101
+#11 Implement AG-M-03: NF-EXT Surgical Code Intelligence per doc — COMPLETED — https://github.com/aibony/nina/pull/102
+#12 Implement AG-M-02: Token-Surgical Architecture (v2.1) per do — COMPLETED — https://github.com/aibony/nina/pull/99
+#13 Implement AG-M-01: NINA Throughput Maximizer (v2.0 Architect — AWAITING_USER_FEEDBACK — no PR yet
+#14 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+✦ This is a high-impact list of 20 "Token-Surgical" upgrades. These are designed to collapse high-token cloud reasoning into zero-token local commands within ninaflash.
+
+  ⚡ The "Token-Surgical" Action Plan (20 Upgrades)
+
+  I. Surgical Research (Moving Code Reading to Local)
+   1. nf code symbol <file> <name>: Use AST to extract ONLY a specific class or function instead of the whole file.
+   2. nf code sigs <dir>: Generate a signature-only map of an entire directory (e.g., core/) to help me "LOCATE" without reading.
+   3. nf find-symbol <name>: Global search for where a class/function is defined across the repo.
+   4. nf capability list: Shows available tools and their docstrings without reading core/capabilities.py.
+
+  II. Context Hygiene (Reducing Instruction Overhead)
+   5. AGENTS.md Pruning: Move "How-To" guides to docs/agent-memory/ and keep only P0 directives in the root.
+   6. Project-level .geminiignore: Block logs/, data/plans/, and backups/ from my indexing and search tools.
+   7. nf index query --mini: Returns only a file's role and guardrails instead of the full metadata JSON.
+   8. nf log tail <n>: Reads only the last N entries of nina_update_log.md to find the next ID.
+
+  III. Validation & Logic (Preventing Wasted Turns)
+   9. nf check diff: Runs syntax/linter checks ONLY on the lines I changed.
+   10. nf check code --fix: Automatically runs ruff --fix or black locally before I even see the errors.
+   11. nf doc check --fix: Automatically formats my nina_update_log.md entries to match the repo style.
+   12. nf session checkpoint: Saves the current "Goal + File List" to a 1KB JSON to survive session resets.
+
+  IV. Backlog & Task Management (Reducing Table Reading)
+   13. nf backlog summary: Replaces the 500-line backlog table with a 5-line summary (READY: 5, DONE: 100).
+   14. nf task active: Lists only IN_PROGRESS tasks with their current locked files.
+   15. nf backlog dag --mini: Shows only the direct dependencies of the current task.
+   16. nf session archive: Moves DONE tasks from the main backlog to an archive file to keep the main context small.
+
+  V. Sync & Observability (Reducing High-Volume Output)
+   17. nf sync --quiet: A version of the sync script that only prints errors/success, hiding the 100-line file list.
+   18. nf status --pulse: A 10-line project heartbeat (Git, Env, Venv, Active Task).
+   19. nf pr diff-mini <id>: Shows file names and line counts for a PR instead of the full diff text.
+   20. nf log summarize: Collapses 100 lines of repeating logs into "Heartbeat x 100".
+
+  ---
+
+  🚀 MEGA-TASK: Gemini CLI Token Optimizer (v1.0)
+  Assignee: Jules (Async Cloud Coder)
+
+    1 Objective: Upgrade ninaflash (nf) and AGENTS.md to minimize the token footprint of Gemini CLI sessions.
+    2
+    3 🏗️ Domain 1: Surgical Code Intelligence
+    4 - Implement `nf code symbol` and `nf find-symbol` using Python's `ast` module.
+    5 - Implement `nf code sigs` to generate directory-level symbol maps.
+    6
+    7 🧠 Domain 2: Instruction Compression
+    8 - Refactor `AGENTS.md`: Move non-essential "Patterns" and "Guides" to `docs/agent-memory/workflow.md`.
+    9 - Replace verbose sections with high-density "Directive Lists."
+   10
+   11 📉 Domain 3: Incremental State Management
+   12 - Update `ninaflash.py` to support `backlog summary` and `task active` commands.
+   13 - Implement `nf log next-id` and `nf log tail` to avoid reading the massive 2000-line update log.
+   14
+   15 🛡️ Domain 4: Automated Hygiene
+   16 - Create a global `.geminiignore` excluding all `logs/`, `data/`, and `upgrades/` folders.
+   17 - Implement `nf check code --fix` to offload linting to local tools.
+   18
+   19 ACCEPTANCE CRITERIA:
+   20 - `ninaflash` must pass `nf check code` with 0 new errors.
+   21 - `AGENTS.md` size must be reduced by at least 40%.
+   22 - All new `nf` commands must be registered in the `ninaflash` help menu.
+
+ — COMPLETED — no PR yet
+#15 NINA: Token-Surgical Architecture (v2.1) — COMPLETED — no PR yet
+#16 Implement Self-Healing Foundation: Governance Task Feed and Safe Idleloop Integration — COMPLETED — no PR yet
+#17 NINA v2.0: High-Velocity Autonomous Control Plane & Throughput Maximizer — COMPLETED — no PR yet
+#18 Bolt: Performance Optimization Agent — AWAITING_USER_FEEDBACK — no PR yet
+#19 Sentinel: Security Vulnerability Protection Agent — AWAITING_USER_FEEDBACK — no PR yet
+#20 Bolt ⚡ Performance Optimization Agent — COMPLETED — https://github.com/aibony/nina/pull/95
+#21 Implement Robust SSRF Protection in tools/browser.py — COMPLETED — no PR yet
+#22 Enriching NINA User Context in facts.json — COMPLETED — https://github.com/aibony/nina/pull/89
+#23 Unit Tests for MemorySystem (core/memory.py) — COMPLETED — https://github.com/aibony/nina/pull/87
+#24 Create Initial Plan Templates for NINA — COMPLETED — https://github.com/aibony/nina/pull/88
+#25 Implement Environment Variable Validation in NinaConfig — COMPLETED — https://github.com/aibony/nina/pull/92
+#26 Implement timeouts for subprocesses in compact_exporter.py — COMPLETED — https://github.com/aibony/nina/pull/90
+#27 Inject Deterministic Personal Context into Memory System — COMPLETED — https://github.com/aibony/nina/pull/93
+#28 Implement Semantic Scoring and Numeric Assertions in core/verifier.py — COMPLETED — https://github.com/aibony/nina/pull/91
+#29 Comprehensive Unit Tests for TaskStore — COMPLETED — https://github.com/aibony/nina/pull/94
+#30 Enhance TaskStore Schema, Indexing, and Archiving (AG-B-02, AG-B-04, AG-B-08) — AWAITING_USER_FEEDBACK — no PR yet
+#31 Developer Tooling Hardening: Jules API, Shell Allowlist & Model Discovery — COMPLETED — https://github.com/aibony/nina/pull/84
+#32 Centralized Cron Registry & Result Logging — COMPLETED — https://github.com/aibony/nina/pull/79
+#33 Agent Loop Refactor: THINK-PLAN-ACT Extraction — COMPLETED — https://github.com/aibony/nina/pull/82
+#34 Finance & Market Tools Hardening: Retry Logic & Structured Returns — COMPLETED — https://github.com/aibony/nina/pull/86
+#35 Telegram Interface Hardening: Rate Limiting & Error Handling — COMPLETED — https://github.com/aibony/nina/pull/81
+#36 Memory System Hardening: ChromaDB Resilience and Scratchpad Layer — COMPLETED — https://github.com/aibony/nina/pull/83
+#37 NINA Initial Test Suite and Loop Resilience — COMPLETED — https://github.com/aibony/nina/pull/80
+#38 Implement Unified Observability & Health Layer — COMPLETED — https://github.com/aibony/nina/pull/78
+#39 NINA AG1 Phase 1: Task Schema, Planning Layer, and Verifier Extensions — COMPLETED — no PR yet
+#40 NINA Observability Refactor: Healthcheck Package & Loguru Integration — COMPLETED — https://github.com/aibony/nina/pull/85
+#41 NINA Coherence Cleanup and Module Reorganization (COHERE-01) — COMPLETED — https://github.com/aibony/nina/pull/77
+#42 Sentinel: Security-Focused Codebase Protection Agent — COMPLETED — https://github.com/aibony/nina/pull/76
+#43 Bolt ⚡ Performance Optimization Agent — COMPLETED — https://github.com/aibony/nina/pull/75
+#44 Porting Claude Code Router Features to Nina/NinaGate/NinaUI — COMPLETED — https://github.com/aibony/nina/pull/74
+#45 Bolt: Performance Optimization Agent — AWAITING_USER_FEEDBACK — no PR yet
+#46 Document Analysis and Suggestions — AWAITING_USER_FEEDBACK — no PR yet
+#47 Implement agynina check doc command — COMPLETED — https://github.com/aibony/nina/pull/73
+#48 Implement agynina check code command — COMPLETED — https://github.com/aibony/nina/pull/71
+#49 NINA Pre-Code Reasoning Scaffold — COMPLETED — https://github.com/aibony/nina/pull/72
+#50 NinaGate: Lightweight OpenAI-Compatible API Proxy and Provider Router — COMPLETED — https://github.com/aibony/nina/pull/70
 
 ## 3. Locked Files (do not touch in new specs)
 ```
@@ -24,24 +133,87 @@ LOCKED_SINCE=2026-06-08T16:58:50+00:00
 ```
 
 ## 4. READY Items (eligible for new Jules specs)
-_Found 1 READY items_
+_Found 8 READY items_
 
-### AG-J — Agentic Test Coverage
-_Directory: `tests/`_
+### AG-M — Throughput Maximizer
+_MEGA-TASK: V2.0 Architecture Upgrade_
+_Dependency: AG-B-01 and AG-B-02 must be DONE first_
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-J-01 | `tests/test_planner.py` | Unit tests for GoalDecomposer: goal parsing, step generation, dependency ordering | `NEEDS_SPEC` | AG-A-01 |
-| AG-J-02 | `tests/test_task_store.py` | Unit tests for TaskStore: CRUD, persistence, TTL, status transitions |
+| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `READY` | AG-B-01 |
+| AG-M-02 | Multi-module | 📉 MEGA-TAS
+
+### AG-N — Advanced Code Intelligence
+_Focus: Zero-token research and semantic mapping_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `DONE` | — |
+| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `READY` | A
+
+### AG-O — Automated Testing & QA
+_Focus: Reducing debug turns through local verification_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-O-01 | `tests/` | Test Scaffold Generator — Create test stubs for every new function. | `READY` | — |
+| AG-O-02 | `tests/` | Mutation Test Suite — Implement basic mutation testing for core modules. | `READY` | — |
+| A
+
+### AG-P — Performance & Latency
+_Focus: High-velocity execution and low overhead_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-P-01 | `core/router.py` | Router Latency Optimizer — Profile and reduce router overhead. | `READY` | — |
+| AG-P-02 | `core/router.py` | Persistent Response Cache — Move cache to SQLite for speed. | `READY` | — |
+| AG-P-03 | `
+
+### AG-Q — Memory & Knowledge
+_Focus: Precision retrieval and minimal noise_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-Q-01 | `data/memory/` | ChromaDB Cluster — Shard vector memory by domain. | `READY` | — |
+| AG-Q-02 | `core/memory.py` | Automatic Fact Extraction — LLM-driven mining of logs. | `READY` | — |
+| AG-Q-03 | `core/memory.py` | Memory C
+
+### AG-R — Repository Hygiene
+_Focus: Minimal repo size and clean structure_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-R-01 | `ninaflash.py` | Stale File Archiver — Auto-move 60-day untouched files. | `READY` | — |
+| AG-R-02 | `requirements.txt`| Requirement Pinner — Lock dependencies to exact hashes. | `READY` | — |
+| AG-R-03 | `ninaflash.py` | La
+
+### AG-S — Interface & Interaction
+_Focus: Fast feedback and low-overhead communication_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-S-01 | `interfaces/telegram_interface.py`| Telegram Batching — Consolidate short messages. | `READY` | — |
+| AG-S-02 | `ninaflash.py` | CLI Progress Bars — Rich bars for long nf commands. | `READY` | — |
+| AG-S-03 | `co
+
+### AG-T — Token & Context Engineering
+_Focus: Absolute minimum context overhead_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-T-01 | `core/agent.py` | Dynamic Prompting — Adjust prompt length by task diff. | `READY` | — |
+| AG-T-02 | `ninaflash.py` | Context Window Estimator — Predict token usage before call. | `READY` | — |
+| AG-T-03 | `core/agent.p
 
 
 ## 5. Last 5 Completions
 ```
-7d9e21a docs: post-session sync 2026-06-11 03:42
-a5866ee docs: post-session sync 2026-06-11 03:37
-212cdc1 docs: post-session sync 2026-06-11 03:34
-28b6a45 docs: hard-code mandatory documentation rule for Jules and unify instructions
-ee22ee0 docs: harden instructions and standardize on ninaflash (nf) shorthand
+6a3d334 docs: post-session sync 2026-06-11 12:53
+762a6e4 merge: PR #106 AG-M-07 nf-clean automated hygiene
+dbc875f Merge remote-tracking branch 'origin/feature/AG-M-10-gate-prompt-templating-10135412826971545639'
+8d602b2 feat(backlog): implement AG-M-05 incremental state commands in ninaflash
+94f1953 merge: PR #103 AG-M-11 log summarizer
 ```
 
 ## 6. Open Blockers
@@ -50,6 +222,10 @@ ee22ee0 docs: harden instructions and standardize on ninaflash (nf) shorthand
 - | AG-F-02 | `tools/agents/market_agent.py` | MarketAgent — watches DSE/CSE prices on schedule, emits ALERT event when watchlist threshold crossed | `NEEDS_SPEC` | AG-F-01 |
 - | AG-F-03 | `tools/agents/expense_agent.py` | ExpenseAgent — monitors Telegram messages for expense patterns, auto-logs to finance tool | `NEEDS_SPEC` | AG-F-01 |
 - | AG-J-06 | `tests/test_market_agent.py` | Unit tests for MarketAgent: mock price feed, threshold crossing, alert emission | `NEEDS_SPEC` | AG-F-02 |
+- | AG-O-02 | `tests/` | Mutation Test Suite — Implement basic mutation testing for core modules. | `READY` | — |
+- | AG-O-06 | `tests/` | Flaky Test Detector — Identify intermittent test failures. | `READY` | — |
+- | AG-S-01 | `interfaces/telegram_interface.py`| Telegram Batching — Consolidate short messages. | `READY` | — |
+- | AG-S-02 | `ninaflash.py` | CLI Progress Bars — Rich bars for long nf commands. | `READY` | — |
 - AG-F-01 → AG-F-02            ← BaseAgent + MarketAgent (first real autonomous agent)
 - | F-02 | memory: deterministic personal_context | E-sync | — | 2026-06-09 |
 
@@ -76,4 +252,4 @@ ee22ee0 docs: harden instructions and standardize on ninaflash (nf) shorthand
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 
 ---
-_Feed size: 3987 bytes_
+_Feed size: 16149 bytes_
