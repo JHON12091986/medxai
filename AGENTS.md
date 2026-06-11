@@ -36,31 +36,37 @@ Three routing layers are always available and MUST be leveraged:
 
 ### RULE 0 — SURGICAL TOOL FIRST (mandatory, check before every file/git operation):
 
-Before using ANY shell read_file, cat, git log, git diff, or grep tool call,
-check this lookup table and use the nf command instead:
+#### BANNED — Never use these for the listed operations:
 
-| WANT TO... | USE THIS INSTEAD |
-| :--- | :--- |
-| Read part of a file | `nf file read <file> --start N --end N` |
-| Find a function/class | `nf code symbol <file> <name>` |
-| Search text across files | `nf file grep <pattern> --dir <dir>` |
-| See what changed | `nf git changed` |
-| Read recent log entries | `nf log tail 5` |
-| Find next log ID | `nf log next-id` |
-| Get git history | `nf git log --n 10` |
-| Search commit messages | `nf git search <keyword>` |
-| Get function signatures only | `nf code sigs <dir>` |
-| See file diff only | `nf file diff <file>` |
-| Edit one string in a file | `nf file patch <file> --find "x" --replace "y"` |
-| Get directory structure | `nf code index` (JSON map, no file reads) |
+| Shell sub-command        | Use instead                              |
+|--------------------------|------------------------------------------|
+| cat <file>               | nf file read <file> --start 0 --end 60   |
+| grep / grep -r           | nf file grep <pattern> --dir <dir>       |
+| git log                  | nf git log --n 10                        |
+| git diff <file>          | nf file diff <file>                      |
+| git status          | nf git changed                           |
+| git blame                | nf git blame <file> --start N --end N    |
+| ls / ls -la              | nf code index                            |
+| find . -name "*.py"      | nf code index                            |
+
+| Pattern (read_file)      | Use instead                             |
+|--------------------------|-----------------------------------------|
+| Reading whole file       | nf file read <file> --start N --end N   |
+| Finding a function       | nf code symbol <file> <name>            |
+| Getting file outline     | nf code outline <file>                  |
+
+| Pattern (replace)        | Use instead                                         |
+|--------------------------|-----------------------------------------------------|
+| Single string replace    | nf file patch <file> --find "X" --replace "Y"       |
+| Insert after anchor      | nf file insert <file> --after "ANCHOR" --text "..."  |
 
 Only escalate to direct shell cat/read_file when:
 - nf command returns empty/error
 - File type is binary or non-text
 - Operation requires full file context (architectural reasoning)
 
-LIFETIME AUDIT: 33,000+ run_shell_command calls identified. Every shell call
-that has an nf equivalent is a quota violation.
+LIFETIME AUDIT (27 sessions): 33,000+ run_shell_command calls.
+66% substitutable with nf. Target: <20 banned calls per session.
 
 Violating this rule wastes cloud tokens and increases latency.
 Every nf command runs locally in <1s with zero token cost.

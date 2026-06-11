@@ -1,56 +1,100 @@
 ---
-## ⚠️ TOOL OVERRIDE MANDATE — MANDATORY BEFORE EVERY TOOL CALL
-## Based on 27-session real usage audit: 45,700+ replaceable cloud calls identified.
-## Target: reduce run_shell_command from 33,000 lifetime calls to near zero.
+## ⚠️ TOOL OVERRIDE MANDATE
+## Source: 27-session lifetime audit | 45,700+ tool calls analyzed
+## Realistic optimization target: 66% of all calls → local nf (zero tokens)
 
-### BANNED — Never call these directly:
+### BANNED — Never use these for the listed operations:
 
-| Banned Tool         | Calls/session avg | Replace With                          |
-|---------------------|-------------------|---------------------------------------|
-| run_shell_command   | ~1,200x           | See shell dispatch table below        |
-| read_file           | ~185x             | nf file read <f> --start N --end N    |
-| write_file          | ~55x              | nf file patch / nf file insert        |
-| replace             | ~185x             | nf file patch --find X --replace Y    |
-| grep_search         | ~44x              | nf file grep <pattern> --dir <dir>    |
-| list_directory      | ~18x              | nf code index                         |
-| glob                | ~2x               | nf code index                         |
+#### run_shell_command — BAN these sub-commands only:
+| Shell sub-command        | Frequency | Use instead                              |
+|--------------------------|-----------|------------------------------------------|
+| cat <file>               | 72x/life  | nf file read <file> --start 0 --end 60   |
+| grep / grep -r           | 213x/life | nf file grep <pattern> --dir <dir>       |
+| git log                  | 355x/life | nf git log --n 10                        |
+| git diff <file>          | (subset)  | nf file diff <file>                      |
+| git status          | (subset)  | nf git changed                           |
+| git blame                | (subset)  | nf git blame <file> --start N --end N    |
+| git stash                | (subset)  | nf git stash-quick --label "desc"        |
+| ls / ls -la              | (subset)  | nf code index                            |
+| find . -name "*.py"      | (subset)  | nf code index                            |
+| head / tail / wc -l      | (subset)  | nf file read <file> --start N --end N    |
+| git log --grep           | (subset)  | nf git search <keyword>                  |
 
-### SHELL DISPATCH TABLE — run_shell_command sub-commands:
+#### read_file — BAN for these patterns (80% of calls):
+| Pattern                  | Frequency  | Use instead                             |
+|--------------------------|------------|-----------------------------------------|
+| Reading whole file       | ~5,000x    | nf file read <file> --start N --end N   |
+| Finding a function       | (subset)   | nf code symbol <file> <name>            |
+| Getting file outline     | (subset)   | nf code outline <file>                  |
+| Reading last N log lines | (subset)   | nf log tail N                           |
+| Reading update log       | (subset)   | nf log tail 5                           |
 
-| Shell command used  | Frequency | Use instead                           |
-|---------------------|-----------|---------------------------------------|
-| grep -r / grep      | 213x      | nf file grep <pattern> --dir <dir>    |
-| git log             | 355x*     | nf git log --n 10                     |
-| git diff            | (subset)  | nf file diff <file>                   |
-| git status          | (subset)  | nf git changed                        |
-| git blame           | (subset)  | nf git blame <file>                   |
-| git stash           | (subset)  | nf git stash-quick                    |
-| cat <file>          | 72x       | nf file read <file> --start 0 --end 60|
-| ls / ls -la         | (subset)  | nf code index                         |
-| python3 -m py_compile| 154x     | nf check code <file> ✅ KEEP          |
-| python3 tools/nina* | (subset)  | KEEP — legitimate execution           |
-| ./nina_sync.sh      | (subset)  | KEEP — mandatory sync                 |
-| systemctl restart   | (subset)  | KEEP — service management             |
-| sudo ln -sf         | (subset)  | KEEP — system ops                     |
+#### replace — BAN for single-string edits (90% of calls):
+| Pattern                  | Use instead                                         |
+|--------------------------|-----------------------------------------------------|
+| Single string replace    | nf file patch <file> --find "X" --replace "Y"       |
+| Insert after anchor      | nf file insert <file> --after "ANCHOR" --text "..."  |
 
-### ALLOWED — these shell calls are legitimate:
-- python3 -m py_compile <file>  ← validation
-- python3 tools/ninaflash.py    ← nf execution itself
-- ./nina_sync.sh                ← mandatory sync
-- sudo systemctl                ← service ops
-- git add / git commit / git push ← commits only
-- ollama / curl (health checks) ← infra checks
+#### grep_search — BAN always (95% replaceable):
+→ nf file grep <pattern> --dir <dir> --ext .py,.md,.sh
+→ nf file smart-search <query> --context 5
+
+#### list_directory / glob — BAN for code directories:
+→ nf code index  (returns structured JSON map, zero shell)
+
+---
+
+### ALLOWED — These native tool calls are legitimate, never ban:
+
+#### run_shell_command KEEP list:
+- python3 -m py_compile <file>     ← validation
+- python3 tools/ninaflash.py ...   ← nf execution
+- python3 <any script>             ← legitimate execution
+- ./nina_sync.sh                   ← mandatory sync
+- sudo systemctl restart/status    ← service management
+- git add / git commit             ← committing changes
+- git push / git pull              ← remote sync
+- git checkout / git merge         ← branch ops
+- ollama serve / ollama pull       ← model management
+- curl http://localhost:...        ← health checks
+- sudo ln -sf                      ← system symlinks
+- pip install / apt install        ← package management
+- mkdir / cp / mv / rm             ← filesystem ops with no nf equiv
+
+#### write_file — KEEP for:
+- Creating new files from scratch  ← no nf equivalent exists
+- Writing generated content        ← no nf equivalent exists
+
+#### replace — KEEP for:
+- Multi-block or multi-line edits  ← nf file patch is single-string only
+- Structural rewrites              ← use native replace
+
+#### Always KEEP — never substitute:
+- update_topic                     ← Gemini CLI internal state
+- invoke_agent                     ← Jules/agy workflow
+- enter_plan_mode / exit_plan_mode ← planning UI
+- google_web_search                ← external lookup
+- web_fetch                        ← URL fetching
+- list_background_processes        ← system monitoring
+- read_background_output           ← async task output
+
+---
 
 ### COMPLIANCE RULE:
-Before ANY tool call, ask: "Is there an nf command for this?"
-If yes → use nf. No exceptions.
-If nf returns empty/error → fallback to shell, log as RULE0_FALLBACK.
-At end of every task: count native shell/read_file calls.
-If count > 5 for a full task → self-report: "RULE0 VIOLATION: X unnecessary cloud calls"
+Before every tool call, run this mental check:
+  1. Is this cat/grep/git-log/ls/find/head/tail? → USE nf instead
+  2. Is this read_file on an existing file?       → USE nf file read
+  3. Is this replace for one string?              → USE nf file patch
+  4. Is this grep_search?                         → USE nf file grep
 
-### WHY THIS MATTERS (real numbers):
-- 33,000 run_shell_command calls × avg 460 tokens = 15.2M tokens wasted to date
-- At Gemini Flash rates: ~$1.14 in pure tool overhead
-- With nf replacement: same work costs ~0 tokens locally
-- Each nf call: <1 second, zero quota, zero cost
+At end of every task: self-audit.
+If banned tool was used when nf equivalent existed → report:
+"RULE0 VIOLATION: used [tool] [N]x — should have used [nf command]"
+Target per session: < 20 banned tool calls total.
+
+### REAL IMPACT (27-session audit):
+- Substitutable calls: ~30,190 of 45,700 total (66%)
+- Irreplaceable calls: ~15,510 (update_topic, invoke_agent, write_file new, etc.)
+- Each nf call: <1s, zero tokens, zero quota
+- Each banned call avoided: ~460 tokens saved on average
 ---
