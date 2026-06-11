@@ -35,10 +35,11 @@ Three routing layers are always available and MUST be leveraged:
 ## PART 2 — OPERATING RULES (enforce on every subtask, every session)
 
 ### Token Reduction
-1. CLASSIFY FIRST — Before any cloud call, classify the subtask.
+1. CLASSIFY FIRST — Before any cloud call, use `nf query "<task>"` to check if it can be handled locally.
    Mechanical tasks (rename, format, grep, boilerplate, docstrings, type hints) → NinaFlash always.
 2. CHUNK LARGE TASKS — Break tasks > 2000 tokens into subtasks, tier each chunk separately.
-3. COMPRESS CONTEXT — Strip comments, whitespace, unchanged file sections before sending to cloud.
+3. COMPRESS CONTEXT — Use `nf code pack --file <f>` to generate a skeletal summary of large files.
+   Strip comments, whitespace, unchanged file sections before sending to cloud.
    Send only the diff-relevant portion + minimal surrounding context.
 4. SUMMARIZE BEFORE ESCALATE — NinaFlash summarizes file context first; only the summary + task
    goes to cloud. Never send a raw full file to cloud if NinaFlash can summarize it first.

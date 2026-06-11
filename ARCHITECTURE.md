@@ -48,7 +48,7 @@ NINA is a three-tier autonomous agentic OS. It is not a chatbot. It is an action
 The "Local Muscle" of NINA. A high-performance CLI executor (v6.0+) that offloads research, validation, and project management from the cloud. It features a "Surgical Code Intelligence" engine that uses local AST parsing to extract function signatures and symbols, avoiding expensive full-file reads. ninaflash maintains a strict 100-function core Nucleus to ensure high "attention" and reliability during autonomous execution.
 
 **NinaGate:**
-A lightweight OpenAI-compatible API proxy (`ninagate/main.py`) running on port 8765. It implements a "Fast-Path" routing strategy, directing boilerplate and low-complexity reasoning to local Ollama models (Qwen2.5-Coder, DeepSeek-Coder). NinaGate manages a priority cascade across 19+ providers, ensuring NINA always has a path to a model even during high-latency or rate-limit events.
+A lightweight OpenAI-compatible API proxy (`ninagate/main.py`) running on port 8765. It implements a "Fast-Path" routing strategy, directing boilerplate and low-complexity reasoning to local Ollama models (Qwen2.5-Coder, DeepSeek-Coder). It features a **Live Quota Tracker** that automatically monitors Gemini Flash usage and downgrades to local models when limits (>900 req/day) are reached, resetting at 1PM BD daily. NinaGate manages a priority cascade across 19+ providers, ensuring NINA always has a path to a model even during high-latency or rate-limit events.
 
 **Token-Surgical Architecture (v2.1):**
 A cross-cutting optimization layer designed to reduce cloud token consumption by 50-90%. It utilizes:
