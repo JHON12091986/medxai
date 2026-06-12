@@ -22,12 +22,11 @@ try:
     import dotenv
 except ImportError:
     dotenv = None
-import time
 import shutil
 import ast
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Set, Tuple
+from typing import List, Dict, Any, Optional, Tuple
 
 # --- KERNEL INITIALIZATION ---
 REPO_ROOT = Path(__file__).parent.parent.resolve()
@@ -127,13 +126,62 @@ def _log_agent_action(action: str):
 _SKIP_DIRS = {".git", "venv", ".venv", "env", "virtualenv", "__pycache__",
               "node_modules", ".mypy_cache", ".pytest_cache", "dist", "build"}
 
+
+_ignore_patterns = None
+
+def _is_ignored(path: Path) -> bool:
+    import fnmatch
+    global _ignore_patterns
+    ignore_file = REPO_ROOT / ".geminiignore"
+    if not ignore_file.exists():
+        return False
+
+    if _ignore_patterns is None:
+        patterns = ignore_file.read_text().splitlines()
+        _ignore_patterns = [p.strip() for p in patterns if p.strip() and not p.startswith("#")]
+
+    try:
+        rel_path = path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        return False
+
+    for pattern in _ignore_patterns:
+        if pattern.endswith('/'):
+            p = pattern[:-1]
+            if fnmatch.fnmatch(rel_path, p) or rel_path.startswith(pattern) or fnmatch.fnmatch(rel_path, f"*/{p}") or f"/{pattern}" in f"/{rel_path}":
+                return True
+        else:
+            if fnmatch.fnmatch(rel_path, pattern) or fnmatch.fnmatch(rel_path, f"*/{pattern}"):
+                return True
+    return False
+
+def cmd_check_ignore(args):
+    """[037] Diagnostic command to list files hidden by .geminiignore."""
+    print("── ninaflash check ignore ───────────────────")
+    ignore_file = REPO_ROOT / ".geminiignore"
+    if not ignore_file.exists():
+        print("No .geminiignore file found.")
+        return
+
+    count = 0
+    for p in REPO_ROOT.rglob('*'):
+        if p.is_file() and _is_ignored(p):
+            try:
+                rel = p.relative_to(REPO_ROOT).as_posix()
+                print(rel)
+                count += 1
+            except Exception:
+                pass
+    print(f"\nTotal ignored files: {count}")
+
+
 def _find_py_files() -> List[Path]:
     """[008] Find all .py files excluding standard ignore dirs."""
-    return [p for p in REPO_ROOT.rglob("*.py") if not any(skip in p.parts for skip in _SKIP_DIRS)]
+    return [p for p in REPO_ROOT.rglob("*.py") if not any(skip in p.parts for skip in _SKIP_DIRS) and not _is_ignored(p)]
 
 def _find_md_files() -> List[Path]:
     """[009] Find all .md files excluding standard ignore dirs."""
-    return [p for p in REPO_ROOT.rglob("*.md") if not any(skip in p.parts for skip in _SKIP_DIRS)]
+    return [p for p in REPO_ROOT.rglob("*.md") if not any(skip in p.parts for skip in _SKIP_DIRS) and not _is_ignored(p)]
 
 # ------------------------------------------------------------------
 # MODULE 1: ATOMIC GIT & PR ORCHESTRATOR
@@ -585,7 +633,7 @@ def cmd_run_capability(args):
     code, out, err = run_cmd(cmd)
     if code == 0:
         print(out)
-        print(f"✅ Success.")
+        print("✅ Success.")
     else:
         print(f"❌ Failed (exit {code}): {err}")
 
@@ -645,6 +693,8 @@ def main():
     p_cd.add_argument("--agents", action="store_true", default=False)
     p_cd.add_argument("--stale",  action="store_true", default=False)
 
+    p_cks.add_parser("ignore")
+
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
@@ -695,6 +745,7 @@ def main():
     elif args.command == "check":
         if args.sub == "code": cmd_check_code(args)
         elif args.sub == "doc": cmd_check_doc(args)
+        elif args.sub == "ignore": cmd_check_ignore(args)
     elif args.command == "code":
         if args.sub == "outline": cmd_code_outline(args)
         elif args.sub == "dep-map": cmd_code_dep_map(args)

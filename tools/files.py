@@ -7,6 +7,38 @@ WORKSPACE = Path("data/workspace").resolve()
 MAX_READ  = 1 * 1024 * 1024   # 1MB
 MAX_WRITE = 5 * 1024 * 1024   # 5MB
 
+
+import fnmatch
+_ignore_patterns = None
+
+def _is_ignored(path_str: str) -> bool:
+    global _ignore_patterns
+    ignore_file = Path(".geminiignore")
+    if not ignore_file.exists():
+        return False
+
+    if _ignore_patterns is None:
+        patterns = ignore_file.read_text().splitlines()
+        _ignore_patterns = [p.strip() for p in patterns if p.strip() and not p.startswith("#")]
+
+    try:
+        repo_root = Path(".").resolve()
+        target_path = (Path("data/workspace") / path_str).resolve()
+        rel_path = target_path.relative_to(repo_root).as_posix()
+    except Exception:
+        rel_path = path_str
+
+    for pattern in _ignore_patterns:
+        if pattern.endswith('/'):
+            p = pattern[:-1]
+            if fnmatch.fnmatch(rel_path, p) or rel_path.startswith(pattern) or fnmatch.fnmatch(rel_path, f"*/{p}") or f"/{pattern}" in f"/{rel_path}":
+                return True
+        else:
+            if fnmatch.fnmatch(rel_path, pattern) or fnmatch.fnmatch(rel_path, f"*/{pattern}"):
+                return True
+    return False
+
+
 def _safe(path: str) -> Path:
     p = (WORKSPACE / path).resolve()
     if not str(p).startswith(str(WORKSPACE)):
@@ -19,6 +51,8 @@ def _disk_guard(config):
         raise OSError(f"Disk {pct:.0f}% full — write blocked.")
 
 async def read(path: str) -> str:
+    if _is_ignored(path):
+        return "File ignored by .geminiignore"
     p = _safe(path)
     if not p.exists(): return f"File not found: {path}"
     data = p.read_bytes()

@@ -1,0 +1,6 @@
+logs/
+data/plans/
+upgrades/backups/
+*.pyc
+__pycache__/
+venv/

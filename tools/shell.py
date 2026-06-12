@@ -1,4 +1,5 @@
 import asyncio, logging, shlex, subprocess
+from pathlib import Path
 
 # ---- Allowlists -------------------------------------------------------------
 ALLOWED_BASES = {
@@ -45,12 +46,45 @@ async def run(cmd: str) -> str:
             logger.warning(f"shell_injection_blocked cmd={cmd!r}", extra={"log": "tools.log", "tool_name": "shell"})
             return "Blocked: shell operators not allowed in command."
 
+    # SEC-IGNORE logic
+    try:
+        ignore_file = Path(".geminiignore")
+        if ignore_file.exists():
+            patterns = [p.strip() for p in ignore_file.read_text().splitlines() if p.strip() and not p.startswith("#")]
+            dirs_to_exclude = [p[:-1] for p in patterns if p.endswith('/')]
+            if base == "grep":
+                for d in dirs_to_exclude:
+                    parts.insert(1, f"--exclude-dir={d}")
+                for d in patterns:
+                    if not d.endswith('/'):
+                        parts.insert(1, f"--exclude={d}")
+            elif base in ["cat", "head", "tail", "less"]:
+                import fnmatch
+                for p in parts[1:]:
+                    if not p.startswith('-'):
+                        for d in patterns:
+                            if d.endswith('/'):
+                                d_clean = d[:-1]
+                                if fnmatch.fnmatch(p, d_clean) or p.startswith(d) or fnmatch.fnmatch(p, f"*/{d_clean}") or f"/{d}" in f"/{p}":
+                                    return f"Blocked: {base} access to {p} matches .geminiignore pattern {d}"
+                            else:
+                                if fnmatch.fnmatch(p, d) or fnmatch.fnmatch(p, f"*/{d}"):
+                                    return f"Blocked: {base} access to {p} matches .geminiignore pattern {d}"
+            elif base == "find":
+                for d in dirs_to_exclude:
+                    parts.extend(["-not", "-path", f"*/{d}/*"])
+                for d in patterns:
+                    if not d.endswith('/'):
+                        parts.extend(["-not", "-name", d])
+    except Exception as e:
+        logger.error(f"shell_ignore_error err={e}")
+
     try:
         loop = asyncio.get_running_loop()
         r = await asyncio.wait_for(
             loop.run_in_executor(None,
                 lambda: subprocess.run(
-                    shlex.split(cmd),
+                    parts,
                     capture_output=True, text=True, timeout=10, shell=False)),
             timeout=12)
 
