@@ -2134,6 +2134,12 @@ def main():
     p_batch = subparsers.add_parser("batch")
     p_batch.add_argument("--cmds", required=True, help="Piped commands: 'c1|c2'")
 
+    p_gemini = subparsers.add_parser("gemini")
+    gemini_sub = p_gemini.add_subparsers(dest="sub")
+    watch_parser = gemini_sub.add_parser('watch', help='Open live scratchpad watcher')
+    watch_parser.add_argument('--clear', action='store_true', default=False,
+                              help='Clear gemini_scratch.jsonl before watching')
+
     p_file = subparsers.add_parser("file"); p_fs_f = p_file.add_subparsers(dest="sub")
     p_fr = p_fs_f.add_parser("read"); p_fr.add_argument("file"); p_fr.add_argument("--start", type=int); p_fr.add_argument("--end", type=int)
     p_fg = p_fs_f.add_parser("grep"); p_fg.add_argument("pattern"); p_fg.add_argument("--dir"); p_fg.add_argument("--ext")
@@ -2280,6 +2286,15 @@ def main():
         elif args.command == "stats": cmd_stats(args)
         elif args.command == "monitor": cmd_monitor(args)
         elif args.command == "batch": cmd_batch(args)
+        elif args.command == "gemini":
+            gemini_cmd = args.sub
+            if gemini_cmd == 'watch':
+                scratch = Path.home() / 'nina' / 'data' / 'gemini_scratch.jsonl'
+                if args.clear and scratch.exists():
+                    scratch.unlink()
+                    print('Scratchpad cleared.')
+                watcher = Path.home() / 'nina' / 'tools' / 'gemini_watch.py'
+                os.execvp('python3', ['python3', str(watcher)])
         elif args.command == "file":
             if args.sub == "read": cmd_file_read(args)
             elif args.sub == "grep": cmd_file_grep(args)

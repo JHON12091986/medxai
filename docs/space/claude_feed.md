@@ -3,48 +3,55 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-12 12:20 +06
-- Git HEAD: 1db84a85b808bcb769ac6521dd734c8a3ab40841
-- Last commit: docs: post-session sync 2026-06-12 12:19
+- Generated: 2026-06-12 20:28 +06
+- Git HEAD: bd02dd812ecba488a874699e94fbdf49d1ad19b3
+- Last commit: docs: post-session sync 2026-06-12 20:28
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Fri 2026-06-12 10:49:38 +06; 1h 31min ago
+     Active: active (running) since Fri 2026-06-12 10:49:38 +06; 9h ago
  Invocation: e938017587f0494f81d51ed46f4baaaf
    Main PID: 331859 (python)
-      Tasks: 4 (limit: 15177)
-     Memory: 140.3M (peak: 155.9M)
-        CPU: 7.986s
+      Tasks: 7 (limit: 15177)
+     Memory: 191.8M (peak: 209M)
+        CPU: 27.535s
      CGroup: /system.slice/nina.service
              └─331859 /home/aibony/nina/venv/bin/python main.py
 
-Jun 12 12:20:10 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 12 12:20:20 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 12 12:20:31 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 12 12:20:41 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 12 12:20:51 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 12 20:28:08 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 12 20:28:18 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 12 20:28:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 12 20:28:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 12 20:28:49 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 Active Jules Sessions:
-- [9064102284761760023] TASK ID: B-047 TITLE: Build a NinaGate routing telemetry dashboard FILES: TBD INSTRUCTIONS: Build a  — IN_PROGRESS
-- [1139990458931220900] TASK ID: AG-N-04 TITLE: Dead Code Detector — Identify and flag unused functions/imports. FILES: `nin — IN_PROGRESS
-- [18327965253246993269] TASK ID: AG-N-03 TITLE: Type Hint Enforcement — Automated script to add missing type hints. FILES: ` — IN_PROGRESS
-- [6352186124626337882] TASK ID: AG-N-02 TITLE: Local Call Graph Generator — Trace function calls locally without LLM. FILES — IN_PROGRESS
-- [2253665677505842948] TASK ID: AG-M-06 TITLE: 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiign — IN_PROGRESS
-- [14361517772513651187] TASK ID: AG-M-01 TITLE: 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domai — IN_PROGRESS
-- [4201320139882912212] TASK ID: B-046 TITLE: Implement conflict-skip and error register logging FILES: TBD INSTRUCTIONS: Im — IN_PROGRESS
-- [4295119415253224450] TASK ID: B-047 TITLE: Build a NinaGate routing telemetry dashboard FILES: TBD INSTRUCTIONS: Build a  — IN_PROGRESS
+- [12315339931076793747] TASK ID: AG-N-05 TITLE: Symbol-Based Context Injector — Read only the call stack of a function. FILE — COMPLETED
+- [15342734822858214987] TASK ID: AG-N-04 TITLE: Dead Code Detector — Identify and flag unused functions/imports. FILES: `nin — FAILED
+- [17635532652974938930] TASK ID: AG-N-03 TITLE: Type Hint Enforcement — Automated script to add missing type hints. FILES: ` — AWAITING_USER_FEEDBACK
+- [15870564319876265568] TASK ID: AG-N-02 TITLE: Local Call Graph Generator — Trace function calls locally without LLM. FILES — AWAITING_USER_FEEDBACK
+- [3710641476915358242] TASK ID: AG-M-06 TITLE: 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiign — IN_PROGRESS
+- [1503648412242382500] TASK ID: AG-M-01 TITLE: 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domai — AWAITING_USER_FEEDBACK
+- [10318595268340981288] TASK ID: B-046 TITLE: Implement conflict-skip and error register logging FILES: TBD INSTRUCTIONS: Im — COMPLETED
+- [9064102284761760023] TASK ID: B-047 TITLE: Build a NinaGate routing telemetry dashboard FILES: TBD INSTRUCTIONS: Build a  — AWAITING_USER_FEEDBACK
+- [1139990458931220900] TASK ID: AG-N-04 TITLE: Dead Code Detector — Identify and flag unused functions/imports. FILES: `nin — FAILED
+- [18327965253246993269] TASK ID: AG-N-03 TITLE: Type Hint Enforcement — Automated script to add missing type hints. FILES: ` — COMPLETED
+- [6352186124626337882] TASK ID: AG-N-02 TITLE: Local Call Graph Generator — Trace function calls locally without LLM. FILES — COMPLETED
+- [2253665677505842948] TASK ID: AG-M-06 TITLE: 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiign — COMPLETED
+- [14361517772513651187] TASK ID: AG-M-01 TITLE: 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domai — AWAITING_USER_FEEDBACK
+- [4201320139882912212] TASK ID: B-046 TITLE: Implement conflict-skip and error register logging FILES: TBD INSTRUCTIONS: Im — AWAITING_USER_FEEDBACK
+- [4295119415253224450] TASK ID: B-047 TITLE: Build a NinaGate routing telemetry dashboard FILES: TBD INSTRUCTIONS: Build a  — AWAITING_USER_FEEDBACK
 - [10236179963338135417] TASK ID: B-048 TITLE: Auto-close stale Jules sessions (>24h blocked) FILES: TBD INSTRUCTIONS: Auto-c — AWAITING_USER_FEEDBACK
-- [5045252319786171332] TASK ID: AG-N-03 TITLE: Type Hint Enforcement — Automated script to add missing type hints. FILES: ` — IN_PROGRESS
+- [5045252319786171332] TASK ID: AG-N-03 TITLE: Type Hint Enforcement — Automated script to add missing type hints. FILES: ` — FAILED
 - [7570061349086982826] TASK ID: AG-N-02 TITLE: Local Call Graph Generator — Trace function calls locally without LLM. FILES — COMPLETED
-- [1625893802525433552] TASK ID: AG-M-06 TITLE: 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiign — IN_PROGRESS
+- [1625893802525433552] TASK ID: AG-M-06 TITLE: 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiign — COMPLETED
 - [12574743133329233326] TASK ID: AG-M-01 TITLE: 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domai — AWAITING_USER_FEEDBACK
 - [785163135227434081] TASK ID: AG-N-09 TITLE: Code Complexity Watchdog — Calculate cyclomatic complexity. FILES: `ninaflas — AWAITING_USER_FEEDBACK
-- [13079340343415191701] TASK ID: AG-N-08 TITLE: Dependency Cycle Detector — Identify circular imports locally. FILES: `ninaf — IN_PROGRESS
+- [13079340343415191701] TASK ID: AG-N-08 TITLE: Dependency Cycle Detector — Identify circular imports locally. FILES: `ninaf — AWAITING_USER_FEEDBACK
 - [4871918342728459208] TASK ID: AG-N-07 TITLE: Automated Refactoring: Method Extraction — Split large functions via AST. FI — COMPLETED
 - [5537056490016431069] TASK ID: AG-N-06 TITLE: Docstring Quality Audit — Score docstrings on clarity and completeness. FILE — COMPLETED
-- [17526672270836309312] TASK ID: AG-N-05 TITLE: Symbol-Based Context Injector — Read only the call stack of a function. FILE — IN_PROGRESS
+- [17526672270836309312] TASK ID: AG-N-05 TITLE: Symbol-Based Context Injector — Read only the call stack of a function. FILE — COMPLETED
 - [15702187238833371099] TASK ID: AG-N-04 TITLE: Dead Code Detector — Identify and flag unused functions/imports. FILES: `nin — AWAITING_USER_FEEDBACK
 - [953157969166757060] TASK ID: AG-N-03 TITLE: Type Hint Enforcement — Automated script to add missing type hints. FILES: ` — COMPLETED
 - [725588557674734561] TASK ID: AG-N-02 TITLE: Local Call Graph Generator — Trace function calls locally without LLM. FILES — COMPLETED
@@ -71,7 +78,7 @@ TITLE: 🛡️ SEC-IGNORE: Global Context Filter — FAILED
 - [16877130974103435855] TASK ID: AG-M-01
 TITLE: 🚀 MEGA-TASK: NINA Throughput Maximiz — AWAITING_USER_FEEDBACK
 - [9165385663234496781] TASK ID: AG-M-06
-TITLE: 🛡️ SEC-IGNORE: Global Context Filter — IN_PROGRESS
+TITLE: 🛡️ SEC-IGNORE: Global Context Filter — COMPLETED
 - [12062461159229550575] TASK ID: AG-M-01
 TITLE: 🚀 MEGA-TASK: NINA Throughput Maximiz — FAILED
 - [11092689245746733850] TASK ID: AG-O-01
@@ -79,27 +86,13 @@ TITLE: Test Scaffold Generator — Create tes — COMPLETED
 - [2201229503621151658] TASK ID: AG-N-10
 TITLE: Symbol Migration Tool — Automate ren — FAILED
 - [14142572470645188381] TASK ID: AG-N-09
-TITLE: Code Complexity Watchdog — Calculate — IN_PROGRESS
+TITLE: Code Complexity Watchdog — Calculate — COMPLETED
 - [4717177113882199359] TASK ID: AG-N-08
 TITLE: Dependency Cycle Detector — Identify — COMPLETED
 - [1598085849761017934] TASK ID: AG-N-07
 TITLE: Automated Refactoring: Method Extrac — AWAITING_USER_FEEDBACK
 - [12153040531148826089] TASK ID: AG-N-06
 TITLE: Docstring Quality Audit — Score docs — COMPLETED
-- [10909534316686343421] TASK ID: AG-N-05
-TITLE: Symbol-Based Context Injector — Read — AWAITING_USER_FEEDBACK
-- [13023222237943336810] TASK ID: AG-N-04
-TITLE: Dead Code Detector — Identify and fl — COMPLETED
-- [15278676307606116315] TASK ID: AG-N-03
-TITLE: Type Hint Enforcement — Automated sc — COMPLETED
-- [10269859017831333431] TASK ID: AG-N-02
-TITLE: Local Call Graph Generator — Trace f — AWAITING_USER_FEEDBACK
-- [2533769843445056042] TASK ID: AG-M-06
-TITLE: 🛡️ SEC-IGNORE: Global Context Filter — AWAITING_USER_FEEDBACK
-- [12842429000191861335] TASK ID: AG-M-01
-TITLE: 🚀 MEGA-TASK: NINA Throughput Maximiz — AWAITING_USER_FEEDBACK
-- [8696994180250454150] TASK ID: AG-O-02
-TITLE: Mutation Test Suite — Implement basi — READY
 
 ## 3. Locked Files (do not touch in new specs)
 ```
@@ -206,11 +199,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
-1db84a8 docs: post-session sync 2026-06-12 12:19
-52a0f00 docs: add alert beep script and conversation summary
-52eb194 docs: post-session sync 2026-06-12 12:19
-56ec140 merge: PR #140 (Local Fallback)
-4346d65 feat: Local Call Graph Generator — Trace function calls locally without LLM
+bd02dd8 docs: post-session sync 2026-06-12 20:28
+3fb708a docs: autonomous documentation update per index
+fe171c1 docs: autonomous documentation update per index
+27f6bc5 docs: autonomous documentation update per index
+b847f13 docs: autonomous documentation update per index
 ```
 
 ## 6. Open Blockers
@@ -248,8 +241,8 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-- No open PRs
+#146 Symbol-Based Context Injector — Read only the call stack of a function. [feat-cmd-code-call-stack-12315339931076793747]
 
 
 ---
-_Feed size: 15330 bytes_
+_Feed size: 15721 bytes_

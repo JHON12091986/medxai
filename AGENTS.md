@@ -367,3 +367,17 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
 
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+---
+
+## Scratchpad Logging (Gemini CLI — mandatory)
+
+After every action, append one JSON line to ~/nina/data/gemini_scratch.jsonl:
+{"t":"<ISO8601>","step":<n>,"action":"<read|write|shell|think|error>","file":"<path or ''>","detail":"<one sentence>","status":"<ok|fail|stuck>"}
+
+Action values: read | write | shell | think | error | stuck | done
+Never skip a step. Never batch multiple steps into one line.
+On task start (step 0): action=start, detail=task summary
+On task end (step -1): action=done, detail=outcome summary
+
+---
