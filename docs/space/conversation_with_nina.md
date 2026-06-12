@@ -29,3 +29,26 @@ The user provided a rapid sequence of strategic goals aimed at achieving **Funct
 
 ## Conclusion
 NINA has evolved from a reactive tool into a proactive, state-driven orchestrator capable of managing its own development lifecycle. The pipeline (Goal -> Spec -> Dispatch -> PR -> Document -> Merge -> Sync) operates autonomously on a 3-minute heartbeat.
+
+---
+
+## Session Highlights — 2026-06-12 (Context Efficiency & Kernel Hardening)
+
+Today's session focused on restoring the "Surgical" local kernel and optimizing the agent's context window for higher performance and lower token usage.
+
+1. **Kernel Restoration & Hygiene**:
+   - Fixed a critical `ValueError` in `tools/ninaflash.py` caused by duplicate `gemini` subparser declarations.
+   - Performed a full hygiene pass on the kernel source: fixed unused imports, unused variables, and `pyflakes` warnings (f-string placeholders).
+   - Verified the fix with `nf monitor` and `py_compile`.
+
+2. **Context Optimization (26k-token Reduction)**:
+   - Surgically updated `.gemini/settings.json` to limit `context.fileName` to essential governance files (`AGENTS.md`, `docs/space/nina_index.md`).
+   - Expanded `.geminiignore` to exclude high-volume logs, temporary `.jsonl` data, and the massive `ninaflash.py` implementation.
+   - Generated `docs/space/ninaflash_stub.md` via `nf code pack` to provide the agent with a lightweight functional reference of the kernel without the implementation bloat.
+
+3. **Governance & Index Hardening**:
+   - Implemented **Rule 7 (Index Governance)** in `AGENTS.md`: Mandatory indexing of new files via `update_index.py` before any sync/push.
+   - Synchronized the repository governance index to resolve unmanaged file errors and broken links.
+   - Confirmed a successful `./nina_sync.sh` with a perfect metadata quality score and a clean pre-push audit.
+
+The system is now operating with a significantly reduced context overhead while maintaining full functional awareness through stubs and indices.
