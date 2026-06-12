@@ -397,6 +397,110 @@ def cmd_code_outline(args):
         elif isinstance(node, ast.ClassDef):
             print(f"class {node.name}:")
 
+def cmd_code_cycles(args):
+    """[040] Identify circular dependencies in local project files."""
+    def _get_module_name(file_path):
+        try:
+            rel_path = file_path.relative_to(REPO_ROOT)
+        except ValueError:
+            return file_path.stem
+        parts = list(rel_path.parts)
+        parts[-1] = parts[-1].replace(".py", "")
+        if parts[-1] == "__init__":
+            parts.pop()
+        return ".".join(parts)
+
+    def _get_imports(file_path):
+        module_name = _get_module_name(file_path)
+        module_parts = module_name.split(".") if module_name else []
+        with open(file_path, "r", encoding="utf-8") as f:
+            try:
+                tree = ast.parse(f.read(), filename=str(file_path))
+            except Exception:
+                return set()
+        imports = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    imports.add(alias.name)
+            elif isinstance(node, ast.ImportFrom):
+                if node.level > 0:
+                    base_parts = module_parts[:-node.level] if node.level <= len(module_parts) else []
+                    if node.module:
+                        base_mod = ".".join(base_parts + [node.module])
+                        imports.add(base_mod)
+                        for alias in node.names:
+                            imports.add(f"{base_mod}.{alias.name}")
+                    else:
+                        base_mod = ".".join(base_parts)
+                        imports.add(base_mod)
+                        for alias in node.names:
+                            imports.add(f"{base_mod}.{alias.name}")
+                else:
+                    if node.module:
+                        imports.add(node.module)
+                        for alias in node.names:
+                            imports.add(f"{node.module}.{alias.name}")
+        return imports
+
+    files = _find_py_files()
+    known_modules = set(_get_module_name(f) for f in files if _get_module_name(f))
+    module_to_imports = {}
+
+    for f in files:
+        mod_name = _get_module_name(f)
+        if not mod_name:
+            continue
+        local_imports = set()
+        for imp in _get_imports(f):
+            imp_parts = imp.split(".")
+            for i in range(len(imp_parts), 0, -1):
+                prefix = ".".join(imp_parts[:i])
+                if prefix in known_modules:
+                    local_imports.add(prefix)
+                    break
+        module_to_imports[mod_name] = local_imports
+
+    cycles = set()
+    path = []
+    path_set = set()
+    fully_visited = set()
+
+    def dfs(node):
+        if node in path_set:
+            idx = path.index(node)
+            cycle = path[idx:]
+            if len(cycle) > 1:
+                min_idx = cycle.index(min(cycle))
+                normalized = tuple(cycle[min_idx:] + cycle[:min_idx])
+                cycles.add(normalized)
+            return
+        if node in fully_visited:
+            return
+
+        path.append(node)
+        path_set.add(node)
+
+        for neighbor in module_to_imports.get(node, []):
+            dfs(neighbor)
+
+        path.pop()
+        path_set.remove(node)
+        fully_visited.add(node)
+
+    for node in module_to_imports:
+        if node not in fully_visited:
+            dfs(node)
+
+    distinct_cycles = sorted(list(set(cycles)))
+    if not distinct_cycles:
+        print("No circular dependencies found.")
+    else:
+        print(f"Found {len(distinct_cycles)} circular dependencies:")
+        for c in distinct_cycles:
+            print(" -> ".join(c) + f" -> {c[0]}")
+
+
 def cmd_code_dep_map(args):
     """[013] Map project dependencies excluding venv."""
     files = _find_py_files()
@@ -2068,6 +2172,7 @@ def main():
     p_fs.add_argument("name")
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
+    p_cs.add_parser("cycles")
     p_cs.add_parser("index")
     p_cs.add_parser("pack").add_argument("file")
     
@@ -2184,6 +2289,7 @@ def main():
         elif args.command == "code":
             if args.sub == "outline": cmd_code_outline(args)
             elif args.sub == "dep-map": cmd_code_dep_map(args)
+            elif args.sub == "cycles": cmd_code_cycles(args)
             elif args.sub == "index": cmd_code_index(args)
             elif args.sub == "symbol": cmd_code_symbol(args)
             elif args.sub == "sigs": cmd_code_sigs(args)
