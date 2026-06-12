@@ -206,24 +206,60 @@ async def monitor_and_resolve_prs_parallel():
         tasks = [resolve_pr_v5(pr, index, local_success, error_register) for pr in open_prs]
         await asyncio.gather(*tasks)
 
+async def prune_stale_branches():
+    """Aggressively deletes remote branches that no longer have an open PR."""
+    logger.info("Cleaning up stale remote branches...")
+    try:
+        # 1. Get open PR head refs
+        cmd = ["gh", "pr", "list", "--json", "headRefName"]
+        res = await asyncio.to_thread(subprocess.run, cmd, capture_output=True, text=True, cwd=str(REPO_ROOT))
+        if res.returncode != 0: return
+        open_refs = {pr["headRefName"] for pr in json.loads(res.stdout)}
+        
+        # 2. Get all remote branches
+        cmd = ["git", "branch", "-r"]
+        res = await asyncio.to_thread(subprocess.run, cmd, capture_output=True, text=True, cwd=str(REPO_ROOT))
+        if res.returncode != 0: return
+        
+        for line in res.stdout.splitlines():
+            line = line.strip()
+            if not line or "->" in line: continue
+            if "origin/main" in line: continue
+            
+            # Extract branch name from 'origin/branch-name'
+            remote_prefix = "origin/"
+            if line.startswith(remote_prefix):
+                branch_name = line[len(remote_prefix):]
+                
+                # If it's a Jules/Feature branch and NOT in open_refs, delete it
+                if branch_name not in open_refs:
+                    if any(x in branch_name.lower() for x in ("jules-", "feat", "bolt-", "telegram-")):
+                        logger.info(f"🗑️ Deleting stale remote branch: {branch_name}")
+                        subprocess.run(["git", "push", "origin", "--delete", branch_name], 
+                                     capture_output=True, cwd=str(REPO_ROOT))
+
+    except Exception as e:
+        logger.error(f"Branch pruning failed: {e}")
+
 async def run_orchestrator_cycle(nina_os=None):
     """The main 3-minute high-capacity cycle."""
-    logger.info("--- Starting Orchestrator v5.2 (Evolutionary) ---")
+    logger.info("--- Starting Orchestrator v5.3 (Self-Cleaning) ---")
     
-    # Step -1: Sense & Evolve (Run Metrics & Evolution logic)
+    # Phase -1: Sense & Evolve
     try:
         await asyncio.to_thread(subprocess.run, ["python3", "tools/monitor.py"], capture_output=True, cwd=str(REPO_ROOT))
         await asyncio.to_thread(subprocess.run, ["python3", "tools/evolve.py"], capture_output=True, cwd=str(REPO_ROOT))
     except Exception as e:
         logger.error(f"Evolution phase failed: {e}")
 
-    # Step 0: Notify Telegram of any items needing attention
+    # Phase 0: Notify Telegram & Prune Stale Data
     await watch_and_notify()
+    await prune_stale_branches()
     
-    # Step 1: Clean up stale sessions to free up queue slots
+    # Phase 1: Clean up stale sessions
     await auto_close_stale_sessions()
     
-    # Step 2: Resolve PRs in Parallel
+    # Phase 2: Resolve PRs in Parallel
     await monitor_and_resolve_prs_parallel()
     
     # Step 3: Saturate Jules Pipeline

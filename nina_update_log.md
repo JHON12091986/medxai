@@ -2515,3 +2515,19 @@
 
 ## Auto-doc patch — 2026-06-12
 - Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+---
+
+## Entry 228 — 2026-06-12 · merge: PR-143 feat(ninaflash): implement Local Call Graph Generator task
+**Triggered by:** nf maintain automation.
+
+**What changed:**
+- Merged via local fallback.
+
+**Rollback:** `git revert -m 1 HEAD`
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
