@@ -1,6 +1,7 @@
 """Jules REST API tool for NINA. Dispatches tasks and polls PR status."""
 
 import os
+import re
 import logging
 import asyncio
 import json
