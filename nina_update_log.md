@@ -2629,3 +2629,16 @@
 
 ## Auto-doc patch — 2026-06-13
 - Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
+
+---
+
+## Entry 240 — 2026-06-13 · merge: PR-149 fix: handle BrokenPipeError when piping Local Call Graph output
+**Triggered by:** nf maintain automation.
+
+**What changed:**
+- Merged via local fallback.
+
+**Rollback:** `git revert -m 1 HEAD`
+
+## Auto-doc patch — 2026-06-13
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
