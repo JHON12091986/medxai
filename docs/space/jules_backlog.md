@@ -395,7 +395,7 @@ _Focus: Zero-token research and semantic mapping_
 | AG-N-04 | `ninaflash.py` | Dead Code Detector — Identify and flag unused functions/imports. | `READY` | — |
 | AG-N-05 | `ninaflash.py` | Symbol-Based Context Injector — Read only the call stack of a function. | `READY` | AG-N-02 |
 | AG-N-06 | `ninaflash.py` | Docstring Quality Audit — Score docstrings on clarity and completeness. | `READY` | — |
-| AG-N-07 | `core/` | Automated Refactoring: Method Extraction — Split large functions via AST. | `READY` | — |
+| AG-N-07 | `core/` | Automated Refactoring: Method Extraction — Split large functions via AST. | `DONE` | — |
 | AG-N-08 | `ninaflash.py` | Dependency Cycle Detector — Identify circular imports locally. | `READY` | — |
 | AG-N-09 | `ninaflash.py` | Code Complexity Watchdog — Calculate cyclomatic complexity. | `READY` | — |
 | AG-N-10 | `ninaflash.py` | Symbol Migration Tool — Automate renaming and moving symbols. | `READY` | — |
