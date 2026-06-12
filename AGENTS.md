@@ -232,6 +232,10 @@ To prevent "Black Box" reasoning (thinking without stimuli):
      file type filter. Never run unfiltered recursive grep.
    - Maximum search scope: grep -r ~/nina --include="*.py" — always bounded.
 
+7. INDEX GOVERNANCE
+   - Any new .md, .py, or .json file MUST be indexed via `python3 tools/update_index.py` BEFORE running `./nina_sync.sh`.
+   - The sync process includes a mandatory governance check; unmanaged files will block the `git push`.
+
 ### LOCKED FILES (never touch under any circumstances)
 tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 
@@ -386,7 +390,7 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - OFFLOAD_OPPORTUNITY: Mechanical tasks (imports, standardized runs) → 100% NinaFlash next time.
 - ESCALATION_TRIGGER: Complex merge conflict resolution across interdependent files (agent.py, router.py) → Gemini Pro required.
 - ROUTING_WIN: Parallel Pre-fetch (Racing) confirmed efficient (75% latency reduction in benchmarks).
-- CONTEXT_HINT: Use `docs/space/nina_index.md` for governance and path validation.
+- CONTEXT_HINT: New files MUST be indexed via `update_index.py` before `nina_sync.sh` to pass governance.
 - **BENCHMARK BASELINE (v4.0):**
   - Token Reduction: 94.1% (Hybrid).
   - Time Saved: 1.50s per complex request.

@@ -4,3 +4,4 @@
 {"ts": "2026-06-12T11:25:57.945303", "summary": "Deployed v5.1 Orchestrator with parallel resolution and index-aware documentation enforcement.", "git_head": "c945e291af4da8f1bac64504e2a6a168055f4b31", "branch": "main"}
 {"ts": "2026-06-12T12:19:09.819973", "summary": "Completed OSS submission prep: Docs, Hygiene, Beep Alert, Arch Update", "git_head": "56ec140d394c424c830b04f6350de728958cbf55", "branch": "main"}
 {"ts": "2026-06-12T20:28:09.146161", "summary": "Resolved doc hallucination for AG-O-02; Completed P0 B-002: Wired model_overrides to hot-reload.", "git_head": "3fb708aa286abb1a74559d2f968d11f5def426ca", "branch": "main"}
+{"ts": "2026-06-12T23:30:48.784216", "summary": "Hardened AGENTS.md with Rule 7: Index Governance", "git_head": "43538ebb2be90ca3507d95cb1271684b95e7baac", "branch": "main"}
