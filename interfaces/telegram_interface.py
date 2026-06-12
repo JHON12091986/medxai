@@ -42,7 +42,8 @@ sec_log = logging.getLogger("nina.security")
 COMMANDS = {
     "task", "ask", "email", "shell", "remember", "forget",
     "patch", "generate", "approve", "reject", "rollback",
-    "addkey", "status", "router", "logs", "abort", "start", "reset", "help", "backlog"
+    "addkey", "status", "router", "logs", "abort", "start", "reset", "help",
+    "backlog", "errors", "jules"
 }
 
 HELP_TEXT = """*NINA v12 Commands*
@@ -62,7 +63,9 @@ HELP_TEXT = """*NINA v12 Commands*
 `addkey list` -- Show provider status & signup links
 `backlog` -- shows top 5 READY items
 `status` -- System health snapshot
+`errors` -- Show open error register items
 `router` -- Provider routing table
+`jules <cmd>` -- Jules API (dispatch, status, feedback)
 `logs` -- Last 50 lines of nina.log
 `abort` -- Kill active task immediately
 `start` -- Reset session history
@@ -232,6 +235,7 @@ class TelegramInterface:
             else:
                 await self._reply(update, "nina.log not found.")
 
+<<<<<<< HEAD
         elif cmd == "backlog":
             backlog_path = Path("docs/space/jules_backlog.md")
             if not backlog_path.exists():
@@ -240,32 +244,43 @@ class TelegramInterface:
 
             try:
                 backlog_content = backlog_path.read_text()
+                ready_items = []
+                for line in backlog_content.splitlines():
+                    if line.strip().startswith("|") and "`READY`" in line:
+                        parts = [p.strip() for p in line.split("|") if p.strip()]
+                        if len(parts) >= 3:
+                            tid = parts[0]
+                            title = parts[1] if "`READY`" in parts[2] else parts[2]
+                            ready_items.append(f"• {tid}: {title}")
+                            if len(ready_items) >= 5: break
+                
+                reply = "*Top 5 READY Backlog Items:*\n" + "\n".join(ready_items) if ready_items else "No READY items found."
+                await self._reply(update, reply, parse_mode=self.PARSE_MODE_DEFAULT)
             except Exception as e:
-                await self._reply(update, f"Error reading backlog: {e}")
-                return
+                await self._reply(update, f"Error: {e}")
 
-            ready_items = []
-            for line in backlog_content.splitlines():
-                if line.strip().startswith("|") and "`READY`" in line:
-                    parts = [p.strip() for p in line.split("|") if p.strip()]
-                    if len(parts) >= 3 and re.match(r'^[A-Z0-9-]+$', parts[0]):
-                        if "`READY`" in parts[2]:
-                            title = parts[1]
-                        elif len(parts) >= 4 and "`READY`" in parts[3]:
-                            title = parts[2]
-                        else:
-                            title = " ".join(parts[1:-1])
-
-                        ready_items.append(f"• {parts[0]}: {title}")
-                        if len(ready_items) >= 5:
-                            break
-
-            if ready_items:
-                reply = "*Top 5 READY Backlog Items:*\n" + "\n".join(ready_items)
+        elif cmd == "errors":
+            path = Path("docs/space/nina_error_register.md")
+            if not path.exists():
+                await self._reply(update, "Error register not found.")
             else:
-                reply = "No READY items found in backlog."
+                lines = path.read_text().splitlines()
+                open_items = []
+                in_table = False
+                for line in lines:
+                    if line.startswith("| ID"): in_table = True; continue
+                    if in_table and line.startswith("|"):
+                        parts = [p.strip() for p in line.split("|")]
+                        if len(parts) >= 6:
+                            if "OPEN" in parts[5] or "PENDING" in parts[5]:
+                                open_items.append(f"• [{parts[1]}] {parts[4]}")
+                reply = "Open Error Register Items:\n" + "\n".join(open_items) if open_items else "No open errors found."
+                await self._reply(update, reply[:4000])
 
-            await self._reply(update, reply, parse_mode=self.PARSE_MODE_DEFAULT)
+        elif cmd == "jules":
+            from tools import jules_api
+            result = await jules_api.run(arg)
+            await self._reply(update, result[:4000])
 
         elif cmd == "start":
             self.session_history.clear()

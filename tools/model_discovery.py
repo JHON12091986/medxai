@@ -129,13 +129,14 @@ class ModelDiscoveryService:
                     r = await client.get(url, headers=headers)
                     r.raise_for_status()
                     data = r.json()
-                    models = data.get("models", data.get("data", []))
+                    
+                    if isinstance(data, list):
+                        models = data
+                    else:
+                        models = data.get("models", data.get("data", []))
+                    
                     if not isinstance(models, list):
-                        # Some APIs like Gemini might have a different structure
-                        if "models" in data:
-                            models = data["models"]
-                        else:
-                            models = []
+                        models = []
 
                     if models:
                         best_model = filter_fn(models)

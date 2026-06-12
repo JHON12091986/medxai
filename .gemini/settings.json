@@ -1,5 +1,8 @@
 { 
   "model": "gemini-3-flash-preview",
   "preview": true,
-  "context": { "fileName": ["AGENTS.md"] } 
+  "context": { "fileName": ["AGENTS.md"] },
+  "tools": {
+    "allowed": ["run_shell_command"]
+  }
 }

@@ -263,7 +263,7 @@ def get_backlog_tasks() -> List[Dict[str, Any]]:
     
     content = BACKLOG_PATH.read_text(encoding="utf-8")
     lines = content.splitlines()
-    task_id_pattern = r"^\|\s*(B-\d+|AG-[A-J]-\d+|R-\d+)\s*\|"
+    task_id_pattern = r"^\|\s*(B-\d+|AG-[A-Z]-\d+|R-\d+)\s*\|"
     current_section, tasks = "", []
     for line in lines:
         if line.startswith("## "): current_section = line[3:].strip(); continue
