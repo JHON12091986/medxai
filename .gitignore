@@ -26,3 +26,4 @@ data/healthcheck_registry.txt
 exports/nina_latest.md
 data/circuit_state.json
 ninagate/quotas.json
+data/jules_seen_activities.json
