@@ -499,6 +499,58 @@ def cmd_code_call_graph(args):
 
     print(json.dumps(graph, indent=2))
 
+def cmd_code_call_stack(args):
+    """[040] Symbol-Based Context Injector: Read only the call stack of a function."""
+    class CallVisitor(ast.NodeVisitor):
+        def __init__(self):
+            self.calls = set()
+        def visit_Call(self, node):
+            if isinstance(node.func, ast.Name):
+                self.calls.add(node.func.id)
+            elif isinstance(node.func, ast.Attribute):
+                self.calls.add(node.func.attr)
+            self.generic_visit(node)
+
+    if hasattr(args, 'file') and args.file:
+        files = [_path_resolve(args.file)]
+    else:
+        files = _find_py_files()
+
+    source_map = {}
+    ast_map = {}
+
+    for py_file in files:
+        if not py_file.exists(): continue
+        try:
+            content = py_file.read_text(encoding="utf-8")
+            tree = ast.parse(content)
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                    source_map[node.name] = ast.get_source_segment(content, node)
+                    if not isinstance(node, ast.ClassDef):
+                        ast_map[node.name] = node
+        except Exception:
+            pass
+
+    visited = set()
+    def trace(name, depth=0):
+        if name in visited or depth > 5: return
+        visited.add(name)
+        source = source_map.get(name)
+        if not source: return
+
+        print(f"--- {name} ---")
+        print(source)
+
+        node = ast_map.get(name)
+        if node:
+            visitor = CallVisitor()
+            visitor.visit(node)
+            for call in visitor.calls:
+                trace(call, depth + 1)
+
+    trace(args.target)
+
 
 # ------------------------------------------------------------------
 # MODULE 3: CONTEXT COMPRESSION
@@ -1901,8 +1953,62 @@ def cmd_ops_rotate_logs(args):
 
     print(f"✅ Rotated and compressed {rotated} log files to {archive_dir.relative_to(REPO_ROOT)}/")
 
+
+
+# --- ADD 6: Session Ledger ---
+def cmd_session_start(args):
+    try:
+        from tools.session_ledger import SessionLedger
+        ledger = SessionLedger(tool=args.tool, task_id=args.task_id)
+        ledger._save()
+        print(f"Session {ledger.session_id} started for {args.tool}")
+    except Exception as e:
+        print(f"Error starting session: {e}")
+        sys.exit(1)
+
+def cmd_session_log(args):
+    try:
+        from tools.session_ledger import get_active_session
+        ledger = get_active_session(args.tool)
+        if ledger:
+            ledger.log_step(args.step, args.action, args.outcome, args.detail)
+            print(f"Logged step {args.step}: {args.outcome}")
+        else:
+            print(f"No active session found for tool {args.tool}")
+            sys.exit(1)
+    except Exception as e:
+        print(f"Error logging step: {e}")
+        sys.exit(1)
+
+def cmd_session_preamble(args):
+    try:
+        from tools.session_preamble import write_preamble_file
+        path = write_preamble_file(args.tool)
+        if path:
+            with open(path, "r") as f:
+                content = f.read()
+            if content:
+                print(content)
+            else:
+                print("No recovery needed — clean slate")
+        else:
+            print("No recovery needed — clean slate")
+    except Exception as e:
+        print(f"Error writing preamble: {e}")
+        sys.exit(1)
+
+def cmd_session_done(args):
+    try:
+        from tools.session_preamble import clear_preamble
+        clear_preamble(args.tool)
+        print("Session closed. Preamble cleared.")
+    except Exception as e:
+        print(f"Error closing session: {e}")
+        sys.exit(1)
+
 # ------------------------------------------------------------------
 # THE UNIFIED DISPATCHER
+
 # ------------------------------------------------------------------
 
 
@@ -2234,6 +2340,12 @@ def main():
     p_batch = subparsers.add_parser("batch")
     p_batch.add_argument("--cmds", required=True, help="Piped commands: 'c1|c2'")
 
+    p_gemini = subparsers.add_parser("gemini")
+    gemini_sub = p_gemini.add_subparsers(dest="sub")
+    watch_parser = gemini_sub.add_parser('watch', help='Open live scratchpad watcher')
+    watch_parser.add_argument('--clear', action='store_true', default=False,
+                              help='Clear gemini_scratch.jsonl before watching')
+
     p_file = subparsers.add_parser("file"); p_fs_f = p_file.add_subparsers(dest="sub")
     p_fr = p_fs_f.add_parser("read"); p_fr.add_argument("file"); p_fr.add_argument("--start", type=int); p_fr.add_argument("--end", type=int)
     p_fg = p_fs_f.add_parser("grep"); p_fg.add_argument("pattern"); p_fg.add_argument("--dir"); p_fg.add_argument("--ext")
@@ -2256,6 +2368,23 @@ def main():
     p_sc = p_ss.add_parser("checkpoint")
     p_sc.add_argument("--goal", default="", help="Active goal for this session")
     p_ss.add_parser("resume")
+
+    p_sstart = p_ss.add_parser("start")
+    p_sstart.add_argument("--tool", default="gemini_cli", help="Tool name")
+    p_sstart.add_argument("--task", dest="task_id", default="", help="Task ID")
+
+    p_slog = p_ss.add_parser("log")
+    p_slog.add_argument("--tool", default="gemini_cli", help="Tool name")
+    p_slog.add_argument("--step", type=int, required=True, help="Step index")
+    p_slog.add_argument("--action", required=True, help="Action taken")
+    p_slog.add_argument("--outcome", choices=["success", "failure", "partial", "skipped"], required=True, help="Outcome")
+    p_slog.add_argument("--detail", default="", help="Detail")
+
+    p_spreamble = p_ss.add_parser("preamble")
+    p_spreamble.add_argument("--tool", default="gemini_cli", help="Tool name")
+
+    p_sdone = p_ss.add_parser("done")
+    p_sdone.add_argument("--tool", default="gemini_cli", help="Tool name")
 
     p_memory = subparsers.add_parser("memory"); p_ms = p_memory.add_subparsers(dest="sub")
     p_ms_stash = p_ms.add_parser("stash")
@@ -2302,6 +2431,8 @@ def main():
     p_cs.add_parser("dep-map")
     p_cs.add_parser("index")
     p_cs.add_parser("call-graph").add_argument("file", nargs="?")
+    p_cs.add_parser("call-stack").add_argument("target")
+    p_cs.choices["call-stack"].add_argument("file", nargs="?")
     p_cs.add_parser("pack").add_argument("file")
     p_cs.add_parser("dead-code").add_argument("target")
     
@@ -2392,6 +2523,15 @@ def main():
         elif args.command == "stats": cmd_stats(args)
         elif args.command == "monitor": cmd_monitor(args)
         elif args.command == "batch": cmd_batch(args)
+        elif args.command == "gemini":
+            gemini_cmd = args.sub
+            if gemini_cmd == 'watch':
+                scratch = Path.home() / 'nina' / 'data' / 'gemini_scratch.jsonl'
+                if args.clear and scratch.exists():
+                    scratch.unlink()
+                    print('Scratchpad cleared.')
+                watcher = Path.home() / 'nina' / 'tools' / 'gemini_watch.py'
+                os.execvp('python3', ['python3', str(watcher)])
         elif args.command == "file":
             if args.sub == "read": cmd_file_read(args)
             elif args.sub == "grep": cmd_file_grep(args)
@@ -2412,6 +2552,10 @@ def main():
         elif args.command == "session":
             if args.sub == "checkpoint": cmd_session_checkpoint(args)
             elif args.sub == "resume": cmd_session_resume(args)
+            elif args.sub == "start": cmd_session_start(args)
+            elif args.sub == "log": cmd_session_log(args)
+            elif args.sub == "preamble": cmd_session_preamble(args)
+            elif args.sub == "done": cmd_session_done(args)
         elif args.command == "memory":
             if args.sub == "stash": cmd_memory_stash(args)
             elif args.sub == "session-save": cmd_memory_session_save(args)
@@ -2433,6 +2577,7 @@ def main():
             elif args.sub == "dep-map": cmd_code_dep_map(args)
             elif args.sub == "index": cmd_code_index(args)
             elif args.sub == "call-graph": cmd_code_call_graph(args)
+            elif args.sub == "call-stack": cmd_code_call_stack(args)
             elif args.sub == "symbol": cmd_code_symbol(args)
             elif args.sub == "sigs": cmd_code_sigs(args)
             elif args.sub == "doc": cmd_code_doc(args)

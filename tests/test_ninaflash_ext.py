@@ -45,3 +45,17 @@ def test_cmd_code_call_graph(tmp_path):
     assert "a" in output_json
     assert "b" in output_json["a"]
     assert "c" in output_json["a"]
+
+def test_cmd_code_call_stack(tmp_path):
+    test_file = tmp_path / "test_stack.py"
+    test_file.write_text("def a():\n  b()\n  c()\n\ndef b():\n  pass\n\ndef c():\n  pass\n")
+
+    res = run_nf("code", "call-stack", "a", str(test_file))
+    assert res.returncode == 0
+
+    assert "--- a ---" in res.stdout
+    assert "def a():" in res.stdout
+    assert "--- b ---" in res.stdout
+    assert "def b():" in res.stdout
+    assert "--- c ---" in res.stdout
+    assert "def c():" in res.stdout
