@@ -18,7 +18,7 @@ def get_stale_files(months=6):
 
 def get_fs_all(repo_root):
     fs_all = set()
-    ignore_parts = {".git", "venv", ".venv", "__pycache__", ".pytest_cache", ".mypy_cache", ".agent", ".jules", "node_modules", ".aider.tags.cache"}
+    ignore_parts = {".git", "venv", ".venv", "__pycache__", ".pytest_cache", ".mypy_cache", ".agent", "node_modules", ".aider.tags.cache"}
     
     for root, dirs, files in os.walk(repo_root):
         # Prune dirs
