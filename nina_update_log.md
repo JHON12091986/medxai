@@ -2502,3 +2502,16 @@
 
 ## Auto-doc patch — 2026-06-12
 - Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+---
+
+## Entry 227 — 2026-06-12 · merge: PR-142 chore(core): add missing type hints to core module
+**Triggered by:** nf maintain automation.
+
+**What changed:**
+- Merged via local fallback.
+
+**Rollback:** `git revert -m 1 HEAD`
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19

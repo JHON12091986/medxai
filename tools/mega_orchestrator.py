@@ -236,11 +236,15 @@ async def run_orchestrator_cycle(nina_os=None):
         to_dispatch = ready_tasks[:available_slots]
         for task in to_dispatch:
             prompt = f"TASK ID: {task['id']}\nTITLE: {task['title']}\nFILES: {task['files']}\n\nINSTRUCTIONS: {task['title']}. Ensure code quality, pass tests, and update relevant documentation files if required by the index."
-            res = await jules_api.run(f"dispatch {prompt}")
-            if "Jules task started" in res:
-                _save_task_status(task["id"], "IN_PROGRESS")
-            elif "400 Client Error" in res:
-                logger.warning(f"Skipping dispatch due to 400 error (queue likely full).")
+            try:
+                res = await jules_api.run(f"dispatch {prompt}")
+                if "Jules task started" in res:
+                    _save_task_status(task["id"], "IN_PROGRESS")
+                elif "400 Client Error" in res:
+                    logger.warning(f"Skipping dispatch due to 400 error (queue likely full).")
+                    break
+            except Exception as e:
+                logger.error(f"Dispatch failed for {task['id']}: {e}")
                 break
     
     logger.info("--- Cycle Complete ---")

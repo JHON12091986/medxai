@@ -82,7 +82,7 @@ Perplexity reads backlog each session
 | B-047 | Build a NinaGate routing telemetry dashboard | `IN_PROGRESS` | TBD | — | Auto-ingested via Goal Intake |
 
 
-| B-046 | Implement conflict-skip and error register logging | `READY` | TBD | — | Auto-ingested via Goal Intake |
+| B-046 | Implement conflict-skip and error register logging | `IN_PROGRESS` | TBD | — | Auto-ingested via Goal Intake |
 
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
