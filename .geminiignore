@@ -1,1 +1,7 @@
 !data/session_checkpoint.json
+logs/
+data/plans/
+upgrades/backups/
+*.pyc
+__pycache__/
+venv/

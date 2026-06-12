@@ -122,10 +122,12 @@ async def test_providerhunter_smoke(tmp_path):
 @pytest.mark.asyncio
 async def test_jules_api_smoke():
     from tools import jules_api
-
+with patch("tools.jules_api.requests.request") as mock_req:
     with patch.dict("os.environ", {"JULES_API_KEY": "dummy"}):
-        with patch("tools.jules_api.make_request_with_retry") as mock_get:
-            mock_get.return_value = {"sources": [{"name": "mocked_source"}]}
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"sources": [{"name": "mocked_source"}]}
+        mock_req.return_value = mock_response
 
             result = await jules_api.run("/jules sources")
             assert "mocked_source" in result

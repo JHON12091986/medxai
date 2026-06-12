@@ -327,15 +327,48 @@ NF_TOKEN_SAVINGS = {
 _SKIP_DIRS = {".git", "venv", ".venv", "env", "virtualenv", "__pycache__",
               "node_modules", ".mypy_cache", ".pytest_cache", "dist", "build"}
 
+def _load_geminiignore() -> List[str]:
+    ignore_file = REPO_ROOT / '.geminiignore'
+    if not ignore_file.exists():
+        return []
+
+    patterns = []
+    for line in ignore_file.read_text(encoding='utf-8').splitlines():
+        line = line.strip()
+        if line and not line.startswith('#') and not line.startswith('!'):
+            patterns.append(line)
+    return patterns
+
+def _is_ignored(path_str: str, patterns: List[str]) -> bool:
+    if not patterns:
+        return False
+    import fnmatch
+    for pattern in patterns:
+        if pattern.endswith('/'):
+            if path_str == pattern[:-1] or path_str.startswith(pattern):
+                return True
+        elif fnmatch.fnmatch(path_str, pattern) or fnmatch.fnmatch(os.path.basename(path_str), pattern):
+            return True
+        elif path_str.startswith(pattern + '/'):
+            return True
+    return False
+
+
+
 def _find_py_files() -> List[Path]:
-    """[008] Find all .py files excluding standard ignore dirs with depth cap."""
+    """[008] Find all .py files excluding standard ignore dirs and .geminiignore with depth cap."""
+    patterns = _load_geminiignore()
     return [p for p in REPO_ROOT.rglob("*.py")
             if not any(skip in p.parts for skip in _SKIP_DIRS)
+            and not _is_ignored(str(p.relative_to(REPO_ROOT)), patterns)
             and len(p.relative_to(REPO_ROOT).parts) <= 8]
 
 def _find_md_files() -> List[Path]:
-    """[009] Find all .md files excluding standard ignore dirs."""
-    return [p for p in REPO_ROOT.rglob("*.md") if not any(skip in p.parts for skip in _SKIP_DIRS)]
+    """[009] Find all .md files excluding standard ignore dirs and .geminiignore."""
+    patterns = _load_geminiignore()
+    return [p for p in REPO_ROOT.rglob("*.md")
+            if not any(skip in p.parts for skip in _SKIP_DIRS)
+            and not _is_ignored(str(p.relative_to(REPO_ROOT)), patterns)]
 
 # ------------------------------------------------------------------
 # MODULE 1: ATOMIC GIT & PR ORCHESTRATOR
@@ -846,6 +879,28 @@ def cmd_check_code(args):
     print(f"Verdict: {verdict_emoji}")
 
     write_nf_log("check", "code", outcome=f"{path} → {verdict}")
+
+
+def cmd_check_ignore(args):
+    """[045] Show which files are currently being hidden from the agent."""
+    patterns = _load_geminiignore()
+    print(f"Loaded {len(patterns)} patterns from .geminiignore")
+    if not patterns:
+        return
+
+    ignored_files = []
+    for root, dirs, files in os.walk(REPO_ROOT):
+        dirs[:] = [d for d in dirs if not _is_ignored(str((Path(root) / d).relative_to(REPO_ROOT)), patterns)]
+        for file in files:
+            path = Path(root) / file
+            if _is_ignored(str(path.relative_to(REPO_ROOT)), patterns):
+                ignored_files.append(str(path.relative_to(REPO_ROOT)))
+
+    print(f"Found {len(ignored_files)} ignored files.")
+    for f in sorted(ignored_files)[:50]:
+        print(f"  {f}")
+    if len(ignored_files) > 50:
+        print(f"  ... and {len(ignored_files) - 50} more")
 
 def cmd_check_doc(args):
     """[034] Doc quality gate: validate required sections and stale references."""
@@ -1425,11 +1480,14 @@ def cmd_file_grep(args):
     pattern = args.pattern
     dir_path = REPO_ROOT / (getattr(args, "dir", ".") or ".")
     extensions = (getattr(args, "ext", ".py,.md,.txt,.log") or ".py,.md,.txt,.log").split(",")
+    patterns = _load_geminiignore()
     for root, dirs, files in os.walk(dir_path):
         dirs[:] = [d for d in dirs if d not in _SKIP_DIRS]
         for file in files:
             if any(file.endswith(ext) for ext in extensions):
                 path = Path(root) / file
+                if _is_ignored(str(path.relative_to(REPO_ROOT)), patterns):
+                    continue
                 try:
                     lines = path.read_text(encoding="utf-8").splitlines()
                     for i, line in enumerate(lines, 1):
@@ -2118,6 +2176,9 @@ def main():
     p_cd.add_argument("--agents", action="store_true", default=False)
     p_cd.add_argument("--stale",  action="store_true", default=False)
 
+    p_cks.add_parser("ignore")
+
+
     p_doc = subparsers.add_parser("doc"); p_docs = p_doc.add_subparsers(dest="sub")
     p_doc_check = p_docs.add_parser("check")
     p_doc_check.add_argument("file", nargs="?", default="docs/space/nina_update_log.md")
@@ -2249,6 +2310,7 @@ def main():
         elif args.command == "check":
             if args.sub == "code": cmd_check_code(args)
             elif args.sub == "doc": cmd_check_doc(args)
+            elif args.sub == "ignore": cmd_check_ignore(args)
         elif args.command == "doc":
             if args.sub == "check": cmd_check_doc(args)
             elif args.sub == "consolidate": cmd_doc_consolidate(args)
