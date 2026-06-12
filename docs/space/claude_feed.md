@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-13 04:43 +06
-- Git HEAD: e685bdadcfb685c1f8d6955151799b41f2ee4f93
-- Last commit: docs: post-session sync 2026-06-13 04:42
+- Generated: 2026-06-13 04:46 +06
+- Git HEAD: e51b9561cf2a9631f8cd5df28ef1cb62601d5885
+- Last commit: docs: post-session sync 2026-06-13 04:46
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sat 2026-06-13 04:20:56 +06; 22min ago
+     Active: active (running) since Sat 2026-06-13 04:20:56 +06; 25min ago
  Invocation: 004ebd9fe7714d10940bb5cb7d3ba5ee
    Main PID: 533517 (python)
       Tasks: 18 (limit: 15177)
-     Memory: 169.2M (peak: 196.6M)
-        CPU: 5.999s
+     Memory: 169.5M (peak: 196.6M)
+        CPU: 6.376s
      CGroup: /system.slice/nina.service
              └─533517 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 13 04:42:50 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 04:43:00 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 04:43:10 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 04:43:20 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 04:43:31 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 04:46:04 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 04:46:14 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 04:46:25 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 04:46:35 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 04:46:45 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -128,11 +128,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
+e51b956 docs: post-session sync 2026-06-13 04:46
 e685bda docs: post-session sync 2026-06-13 04:42
 5c433a6 docs: post-session sync 2026-06-13 04:38
 79f356b docs: post-session sync 2026-06-13 04:36
 20678bc docs: post-session sync 2026-06-13 04:32
-400a9a1 docs: post-session sync 2026-06-13 04:30
 ```
 
 ## 6. Open Blockers
@@ -170,8 +170,9 @@ e685bda docs: post-session sync 2026-06-13 04:42
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
+#154 Dependency Cycle Detector — Identify circular imports locally [feat/dependency-cycle-detector-2590444877765026733]
 #153 feat: add call-stack command to resolve and extract local functions [feat/code-call-stack-11856651123247013161]
 
 
 ---
-_Feed size: 9127 bytes_
+_Feed size: 9247 bytes_

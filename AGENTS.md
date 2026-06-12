@@ -236,6 +236,16 @@ To prevent "Black Box" reasoning (thinking without stimuli):
    - Any new .md, .py, or .json file MUST be indexed via `python3 tools/update_index.py` BEFORE running `./nina_sync.sh`.
    - The sync process includes a mandatory governance check; unmanaged files will block the `git push`.
 
+8. REFACTORING & DELETION SAFETY
+   - When deleting or moving any module or function, you MUST run a global codebase search (e.g., using `nf file grep`) for imports or references to the deleted symbol. All matches must be resolved before committing.
+
+9. PAGINATION SAFETY
+   - All background tasks, status check commands, and external watchers querying APIs (such as Jules API) MUST request a sufficient `pageSize` (minimum 100) to prevent pagination truncation and missing critical updates or conversation events.
+
+10. JULES TASK HYGIENE & BOUNDARIES
+    - All autonomous Jules tasks must maintain repository hygiene. Clean up/delete any untracked scratch/temporary files and revert any out-of-scope modifications (e.g., configuration, cache files like `data/router_cache.json`, or test smoke files) before submitting.
+    - Code modification and refactoring tools MUST implement explicit safety boundaries (e.g. raising errors on encountering control flow statements like `Return`, `Break`, or `Continue` inside blocks slated for extraction).
+
 ### LOCKED FILES (never touch under any circumstances)
 tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 
