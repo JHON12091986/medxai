@@ -1,8 +1,5 @@
 { 
-  "model": "gemini-3-flash-preview",
+  "model": { "name": "gemini-2.5-flash" },
   "preview": true,
-  "context": { "fileName": ["AGENTS.md", "docs/space/nina_index.md"] },
-  "tools": {
-    "allowed": ["run_shell_command"]
-  }
+  "context": { "fileName": ["AGENTS.md", "docs/space/nina_index.md"] }
 }
