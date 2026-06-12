@@ -2333,20 +2333,29 @@ def main():
     p_batch = subparsers.add_parser("batch")
     p_batch.add_argument("--cmds", required=True, help="Piped commands: 'c1|c2'")
 
-    p_gemini = subparsers.add_parser("gemini")
-    gemini_sub = p_gemini.add_subparsers(dest="sub")
-    watch_parser = gemini_sub.add_parser('watch', help='Open live scratchpad watcher')
+    # --- Gemini CLI commands (promoted to top-level from nested subparser) ---
+    # nf watch
+    watch_parser = subparsers.add_parser('watch', help='Open live scratchpad watcher')
     watch_parser.add_argument('--clear', action='store_true', default=False,
                               help='Clear gemini_scratch.jsonl before watching')
-    gemini_sub.add_parser("context")
-    p_gem_prompt = gemini_sub.add_parser("prompt")
-    p_gem_prompt.add_argument("--task", required=True)
-    p_gem_prompt.add_argument("--context-file")
-    gemini_sub.add_parser("status")
-    p_gem_run = gemini_sub.add_parser("run")
-    p_gem_run.add_argument("--task", required=True)
-    p_gem_run.add_argument("--context-file")
-    p_gem_run.add_argument("--dry-run", action="store_true")
+
+    # nf gemini-context
+    p_gemini_context = subparsers.add_parser("gemini-context", help="Estimate context tokens for Gemini CLI")
+
+    # nf gemini-prompt
+    p_gemini_prompt = subparsers.add_parser("gemini-prompt", help="Generate Gemini CLI prompt file")
+    p_gemini_prompt.add_argument("--task", required=True)
+    p_gemini_prompt.add_argument("--context-file")
+
+    # nf gemini-status
+    p_gemini_status = subparsers.add_parser("gemini-status", help="Show Gemini CLI daily status")
+
+    # nf gemini-run
+    p_gemini_run = subparsers.add_parser("gemini-run", help="Run Gemini CLI with dynamic context and model selection")
+    p_gemini_run.add_argument("--task", required=True)
+    p_gemini_run.add_argument("--context-file")
+    p_gemini_run.add_argument("--dry-run", action="store_true")
+    # --- End Gemini CLI commands ---
 
     p_file = subparsers.add_parser("file"); p_fs_f = p_file.add_subparsers(dest="sub")
     p_fr = p_fs_f.add_parser("read"); p_fr.add_argument("file"); p_fr.add_argument("--start", type=int); p_fr.add_argument("--end", type=int)
@@ -2513,15 +2522,17 @@ def main():
         elif args.command == "stats": cmd_stats(args)
         elif args.command == "monitor": cmd_monitor(args)
         elif args.command == "batch": cmd_batch(args)
-        elif args.command == "gemini":
-            gemini_cmd = args.sub
-            if gemini_cmd == 'watch':
-                scratch = Path.home() / 'nina' / 'data' / 'gemini_scratch.jsonl'
-                if args.clear and scratch.exists():
-                    scratch.unlink()
-                    print('Scratchpad cleared.')
-                watcher = Path.home() / 'nina' / 'tools' / 'gemini_watch.py'
-                os.execvp('python3', ['python3', str(watcher)])
+        elif args.command == "watch":
+            scratch = Path.home() / 'nina' / 'data' / 'gemini_scratch.jsonl'
+            if args.clear and scratch.exists():
+                scratch.unlink()
+                print('Scratchpad cleared.')
+            watcher = Path.home() / 'nina' / 'tools' / 'gemini_watch.py'
+            os.execvp('python3', ['python3', str(watcher)])
+        elif args.command == "gemini-context": cmd_gemini_context(args)
+        elif args.command == "gemini-prompt": cmd_gemini_prompt(args)
+        elif args.command == "gemini-status": cmd_gemini_status(args)
+        elif args.command == "gemini-run": cmd_gemini_run(args)
         elif args.command == "file":
             if args.sub == "read": cmd_file_read(args)
             elif args.sub == "grep": cmd_file_grep(args)
@@ -2573,7 +2584,8 @@ def main():
             elif args.sub == "doc": cmd_code_doc(args)
             elif args.sub == "pack": cmd_context_pack(args)
             elif args.sub == "dead-code": cmd_code_dead_code(args)
-        elif args.command == "query": cmd_query_capability(args)
+        elif args.command == "query": cmd_query(args)
+        elif args.command == "query-capability": cmd_query_capability(args)
         elif args.command == "pr":
             if args.sub == "reconcile": cmd_pr_reconcile(args)
         elif args.command == "task":
@@ -2595,14 +2607,7 @@ def main():
             elif args.sub == "compress-logs": cmd_ops_compress_logs(args)
             elif args.sub == "rotate-logs": cmd_ops_rotate_logs(args)
         elif args.command == "test": cmd_test(args)
-        elif args.command == "test": cmd_test(args)
         elif args.command == "bench": cmd_bench(args)
-        elif args.command == "query": cmd_query(args)
-        elif args.command == "gemini":
-            if args.sub == "context": cmd_gemini_context(args)
-            elif args.sub == "prompt": cmd_gemini_prompt(args)
-            elif args.sub == "status": cmd_gemini_status(args)
-            elif args.sub == "run": cmd_gemini_run(args)
         elif args.command == "gen":
             if args.sub == "tool": cmd_gen_tool(args)
             elif args.sub == "test": cmd_gen_test(args)
