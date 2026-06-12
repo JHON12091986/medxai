@@ -14341,6 +14341,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_codebase_backup_20260612_233945.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_codebase_backup_20260612_233945.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_docbase_backup_20260610_162242.md",
       "category": "backup",
       "role": "archive",
@@ -15445,6 +15468,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_logbase_backup_20260612_233944.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_logbase_backup_20260612_233944.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_update_log.bak.20260606_125916",
       "category": "backup",
       "role": "archive",
@@ -15571,6 +15617,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_docbase_backup_20260611_144858.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_docbase_backup_20260612_233945.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_docbase_backup_20260612_233945.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -43904,16 +43973,16 @@
       ]
     },
     {
-      "path": "logs/nina.log.2026-06-05",
+      "path": "logs/emailaccess.log",
       "category": "log",
       "role": "derived",
       "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
+      "canonical": false,
+      "lifecycle": "deprecated",
       "retention_policy": "rotate",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": null,
+      "duplicate_cluster_id": "dup-0001",
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -43927,16 +43996,16 @@
       ]
     },
     {
-      "path": "logs/emailaccess.log",
+      "path": "logs/nina.log.2026-06-12",
       "category": "log",
       "role": "derived",
       "governed": true,
-      "canonical": false,
-      "lifecycle": "deprecated",
+      "canonical": true,
+      "lifecycle": "active",
       "retention_policy": "rotate",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0001",
+      "duplicate_cluster_id": null,
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -45373,6 +45442,29 @@
       "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
       "tags": [
         "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "tools/gemini_wrapper.sh",
+      "category": "script",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
+      "tags": [
+        "script",
         "source_of_truth",
         "active"
       ]
