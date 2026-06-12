@@ -76,7 +76,7 @@ Perplexity reads backlog each session
 
 ## ██ P1 — HIGH
 
-| B-048 | Auto-close stale Jules sessions (>24h blocked) | `READY` | TBD | — | Auto-ingested via Goal Intake |
+| B-048 | Auto-close stale Jules sessions (>24h blocked) | `IN_PROGRESS` | TBD | — | Auto-ingested via Goal Intake |
 
 
 | B-047 | Build a NinaGate routing telemetry dashboard | `READY` | TBD | — | Auto-ingested via Goal Intake |
