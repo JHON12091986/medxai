@@ -1,4 +1,0 @@
-LOCKED_FILES=tools/nina_sync.py,tests/test_nina_sync.py,.ninaignore,requirements.txt
-JULES_TASK=B-005
-JULES_PR=feat/b-005-nina-sync
-LOCKED_SINCE=2026-06-08T16:58:50+00:00
