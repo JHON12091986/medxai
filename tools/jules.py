@@ -134,7 +134,7 @@ async def watch_cycle():
         title = s.get("title", "Untitled")
 
         if state == "AWAITING_USER_FEEDBACK":
-            act_data = await make_request("GET", f"{JULES_BASE_URL}/sessions/{sid}/activities", params={"pageSize": 5})
+            act_data = await make_request("GET", f"{JULES_BASE_URL}/sessions/{sid}/activities", params={"pageSize": 100})
             for act in reversed(act_data.get("activities", [])):
                 aid = act["id"]
                 if aid not in seen and "agentMessaged" in act:
