@@ -1552,7 +1552,7 @@ def cmd_file_patch(args):
     path = _path_resolve(args.file)
     if not path.exists(): print(f"❌ File not found: {path}"); return
     content = path.read_text(encoding="utf-8")
-    if args.find not in content: print(f"❌ Exact string not found."); return
+    if args.find not in content: print("❌ Exact string not found."); return
     lines = content.splitlines()
     for i, line in enumerate(lines):
         if args.find in line:
@@ -1576,8 +1576,8 @@ def cmd_file_insert(args):
             new_lines.append(args.text); inserted = True
     if inserted:
         path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
-        print(f"✅ Line inserted after anchor.")
-    else: print(f"❌ Anchor not found.")
+        print("✅ Line inserted after anchor.")
+    else: print("❌ Anchor not found.")
 
 def cmd_file_diff(args):
     """[047] Show git diff for file."""
@@ -1615,9 +1615,6 @@ def cmd_git_stash_quick(args):
 
 def cmd_monitor_tools(sessions_dir, limit):
     """Parse Gemini CLI sessions: tool call frequency + token cost per tool."""
-    import glob, json
-    from pathlib import Path
-
     # Token cost estimates per tool invocation (Gemini Flash blended rate)
     TOOL_TOKEN_COST = {
         "read_file":          {"avg_in": 800,  "avg_out": 50,  "replaceable": "nf file read / nf code symbol"},
@@ -1720,10 +1717,6 @@ def cmd_monitor_tools(sessions_dir, limit):
 # --- ADD 3: NinaGate Performance Monitor ---
 def cmd_monitor(args):
     """Parse real Gemini CLI session data + NinaGate logs for savings report."""
-    import glob, json
-    from pathlib import Path
-    from datetime import datetime
-
     full_mode = getattr(args, 'full', False)
     sessions_dir = Path.home() / ".gemini" / "tmp" / "nina" / "chats"
     ninagate_log = REPO_ROOT / "logs" / "ninagate.log"
@@ -1812,7 +1805,7 @@ def cmd_monitor(args):
     mode_label = "ALL sessions" if full_mode else f"Last {limit} session(s)"
     print(f"  Source: Gemini CLI sessions ({mode_label})")
     print("=" * 56)
-    print(f"\n  GEMINI CLI TOKEN USAGE")
+    print("\n  GEMINI CLI TOKEN USAGE")
     print(f"  Input tokens:       {total_input:>12,}")
     print(f"  Output tokens:      {total_output:>12,}")
     print(f"  Cached tokens:      {total_cached:>12,}")
@@ -1820,12 +1813,12 @@ def cmd_monitor(args):
     print(f"  nf tool calls:      {nf_calls:>12,}  ← zero-token local ops")
 
     if tool_calls:
-        print(f"\n  TOP TOOL CALLS")
+        print("\n  TOP TOOL CALLS")
         for name, count in sorted(tool_calls.items(), key=lambda x: -x[1])[:8]:
             marker = " ← NinaFlash" if ("shell" in name.lower() and nf_calls > 0) else ""
             print(f"  {name:<30} {count:>4}x{marker}")
 
-    print(f"\n  NINAGATE ROUTING (last 500 log entries)")
+    print("\n  NINAGATE ROUTING (last 500 log entries)")
     if ng_count > 0:
         ratio = ng_local / ng_count * 100
         avg_lat = ng_total_latency / ng_count if ng_count else 0
@@ -1859,23 +1852,23 @@ def cmd_monitor(args):
             except Exception:
                 continue
 
-    print(f"\n  NINAFLASH LOCAL EXECUTION (last 500 log entries)")
+    print("\n  NINAFLASH LOCAL EXECUTION (last 500 log entries)")
     if nf_total_calls > 0:
         print(f"  Total nf calls:     {nf_total_calls:>6,}")
         print(f"  Errors:             {nf_errors:>6,}")
         print(f"  Tokens saved est:   {nf_total_tokens_saved:>6,}  (cloud calls avoided)")
         cost = nf_total_tokens_saved / 1_000_000 * 0.19
         print(f"  Est. cost saved:    ${cost:.4f}")
-        print(f"  Top commands:")
+        print("  Top commands:")
         for cmd, count in sorted(nf_cmd_counts.items(), key=lambda x: -x[1])[:6]:
             savings = NF_TOKEN_SAVINGS.get(cmd, 0) * count
             print(f"    nf {cmd:<20} {count:>4}x  (~{savings:,} tokens saved)")
     else:
         print("  No NinaFlash log yet. Run any nf command to start logging.")
 
-    print(f"\n  HOW TO GET MORE DATA")
-    print(f"  /stats model         — inside Gemini CLI, live session totals")
-    print(f"  nf monitor --full    — parse ALL historical sessions")
+    print("\n  HOW TO GET MORE DATA")
+    print("  /stats model         — inside Gemini CLI, live session totals")
+    print("  nf monitor --full    — parse ALL historical sessions")
     print("=" * 56)
 
 # --- ADD 4: Parallel NF Execution ---
@@ -1900,7 +1893,7 @@ def cmd_memory_session_save(args):
     mem_path = REPO_ROOT / "data/session_memory.jsonl"
     mem_path.parent.mkdir(parents=True, exist_ok=True)
     with open(mem_path, "a") as f: f.write(json.dumps(entry) + "\n")
-    print(f"✅ Session saved.")
+    print("✅ Session saved.")
 
 def cmd_memory_session_recall(args):
     """[056] Recall last N session entries."""
@@ -2247,7 +2240,7 @@ def cmd_gemini_prompt(args):
                 pass
 
         warmer = PrefixCacheWarmer()
-        prompt_path = warmer.write_prompt_file(args.task, extra_context)
+        warmer.write_prompt_file(args.task, extra_context)
 
         selector = ModelTierSelector()
         model_flag = selector.get_cli_flag(args.task, tokens, files)
@@ -2345,6 +2338,15 @@ def main():
     watch_parser = gemini_sub.add_parser('watch', help='Open live scratchpad watcher')
     watch_parser.add_argument('--clear', action='store_true', default=False,
                               help='Clear gemini_scratch.jsonl before watching')
+    gemini_sub.add_parser("context")
+    p_gem_prompt = gemini_sub.add_parser("prompt")
+    p_gem_prompt.add_argument("--task", required=True)
+    p_gem_prompt.add_argument("--context-file")
+    gemini_sub.add_parser("status")
+    p_gem_run = gemini_sub.add_parser("run")
+    p_gem_run.add_argument("--task", required=True)
+    p_gem_run.add_argument("--context-file")
+    p_gem_run.add_argument("--dry-run", action="store_true")
 
     p_file = subparsers.add_parser("file"); p_fs_f = p_file.add_subparsers(dest="sub")
     p_fr = p_fs_f.add_parser("read"); p_fr.add_argument("file"); p_fr.add_argument("--start", type=int); p_fr.add_argument("--end", type=int)
@@ -2438,7 +2440,7 @@ def main():
     
     subparsers.add_parser("bench", help="Run a standardized reasoning task twice (Cloud vs Hybrid)")
 
-    p_query = subparsers.add_parser("query", help="List all cmd_ handlers")
+    subparsers.add_parser("query", help="List all cmd_ handlers")
     p_query_cap = subparsers.add_parser("query-capability", help="Query task capability")
     p_query_cap.add_argument("task", help="Description of the task to query")
 
@@ -2498,18 +2500,6 @@ def main():
     p_run = subparsers.add_parser("run")
     p_run.add_argument("name",          help="Name of the capability to run")
     p_run.add_argument("extra_args",    nargs=argparse.REMAINDER, help="Arguments passed to the tool")
-
-    p_gemini = subparsers.add_parser("gemini"); p_gem_s = p_gemini.add_subparsers(dest="sub")
-    p_gem_s.add_parser("context")
-    p_gem_prompt = p_gem_s.add_parser("prompt")
-    p_gem_prompt.add_argument("--task", required=True)
-    p_gem_prompt.add_argument("--context-file")
-    p_gem_s.add_parser("status")
-    p_gem_run = p_gem_s.add_parser("run")
-    p_gem_run.add_argument("--task", required=True)
-    p_gem_run.add_argument("--context-file")
-    p_gem_run.add_argument("--dry-run", action="store_true")
-
 
     args = parser.parse_args()
     import time as _time

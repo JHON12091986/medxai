@@ -3,30 +3,395 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-12 20:28 +06
-- Git HEAD: bd02dd812ecba488a874699e94fbdf49d1ad19b3
-- Last commit: docs: post-session sync 2026-06-12 20:28
+- Generated: 2026-06-12 22:54 +06
+- Git HEAD: 61e27bcffc9c8187cfbe3d95520c548eeaa35e46
+- Last commit: docs: post-session sync 2026-06-12 22:54
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Fri 2026-06-12 10:49:38 +06; 9h ago
+     Active: active (running) since Fri 2026-06-12 10:49:38 +06; 12h ago
  Invocation: e938017587f0494f81d51ed46f4baaaf
    Main PID: 331859 (python)
       Tasks: 7 (limit: 15177)
-     Memory: 191.8M (peak: 209M)
-        CPU: 27.535s
+     Memory: 205.7M (peak: 222.7M)
+        CPU: 33.882s
      CGroup: /system.slice/nina.service
              └─331859 /home/aibony/nina/venv/bin/python main.py
 
-Jun 12 20:28:08 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 12 20:28:18 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 12 20:28:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 12 20:28:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 12 20:28:49 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 12 22:54:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:apscheduler.executors.default:Running job "_wrap_job.<locals>.wrapper (trigger: interval[0:05:00], next run at: 2026-06-12 22:59:39 +06)" (scheduled at 2026-06-12 22:54:39.372427+06:00)
+Jun 12 22:54:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/sendMessage "HTTP/1.1 200 OK"
+Jun 12 22:54:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:nina.scheduler:{"event": "job_run", "job": "thermal_health", "duration": 0.9110817909240723, "success": true}
+Jun 12 22:54:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:05:00], next run at: 2026-06-12 22:59:39 +06)" executed successfully
+Jun 12 22:54:42 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 Active Jules Sessions:
+- [5515461256896984256] jules remote new --repo aibony/nina --task start --session "
+TASK ID: AG-G-01
+TITLE: MEGA-TASK Gemini CLI Flash-Speed Performance Stack — Context Trim, Cache Prefix, Model Routing, File Filter, Prompt Budget
+ASSIGNEE: Jules (async cloud coder)
+TYPE: feat
+COMMIT: feat(gemini-perf): flash-speed performance stack for gemini cli AG-G-01
+
+Do NOT pause for confirmation at any point. Complete all batches sequentially without asking for feedback. Open the PR when done.
+
+---
+
+## OBJECTIVE
+
+Gemini CLI performance degrades because it sends a large, unfiltered codebase context on
+every invocation. This burns the 1,000 req/day free quota fast, inflates prompt tokens,
+increases time-to-first-token, and causes the model to wander into irrelevant files.
+
+This MEGA-TASK implements 5 performance domains that together achieve Flash-class latency:
+
+  Domain 1 — Context Pruning      : strip dead files, lock-files, binaries before injection
+  Domain 2 — GEMINI.md Surgery    : rewrite system instructions to be token-minimal
+  Domain 3 — Prefix Cache Warm-up : stable system prompt prefix so API cache hits occur
+  Domain 4 — Model Tier Selector  : auto-pick gemini-2.5-flash vs pro based on task size
+  Domain 5 — Prompt Budget Guard  : enforce per-invocation token budget, warn before overrun
+
+All 5 domains land in one new file (tools/gemini_perf.py) + edits to GEMINI.md and
+ninaflash.py. Nothing touches any high-risk files.
+
+---
+
+## DOMAIN 1 — Context Pruning Engine
+
+### File: tools/gemini_perf.py  (NEW — primary deliverable, all domains live here)
+
+#### Class: ContextPruner
+
+PURPOSE: Before invoking Gemini CLI, prune the working directory so only relevant files
+are included. Writes a temporary .geminiignore-style exclusion list to ~/nina/.geminiperfignore
+
+ALWAYS EXCLUDE patterns (hardcoded defaults, never configurable away):
+  - __pycache__/, *.pyc, *.pyo
+  - .git/, .github/
+  - *.egg-info/, dist/, build/, .tox/
+  - venv/, .venv/, env/
+  - *.log (all log files — they are huge, never useful for coding tasks)
+  - data/session_ledger.json, data/session_ledger.tmp
+  - data/gemini_preamble.md
+  - juleslock.txt
+  - docs/space/ (NINA feed docs — too large, already in nina_latest.md)
+  - nina_master_backup*.md
+  - *.png, *.jpg, *.jpeg, *.gif, *.ico, *.svg (binary assets)
+  - *.db, *.sqlite, *.sqlite3
+  - node_modules/ (if ever present)
+  - .env (security — never send secrets to cloud)
+
+CONFIGURABLE EXCLUDE: read ~/nina/.geminiperfignore_extra if it exists — one glob per line,
+lines starting with # are comments. Merge with hardcoded defaults.
+
+Method: write_ignore_file() -> str
+  - Merges hardcoded + extra patterns
+  - Writes to ~/nina/.geminiignore (overwrite — this is the file Gemini CLI reads)
+  - Returns the path
+  - Atomic write via tmp + os.replace()
+  - Never raises
+
+Method: estimate_context_tokens(paths: list[str]) -> int
+  - For each file path: read first 8000 bytes, count chars / 4 (rough token estimate)
+  - Sum across files, return int
+  - Skip unreadable files silently
+  - This is for budget display only — not passed to the API
+
+Method: get_included_files(base_dir: str = '~/nina') -> list[str]
+  - Walks base_dir, applies exclusion patterns via fnmatch
+  - Returns sorted list of relative file paths that WOULD be included
+  - Used by budget guard (Domain 5) and the nf gemini-context command
+
+---
+
+## DOMAIN 2 — GEMINI.md System Prompt Surgery
+
+### File: GEMINI.md  (EDIT)
+
+READ the current GEMINI.md before editing.
+
+REWRITE it following these exact constraints. Do NOT add prose — every byte is a token:
+
+#### Required sections and format:
+
+```markdown
+# NINA Dev Agent — Gemini CLI
+
+## Identity
+Assistant for NINA codebase at ~/nina. Python 3.11. Ubuntu 26.04.
+
+## Rules
+- Read every file fully before editing it
+- One file per subtask. Finish it completely before moving to the next
+- Never invent import paths — verify with grep first
+- Atomic edits only — no partial writes
+- If unsure: stop and output NEEDS_CLARIFICATION: <question>
+
+## High-Risk Files (extra caution, minimal edits)
+interfaces/telegram_interface.py | core/router.py | core/agent.py | guardian_engine.py | tools/shell.py | .env
+
+## Locked Files (never touch)
+tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
+
+## Commit format
+feat(scope): description TASK-ID
+fix(scope): description TASK-ID
+docs(scope): description TASK-ID
+
+## On failure
+Log exact error. State which file and line. Output STUCK: <reason> if cannot proceed.
+```
+
+RULES for this edit:
+- Final GEMINI.md must be under 400 bytes total
+- No bullet walls — use pipe-delimited lists for short enumerations
+- No greetings, no preamble sentences, no 'you are a helpful assistant' boilerplate
+- Keep only rules that affect behavior — remove anything decorative
+- Do not remove the High-Risk and Locked files lists — these are load-bearing
+
+---
+
+## DOMAIN 3 — Prefix Cache Warm-up Script
+
+### Add to tools/gemini_perf.py:
+
+#### Class: PrefixCacheWarmer
+
+PURPOSE: The Gemini API caches prompt prefixes that are identical across calls. The system
+prompt (GEMINI.md content) must be bit-for-bit identical at the START of every prompt to
+get cache hits. This class ensures that.
+
+Method: get_stable_prefix() -> str
+  - Reads ~/nina/GEMINI.md
+  - Strips trailing whitespace from every line (whitespace changes break cache hits)
+  - Returns the normalized string
+  - Caches result in memory for the process lifetime (functools.lru_cache or module var)
+  - Never raises — returns '' on read error
+
+Method: build_prompt(user_task: str, extra_context: str = '') -> str
+  - Returns: get_stable_prefix() + '\n\n---\n\n' + extra_context + '\n\n' + user_task
+  - IMPORTANT: stable prefix MUST come first — Gemini API implicit cache requires
+    the repeated portion to be at the very start of the prompt [Google API docs]
+  - user_task goes LAST (after all stable context) — this also improves model accuracy
+  - Total length check: if estimated tokens > NINA_GEMINI_TOKEN_BUDGET (default 8000),
+    log a WARNING and truncate extra_context from the middle, preserving prefix + task
+
+Method: write_prompt_file(user_task: str, extra_context: str = '') -> str
+  - Calls build_prompt(), writes result to ~/nina/data/gemini_prompt.md
+  - Returns path string
+  - Usage: gemini -p \"$(cat ~/nina/data/gemini_prompt.md)\"
+
+---
+
+## DOMAIN 4 — Model Tier Auto-Selector
+
+### Add to tools/gemini_perf.py:
+
+#### Class: ModelTierSelector
+
+PURPOSE: Automatically pick gemini-2.5-flash for small/simple tasks (faster, cheaper,
+preserves quota) and gemini-2.5-pro for complex multi-file refactors.
+
+TASK CLASSIFICATION RULES (in priority order):
+
+Flash tier triggers (ANY of these → use flash):
+  - estimated context tokens <= 4000
+  - task string contains any of: 'fix typo', 'rename', 'add comment', 'docstring',
+    'format', 'lint', 'add type hint', 'add import', 'print', 'log statement'
+  - number of target files == 1 and file line count < 200
+
+Pro tier triggers (ANY of these → use pro):
+  - estimated context tokens > 12000
+  - task string contains any of: 'refactor', 'architecture', 'mega', 'multi-file',
+    'migrate', 'security', 'audit', 'design', 'rewrite'
+  - number of target files > 4
+
+Default: flash (when no triggers match — bias toward speed)
+
+Method: select(task: str, context_tokens: int, target_files: list[str]) -> str
+  - Returns: 'gemini-2.5-flash' or 'gemini-2.5-pro'
+  - Also logs the selection reason at DEBUG level
+  - Never raises
+
+Method: get_cli_flag(task: str, context_tokens: int, target_files: list[str]) -> str
+  - Returns: '--model gemini-2.5-flash' or '--model gemini-2.5-pro'
+  - Usage: gemini {get_cli_flag(...)} -p \"...\"
+
+---
+
+## DOMAIN 5 — Prompt Budget Guard
+
+### Add to tools/gemini_perf.py:
+
+#### Class: PromptBudgetGuard
+
+PURPOSE: Before running Gemini CLI, check estimated token count against daily quota
+budget and per-invocation budget. Warn loudly if about to overrun. Track daily usage.
+
+BUDGETS (configurable via env vars):
+  NINA_GEMINI_DAILY_REQ_LIMIT  (default 1000) — daily request limit (free tier)
+  NINA_GEMINI_TOKEN_BUDGET     (default 8000) — max tokens per single invocation
+  NINA_GEMINI_WARN_AT          (default 800)  — warn when daily reqs exceed this
+
+State file: ~/nina/data/gemini_usage.json
+Schema: {'date': 'YYYY-MM-DD', 'requests': int, 'estimated_tokens': int}
+Reset automatically when date changes.
+
+Method: record_request(estimated_tokens: int) -> None
+  - Increments requests count, adds estimated_tokens
+  - Saves to gemini_usage.json atomically
+  - If requests >= NINA_GEMINI_WARN_AT: log WARNING 'Gemini quota: {n} of {limit} daily requests used'
+  - If requests >= NINA_GEMINI_DAILY_REQ_LIMIT: log ERROR 'Gemini quota exhausted — switch to Qwen Code CLI'
+  - Never raises
+
+Method: check_invocation(estimated_tokens: int) -> dict
+  - Returns: {'ok': bool, 'reason': str, 'daily_used': int, 'daily_limit': int, 'token_estimate': int}
+  - ok=False if: daily requests >= limit OR estimated_tokens > NINA_GEMINI_TOKEN_BUDGET * 1.5
+  - Used by nf gemini-run to gate execution
+
+Method: get_status() -> dict
+  - Returns current usage stats dict (same schema as state file + budgets)
+  - Never raises
+
+---
+
+## DOMAIN 6 — ninaflash.py CLI Commands  (EDIT ninaflash.py)
+
+READ the full file before editing. Do NOT change any existing commands.
+
+Add a 'gemini' subparser group with these subcommands:
+
+### nf gemini context
+  - Calls ContextPruner().write_ignore_file() then get_included_files()
+  - Prints: 'Context: {N} files, ~{tokens} estimated tokens'
+  - Prints the file list (one per line, relative paths)
+  - Purpose: lets user audit what Gemini CLI will see before running
+
+### nf gemini prompt --task TEXT [--context-file PATH]
+  - Calls PrefixCacheWarmer().write_prompt_file(task, extra_context=file_contents_if_given)
+  - Calls ModelTierSelector().get_cli_flag(task, tokens, files)
+  - Prints the recommended gemini invocation:
+    gemini {model_flag} -p \"$(cat ~/nina/data/gemini_prompt.md)\"
+  - Purpose: one-liner that gives the user the exact ready-to-paste command
+
+### nf gemini status
+  - Calls PromptBudgetGuard().get_status()
+  - Prints a compact usage table:
+    Daily requests : {used} / {limit}
+    Estimated tokens today : {tokens}
+    Token budget/call : {budget}
+    Recommended model : flash | pro
+
+### nf gemini run --task TEXT [--context-file PATH] [--dry-run]
+  - Runs the full pipeline:
+    1. ContextPruner().write_ignore_file()
+    2. estimate context tokens
+    3. PromptBudgetGuard().check_invocation(tokens) — if ok=False, print reason and exit(1)
+    4. ModelTierSelector().get_cli_flag(task, tokens, files)
+    5. PrefixCacheWarmer().write_prompt_file(task)
+    6. PromptBudgetGuard().record_request(tokens)
+    7. If --dry-run: print the full gemini command, do not execute
+    8. If not --dry-run: os.execvp('gemini', ['gemini', model_flag, '-p', prompt])
+       (exec replaces current process — clean, no subprocess overhead)
+  - Purpose: single command replaces all manual Gemini CLI prep steps
+
+All subcommands: wrap in try/except, print error + exit(1) on failure, never traceback.
+
+---
+
+## DOMAIN 7 — docs/gemini_perf.md  (NEW FILE)
+
+### Gemini CLI Flash-Speed Guide
+
+## What this does
+Five-layer performance stack that cuts Gemini CLI token usage by 60-80% per call
+and achieves near-Flash latency on single-file tasks.
+
+## Quick start
+
+# 1. Audit what Gemini will see
+nf gemini context
+
+# 2. Generate optimized prompt + get recommended command
+nf gemini prompt --task 'fix the import error in tools/local_inference.py'
+
+# 3. Check daily quota
+nf gemini status
+
+# 4. Full auto-run (prompt + model select + quota check + exec)
+nf gemini run --task 'add type hints to core/agent.py'
+
+# 5. Dry-run to preview without executing
+nf gemini run --task 'refactor core/router.py' --dry-run
+
+## Why it's faster
+
+| Problem | Solution | Speedup |
+|---|---|---|
+| Fat context (all files) | .geminiignore prunes logs/cache/venv/data | 40-70% fewer tokens |
+| Bloated GEMINI.md | Rewritten to <400 bytes | ~200 tokens saved/call |
+| No cache hits | Stable prefix always first | Implicit cache hit after 2nd call |
+| Pro model for tiny tasks | Flash auto-selected for <4k token tasks | 2-3x faster TTFT |
+| Quota blind-spending | Budget guard warns at 800/1000 req | Prevents daily exhaustion |
+
+## Per-call token budget
+Set NINA_GEMINI_TOKEN_BUDGET in .env (default: 8000 tokens per call).
+Set NINA_GEMINI_WARN_AT for quota warning threshold (default: 800 requests).
+
+## Cache hit tips (from Google API docs)
+- Stable context (GEMINI.md) must be IDENTICAL and at the START of every prompt
+- Send similar requests within a short time window for implicit cache hit
+- nf gemini prompt ensures this automatically
+
+## Quota fallback cascade
+Gemini Flash (1000/day) → Qwen Code CLI (2000/day) → Jules (async, 100/day)
+
+---
+
+## WHAT NOT TO TOUCH
+
+- interfaces/telegram_interface.py
+- core/router.py | core/agent.py | core/memory.py | core/nina.py
+- guardian_engine.py
+- tools/shell.py | tools/browser.py
+- .env (document env vars in docs/gemini_perf.md only)
+- Any existing test files
+- juleslock.txt locked files: tools/ninasync.py, tests/test_ninasync.py, .ninaignore, requirements.txt
+
+---
+
+## ACCEPTANCE CRITERIA
+
+1. tools/gemini_perf.py imports cleanly with stdlib only (no new pip deps)
+2. ContextPruner.write_ignore_file() writes a valid ~/nina/.geminiignore that Gemini CLI can read
+3. GEMINI.md is <= 400 bytes after edit
+4. PrefixCacheWarmer.build_prompt() always places GEMINI.md content first, user task last
+5. ModelTierSelector.select() returns 'gemini-2.5-flash' for a 1-file, 200-line, 3000-token task
+6. ModelTierSelector.select() returns 'gemini-2.5-pro' for a 'refactor architecture' 15000-token task
+7. PromptBudgetGuard.record_request() resets counter when date changes (new day)
+8. nf gemini run --dry-run prints the gemini command without executing it
+9. nf gemini context, status, prompt, run all work without error on a clean run
+10. All existing nf commands still work
+11. pyflakes passes on all new/modified files
+
+---
+
+## COMMIT CONVENTION
+
+feat(gemini-perf): ContextPruner writes .geminiignore, prunes logs/venv/data AG-G-01
+feat(gemini-perf): PrefixCacheWarmer stable prefix + prompt file builder AG-G-01
+feat(gemini-perf): ModelTierSelector auto-picks flash vs pro by task size AG-G-01
+feat(gemini-perf): PromptBudgetGuard daily quota tracking with warn/block AG-G-01
+feat(gemini-perf): nf gemini context/prompt/status/run subcommands AG-G-01
+docs(gemini-perf): GEMINI.md rewritten to <400 bytes token-minimal AG-G-01
+docs(gemini-perf): flash-speed guide with cache hit tips and quota cascade AG-G-01
+
+Open one PR with all commits. Do not merge — agy will review and merge.
+" i mistakenly wrote gemini.md ... it will be agents.md as we keep a single agents.md
+ — COMPLETED
+- [7160975763118305345] Session Continuity Ledger and Hallucination Memory — COMPLETED
+- [675840758545924608] HW-01: Local Hardware Offload Engine with Thermal Guard — AWAITING_USER_FEEDBACK
 - [12315339931076793747] TASK ID: AG-N-05 TITLE: Symbol-Based Context Injector — Read only the call stack of a function. FILE — COMPLETED
 - [15342734822858214987] TASK ID: AG-N-04 TITLE: Dead Code Detector — Identify and flag unused functions/imports. FILES: `nin — FAILED
 - [17635532652974938930] TASK ID: AG-N-03 TITLE: Type Hint Enforcement — Automated script to add missing type hints. FILES: ` — AWAITING_USER_FEEDBACK
@@ -87,20 +452,9 @@ TITLE: Test Scaffold Generator — Create tes — COMPLETED
 TITLE: Symbol Migration Tool — Automate ren — FAILED
 - [14142572470645188381] TASK ID: AG-N-09
 TITLE: Code Complexity Watchdog — Calculate — COMPLETED
-- [4717177113882199359] TASK ID: AG-N-08
-TITLE: Dependency Cycle Detector — Identify — COMPLETED
-- [1598085849761017934] TASK ID: AG-N-07
-TITLE: Automated Refactoring: Method Extrac — AWAITING_USER_FEEDBACK
-- [12153040531148826089] TASK ID: AG-N-06
-TITLE: Docstring Quality Audit — Score docs — COMPLETED
 
 ## 3. Locked Files (do not touch in new specs)
-```
-LOCKED_FILES=tools/nina_sync.py,tests/test_nina_sync.py,.ninaignore,requirements.txt
-JULES_TASK=B-005
-JULES_PR=feat/b-005-nina-sync
-LOCKED_SINCE=2026-06-08T16:58:50+00:00
-```
+- jules_lock.txt not found — all files available
 
 ## 4. READY Items (eligible for new Jules specs)
 _Found 10 READY items_
@@ -199,11 +553,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
-bd02dd8 docs: post-session sync 2026-06-12 20:28
-3fb708a docs: autonomous documentation update per index
-fe171c1 docs: autonomous documentation update per index
-27f6bc5 docs: autonomous documentation update per index
-b847f13 docs: autonomous documentation update per index
+61e27bc docs: post-session sync 2026-06-12 22:54
+ef3249e chore: update index and remove stale jules lock
+1426a4d Merge pull request #148 from aibony/feat-gemini-perf-5515461256896984256
+50627a2 chore: resolve conflicts in 148 and compact AGENTS.md
+7a9046d Merge pull request #147 from aibony/feat/session-ledger-ag-c-01-7160975763118305345
 ```
 
 ## 6. Open Blockers
@@ -241,8 +595,8 @@ b847f13 docs: autonomous documentation update per index
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-#146 Symbol-Based Context Injector — Read only the call stack of a function. [feat-cmd-code-call-stack-12315339931076793747]
+- No open PRs
 
 
 ---
-_Feed size: 15721 bytes_
+_Feed size: 30290 bytes_

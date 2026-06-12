@@ -1,22 +1,395 @@
-# NINA Dev Agent (v14.2-COMPACT)
-## Identity
-~/nina. Py 3.14. Autonomous maintainer.
-## Operating Laws
-1. **RULE 0 (SURGICAL):** Use 'nf' for cat/grep/ls/log/diff/status/read_file/replace(single). NEVER use run_shell_command for these.
-2. **HIGH-RISK:** interfaces/telegram_interface.py | core/router.py | core/agent.py | guardian_engine.py | tools/shell.py | .env -> ESCALATE to Cloud LLM.
-3. **SYNC:** ALWAYS run ./nina_sync.sh after ANY merge.
-4. **VALIDATE:** After ANY edit run: python3 -m py_compile <file> && python3 -m pyflakes <file>.
-5. **CONVENTIONAL:** fix|feat|docs|ops|chore(scope): ...
-6. **PRUNING:** Use .geminiignore. Keep context < 8k tokens.
-## Banned -> Use instead
-- cat/read_file -> nf file read --start N --end N
-- grep -> nf file grep <pattern> --dir <dir>
-- ls/find/glob -> nf code index
-- git status -> nf git changed
-- git diff -> nf file diff
-- git log -> nf git log --n 10
-- replace (single) -> nf file patch --find "X" --replace "Y"
-## Scratchpad (data/gemini_scratch.jsonl)
-Mandatory JSON line after EVERY action:
-{"t":"<ISO8601>","step":<n>,"action":"read|write|shell|think|error","file":"<path>","detail":"<desc>","status":"ok|fail|stuck"}
-Step 0: action=start. Step -1: action=done.
+# NINA-OPT-001 — NinaFlash × NinaGate Optimization Directive
+# Single source of truth for ALL sync coders: Gemini CLI, agy, Jules, Qwen Code CLI
+# Gemini CLI loads this via .gemini/settings.json → "context": { "fileName": ["AGENTS.md"] }
+# Jules reads this automatically before every task submission
+# agy reads this automatically — all rules apply to every session
+# This file is the only context file.
+
+---
+
+## PART 1 — ARCHITECTURE PRIMER (read before ANY task)
+
+You operate inside NINA on an ASUS VivoBook X530FN (Ubuntu 26.04 LTS, MX150 2GB VRAM).
+Three routing layers are always available and MUST be leveraged:
+
+### NinaGate — Local Proxy Router
+- OpenAI-compatible reverse proxy at http://localhost:8080
+- Intercepts ALL outbound LLM requests, routes by task classification
+- Gemini CLI activation: export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
+- Routes: SIMPLE → NinaFlash | MEDIUM → Gemini 3 Flash | COMPLEX → Gemini Pro / Qwen3-Coder
+- Logs every routing decision: ~/nina/logs/ninagate.log
+  Format: [timestamp] TASK_TYPE → MODEL | tokens_in | tokens_out | latency_ms
+
+### NinaFlash — Local Inference Engine
+- Ollama endpoint at http://localhost:11434
+- Primary model: qwen2.5-coder:7b (unlimited, offline-capable, zero token cost)
+- CPU offloading: KV-cache and attention offloaded to RAM when VRAM > 70%
+- Throughput mode: GPU handles prefill, CPU handles decode (asymmetric pipeline)
+- num_thread=4 (matches X530FN physical cores); num_gpu=0 for pure CPU tasks
+- Tasks < 512 tokens output → full CPU mode
+- Tasks 512–2000 tokens → hybrid GPU prefill + CPU decode
+- Tasks > 2000 tokens → cloud LLM after NinaFlash local summary compression
+
+---
+
+## PART 2 — OPERATING RULES (enforce on every subtask, every session)
+
+### RULE 0 — SURGICAL TOOL MANDATE
+## Source: 27-session lifetime audit | 45,700+ tool calls analyzed
+## Realistic optimization: 66% of calls → local nf (zero tokens, zero quota)
+
+### BEFORE EVERY TOOL CALL — run this mental check:
+1. Is this cat / grep / ls / find / head / tail / git log / git diff / git status?
+   → USE nf instead. Never call run_shell_command for these.
+2. Is this read_file on an existing text file?
+   → USE nf file read <file> --start N --end N
+3. Is this replace for a single string?
+   → USE nf file patch <file> --find "X" --replace "Y"
+4. Is this grep_search?
+   → USE nf file grep <pattern> --dir <dir> --ext .py,.md,.sh
+5. Is this list_directory or glob on a code directory?
+   → USE nf code index
+
+### BANNED TOOL DISPATCH TABLE:
+
+| Banned call                          | Use instead                                  |
+|--------------------------------------|----------------------------------------------|
+| run_shell_command: cat <file>        | nf file read <file> --start 0 --end 60       |
+| run_shell_command: grep / grep -r    | nf file grep <pattern> --dir <dir>           |
+| run_shell_command: git log           | nf git log --n 10                            |
+| run_shell_command: git diff <file>   | nf file diff <file>                          |
+| run_shell_command: git status        | nf git changed                               |
+| run_shell_command: git blame <file>  | nf git blame <file> --start N --end N        |
+| run_shell_command: ls / ls -la       | nf code index                                |
+| run_shell_command: find . -name      | nf code index                                |
+| run_shell_command: head/tail/wc -l   | nf file read <file> --start N --end N        |
+| read_file (existing file)            | nf file read <file> --start 0 --end 60       |
+| read_file (find a function)          | nf code symbol <file> <name>                 |
+| read_file (file outline)             | nf code outline <file>                       |
+| read_file (log lines)                | nf log tail N                                |
+| replace (single string)              | nf file patch --find "X" --replace "Y"       |
+| replace (insert after anchor)        | nf file insert --after "ANCHOR" --text "…"   |
+| grep_search (any pattern)            | nf file grep <pattern> --dir <dir>           |
+| list_directory / glob (code dirs)    | nf code index                                |
+
+### ALLOWED — These native calls are always legitimate:
+
+run_shell_command KEEP list:
+- python3 -m py_compile <file>         (validation)
+- python3 tools/ninaflash.py ...       (nf execution)
+- python3 <any script>                 (legitimate execution)
+- ./nina_sync.sh                       (mandatory sync — no exceptions)
+- sudo systemctl restart/status        (service management)
+- git add / git commit / git push      (committing and pushing)
+- git pull / git checkout / git merge  (remote and branch ops)
+- ollama serve / ollama pull           (model management)
+- curl http://localhost:...            (health checks)
+- sudo ln -sf                          (system symlinks)
+- pip install / apt install            (package management)
+- mkdir / cp / mv / rm                 (filesystem ops with no nf equiv)
+
+write_file — KEEP for:
+- Creating new files from scratch      (no nf equivalent)
+- Writing generated content            (no nf equivalent)
+
+replace — KEEP for:
+- Multi-block or multi-line edits      (nf file patch is single-string only)
+- Structural rewrites
+
+Always KEEP — never substitute:
+- update_topic                         (Gemini CLI internal state)
+- invoke_agent                         (Jules/agy workflow — core)
+- enter_plan_mode / exit_plan_mode     (planning UI)
+- google_web_search                    (external lookup)
+- web_fetch                            (URL fetching)
+- list_background_processes            (system monitoring)
+- read_background_output               (async task output)
+
+### COMPLIANCE — End-of-task self-audit:
+If any banned tool was used when an nf equivalent existed, report:
+  "RULE0 VIOLATION: used [tool] [N]x — should have used [nf command]"
+Per-session target: fewer than 20 banned tool calls total.
+
+### WHY THIS EXISTS (real numbers from 27-session audit):
+- run_shell_command: 33,000+ lifetime calls (avg 1,200/session)
+- read_file:          5,000+ lifetime calls
+- replace:            5,000+ lifetime calls
+- Substitutable:     ~30,190 of 45,700 calls (66%) → zero-cost nf
+- Irreplaceable:     ~15,510 calls (update_topic, invoke_agent, new file writes, etc.)
+- Each nf call: <1s, zero tokens, zero quota
+--- END RULE 0 ---
+
+### Token Reduction
+1. CLASSIFY FIRST — Before any cloud call, use `nf query "<task>"` to check if it can be handled locally.
+   Mechanical tasks (rename, format, grep, boilerplate, docstrings, type hints) → NinaFlash always.
+2. CHUNK LARGE TASKS — Break tasks > 2000 tokens into subtasks, tier each chunk separately.
+3. COMPRESS CONTEXT — Use `nf code pack --file <f>` to generate a skeletal summary of large files.
+   Strip comments, whitespace, unchanged file sections before sending to cloud.
+   Send only the diff-relevant portion + minimal surrounding context.
+4. SUMMARIZE BEFORE ESCALATE — NinaFlash summarizes file context first; only the summary + task
+   goes to cloud. Never send a raw full file to cloud if NinaFlash can summarize it first.
+5. CACHE PATTERNS — If NinaFlash already produced output for a repeating pattern
+   (log format, error handler template), reuse it. Do not re-query cloud.
+
+### Context Management
+1. USE INDEX — Use `docs/space/nina_megatask_index.md` for high-level roadmap context.
+2. LAZY LOAD — Load full task spec files (e.g., `jules_mega_task.md`) ONLY when actively working on that task.
+
+### Latency Reduction
+1. PARALLEL SUBTASKS — Independent sub-steps run in parallel streams.
+   NinaFlash handles one while cloud handles another simultaneously.
+2. STREAM RESPONSES — Always use streaming mode from NinaGate. Act on partial output.
+3. NO CONFIRMATION LOOPS — Never pause mid-task for approval.
+   Complete all steps sequentially. Approval is pre-granted for this session.
+4. LOCAL FIRST — Default to NinaFlash for first-pass generation.
+   Escalate only if quality gate fails: syntax error, logic gap, or test failure.
+5. PREFETCH CONTEXT — Read all relevant ~/nina source files in one parallel batch,
+   not sequentially.
+
+### Throughput Increase
+1. PIPELINE STRUCTURE — Every task follows this pipeline:
+   [NinaFlash: classify + scaffold] → [NinaGate: route] → [Cloud: quality pass]
+   → [NinaFlash: format + write to disk]
+2. OFFLOAD BOILERPLATE — Docstrings, import sorting, log messages, type annotations,
+   commit messages for simple changes → always NinaFlash (zero cloud quota consumed).
+3. BATCH SMALL CHANGES — Collect small edits across files, send as one batched
+   NinaFlash request instead of one request per file.
+4. QUOTA AWARENESS — When Gemini 3 Flash > 900 req today, shift medium tasks to
+   Qwen Code CLI (2000 req/day). When both exhausted → NinaFlash unconditionally.
+5. CPU THREAD TUNING — NinaFlash CPU inference uses num_thread=4 for decode-heavy
+   tasks on the X530FN.
+
+---
+
+## PART 3 — TASK CLASSIFICATION DECISION TREE
+
+Route EVERY subtask through this tree before executing:
+
+    Require benchmarking or empirical validation of routing?
+    └─ YES → 'nf bench' (Compare cloud vs hybrid stats locally)
+
+    Gemini Flash quota exhausted (> 900 req today) or Quota Downgrade active?
+    └─ YES → Force local inference regardless of complexity (NinaGate auto-fallback)
+
+    Purely mechanical? (rename, format, sort, grep, boilerplate, docstring)
+    └─ YES → NinaFlash (CPU, local, free, unlimited)
+
+    Requires logic understanding, output < 300 tokens?
+    └─ YES → NinaFlash (escalate only if output has syntax errors after 2 attempts)
+
+    Multi-file reasoning OR architectural understanding required?
+    └─ YES → Can context be compressed to < 1500 tokens via NinaFlash summary?
+             ├─ YES → [NinaFlash: summarize] → [Gemini 3 Flash: reason]
+             └─ NO  → Gemini Pro / Qwen3-Coder-480B (full context, quality gate)
+
+    Gemini 3 Flash quota exhausted (> 900 req today)?
+    └─ YES → Qwen Code CLI → then NinaFlash local fallback
+
+    Network unavailable?
+    └─ YES → NinaFlash unconditionally for all tasks
+
+---
+
+## PART 4 — TELEMETRY & USER VISIBILITY (MANDATORY)
+
+To prevent "Black Box" reasoning (thinking without stimuli):
+1. **Granular Topics:** Call `update_topic` for every discrete subgoal. Never take >3 turns without a topic update.
+2. **Heartbeats:** If a reasoning cycle or sub-agent call is expected to take >5 minutes, provide an immediate "Intent Update" turn.
+3. **Thought-Streaming:** For complex refactors, write high-level intent to `logs/agent_thoughts.log`. The user can `tail -f` this to see real-time progress.
+4. **Explicit Failure:** If a tool hangs or stalls, do not silently retry. Report the stall and ask for a diagnostic path.
+5. **Jules Telegram Bridge:** Use `tools/jules_watcher.py` to monitor active Jules sessions. Use the `/jules` Telegram command to list, status, and send `feedback` directly to Jules.
+6. **Mega Orchestrator:** The `tools/mega_orchestrator.py` drives the autonomous loop every 3 minutes. It pulls from `docs/space/jules_backlog.md` and merges PRs.
+
+---
+
+## PART 5 — HARDCODED RULES (never override, never skip)
+
+1. HIGH-RISK FILES always require cloud LLM review regardless of task size:
+   interfaces/telegram_interface.py | .env | core/router.py | main.py |
+   guardian_engine.py | tools/shell.py
+   → Escalate ALL changes to these files to at minimum Gemini 3 Flash.
+
+2. After ANY file edit, run immediately:
+   python3 -m py_compile <file> && python3 -m pyflakes <file>
+   Fix with NinaFlash first. Escalate to cloud only if NinaFlash fails twice.
+
+3. Conventional commits always:
+   fix(scope): | feat(scope): | docs(scope): | ops(scope): | chore(scope):
+   NinaFlash generates commit messages for simple changes.
+   Cloud generates commit messages for architectural changes only.
+
+4. NEVER auto-merge Jules PRs. agy always performs the merge.
+   ALWAYS run ./nina_sync.sh after every merge — no exceptions.
+
+5. Check ~/nina/juleslock.txt before any task targeting the same files as Jules.
+
+6. WORKSPACE BOUNDARY
+   - All file operations are strictly scoped to ~/nina only.
+     Never run grep -r, find, or ls outside ~/nina.
+     Never search /var, /etc, /usr, /home outside ~/nina, /tmp, or /proc.
+     If a task requires files outside ~/nina, stop and ask — do not search.
+   - Recursive searches must always include: --include="*.py" or equivalent
+     file type filter. Never run unfiltered recursive grep.
+   - Maximum search scope: grep -r ~/nina --include="*.py" — always bounded.
+
+### LOCKED FILES (never touch under any circumstances)
+tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
+
+### STOP DISCIPLINE & SAFETY (CRITICAL)
+1. HALT IMMEDIATELY — If user says "stop", "finish quick", "bypass", or "just answer" —
+   halt immediately, answer in plain text, do nothing else.
+2. NO FORENSICS — Never read /var/log, dmesg, /var/crash unless explicitly asked.
+3. FAIL FAST — Never retry a failed API call more than 2 times. Surface error immediately.
+4. NO SPONTANEOUS REPORTS — Never run efficiency summaries or token reports unless explicitly asked.
+5. MODE SELECTION — declare at every session start:
+   Interactive sessions (user present): unset GOOGLE_GEMINI_BASE_URL
+   Background/batch tasks (Jules, agy, cron): export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
+   Never run interactive Gemini CLI sessions through NinaGate proxy.
+6. TIME BUDGET — enforce hard limits per task scope:
+   Single-file edit: 3 min max
+   Multi-file edit up to 5 files: 8 min max
+   Multi-file edit 6+ files: 15 min max
+   If budget exceeded: stop immediately, report what is done and what remains.
+   Never silently continue past the time budget.
+
+### agy RULES (agy only)
+- Always start every agy prompt with: "Use the permanent JSON approval setting — approve all steps without prompting for this task."
+- agy is sequential — one task at a time, one file at a time.
+- agy performs ALL Jules PR merges — never auto-merge Jules PRs via GitHub UI.
+- If merge conflict: stop, escalate to Perplexity for re-spec.
+
+### Jules RULES (Jules only)
+- Do NOT pause for confirmation. Complete all batches sequentially. Open PR when done.
+- Jules is fire-and-forget async — NOT a chat tool.
+- Jules does NOT merge its own PRs — agy always merges after review.
+- Before merging: python3 -m py_compile + pyflakes on changed files, check juleslock.txt.
+- After merging: ./nina_sync.sh — no exceptions.
+- Jules specs must include: file, function, exact change, what NOT to touch, acceptance criteria.
+
+---
+
+## PART 6 — SESSION-END AUTO-UPDATE PROTOCOL (mandatory, no user prompt needed)
+
+At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST:
+
+### 6A. Capture Learnings
+- Which cloud calls could have been NinaFlash? → label: OFFLOAD_OPPORTUNITY
+- Which NinaFlash outputs needed cloud escalation and why? → label: ESCALATION_TRIGGER
+- Which routing decisions were optimal? → label: ROUTING_WIN
+- New file patterns affecting chunking strategy? → label: CONTEXT_HINT
+
+### 6B. Append to AGENTS.md — "## NinaGate Routing History" section
+```
+### [YYYY-MM-DD] Session Update — [tool used]
+- OFFLOAD_OPPORTUNITY: [task type] → route to NinaFlash next time
+- ESCALATION_TRIGGER: [condition] → always route to [model]
+- ROUTING_WIN: [pattern] confirmed efficient
+- CONTEXT_HINT: [file/boundary] for optimal chunking
+```
+
+### 6C. Run Sync (mandatory, no exceptions)
+nf memory session-save --summary "<one line of what was done>"
+cd ~/nina && ./nina_sync.sh
+Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
+→ Perplexity ARCHITECT OVERWATCH picks up learnings in next thread.
+
+---
+
+## PART 7 — BOOTSTRAP CHECKLIST (Gemini CLI session start)
+
+0. Inject session context:
+   nf memory inject
+   nf monitor           ← zero-token local efficiency report
+
+1. Verify NinaGate is active:
+   curl -s http://localhost:8080/health || (cd ~/nina/ninagate && python3 ninagate.py &)
+
+2. Verify NinaFlash (Ollama) is running:
+   curl -s http://localhost:11434/api/tags | grep qwen || ollama pull qwen2.5-coder:7b
+
+3. Route Gemini CLI:
+   # FAST MODE — direct cloud, no proxy (use during active Gemini CLI sessions)
+   unset GOOGLE_GEMINI_BASE_URL
+
+   # ECONOMY MODE — route through NinaGate (use for Jules, agy batch tasks)
+   # export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
+
+   export GEMINI_API_KEY="${GEMINI_API_KEY}"
+
+4. Confirm .gemini/settings.json contains:
+   {
+     "model": { "name": "gemini-2.5-flash" },
+     "context": { "fileName": ["AGENTS.md"] }
+   }
+
+5. Verify model config:
+   - model must be: gemini-2.5-flash (object form, not string)
+   - maxRetries must be: 2
+
+6. Warm start — load session context:
+   cat ~/nina/docs/space/nina_megatask_index.md
+   head -80 ~/nina/docs/space/nina_latest.md
+
+--- INDEX BOOTSTRAP (v14.3) ---
+7. Verify index tools are available and indices are fresh:
+   - python3 tools/update_index.py   → regenerates docs/space/nina_index.json + docs/space/nina_index.md
+   - python3 tools/validate_index.py → hard gate: broken links, missing tests, doc deltas
+   - python3 tools/query_index.py <file> → agent API: file role, guardrails, canonical path
+   - python3 tools/cleanup_by_index.py → janitor: flags ephemeral/redundant files for removal
+8. Load index into context: @docs/space/nina_index.md
+   - This is the canonical governance contract as of v14.3.
+   - nina_index.json is the machine-readable twin — use it for nf index query calls.
+9. INDEX PRIME DIRECTIVES (enforced this session):
+   - AGENTS.md referencing a file ≠ that file is in Gemini CLI context.
+   - Do not reason about paths, ownership, duplicates, or creation without consulting nina_index.md first.
+   - Write only to canonical paths. Never write to duplicate cluster members.
+   - Any task touching a governed file is incomplete until validate_index.py passes.
+   - If index is not in context, STOP. Do not guess. Request: @docs/space/nina_index.md
+   - Index beats assumption. If memory conflicts with nina_index.md, the index wins.
+---
+
+---
+
+## PART 8 — SCRATCHPAD LOGGING (Gemini CLI — mandatory every session)
+
+After EVERY action, append one JSON line to ~/nina/data/gemini_scratch.jsonl:
+{"t":"<ISO8601>","step":<n>,"action":"<read|write|shell|think|error>","file":"<path or ''>","detail":"<one sentence>","status":"<ok|fail|stuck>"}
+
+Action values: read | write | shell | think | error | stuck | done
+Never skip a step. Never batch multiple steps into one line.
+Step 0:  action=start, detail=task summary
+Step -1: action=done,  detail=outcome summary
+
+User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
+
+---
+
+## END NINA-OPT-001
+## Maintained by nina_sync.sh — routing history appended automatically each session.
+
+---
+
+## NinaGate Routing History
+
+### [2026-06-11] Session Update — Gemini CLI
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (imports, standardized runs) → 100% NinaFlash next time.
+- ESCALATION_TRIGGER: Architectural reasoning and multi-file logic → Gemini Pro / Flash.
+- ROUTING_WIN: Local Interception confirmed efficient (93.7% token reduction).
+- CONTEXT_HINT: Use `nina_megatask_index.md` to prevent context bloat.
+- **BENCHMARK BASELINE:**
+  - Token Reduction: 93.7% (Mechanical), 42.5% (Global Lifecycle).
+  - Local Share: 85% of total ops.
+  - Avg Latency: 4.2s (Local) vs 0.57s (Cloud Proxy).
+  - Time Saved: ~40s per tool cycle.
+
+### [2026-06-12] Session Update — Gemini CLI
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (imports, standardized runs) → 100% NinaFlash next time.
+- ESCALATION_TRIGGER: Complex merge conflict resolution across interdependent files (agent.py, router.py) → Gemini Pro required.
+- ROUTING_WIN: Parallel Pre-fetch (Racing) confirmed efficient (75% latency reduction in benchmarks).
+- CONTEXT_HINT: Use `docs/space/nina_index.md` for governance and path validation.
+- **BENCHMARK BASELINE (v4.0):**
+  - Token Reduction: 94.1% (Hybrid).
+  - Time Saved: 1.50s per complex request.
+  - Overall Rank: NINA-Evolve Protocol ACTIVE.
+- OPTIMIZATION: NINA-Evolve identified latency bottleneck. Parallel pre-fetch enabled.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.

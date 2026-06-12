@@ -2533,3 +2533,13 @@
 **Files changed:** data/router_cache.json,docs/space/nina_repo_hygiene_dashboard.md,data/gemini_scratch.jsonl,pr146.diff,pr147.diff,pr148.diff
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 231 — 2026-06-12 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,data/router_cache.json,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,tools/ninaflash.py,data/gemini_scratch.jsonl
+
+**Verification:** git push OK, nina.service active
