@@ -123,11 +123,12 @@ async def run(cmd: str) -> str:
         api_key = get_api_key()
         headers = {"X-Goog-Api-Key": api_key, "Content-Type": "application/json"}
         url = "https://jules.googleapis.com/v1alpha/sessions"
+        title = re.sub(r'[\r\n\t]+', ' ', arg).strip()[:100]
         body = {
             "prompt": arg,
             "sourceContext": {"source": "sources/github/aibony/nina", "githubRepoContext": {"startingBranch": "main"}},
             "automationMode": "AUTO_CREATE_PR",
-            "title": arg[:60]
+            "title": title
         }
         data = await make_request_with_retry("POST", url, headers, json_data=body)
         sid = data.get("id") or data.get("name", "").split("/")[-1]
