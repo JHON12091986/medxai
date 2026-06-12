@@ -42,7 +42,8 @@ sec_log = logging.getLogger("nina.security")
 COMMANDS = {
     "task", "ask", "email", "shell", "remember", "forget",
     "patch", "generate", "approve", "reject", "rollback",
-    "addkey", "status", "router", "logs", "abort", "start", "reset", "help"
+    "addkey", "status", "router", "logs", "abort", "start", "reset", "help",
+    "errors"
 }
 
 HELP_TEXT = """*NINA v12 Commands*
@@ -61,6 +62,7 @@ HELP_TEXT = """*NINA v12 Commands*
 `addkey <P> <key>` -- Add a provider API key
 `addkey list` -- Show provider status & signup links
 `status` -- System health snapshot
+`errors` -- Show open error register items
 `router` -- Provider routing table
 `logs` -- Last 50 lines of nina.log
 `abort` -- Kill active task immediately
@@ -230,6 +232,34 @@ class TelegramInterface:
                 await self._reply(update, "\n".join(lines)[-4000:])
             else:
                 await self._reply(update, "nina.log not found.")
+
+        elif cmd == "errors":
+            path = Path("docs/space/nina_error_register.md")
+            if not path.exists():
+                await self._reply(update, "Error register not found.")
+            else:
+                lines = path.read_text().splitlines()
+                open_items = []
+                in_table = False
+                for line in lines:
+                    if line.startswith("| ID"):
+                        in_table = True
+                        continue
+                    if in_table and line.startswith("|-"):
+                        continue
+                    if in_table and line.startswith("|"):
+                        parts = [p.strip() for p in line.split("|")]
+                        if len(parts) >= 8:
+                            item_id = parts[1]
+                            issue = parts[4]
+                            status = parts[5]
+                            if "OPEN" in status or "PENDING" in status:
+                                open_items.append(f"• [{item_id}] {issue}")
+                if not open_items:
+                    await self._reply(update, "No open errors found.")
+                else:
+                    reply_text = "Open Error Register Items:\n" + "\n".join(open_items)
+                    await self._reply(update, reply_text[:4000])
 
         elif cmd == "start":
             self.session_history.clear()
