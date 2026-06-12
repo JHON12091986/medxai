@@ -1,3 +1,19 @@
+# NINA Update Log
+
+## Overview
+Log of updates.
+
+## Purpose
+Track changes.
+
+## Usage
+Read it.
+
+
+## Entry 095 - 2026-06-12 - Docstring Quality Audit
+- **What Changed:** Implemented `cmd_code_audit_doc` in `tools/ninaflash.py` to evaluate and score docstrings on clarity and completeness. Added `audit-doc` command to the CLI. Created tests in `tests/test_doc_audit.py`.
+- **What was verified:** Verified that `audit-doc` correctly parses files using AST, correctly scores based on existence, minimum length, and the presence of expected keywords (args, returns, yields, raises). Verified tests successfully pass, full test suite passes.
+- **Rollback Path:** Revert `tools/ninaflash.py` and delete `tests/test_doc_audit.py`.
 # NINA v12.2 Update Log
 
 **Machine:** ASUS VivoBook X530FN (aibony) · i5 8th Gen · 16GB RAM · MX150 2GB VRAM  
