@@ -32,3 +32,16 @@ def test_cmd_code_doc():
     assert res.returncode == 0
     assert "tools/ninaflash.py:" in res.stdout
     assert "Extract signatures" in res.stdout
+
+def test_cmd_code_call_graph(tmp_path):
+    import json
+    test_file = tmp_path / "test_file.py"
+    test_file.write_text("def a():\n  b()\n  c()\n\ndef b():\n  pass\n")
+
+    res = run_nf("code", "call-graph", "--file", str(test_file))
+    assert res.returncode == 0
+    output_json = json.loads(res.stdout)
+
+    assert "a" in output_json
+    assert "b" in output_json["a"]
+    assert "c" in output_json["a"]

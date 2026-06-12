@@ -425,6 +425,48 @@ def cmd_code_index(args):
     print(json.dumps(index, indent=2))
 
 
+def cmd_code_call_graph(args):
+    """[038] Local Call Graph Generator: Trace function calls locally without LLM."""
+
+    class CallVisitor(ast.NodeVisitor):
+        def __init__(self):
+            self.calls = set()
+        def visit_Call(self, node):
+            if isinstance(node.func, ast.Name):
+                self.calls.add(node.func.id)
+            elif isinstance(node.func, ast.Attribute):
+                self.calls.add(node.func.attr)
+            self.generic_visit(node)
+
+    graph = {}
+
+    if hasattr(args, 'file') and args.file:
+        files = [_path_resolve(args.file)]
+    else:
+        files = _find_py_files()
+
+    for py_file in files:
+        if not py_file.exists():
+            continue
+        try:
+            tree = ast.parse(py_file.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    visitor = CallVisitor()
+                    visitor.visit(node)
+                    if visitor.calls:
+                        if node.name not in graph:
+                            graph[node.name] = []
+                        graph[node.name].extend(list(visitor.calls))
+        except Exception:
+            pass
+
+    for key in graph:
+        graph[key] = list(set(graph[key]))
+
+    print(json.dumps(graph, indent=2))
+
+
 # ------------------------------------------------------------------
 # MODULE 3: CONTEXT COMPRESSION
 # ------------------------------------------------------------------
@@ -2069,6 +2111,7 @@ def main():
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
     p_cs.add_parser("index")
+    p_cs.add_parser("call-graph").add_argument("--file", nargs="?")
     p_cs.add_parser("pack").add_argument("file")
     
     subparsers.add_parser("bench", help="Run a standardized reasoning task twice (Cloud vs Hybrid)")
@@ -2185,6 +2228,7 @@ def main():
             if args.sub == "outline": cmd_code_outline(args)
             elif args.sub == "dep-map": cmd_code_dep_map(args)
             elif args.sub == "index": cmd_code_index(args)
+            elif args.sub == "call-graph": cmd_code_call_graph(args)
             elif args.sub == "symbol": cmd_code_symbol(args)
             elif args.sub == "sigs": cmd_code_sigs(args)
             elif args.sub == "doc": cmd_code_doc(args)
