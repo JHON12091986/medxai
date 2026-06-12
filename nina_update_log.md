@@ -2463,3 +2463,6 @@
 **Files changed:** crons/manager.py,data/session_memory.jsonl,docs/space/claude_feed.md,data/jules_seen_activities.json,fetch_all_questions.py,fetch_jules_question.py,resolve_jules.py,tools/jules_watcher.py
 
 **Verification:** git push OK, nina.service deactivating
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
