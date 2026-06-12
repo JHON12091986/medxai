@@ -42,7 +42,7 @@ sec_log = logging.getLogger("nina.security")
 COMMANDS = {
     "task", "ask", "email", "shell", "remember", "forget",
     "patch", "generate", "approve", "reject", "rollback",
-    "addkey", "status", "router", "logs", "abort", "start", "reset", "help"
+    "addkey", "status", "router", "logs", "abort", "start", "reset", "help", "backlog"
 }
 
 HELP_TEXT = """*NINA v12 Commands*
@@ -60,6 +60,7 @@ HELP_TEXT = """*NINA v12 Commands*
 `rollback <file>` -- Restore previous version
 `addkey <P> <key>` -- Add a provider API key
 `addkey list` -- Show provider status & signup links
+`backlog` -- shows top 5 READY items
 `status` -- System health snapshot
 `router` -- Provider routing table
 `logs` -- Last 50 lines of nina.log
@@ -230,6 +231,41 @@ class TelegramInterface:
                 await self._reply(update, "\n".join(lines)[-4000:])
             else:
                 await self._reply(update, "nina.log not found.")
+
+        elif cmd == "backlog":
+            backlog_path = Path("docs/space/jules_backlog.md")
+            if not backlog_path.exists():
+                await self._reply(update, "Backlog not found.")
+                return
+
+            try:
+                backlog_content = backlog_path.read_text()
+            except Exception as e:
+                await self._reply(update, f"Error reading backlog: {e}")
+                return
+
+            ready_items = []
+            for line in backlog_content.splitlines():
+                if line.strip().startswith("|") and "`READY`" in line:
+                    parts = [p.strip() for p in line.split("|") if p.strip()]
+                    if len(parts) >= 3 and re.match(r'^[A-Z0-9-]+$', parts[0]):
+                        if "`READY`" in parts[2]:
+                            title = parts[1]
+                        elif len(parts) >= 4 and "`READY`" in parts[3]:
+                            title = parts[2]
+                        else:
+                            title = " ".join(parts[1:-1])
+
+                        ready_items.append(f"• {parts[0]}: {title}")
+                        if len(ready_items) >= 5:
+                            break
+
+            if ready_items:
+                reply = "*Top 5 READY Backlog Items:*\n" + "\n".join(ready_items)
+            else:
+                reply = "No READY items found in backlog."
+
+            await self._reply(update, reply, parse_mode=self.PARSE_MODE_DEFAULT)
 
         elif cmd == "start":
             self.session_history.clear()
