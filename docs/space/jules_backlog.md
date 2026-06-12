@@ -79,7 +79,7 @@ Perplexity reads backlog each session
 | B-048 | Auto-close stale Jules sessions (>24h blocked) | `IN_PROGRESS` | TBD | — | Auto-ingested via Goal Intake |
 
 
-| B-047 | Build a NinaGate routing telemetry dashboard | `READY` | TBD | — | Auto-ingested via Goal Intake |
+| B-047 | Build a NinaGate routing telemetry dashboard | `IN_PROGRESS` | TBD | — | Auto-ingested via Goal Intake |
 
 
 | B-046 | Implement conflict-skip and error register logging | `READY` | TBD | — | Auto-ingested via Goal Intake |

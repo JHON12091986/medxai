@@ -9,6 +9,7 @@ import json
 import asyncio
 import logging
 import requests
+import subprocess
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -19,8 +20,22 @@ REPO_ROOT = Path(__file__).parent.parent.resolve()
 SEEN_FILE = REPO_ROOT / "data" / "jules_seen_activities.json"
 TELEGRAM_TOKEN = os.environ.get("TELEGRAMBOTTOKEN")
 CHAT_ID = os.environ.get("AUTHORIZEDUSERID")
+BEEP_SCRIPT = REPO_ROOT / "tools" / "alert_beep.py"
 
 logger = logging.getLogger("nina.tools.jules_watcher")
+_beep_proc = None
+
+def start_beep():
+    global _beep_proc
+    if _beep_proc is None or _beep_proc.poll() is not None:
+        logger.info("Starting audio alert sequence...")
+        _beep_proc = subprocess.Popen(["python3", str(BEEP_SCRIPT)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+def stop_beep():
+    global _beep_proc
+    if _beep_proc and _beep_proc.poll() is None:
+        _beep_proc.terminate()
+        _beep_proc = None
 
 def load_seen_activities() -> set:
     if SEEN_FILE.exists():
@@ -90,6 +105,7 @@ async def watch_and_notify():
                         )
                         await send_telegram_notification(notification)
                         new_seen.add(aid)
+                        start_beep()
                         logger.info(f"Notification sent for session {sid}, activity {aid}")
                         break # Only notify the latest question per session
             except Exception as e:

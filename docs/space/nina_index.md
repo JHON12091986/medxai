@@ -32,6 +32,8 @@ This index tracks all governed artifacts in the NINA repository.
 | `bench_report.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `commit_message.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `efficiency_report.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `fetch_all_questions.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `fetch_jules_question.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `fix_caps_again.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `generate_backups.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `guardian` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -62,8 +64,10 @@ This index tracks all governed artifacts in the NINA repository.
 | `pr_desc.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pytest.ini` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `requirements.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `resolve_jules.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `system_templates.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test.lock` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `test_dispatch.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_httpx_hook.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_ninagate_logic.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_router.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |

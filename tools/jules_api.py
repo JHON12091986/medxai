@@ -118,6 +118,11 @@ async def run(cmd: str) -> str:
         if not arg or " " not in arg: return "Usage: feedback [sid] [message]"
         sid, msg = arg.split(None, 1)
         res = await provide_feedback(sid, msg)
+        
+        # Stop beep if it was running
+        import subprocess
+        subprocess.run(["pkill", "-f", "alert_beep.py"], capture_output=True)
+        
         return f"Feedback sent to {sid}: {msg}"
 
     if action == "dispatch":

@@ -198,6 +198,8 @@ To prevent "Black Box" reasoning (thinking without stimuli):
 2. **Heartbeats:** If a reasoning cycle or sub-agent call (e.g. `generalist`) is expected to take >5 minutes, provide an immediate "Intent Update" turn.
 3. **Thought-Streaming:** For complex refactors, write high-level intent to `logs/agent_thoughts.log`. The user can `tail -f` this to see real-time progress.
 4. **Explicit Failure:** If a tool hangs or stalls, do not silently retry. Report the stall and ask for a diagnostic path.
+5. **Jules Telegram Bridge:** Use `tools/jules_watcher.py` to monitor active Jules sessions. Use the `/jules` Telegram command to list, status, and send `feedback` directly to Jules.
+6. **Mega Orchestrator:** The `tools/mega_orchestrator.py` drives the autonomous loop every 3 minutes. It pulls from `docs/space/jules_backlog.md` and merges PRs.
 
 ---
 

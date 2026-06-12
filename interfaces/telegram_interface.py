@@ -235,7 +235,6 @@ class TelegramInterface:
             else:
                 await self._reply(update, "nina.log not found.")
 
-<<<<<<< HEAD
         elif cmd == "backlog":
             backlog_path = Path("docs/space/jules_backlog.md")
             if not backlog_path.exists():

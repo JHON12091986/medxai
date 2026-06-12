@@ -1,109 +1,31 @@
-# NINA Architecture
+# NINA v5.1 Architecture Blueprint
 
-## Overview
-A high-level blueprint of the NINA ecosystem, detailing the interactions between the strategic, cloud-based, and local execution layers.
+NINA is an autonomous engineering system designed to maintain and evolve its own codebase through a self-healing pipeline.
 
-## Purpose
-To define the structural boundaries, security protocols, and optimization strategies that ensure NINA remains stable, secure, and cost-effective during autonomous expansion.
+## 1. The Autonomous Orchestrator (mega_orchestrator.py)
+NINA operates on a continuous 3-minute cron cycle (`crons/manager.py`) governed by `mega_orchestrator.py`. 
+- **Phase 0 (Sense):** Polls 15 Jules cloud sessions for questions/errors via `jules_watcher.py`.
+- **Phase 1 (Resolve):** Uses `asyncio.gather` and the GitHub API to merge Pull Requests concurrently.
+- **Phase 2 (Saturate):** Reads `jules_backlog.md` and dispatches new jobs to maintain 100% capacity in the cloud VM queue.
 
-## Usage
-Consult this document when designing new core modules or agents to ensure they align with the three-tier agent model and the Prime Directive.
+## 2. Jules-Telegram Bridge
+When Jules pauses a task to ask a clarifying question, `jules_watcher.py` extracts the text and forwards it to the authorized user's Telegram. The user replies via `/jules feedback [SID] [response]`, which NINA relays directly back to the active session via `jules_api.py`.
 
-## System Overview
+## 3. NinaGate & Smart Routing
+NinaGate acts as a reverse proxy intercepting all OpenAI-compatible API calls.
+- **Decision Tree:** If a task is "SIMPLE" (formatting, regex, docstrings), NinaGate reroutes it to `NinaFlash` running `qwen2.5-coder` locally via Ollama.
+- **Fallbacks:** If a cloud provider rate limits (429) or fails, the router seamlessly cascades to available local or secondary cloud models.
 
-NINA is a three-tier autonomous agentic OS. It is not a chatbot. It is an action-first system that relies on a multi-layered approach involving a strategic Architect, an asynchronous Cloud Coder, and a dedicated Local Executor for maximum local security and robust performance.
+## 4. Guardian AST Engine
+Before any code is committed or merged, `guardian_engine.py` builds an Abstract Syntax Tree (AST) of the new code to search for critical violations:
+- Execution of `shell=True` without constraints.
+- Hardcoded secrets or tokens.
+- Unsafe module imports.
 
-## Architecture Diagram
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    NINA Ecosystem                            │
-│                                                             │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
-│  │  Perplexity  │    │    Jules     │    │   ninaflash    │  │
-│  │  Enterprise  │    │  (Cloud VM)  │    │(Antigravity) │  │
-│  │    Pro       │    │Gemini 3.1 Pro│    │Gemini Flash  │  │
-│  │              │    │              │    │              │  │
-│  │  ARCHITECT   │    │ASYNC BUILDER │    │LOCAL MUSCLE  │  │
-│  │  + OVERWATCH │    │              │    │              │  │
-│  └──────┬───────┘    └──────┬───────┘    └──────┬───────┘  │
-│         │ specs             │ PRs               │ merges   │
-│         │                  ▼                   │          │
-│         │           ┌──────────────┐           │          │
-│         │           │   GitHub     │◄──────────┘          │
-│         │           │  (PR Gate)   │                      │
-│         │           └──────┬───────┘                      │
-│         │                  │ merged                       │
-│         │                  ▼                              │
-│         │         ┌────────────────┐                      │
-│         └────────►│  NINA (Live)   │                      │
-│          review   │  systemd svc   │                      │
-│                   └────────────────┘                      │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Component Deep-Dives
-
-**ninaflash (nf):**
-The "Local Muscle" of NINA. A high-performance CLI executor (v6.5+) that offloads research, validation, and project management from the cloud. It features a "Surgical Code Intelligence" engine, zero-token file/git manipulation, and parallel execution. It maintains a strict 100-function core Nucleus and implements **Structured JSON Logging** (`logs/ninaflash.log`) with monotonic timing and token savings estimates. ninaflash now includes `nf bench` for performance auditing and `nf query` for capability mapping.
-
-**Guardian Hardening (Mega Task 7):**
-An autonomous Quality Assurance layer integrated into `core/agent.py`. It provides a "Self-Fix" loop that automatically verifies the syntax of surgical edits using `pyflakes` and `py_compile`. If an edit fails verification, the Guardian autonomously re-routes the error back to the agent for immediate repair, ensuring that merged code never breaks the build.
-
-**Parallel Tool Hub (Observability v2.0):**
-An upgrade to the `AgentLoop` that allows NINA to execute multiple independent tool calls simultaneously via `asyncio.gather`. This "Wide-Path" execution model reduces overall task latency by up to 60% and is monitored in real-time by the Live Visual Telemetry dashboard.
-
-### 3. NinaGate Proxy (Local Acceleration)
-A lightweight OpenAI-compatible API proxy (`ninagate/main.py`) running on port 8080. It implements an **Async Non-Blocking Pipeline** (v3.0): cloud requests are initiated immediately, while a heuristic classification runs in parallel. If a task is identified as `SIMPLE`, the cloud request is cancelled and offloaded to local Ollama models (Qwen2.5-Coder), saving tokens without blocking the user.
-
-It features a **Live Quota Tracker** that automatically monitors Gemini gemini-3-flash-preview usage and downgrades to local models when limits (>900 req/day) are reached, resetting at 1PM BD daily. NinaGate manages a priority cascade across 20+ providers, ensuring NINA always has a path to a model even during high-latency or rate-limit events.
-
-**Token-Surgical Architecture (v2.1):**
-A cross-cutting optimization layer designed to reduce cloud token consumption by 50-90%. It utilizes:
-- **Local RAG:** Semantic chunk-searching via ChromaDB to provide precise context.
-- **Reasoning Offloading:** Moving the 7-step planning scaffold to local models.
-- **Differential Context:** Prioritizing git diffs and symbol skeletons over full file contents in cloud prompts.
-- **Cached Templating:** Moving project-wide instructions (AGENTS.md) into NinaGate's system prompt cache.
-
-**HybridRouter V4:**
-NINA's model routing engine located in `core/router.py`. It intelligently routes queries across 19+ cloud AI providers and local Ollama instances based on a weighted scoring mechanism (success rate × latency × rate limits). The router integrates a CircuitBreaker to prevent cascading failures when a provider drops, prioritizing free-tier options first while safeguarding performance.
-
-**AgentLoop (THINK-PLAN-ACT):**
-The core processing loop that transforms intent into execution. It runs continuously, receiving input (e.g., from Telegram) and breaking tasks down using a THINK-PLAN-ACT cadence. It ensures state is maintained during complex tasks and provides a thermal guard to prevent runaway loops or resource exhaustion. Workspace boundary enforcement is governed by AGENTS.md Part 5 Rule 6 — all file operations are strictly scoped to ~/nina only.
-
-**Guardian Gate:**
-The forensic safety layer for autonomous self-patching. Residing in `guardian_engine.py` and `guardian` script, it runs AST scans and baseline drift analysis on every patch applied. It ensures no code runs without py_compile and pyflakes validation, logging all updates locally to provide safety, accountability, and preventing agent conflicts via file locking.
-
-**Memory System:**
-NINA's dual-tier memory orchestrator. It uses ChromaDB as a semantic vector store for episodic recall of past events, enabling NINA to "remember" history. It also relies on a hardcoded, unmodifiable `facts.json` to anchor NINA's identity and core knowledge, preventing long-term context drift or personality alteration.
-
-### 4. NINA-Evolve Protocol (v4.0 - Self-Optimization)
-The "Vicious Cycle" of autonomous improvement. NINA monitors its own performance metrics (tokens, latency, throughput) and identifies bottlenecks via `tools/evolve.py`. When an optimization is identified, the system generates a proposal, implements the code change, validates it via automated testing, and merges the upgrade—all without user intervention. This recursive learning ensures NINA becomes more robust and efficient as time passes.
-
-## Data Flow
-
-A typical operation begins when a command is received via Telegram. It passes through the `telegram_interface.py` which acts as the authenticated gateway. The request enters the `AgentLoop`, which synthesizes intent and coordinates action. The loop utilizes the `HybridRouter` to select an appropriate LLM provider for the reasoning. The generated response/action is executed—often utilizing local op-codes if handled by ninaflash—and the result is returned back through the interface to the user.
-
-## Safety Architecture
-
-NINA relies on multiple safeguards to ensure security:
-- **Guardian Gate:** Checks logic against an immutable baseline.
-- **jules_lock.txt:** Prevents concurrent access issues between Jules and ninaflash.
-- **Shell Allowlist:** Prevents arbitrary and dangerous command execution.
-- **Local-only Routing:** Ensures highly sensitive pathways, such as banking operations, always remain locally processed and never touch cloud providers.
-
-## Deployment Architecture
-
-NINA runs as a persistently managed background service via `systemd` (`nina.service` and `nina-dashboard.service`). It heavily relies on local Ollama models for localized processing capability to maintain uptime during connectivity outages or rate-limit saturation. The workflow leverages a strictly isolated worktree branching strategy, allowing autonomous agents to operate parallelly without destabilizing the primary `main` branch.
-
-## THE OPTIMIZATION OFFENSIVE (v14.0 - NINA-OPT-001)
-NINA prioritizes local hardware. Every subtask is routed through the **NinaGate** classification tree.
-1. **Local-First:** NinaFlash (Qwen-2.5-Coder:7B) handles mechanical tasks and small edits for $0.
-2. **Surgical Retrieval:** Files >100 lines are surgically retrieved via AST (Abstract Syntax Tree) primitives in `ninaflash`.
-3. **Unified Directive:** A single source of truth (`AGENTS.md`) governs all coders, ensuring zero context drift.
-
-## VISIBILITY & TELEMETRY (Glass Box Architecture)
-NINA eliminates "Black Box" reasoning through mandatory telemetry:
-- **Granular Topic Updates:** Every discrete sub-goal triggers a status update.
-- **Thought-Streaming:** Internal reasoning intent is mirrored to `logs/agent_thoughts.log`.
-- **Heartbeat Protocol:** Automated status turns during high-latency operations.
+## 5. Data Flow & Index Governance
+1. **Goal Intake:** Natural language commands are parsed into structured markdown via `tools/goal_intake.py`.
+2. **Spec Generation:** The goal is added to `docs/space/jules_backlog.md`.
+3. **Dispatch:** The orchestrator picks up the `READY` task and dispatches it to Jules.
+4. **Execution:** Jules opens a Pull Request (`IN_PR`).
+5. **Auto-Document:** `mega_orchestrator.py` cross-references the modified files against `docs/space/nina_index.json`. If `"doc_required": true`, it triggers `tools/doc_autogen.py` to write the docs.
+6. **Merge & Sync:** The PR is merged, the error register is updated if conflicts occur, and `./nina_sync.sh` backs up the state to Google Drive.
