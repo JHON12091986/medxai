@@ -1990,6 +1990,35 @@ def cmd_code_doc(args):
             pass
 
 
+def cmd_code_dead_code(args):
+    """[065] Identify unused functions/imports using vulture."""
+    if not shutil.which("vulture"):
+        print("❌ 'vulture' is not installed. Install via: pip install vulture")
+        return
+
+    path = args.target
+    print("── ninaflash dead-code detection ──")
+    print(f"Target: {path}")
+    print("───────────────────────────────────")
+    try:
+        result = subprocess.run(["vulture", path], capture_output=True, text=True)
+        if result.stdout:
+            print(result.stdout.strip())
+        if result.stderr:
+            print(result.stderr.strip(), file=sys.stderr)
+
+        if result.returncode == 0:
+            print("───────────────────────────────────")
+            print("Verdict: ✅ PASS (No dead code found)")
+            write_nf_log("check", "dead-code", outcome=f"{path} → PASS")
+        else:
+            print("───────────────────────────────────")
+            print("Verdict: ❌ FAIL (Dead code detected)")
+            write_nf_log("check", "dead-code", outcome=f"{path} → FAIL")
+    except Exception as e:
+        print(f"❌ Error running vulture: {e}")
+
+
 def cmd_test(args):
     """[043] Test Runner: Execute pytest suite."""
     import time
@@ -2113,6 +2142,7 @@ def main():
     p_cs.add_parser("index")
     p_cs.add_parser("call-graph").add_argument("--file", nargs="?")
     p_cs.add_parser("pack").add_argument("file")
+    p_cs.add_parser("dead-code").add_argument("target")
     
     subparsers.add_parser("bench", help="Run a standardized reasoning task twice (Cloud vs Hybrid)")
 
@@ -2233,6 +2263,7 @@ def main():
             elif args.sub == "sigs": cmd_code_sigs(args)
             elif args.sub == "doc": cmd_code_doc(args)
             elif args.sub == "pack": cmd_context_pack(args)
+            elif args.sub == "dead-code": cmd_code_dead_code(args)
         elif args.command == "query": cmd_query_capability(args)
         elif args.command == "pr":
             if args.sub == "reconcile": cmd_pr_reconcile(args)

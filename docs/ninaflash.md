@@ -12,6 +12,7 @@ To maximize token efficiency and minimize latency, all NINA agents must prioriti
 | :--- | :--- |
 | Read part of a file | `nf file read <file> --start N --end N` |
 | Find a function/class | `nf code symbol <file> <name>` |
+| Detect dead code/unused imports | `nf code dead-code <target>` |
 | Search text across files | `nf file grep <pattern> --dir <dir>` |
 | See what changed | `nf git changed` |
 | Read recent log entries | `nf log tail 5` |
@@ -31,6 +32,7 @@ ninaflash v6.1+ features a "Surgical Code Intelligence" layer designed for extre
 
 - `nf code pack <file>` — Distill a large Python file into a token-efficient skeletal summary.
 - `nf code symbol --file <f> --name <n>` — Extracts the exact implementation of a specific class or function.
+- `nf code dead-code <target>` — Uses `vulture` to detect dead code and unused imports in the target file or directory.
 - `nf query "<task>"` — Local capability introspection tool.
 
 ### [NEW] File & Git Operations (Zero Cloud Cost)
