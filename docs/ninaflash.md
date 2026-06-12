@@ -34,6 +34,7 @@ ninaflash v6.1+ features a "Surgical Code Intelligence" layer designed for extre
 - `nf code symbol --file <f> --name <n>` — Extracts the exact implementation of a specific class or function.
 - `nf code dead-code <target>` — Uses `vulture` to detect dead code and unused imports in the target file or directory.
 - `nf query "<task>"` — Local capability introspection tool.
+- `nf code call-graph <file>` — Local Call Graph Generator: Trace function calls locally without LLM.
 
 ### [NEW] File & Git Operations (Zero Cloud Cost)
 
