@@ -29,7 +29,8 @@ class ContextPruner:
         "*.png", "*.jpg", "*.jpeg", "*.gif", "*.ico", "*.svg",
         "*.db", "*.sqlite", "*.sqlite3",
         "node_modules/",
-        ".env"
+        ".env",
+        "upgrades/"
     ]
 
     def write_ignore_file(self) -> str:

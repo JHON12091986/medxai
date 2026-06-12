@@ -306,7 +306,7 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
    nf monitor           ← zero-token local efficiency report
 
 1. Verify NinaGate is active:
-   curl -s http://localhost:8080/health || (cd ~/nina/ninagate && python3 ninagate.py &)
+   curl -s http://localhost:8080/health || (cd ~/nina/ninagate && python3 main.py &)
 
 2. Verify NinaFlash (Ollama) is running:
    curl -s http://localhost:11434/api/tags | grep qwen || ollama pull qwen2.5-coder:7b
@@ -403,3 +403,15 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: None.
 - ROUTING_WIN: Scoped execution via `gemini_scoped.sh` prevents context pollution.
 - CONTEXT_HINT: Scoped runs effectively "compress" task context to a single file.
+
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.

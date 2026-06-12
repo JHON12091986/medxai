@@ -3,31 +3,31 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-13 00:29 +06
-- Git HEAD: 5bac6d9df1bff22f36e59981644ecb53d36144ef
-- Last commit: docs: post-session sync 2026-06-13 00:27
+- Generated: 2026-06-13 01:17 +06
+- Git HEAD: 9c49c76b67442dd4b90052ce55e146fd9fcdbf1e
+- Last commit: docs: post-session sync 2026-06-13 01:16
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Fri 2026-06-12 10:49:38 +06; 13h ago
+     Active: active (running) since Fri 2026-06-12 10:49:38 +06; 14h ago
  Invocation: e938017587f0494f81d51ed46f4baaaf
    Main PID: 331859 (python)
       Tasks: 7 (limit: 15177)
-     Memory: 205.8M (peak: 222.7M)
-        CPU: 37.211s
+     Memory: 206M (peak: 222.7M)
+        CPU: 38.594s
      CGroup: /system.slice/nina.service
              └─331859 /home/aibony/nina/venv/bin/python main.py
 
-Jun 13 00:28:15 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 00:28:25 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 00:28:35 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 00:28:45 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 00:28:55 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 01:16:17 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 01:16:27 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 01:16:38 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 01:16:48 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 01:16:58 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[331859]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 Active Jules Sessions:
-- [14731582043566038455] Bolt: Performance Optimization Agent — IN_PROGRESS
+- [14731582043566038455] Bolt: Performance Optimization Agent — AWAITING_USER_FEEDBACK
 - [5515461256896984256] jules remote new --repo aibony/nina --task start --session "
 TASK ID: AG-G-01
 TITLE: MEGA-TASK Gemini CLI Flash-Speed Performance Stack — Context Trim, Cache Prefix, Model Routing, File Filter, Prompt Budget
@@ -552,11 +552,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
+9c49c76 docs: post-session sync 2026-06-13 01:16
+71ee78a fix(ninaflash): resolve conflicting subparser from Gemini CLI GCL-02
+63254c6 fix(gemini-cli): model object format + remove deprecated tools.allowed GCL-03
 5bac6d9 docs: post-session sync 2026-06-13 00:27
 7ceff52 docs: post-session sync 2026-06-13 00:23
-10a56da docs: post-session sync 2026-06-13 00:20
-2aa9c1f docs: post-session sync 2026-06-13 00:19
-b08a656 docs: post-session sync 2026-06-12 23:38
 ```
 
 ## 6. Open Blockers
@@ -598,4 +598,4 @@ b08a656 docs: post-session sync 2026-06-12 23:38
 
 
 ---
-_Feed size: 30111 bytes_
+_Feed size: 30185 bytes_
