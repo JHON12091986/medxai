@@ -2553,3 +2553,21 @@
 - Merged via local fallback.
 
 **Rollback:** `git revert -m 1 HEAD`
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
