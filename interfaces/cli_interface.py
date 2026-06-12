@@ -15,7 +15,7 @@ from core.router import (
 )
 from core.memory import MemorySystem
 from core.agent import AgentLoop
-from tools import shell, browser, system as systool, jules_api
+from tools import shell, browser, system as systool, jules, search
 
 async def run_cli():
     parser = argparse.ArgumentParser(description="NINA Command Line Interface")
@@ -112,11 +112,19 @@ async def run_cli():
     # Build tools dictionary
     tools = {
         "shell": shell,
-        "web": __import__("tools.searchtool", fromlist=["run"]),
+        "web": search,
         "browser": browser,
         "system": systool,
-        "jules": jules_api,
+        "jules": jules,
     }
+
+    # Handle direct commands (bypassing AgentLoop for specific tools)
+    if args.task and args.task[0].lower() == "jules":
+        cmd_str = " ".join(args.task[1:])
+        result = await jules.run(cmd_str)
+        print(result)
+        await router.close()
+        return
 
     # Helper for task classification using LOCALFAST
     async def local_fast(prompt: str) -> str:
@@ -129,6 +137,7 @@ async def run_cli():
             return ""
 
     # Session Bridge context load
+    session_summary = "" # Initialize session_summary
     memory_path = "data/memory/session_summaries.md"
     try:
         with open(memory_path, 'r') as mf:

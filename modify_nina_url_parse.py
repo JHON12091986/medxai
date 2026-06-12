@@ -8,8 +8,10 @@ search = """        # If routing through NinaGate, strip redundant instructions
                 self.router.http.headers["X-NINA-ROLE"] = "agent"
         else:"""
 
-replace = """        # If routing through NinaGate, strip redundant instructions
-        from urllib.parse import urlparse
+replace = """\
+        # If routing through NinaGate, strip redundant instructions
+        from urllib.parse import (
+            urlparse)
         api_base = getattr(self.config, "onebrain_api_base", "") or ""
         parsed_url = urlparse(api_base)
 

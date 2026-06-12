@@ -14,10 +14,10 @@ from typing import Optional, cast
 import httpx
 import psutil
 from core.config import NinaConfig, RATELIMITS
-from tools import jules_api
+from tools import jules
 from tools.model_discovery import ModelDiscoveryService
 
-_ = jules_api
+_ = jules
 
 from core.logger import get_logger
 

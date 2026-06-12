@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
-source ~/nina/venv/bin/activate
+source ~/nina/.venv/bin/activate
 cd ~/nina
+export PYTHONPATH=$PWD
 python -m interfaces.cli_interface "$@"

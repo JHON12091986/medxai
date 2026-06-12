@@ -412,12 +412,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
 
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash)
+- OFFLOAD_OPPORTUNITY: Mechanical import fixes and pytest validations.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Stand-alone CLI execution of tools/jules.py with dotenv loaded.
+- CONTEXT_HINT: Watcher notification failures are direct symptoms of main scheduler/daemon crash.
 
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.

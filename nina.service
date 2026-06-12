@@ -8,7 +8,7 @@ Type=simple
 User=aibony
 WorkingDirectory=/home/aibony/nina
 Environment=PYTHONUNBUFFERED=1
-ExecStart=/home/aibony/nina/venv/bin/python main.py
+ExecStart=/home/aibony/nina/.venv/bin/python main.py
 Restart=on-failure
 RestartSec=5
 

@@ -120,17 +120,14 @@ async def test_providerhunter_smoke(tmp_path):
             assert data[0]["healthy"] == True
 
 @pytest.mark.asyncio
-async def test_jules_api_smoke():
-    from tools import jules_api
-with patch("tools.jules_api.requests.request") as mock_req:
-    with patch.dict("os.environ", {"JULES_API_KEY": "dummy"}):
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {"sources": [{"name": "mocked_source"}]}
-        mock_req.return_value = mock_response
+async def test_jules_smoke():
+    from tools import jules
+    with patch("tools.jules.make_request") as mock_req:
+        with patch.dict("os.environ", {"JULES_API_KEY": "dummy"}):
+            mock_req.return_value = {"sessions": [{"name": "sessions/mocked_sid", "title": "mocked_title", "state": "AWAITING_USER_FEEDBACK"}]}
 
-            result = await jules_api.run("/jules sources")
-            assert "mocked_source" in result
+            result = await jules.run("status")
+            assert "Active Jules Sessions" in result
 
 @pytest.mark.asyncio
 async def test_gputuner_smoke(tmp_path):

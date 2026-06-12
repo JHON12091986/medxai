@@ -11,8 +11,8 @@
     "offload_opportunities": 0,
     "parallel_count": 0,
     "hw": {
-        "cpu_load_pct": 8.6,
-        "ram_available_mb": 8559,
+        "cpu_load_pct": 10.1,
+        "ram_available_mb": 8226,
         "vram_used_mb": 3,
         "vram_total_mb": 2048
     },

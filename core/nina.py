@@ -9,7 +9,7 @@ from tools.upgradepipeline import UpgradePipeline, IDLE_QUEUE as _IDLE_QUEUE
 from idleloop import IdleUpgradeLoop
 from core.hotreload import ConfigHotReload
 from interfaces.telegram_interface import TelegramInterface
-from tools import shell, browser, system as systool, jules_api, search
+from tools import shell, browser, system as systool, jules, search
 
 SYSTEM_PROMPT_TEMPLATE = """You are NINA — a personal autonomous AI agent, not a chatbot.
 
@@ -68,7 +68,7 @@ class NinaOS:
         self.memory  = MemorySystem()
         self.pipeline= UpgradePipeline(self.config, self.router)
         self.tools = {"shell": shell, "web": search, "browser": browser,
-                        "system": systool, "jules": jules_api}
+                        "system": systool, "jules": jules}
         self.agent   = None
         self.telegram= None
         self.scheduler=None

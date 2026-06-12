@@ -21,7 +21,7 @@ Perplexity reads backlog each session
 ```
 
 **Territory rule:** Perplexity will never spec two concurrent tasks that touch the same file.
-**Batch size:** Up to 15 non-overlapping READY tasks per Jules batch.
+**Batch size:** The Mega Orchestrator bundles up to 5 non-overlapping READY tasks into a single "Mega Task" dispatch to preserve the 100/day Jules quota.
 **Daily budget:** 15 SCHED tasks + up to 75 backlog tasks = 90/100 daily limit. 10 reserved for emergencies.
 
 ---

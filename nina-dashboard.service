@@ -7,7 +7,7 @@ Partof=nina.service
 Type=simple
 User=aibony
 WorkingDirectory=/home/aibony/nina
-ExecStart=/home/aibony/nina/venv/bin/python tools/nina_dashboard.py
+ExecStart=/home/aibony/nina/.venv/bin/python tools/nina_dashboard.py
 Restart=always
 RestartSec=5
 

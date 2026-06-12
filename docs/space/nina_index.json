@@ -234,29 +234,6 @@
       ]
     },
     {
-      "path": "fetch_jules_question.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": ".env",
       "category": "other",
       "role": "source_of_truth",
@@ -532,29 +509,6 @@
       "summary": "Governed artifact.",
       "tags": [
         "other",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "resolve_jules.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
         "source_of_truth",
         "active"
       ]
@@ -1295,29 +1249,6 @@
       "summary": "Governed artifact.",
       "tags": [
         "other",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "fetch_all_questions.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
         "source_of_truth",
         "active"
       ]
@@ -12984,6 +12915,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_docbase_backup_20260613_002447.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_docbase_backup_20260613_002447.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_logbase_backup_20260611_155054.md",
       "category": "backup",
       "role": "archive",
@@ -13720,6 +13674,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_codebase_backup_20260613_002448.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_codebase_backup_20260613_002448.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/py_20260609030000.zip",
       "category": "backup",
       "role": "archive",
@@ -13823,6 +13800,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_docbase_backup_20260611_232156.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/py_20260613030000.zip",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "py_20260613030000.zip",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -14456,6 +14456,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_codebase_backup_20260613_002930.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_codebase_backup_20260613_002930.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_docbase_backup_20260611_223655.md",
       "category": "backup",
       "role": "archive",
@@ -14812,6 +14835,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_codebase_backup_20260612_225456.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_docbase_backup_20260613_011744.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_docbase_backup_20260613_011744.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -15433,6 +15479,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_docbase_backup_20260611_220045.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_logbase_backup_20260613_002929.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_logbase_backup_20260613_002929.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -16181,6 +16250,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_logbase_backup_20260613_011743.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_logbase_backup_20260613_011743.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_docbase_backup_20260609_220745.md",
       "category": "backup",
       "role": "archive",
@@ -16261,6 +16353,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_logbase_backup_20260611_125350.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_docbase_backup_20260613_002930.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_docbase_backup_20260613_002930.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -17480,6 +17595,52 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_docbase_backup_20260611_143538.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_logbase_backup_20260613_002447.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_logbase_backup_20260613_002447.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_codebase_backup_20260613_011744.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_codebase_backup_20260613_011744.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -41462,7 +41623,7 @@
       "category": "backup",
       "role": "archive",
       "governed": true,
-      "canonical": false,
+      "canonical": true,
       "lifecycle": "archived",
       "retention_policy": "keep_latest_n: 10",
       "origin": "script:backup",
@@ -41699,6 +41860,52 @@
       "owner": "system",
       "duplicate_cluster_id": "dup-0043",
       "series_id": "docbase_20260609_212539",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/memory20260613023000/facts.json",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": false,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": "dup-0143",
+      "series_id": "memory20260613023000",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/memory20260613023000/chromadb/chroma.sqlite3",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": false,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": "dup-0144",
+      "series_id": "memory20260613023000",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -42655,6 +42862,29 @@
     },
     {
       "path": "docs/guardian.md",
+      "category": "doc",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Subsystem-level deep-dives (Guardian, Memory, Router, ninaflash).",
+      "tags": [
+        "doc",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "docs/jules_pipeline.md",
       "category": "doc",
       "role": "source_of_truth",
       "governed": true,
@@ -44134,6 +44364,29 @@
       ]
     },
     {
+      "path": "logs/upgrade.log.2026-06-12",
+      "category": "log",
+      "role": "derived",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "rotate",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "log",
+        "derived",
+        "active"
+      ]
+    },
+    {
       "path": "logs/agent.log.2026-05-24",
       "category": "log",
       "role": "derived",
@@ -44456,6 +44709,29 @@
       ]
     },
     {
+      "path": "logs/ninagate_stdout.log",
+      "category": "log",
+      "role": "derived",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "rotate",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "log",
+        "derived",
+        "active"
+      ]
+    },
+    {
       "path": "logs/nina.log.2026-06-10",
       "category": "log",
       "role": "derived",
@@ -44640,29 +44916,6 @@
       ]
     },
     {
-      "path": "logs/tools.log.2026-05-22",
-      "category": "log",
-      "role": "derived",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "rotate",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "log",
-        "derived",
-        "active"
-      ]
-    },
-    {
       "path": "logs/agent.log.2026-06-04",
       "category": "log",
       "role": "derived",
@@ -44732,7 +44985,53 @@
       ]
     },
     {
+      "path": "logs/gemini_wrapper.log",
+      "category": "log",
+      "role": "derived",
+      "governed": true,
+      "canonical": false,
+      "lifecycle": "deprecated",
+      "retention_policy": "rotate",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": "dup-0001",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "log",
+        "derived",
+        "active"
+      ]
+    },
+    {
       "path": "logs/upgrade.log",
+      "category": "log",
+      "role": "derived",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "rotate",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "log",
+        "derived",
+        "active"
+      ]
+    },
+    {
+      "path": "logs/tools.log.2026-06-12",
       "category": "log",
       "role": "derived",
       "governed": true,
@@ -44848,29 +45147,6 @@
     },
     {
       "path": "logs/agent.log.2026-05-23",
-      "category": "log",
-      "role": "derived",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "rotate",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "log",
-        "derived",
-        "active"
-      ]
-    },
-    {
-      "path": "logs/upgrade.log.2026-06-04",
       "category": "log",
       "role": "derived",
       "governed": true,
@@ -45493,29 +45769,6 @@
       ]
     },
     {
-      "path": "tools/jules_watcher.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": true,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "tools/gemini_wrapper.sh",
       "category": "script",
       "role": "source_of_truth",
@@ -45746,6 +45999,29 @@
       ]
     },
     {
+      "path": "tools/jules.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": true,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "tools/gemini_scoped.sh",
       "category": "script",
       "role": "source_of_truth",
@@ -45924,29 +46200,6 @@
       "guardrails": [
         "high_risk_do_not_edit_directly"
       ],
-      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "tools/jules_api.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": true,
-      "doc_required": true,
-      "guardrails": [],
       "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
       "tags": [
         "code",
@@ -47475,6 +47728,29 @@
       ]
     },
     {
+      "path": "data/memory/session_summaries.md",
+      "category": "doc",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "doc",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "data/memory/facts.json",
       "category": "config",
       "role": "system_of_record",
@@ -47509,7 +47785,7 @@
       "retention_policy": "keep",
       "origin": "manual",
       "owner": "engineering",
-      "duplicate_cluster_id": "dup-0144",
+      "duplicate_cluster_id": null,
       "series_id": null,
       "series_type": null,
       "requires_tests": false,
@@ -47983,6 +48259,29 @@
       ]
     },
     {
+      "path": "scripts/gemini_monitor.sh",
+      "category": "script",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "script",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "core/logger.py",
       "category": "code",
       "role": "source_of_truth",
@@ -48342,6 +48641,7 @@
         "logs/emailaccess.log",
         "logs/security.log",
         "logs/error.log",
+        "logs/gemini_wrapper.log",
         "logs/agent.log.2026-05-21",
         "logs/nina_sync.log",
         "tests/__init__.py",
@@ -50494,16 +50794,17 @@
       "canonical_path": "data/memory/facts.json",
       "members": [
         "upgrades/backups/memory20260611023000/facts.json",
+        "upgrades/backups/memory20260613023000/facts.json",
         "data/memory/facts.json"
       ],
       "reason": "exact_md5_duplicate"
     },
     {
       "cluster_id": "dup-0144",
-      "canonical_path": "data/memory/chromadb/chroma.sqlite3",
+      "canonical_path": "upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3",
       "members": [
         "upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3",
-        "data/memory/chromadb/chroma.sqlite3"
+        "upgrades/backups/memory20260613023000/chromadb/chroma.sqlite3"
       ],
       "reason": "exact_md5_duplicate"
     },

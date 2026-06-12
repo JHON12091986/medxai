@@ -1,10 +1,7 @@
-import os
 import sys
-import json
 import asyncio
 import re
 from pathlib import Path
-from tools import jules_api
 
 REPO_ROOT = Path(__file__).parent.parent.resolve()
 BACKLOG_PATH = REPO_ROOT / "docs/space/jules_backlog.md"

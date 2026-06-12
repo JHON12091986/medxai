@@ -2624,34 +2624,12 @@
 
 **Verification:** git push OK, nina.service active
 
-## Auto-doc patch — 2026-06-13
-- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-13
-- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
-
 ---
 
-## Entry 240 — 2026-06-13 · merge: PR-149 fix: handle BrokenPipeError when piping Local Call Graph output
-**Triggered by:** nf maintain automation.
+## Entry 240 — 2026-06-13 · D-sync Post-session sync
 
-**What changed:**
-- Merged via local fallback.
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Rollback:** `git revert -m 1 HEAD`
+**Files changed:** AGENTS.md,CHANGELOG.md,MEMORY.md,bin/nina,core/nina.py,core/router.py,crons/manager.py,data/gemini_scratch.jsonl,data/router_cache.json,data/session_memory.jsonl,docs/space/jules_backlog.md,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md,efficiency_report.json,fetch_all_questions.py,fetch_jules_question.py,interfaces/cli_interface.py,interfaces/telegram_interface.py,modify_nina_url_parse.py,nina-dashboard.service,nina.service,nina_update_log.md,resolve_jules.py,tests/test_tools_smoke.py,tools/__init__.py,tools/goal_intake.py,tools/jules_api.py,tools/jules_watcher.py,tools/mega_orchestrator.py,docs/jules_pipeline.md,tools/jules.py
 
-## Auto-doc patch — 2026-06-13
-- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
-
----
-
-## Entry 241 — 2026-06-13 · merge: PR-150 feat(tools): add Docstring Quality Audit to ninaflash.py
-**Triggered by:** nf maintain automation.
-
-**What changed:**
-- Merged via local fallback.
-
-**Rollback:** `git revert -m 1 HEAD`
-
-## Auto-doc patch — 2026-06-13
-- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
+**Verification:** git push OK, nina.service active

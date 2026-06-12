@@ -32,8 +32,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `bench_report.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `commit_message.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `efficiency_report.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `fetch_all_questions.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `fetch_jules_question.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `fix_caps_again.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `generate_backups.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `guardian` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -63,7 +61,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `pr_desc.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pytest.ini` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `requirements.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `resolve_jules.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `system_templates.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test.lock` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_dispatch.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -86,6 +83,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `interfaces/` | subsystem | active | keep | Telegram and REST API communication layers. | ✅ YES |
 | `logs/` | subsystem | active | keep | Subsystem directory containing logs logic/docs. | ✅ YES |
 | `ninagate/` | subsystem | active | keep | Subsystem directory containing ninagate logic/docs. | ✅ YES |
+| `scripts/` | subsystem | active | keep | Subsystem directory containing scripts logic/docs. | ✅ YES |
 | `templates/` | subsystem | active | keep | Subsystem directory containing templates logic/docs. | ✅ YES |
 | `tests/` | subsystem | active | keep | Subsystem directory containing tests logic/docs. | ✅ YES |
 | `tools/` | subsystem | active | keep | Capability kernel and domain-specific action modules (ninaflash nucleus). | ✅ YES |
@@ -208,8 +206,8 @@ The following clusters contain identical content. Consolidate to the canonical s
 - **Cluster `dup-0140`**: Canonical is `upgrades/backups/guardian_auto_20260523_013333/core/logger.py.bak`. Members: `upgrades/backups/guardian_auto_20260523_013333/core/logger.py.bak`, `upgrades/backups/guardian_auto_20260523_013508/core/logger.py.bak`, `upgrades/backups/guardian_auto_20260523_012934/core/logger.py.bak`, `upgrades/backups/core_cleanup/logger.py.bak`
 - **Cluster `dup-0141`**: Canonical is `upgrades/backups/archive/NINA Development Policy.md`. Members: `upgrades/backups/archive/NINA Development Policy.md`, `upgrades/backups/archive/nina_dev_policy.md`
 - **Cluster `dup-0142`**: Canonical is `upgrades/backups/memory20260606023000/facts.json`. Members: `upgrades/backups/memory20260606023000/facts.json`, `upgrades/backups/memory20260609023000/facts.json`
-- **Cluster `dup-0143`**: Canonical is `data/memory/facts.json`. Members: `upgrades/backups/memory20260611023000/facts.json`, `data/memory/facts.json`
-- **Cluster `dup-0144`**: Canonical is `data/memory/chromadb/chroma.sqlite3`. Members: `upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3`, `data/memory/chromadb/chroma.sqlite3`
+- **Cluster `dup-0143`**: Canonical is `data/memory/facts.json`. Members: `upgrades/backups/memory20260611023000/facts.json`, `upgrades/backups/memory20260613023000/facts.json`, `data/memory/facts.json`
+- **Cluster `dup-0144`**: Canonical is `upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3`. Members: `upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3`, `upgrades/backups/memory20260613023000/chromadb/chroma.sqlite3`
 - **Cluster `dup-0145`**: Canonical is `bin/nf`. Members: `bin/nf`, `bin/ninaflash`
 - **Cluster `dup-0146`**: Canonical is `data/gpuconfig.json`. Members: `data/gpuconfig.json`, `data/modeldiscovery.json`
 

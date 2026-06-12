@@ -277,8 +277,8 @@ class TelegramInterface:
                 await self._reply(update, reply[:4000])
 
         elif cmd == "jules":
-            from tools import jules_api
-            result = await jules_api.run(arg)
+            from tools import jules
+            result = await jules.run(arg)
             await self._reply(update, result[:4000])
 
         elif cmd == "start":
