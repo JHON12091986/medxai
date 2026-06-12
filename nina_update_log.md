@@ -2503,3 +2503,23 @@
 **Files changed:** .env.example,core/config.py,core/hotreload.py,crons/manager.py,data/router_cache.json,data/session_memory.jsonl,docs/space/claude_feed.md,docs/space/jules_backlog.md,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md,tools/providerhunter.py
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 228 — 2026-06-12 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,data/router_cache.json,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,tools/ninaflash.py,data/gemini_scratch.jsonl,tools/gemini_watch.py
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 229 — 2026-06-12 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** data/router_cache.json,docs/space/nina_repo_hygiene_dashboard.md,data/gemini_scratch.jsonl
+
+**Verification:** git push OK, nina.service active

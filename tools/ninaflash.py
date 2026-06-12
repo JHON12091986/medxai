@@ -499,6 +499,58 @@ def cmd_code_call_graph(args):
 
     print(json.dumps(graph, indent=2))
 
+def cmd_code_call_stack(args):
+    """[040] Symbol-Based Context Injector: Read only the call stack of a function."""
+    class CallVisitor(ast.NodeVisitor):
+        def __init__(self):
+            self.calls = set()
+        def visit_Call(self, node):
+            if isinstance(node.func, ast.Name):
+                self.calls.add(node.func.id)
+            elif isinstance(node.func, ast.Attribute):
+                self.calls.add(node.func.attr)
+            self.generic_visit(node)
+
+    if hasattr(args, 'file') and args.file:
+        files = [_path_resolve(args.file)]
+    else:
+        files = _find_py_files()
+
+    source_map = {}
+    ast_map = {}
+
+    for py_file in files:
+        if not py_file.exists(): continue
+        try:
+            content = py_file.read_text(encoding="utf-8")
+            tree = ast.parse(content)
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                    source_map[node.name] = ast.get_source_segment(content, node)
+                    if not isinstance(node, ast.ClassDef):
+                        ast_map[node.name] = node
+        except Exception:
+            pass
+
+    visited = set()
+    def trace(name, depth=0):
+        if name in visited or depth > 5: return
+        visited.add(name)
+        source = source_map.get(name)
+        if not source: return
+
+        print(f"--- {name} ---")
+        print(source)
+
+        node = ast_map.get(name)
+        if node:
+            visitor = CallVisitor()
+            visitor.visit(node)
+            for call in visitor.calls:
+                trace(call, depth + 1)
+
+    trace(args.target)
+
 
 # ------------------------------------------------------------------
 # MODULE 3: CONTEXT COMPRESSION
@@ -2188,6 +2240,12 @@ def main():
     p_batch = subparsers.add_parser("batch")
     p_batch.add_argument("--cmds", required=True, help="Piped commands: 'c1|c2'")
 
+    p_gemini = subparsers.add_parser("gemini")
+    gemini_sub = p_gemini.add_subparsers(dest="sub")
+    watch_parser = gemini_sub.add_parser('watch', help='Open live scratchpad watcher')
+    watch_parser.add_argument('--clear', action='store_true', default=False,
+                              help='Clear gemini_scratch.jsonl before watching')
+
     p_file = subparsers.add_parser("file"); p_fs_f = p_file.add_subparsers(dest="sub")
     p_fr = p_fs_f.add_parser("read"); p_fr.add_argument("file"); p_fr.add_argument("--start", type=int); p_fr.add_argument("--end", type=int)
     p_fg = p_fs_f.add_parser("grep"); p_fg.add_argument("pattern"); p_fg.add_argument("--dir"); p_fg.add_argument("--ext")
@@ -2273,6 +2331,8 @@ def main():
     p_cs.add_parser("dep-map")
     p_cs.add_parser("index")
     p_cs.add_parser("call-graph").add_argument("file", nargs="?")
+    p_cs.add_parser("call-stack").add_argument("target")
+    p_cs.choices["call-stack"].add_argument("file", nargs="?")
     p_cs.add_parser("pack").add_argument("file")
     p_cs.add_parser("dead-code").add_argument("target")
     
@@ -2351,6 +2411,15 @@ def main():
         elif args.command == "stats": cmd_stats(args)
         elif args.command == "monitor": cmd_monitor(args)
         elif args.command == "batch": cmd_batch(args)
+        elif args.command == "gemini":
+            gemini_cmd = args.sub
+            if gemini_cmd == 'watch':
+                scratch = Path.home() / 'nina' / 'data' / 'gemini_scratch.jsonl'
+                if args.clear and scratch.exists():
+                    scratch.unlink()
+                    print('Scratchpad cleared.')
+                watcher = Path.home() / 'nina' / 'tools' / 'gemini_watch.py'
+                os.execvp('python3', ['python3', str(watcher)])
         elif args.command == "file":
             if args.sub == "read": cmd_file_read(args)
             elif args.sub == "grep": cmd_file_grep(args)
@@ -2396,6 +2465,7 @@ def main():
             elif args.sub == "dep-map": cmd_code_dep_map(args)
             elif args.sub == "index": cmd_code_index(args)
             elif args.sub == "call-graph": cmd_code_call_graph(args)
+            elif args.sub == "call-stack": cmd_code_call_stack(args)
             elif args.sub == "symbol": cmd_code_symbol(args)
             elif args.sub == "sigs": cmd_code_sigs(args)
             elif args.sub == "doc": cmd_code_doc(args)
