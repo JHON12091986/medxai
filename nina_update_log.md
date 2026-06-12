@@ -2443,3 +2443,6 @@
 **Files changed:** AGENTS.md,CHANGELOG.md,core/router.py,dashboard/nina-guardian.html,docs/space/claude_feed.md,ninagate/main.py,tools/evolve.py,tools/monitor.py,.gemini/,EVOLVE_PROPOSAL.md,MEMORY.md,data/session_memory.jsonl,efficiency_report.json,jules_mega_task.md
 
 **Verification:** git push OK, nina.service active
+
+## Auto-doc patch — 2026-06-12
+- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19

@@ -1,0 +1,16 @@
+{
+  "name": "nina",
+  "version": "1.0.0",
+  "mcpServers": {
+    "nina-tools": {
+      "command": "python3",
+      "args": ["/home/aibony/nina/tools/nina_mcp_server.py"]
+    }
+  },
+  "contextFiles": ["AGENTS.md"],
+  "customCommands": {
+    "/nf": "Run ninaflash command: ",
+    "/status": "Check nina.service status and last 20 log lines",
+    "/sync": "Run ./nina_sync.sh and report result"
+  }
+}

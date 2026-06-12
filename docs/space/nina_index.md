@@ -22,13 +22,16 @@ This index tracks all governed artifacts in the NINA repository.
 | `ARCHITECTURE.md` | source_of_truth | active | keep | High-level system design and logic flow map. | ✅ YES |
 | `CHANGELOG.md` | source_of_truth | active | keep | User-friendly summary of major version releases. | ✅ YES |
 | `CONTRIBUTING.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `EVOLVE_PROPOSAL.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `LICENSE` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `MEMORY.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `Makefile` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `README.md` | source_of_truth | active | keep | Human-facing project overview, agent model, and installation guide. | ✅ YES |
 | `SECURITY.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `WORKFLOW.md` | source_of_truth | active | keep | Repository rules of engagement and development lifecycle. | ✅ YES |
 | `bench_report.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `commit_message.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `efficiency_report.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `fix_caps_again.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `generate_backups.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `guardian` | source_of_truth | active | keep | Governed artifact. | ✅ YES |

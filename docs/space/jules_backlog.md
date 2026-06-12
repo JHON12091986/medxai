@@ -82,14 +82,14 @@ Perplexity reads backlog each session
 | B-006 | F-09 Part 2 — wire ModelDiscovery into router._ordered_providers() | `DONE` | core/router.py | B-005 | ninaflash only — high-risk file |
 | B-007 | F-09 Part 3 — seed data/model_cache.json with all 16 providers | `DONE` | data/model_cache.json | B-005 | Jules can do this |
 | B-008 | Add circuit breaker state persistence to data/circuit_state.json | `DONE` | core/router.py, data/ | — | Currently in-memory — lost on restart. ninaflash only |
-| B-009 | Add rate limiting to Telegram command handler | `READY` | interfaces/telegraminterface.py | — | ninaflash only — high-risk file |
-| B-010 | Add input length validation to all Telegram command parsers | `READY` | interfaces/telegraminterface.py | — | ninaflash only — high-risk file |
-| B-011 | Guardian engine: add file integrity check on startup | `READY` | guardianengine.py | — | SIGNATURES dict exists but startup check is passive. ninaflash only |
-| B-012 | Add structured JSON logging to router.py for provider selection events | `READY` | core/router.py | — | Plain text logs hard to parse for metrics. ninaflash only |
+| B-009 | Add rate limiting to Telegram command handler | `IN_PROGRESS` | interfaces/telegraminterface.py | — | ninaflash only — high-risk file |
+| B-010 | Add input length validation to all Telegram command parsers | `IN_PROGRESS` | interfaces/telegraminterface.py | — | ninaflash only — high-risk file |
+| B-011 | Guardian engine: add file integrity check on startup | `IN_PROGRESS` | guardianengine.py | — | SIGNATURES dict exists but startup check is passive. ninaflash only |
+| B-012 | Add structured JSON logging to router.py for provider selection events | `IN_PROGRESS` | core/router.py | — | Plain text logs hard to parse for metrics. ninaflash only |
 | B-013 | healthcheck.py: replace bare except with typed exception handling | `DONE` | healthcheck.py | — | Bare except swallows real errors |
 | B-014 | Add startup banner to main.py showing active providers + model strings | `IN_PROGRESS` | main.py | B-002 | Needs model_overrides wired first. ninaflash only |
 | B-015 | crons/manager.py: add job execution metrics (duration, last_success, fail_count) | `DONE` | crons/manager.py | — | No visibility into cron job health |
-| R-77 | Fix parallel_route RAM guard crash | `READY` | core/router.py | — | A-1 from action board. ninaflash only |
+| R-77 | Fix parallel_route RAM guard crash | `IN_PROGRESS` | core/router.py | — | A-1 from action board. ninaflash only |
 | R-78 | Fix tool grammar fragility — minimum viable guard | `DONE` | core/agent.py | — | A-3 from action board; Jules session 230224707076942630 |
 
 ---
@@ -108,11 +108,11 @@ Perplexity reads backlog each session
 | B-023 | Add AGENTS.md section: tracker update protocol for Jules tasks | `DONE` | AGENTS.md | — | Jules needs instructions to update task tracker after each run; Jules session 15026902744619615986 |
 | B-024 | Add AGENTS.md section: backlog update protocol | `DONE` | AGENTS.md | — | 2026-06-07 |
 | B-025 | crons/manager.py: add graceful shutdown handler (SIGTERM) | `DONE` | crons/manager.py | — | No clean shutdown on systemd stop; Jules session 5406292542431629720 |
-| B-026 | Add retry with exponential backoff to provider API calls | `READY` | core/router.py | — | Current retry is basic — no backoff. ninaflash only |
+| B-026 | Add retry with exponential backoff to provider API calls | `IN_PROGRESS` | core/router.py | — | Current retry is basic — no backoff. ninaflash only |
 | B-027 | tools/gputuner.py: add fallback when nvidia-smi not available | `DONE` | tools/gputuner.py | — | Crashes on non-GPU systems; Jules session 18284106294453230200 |
 | B-028 | Add .env validation on startup — warn on missing required keys | `IN_PR` (partial — config.py done) | main.py, core/config.py | — | Silent failure on missing env vars. main.py → ninaflash only |
 | B-029 | Write integration test: full request through router → provider → response | `DONE` | tests/test_integration.py | — | No end-to-end test exists; Jules session 7992182378283234865 |
-| B-030 | Add request ID to all log lines for traceability | `READY` | core/router.py, main.py | — | Hard to trace multi-step requests. ninaflash only |
+| B-030 | Add request ID to all log lines for traceability | `IN_PROGRESS` | core/router.py, main.py | — | Hard to trace multi-step requests. ninaflash only |
 
 ---
 
@@ -120,7 +120,7 @@ Perplexity reads backlog each session
 
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
-| B-031 | Add provider latency histogram to router metrics | `READY` | core/router.py | B-012 | Needs structured logging first. ninaflash only |
+| B-031 | Add provider latency histogram to router metrics | `IN_PROGRESS` | core/router.py | B-012 | Needs structured logging first. ninaflash only |
 | B-032 | tools/compact_exporter.py: add --dry-run flag | `DONE` | tools/compact_exporter.py | — | Jules session 16016744403096643329 |
 | B-033 | Telegram: /status command — shows provider health summary | `NEEDS_SPEC` | interfaces/telegraminterface.py | — | ninaflash only |
 | B-034 | Telegram: /models command — shows current model per provider | `NEEDS_SPEC` | interfaces/telegraminterface.py | B-005 | ninaflash only |

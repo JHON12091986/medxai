@@ -1,0 +1,18 @@
+{
+    "local_requests": 0,
+    "cloud_requests": 116,
+    "cached_requests": 9,
+    "total_input_tokens": 11599,
+    "total_output_tokens": 6656,
+    "tokens_saved": 0,
+    "total_latency_ms": 65630.41257858276,
+    "start_ts": 1779473068.0,
+    "end_ts": 1779558381.0,
+    "offload_opportunities": 0,
+    "parallel_count": 0,
+    "wall_time_s": 85313.0,
+    "rpm": 0.09,
+    "sequential_time_s": 65.63,
+    "time_efficiency_s": -85247.37,
+    "token_savings_pct": 0.0
+}

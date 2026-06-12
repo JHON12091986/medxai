@@ -1,0 +1,5 @@
+{ 
+  "model": "gemini-3-flash-preview",
+  "preview": true,
+  "context": { "fileName": ["AGENTS.md"] } 
+}
