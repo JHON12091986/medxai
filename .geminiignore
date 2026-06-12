@@ -5,3 +5,9 @@ upgrades/backups/
 *.pyc
 __pycache__/
 venv/
+tools/ninaflash.py
+ninagate/main.py
+data/
+logs/
+*.jsonl
+*.log
