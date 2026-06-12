@@ -38,7 +38,7 @@ def test_cmd_code_call_graph(tmp_path):
     test_file = tmp_path / "test_file.py"
     test_file.write_text("def a():\n  b()\n  c()\n\ndef b():\n  pass\n")
 
-    res = run_nf("code", "call-graph", "--file", str(test_file))
+    res = run_nf("code", "call-graph", str(test_file))
     assert res.returncode == 0
     output_json = json.loads(res.stdout)
 

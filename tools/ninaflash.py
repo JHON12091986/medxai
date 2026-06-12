@@ -2201,7 +2201,7 @@ def main():
     p_cs.add_parser("outline").add_argument("file")
     p_cs.add_parser("dep-map")
     p_cs.add_parser("index")
-    p_cs.add_parser("call-graph").add_argument("--file", nargs="?")
+    p_cs.add_parser("call-graph").add_argument("file", nargs="?")
     p_cs.add_parser("pack").add_argument("file")
     p_cs.add_parser("dead-code").add_argument("target")
     
