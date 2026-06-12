@@ -1400,7 +1400,7 @@ def cmd_file_patch(args):
     path = _path_resolve(args.file)
     if not path.exists(): print(f"❌ File not found: {path}"); return
     content = path.read_text(encoding="utf-8")
-    if args.find not in content: print(f"❌ Exact string not found."); return
+    if args.find not in content: print("❌ Exact string not found."); return
     lines = content.splitlines()
     for i, line in enumerate(lines):
         if args.find in line:
@@ -1424,8 +1424,8 @@ def cmd_file_insert(args):
             new_lines.append(args.text); inserted = True
     if inserted:
         path.write_text("\n".join(new_lines) + "\n", encoding="utf-8")
-        print(f"✅ Line inserted after anchor.")
-    else: print(f"❌ Anchor not found.")
+        print("✅ Line inserted after anchor.")
+    else: print("❌ Anchor not found.")
 
 def cmd_file_diff(args):
     """[047] Show git diff for file."""
@@ -1463,8 +1463,7 @@ def cmd_git_stash_quick(args):
 
 def cmd_monitor_tools(sessions_dir, limit):
     """Parse Gemini CLI sessions: tool call frequency + token cost per tool."""
-    import glob, json
-    from pathlib import Path
+    import json
 
     # Token cost estimates per tool invocation (Gemini Flash blended rate)
     TOOL_TOKEN_COST = {
@@ -1568,9 +1567,7 @@ def cmd_monitor_tools(sessions_dir, limit):
 # --- ADD 3: NinaGate Performance Monitor ---
 def cmd_monitor(args):
     """Parse real Gemini CLI session data + NinaGate logs for savings report."""
-    import glob, json
-    from pathlib import Path
-    from datetime import datetime
+    import json
 
     full_mode = getattr(args, 'full', False)
     sessions_dir = Path.home() / ".gemini" / "tmp" / "nina" / "chats"
@@ -1660,7 +1657,7 @@ def cmd_monitor(args):
     mode_label = "ALL sessions" if full_mode else f"Last {limit} session(s)"
     print(f"  Source: Gemini CLI sessions ({mode_label})")
     print("=" * 56)
-    print(f"\n  GEMINI CLI TOKEN USAGE")
+    print("\n  GEMINI CLI TOKEN USAGE")
     print(f"  Input tokens:       {total_input:>12,}")
     print(f"  Output tokens:      {total_output:>12,}")
     print(f"  Cached tokens:      {total_cached:>12,}")
@@ -1668,12 +1665,12 @@ def cmd_monitor(args):
     print(f"  nf tool calls:      {nf_calls:>12,}  ← zero-token local ops")
 
     if tool_calls:
-        print(f"\n  TOP TOOL CALLS")
+        print("\n  TOP TOOL CALLS")
         for name, count in sorted(tool_calls.items(), key=lambda x: -x[1])[:8]:
             marker = " ← NinaFlash" if ("shell" in name.lower() and nf_calls > 0) else ""
             print(f"  {name:<30} {count:>4}x{marker}")
 
-    print(f"\n  NINAGATE ROUTING (last 500 log entries)")
+    print("\n  NINAGATE ROUTING (last 500 log entries)")
     if ng_count > 0:
         ratio = ng_local / ng_count * 100
         avg_lat = ng_total_latency / ng_count if ng_count else 0
@@ -1707,23 +1704,23 @@ def cmd_monitor(args):
             except Exception:
                 continue
 
-    print(f"\n  NINAFLASH LOCAL EXECUTION (last 500 log entries)")
+    print("\n  NINAFLASH LOCAL EXECUTION (last 500 log entries)")
     if nf_total_calls > 0:
         print(f"  Total nf calls:     {nf_total_calls:>6,}")
         print(f"  Errors:             {nf_errors:>6,}")
         print(f"  Tokens saved est:   {nf_total_tokens_saved:>6,}  (cloud calls avoided)")
         cost = nf_total_tokens_saved / 1_000_000 * 0.19
         print(f"  Est. cost saved:    ${cost:.4f}")
-        print(f"  Top commands:")
+        print("  Top commands:")
         for cmd, count in sorted(nf_cmd_counts.items(), key=lambda x: -x[1])[:6]:
             savings = NF_TOKEN_SAVINGS.get(cmd, 0) * count
             print(f"    nf {cmd:<20} {count:>4}x  (~{savings:,} tokens saved)")
     else:
         print("  No NinaFlash log yet. Run any nf command to start logging.")
 
-    print(f"\n  HOW TO GET MORE DATA")
-    print(f"  /stats model         — inside Gemini CLI, live session totals")
-    print(f"  nf monitor --full    — parse ALL historical sessions")
+    print("\n  HOW TO GET MORE DATA")
+    print("  /stats model         — inside Gemini CLI, live session totals")
+    print("  nf monitor --full    — parse ALL historical sessions")
     print("=" * 56)
 
 # --- ADD 4: Parallel NF Execution ---
@@ -1748,7 +1745,7 @@ def cmd_memory_session_save(args):
     mem_path = REPO_ROOT / "data/session_memory.jsonl"
     mem_path.parent.mkdir(parents=True, exist_ok=True)
     with open(mem_path, "a") as f: f.write(json.dumps(entry) + "\n")
-    print(f"✅ Session saved.")
+    print("✅ Session saved.")
 
 def cmd_memory_session_recall(args):
     """[056] Recall last N session entries."""
@@ -1823,6 +1820,76 @@ def cmd_code_symbol(args):
         print(f"❌ Symbol '{args.name}' not found in {path}")
     except Exception as e:
         print(f"❌ Error parsing {path}: {e}")
+
+
+def cmd_code_migrate(args):
+    """[060] Automate renaming and moving symbols."""
+    import re
+    import ast
+    old_name = args.old_name
+    new_name = args.new_name
+    target_dir = _path_resolve(args.dir)
+
+    if not target_dir.exists():
+        print(f"❌ Directory not found: {target_dir}")
+        return
+
+    files_to_check = []
+    if target_dir.is_file():
+        files_to_check = [target_dir]
+    else:
+        for py_file in target_dir.rglob("*.py"):
+            if any(skip in py_file.parts for skip in _SKIP_DIRS):
+                continue
+            files_to_check.append(py_file)
+
+    migrated_count = 0
+    for py_file in files_to_check:
+        try:
+            source = py_file.read_text(encoding="utf-8")
+            tree = ast.parse(source)
+            found = False
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Name) and node.id == old_name:
+                    found = True
+                    break
+                elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == old_name:
+                    found = True
+                    break
+                elif isinstance(node, ast.Attribute) and node.attr == old_name:
+                    found = True
+                    break
+                elif isinstance(node, ast.Import):
+                    for alias in node.names:
+                        if alias.name == old_name or alias.asname == old_name:
+                            found = True
+                            break
+                elif isinstance(node, ast.ImportFrom):
+                    if node.module == old_name:
+                        found = True
+                    for alias in node.names:
+                        if alias.name == old_name or alias.asname == old_name:
+                            found = True
+                            break
+            if not found:
+                continue
+
+            new_source = re.sub(rf'\b{old_name}\b', new_name, source)
+            if new_source != source:
+                py_file.write_text(new_source, encoding="utf-8")
+                try:
+                    rel_path = py_file.relative_to(REPO_ROOT)
+                except ValueError:
+                    rel_path = py_file
+                print(f"✅ Migrated '{old_name}' to '{new_name}' in {rel_path}")
+                migrated_count += 1
+        except Exception as e:
+            print(f"❌ Error migrating in {py_file}: {e}")
+
+    if migrated_count == 0:
+        print(f"⚠️ Symbol '{old_name}' not found or no changes made.")
+    else:
+        print(f"🚀 Successfully migrated symbol in {migrated_count} files.")
 
 def cmd_find_symbol(args):
     """[038] Recursively search the repository for a specified class or function definition."""
@@ -2059,6 +2126,11 @@ def main():
     p_sym = p_cs.add_parser("symbol")
     p_sym.add_argument("file")
     p_sym.add_argument("name")
+
+    p_mig = p_cs.add_parser("migrate")
+    p_mig.add_argument("old_name")
+    p_mig.add_argument("new_name")
+    p_mig.add_argument("--dir", default=".")
     p_sigs = p_cs.add_parser("sigs")
     p_sigs.add_argument("dir")
     p_doc = p_cs.add_parser("doc")
@@ -2074,6 +2146,7 @@ def main():
     subparsers.add_parser("bench", help="Run a standardized reasoning task twice (Cloud vs Hybrid)")
 
     p_query = subparsers.add_parser("query", help="List all cmd_ handlers")
+    _ = p_query
     p_query_cap = subparsers.add_parser("query-capability", help="Query task capability")
     p_query_cap.add_argument("task", help="Description of the task to query")
 
@@ -2186,6 +2259,7 @@ def main():
             elif args.sub == "dep-map": cmd_code_dep_map(args)
             elif args.sub == "index": cmd_code_index(args)
             elif args.sub == "symbol": cmd_code_symbol(args)
+            elif args.sub == "migrate": cmd_code_migrate(args)
             elif args.sub == "sigs": cmd_code_sigs(args)
             elif args.sub == "doc": cmd_code_doc(args)
             elif args.sub == "pack": cmd_context_pack(args)
