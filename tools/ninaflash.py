@@ -2108,6 +2108,106 @@ def cmd_test(args):
     else:
         print(f"❌ Tests failed.\n{out}\n{err}")
 
+
+def cmd_gemini_context(args):
+    try:
+        from gemini_perf import ContextPruner
+        pruner = ContextPruner()
+        pruner.write_ignore_file()
+        files = pruner.get_included_files()
+        tokens = pruner.estimate_context_tokens(files)
+        print(f"Context: {len(files)} files, ~{tokens} estimated tokens")
+        for f in files:
+            print(f)
+    except Exception as e:
+        import sys
+        print(f"Error: {e}")
+        sys.exit(1)
+
+def cmd_gemini_prompt(args):
+    try:
+        from gemini_perf import ContextPruner, PrefixCacheWarmer, ModelTierSelector
+        pruner = ContextPruner()
+        files = pruner.get_included_files()
+        tokens = pruner.estimate_context_tokens(files)
+
+        extra_context = ""
+        if args.context_file:
+            import os
+            try:
+                with open(os.path.expanduser(args.context_file), "r", encoding="utf-8") as f:
+                    extra_context = f.read()
+            except Exception:
+                pass
+
+        warmer = PrefixCacheWarmer()
+        prompt_path = warmer.write_prompt_file(args.task, extra_context)
+
+        selector = ModelTierSelector()
+        model_flag = selector.get_cli_flag(args.task, tokens, files)
+
+        print(f'gemini {model_flag} -p "$(cat ~/nina/data/gemini_prompt.md)"')
+    except Exception as e:
+        import sys
+        print(f"Error: {e}")
+        sys.exit(1)
+
+def cmd_gemini_status(args):
+    try:
+        from gemini_perf import PromptBudgetGuard
+        guard = PromptBudgetGuard()
+        status = guard.get_status()
+        print(f"Daily requests : {status['requests']} / {status['daily_limit']}")
+        print(f"Estimated tokens today : {status['estimated_tokens']}")
+        print(f"Token budget/call : {status['token_budget']}")
+        print("Recommended model : flash | pro")
+    except Exception as e:
+        import sys
+        print(f"Error: {e}")
+        sys.exit(1)
+
+def cmd_gemini_run(args):
+    try:
+        from gemini_perf import ContextPruner, PrefixCacheWarmer, ModelTierSelector, PromptBudgetGuard
+        import sys, os
+
+        pruner = ContextPruner()
+        pruner.write_ignore_file()
+        files = pruner.get_included_files()
+        tokens = pruner.estimate_context_tokens(files)
+
+        guard = PromptBudgetGuard()
+        check = guard.check_invocation(tokens)
+        if not check['ok']:
+            print(f"Error: {check['reason']}")
+            sys.exit(1)
+
+        extra_context = ""
+        if args.context_file:
+            try:
+                with open(os.path.expanduser(args.context_file), "r", encoding="utf-8") as f:
+                    extra_context = f.read()
+            except Exception:
+                pass
+
+        selector = ModelTierSelector()
+        model_flag = selector.select(args.task, tokens, files)
+
+        warmer = PrefixCacheWarmer()
+        prompt_path = warmer.write_prompt_file(args.task, extra_context)
+
+        guard.record_request(tokens)
+
+        cmd_args = ['gemini', '--model', model_flag, '-p', prompt_path]
+        if args.dry_run:
+            print(" ".join(cmd_args))
+        else:
+            os.execvp('gemini', cmd_args)
+    except Exception as e:
+        import sys
+        print(f"Error: {e}")
+        sys.exit(1)
+
 def main():
     parser = argparse.ArgumentParser(description="ninaflash AI Agent Kernel v6.0 — The 100-Function OS.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -2268,6 +2368,18 @@ def main():
     p_run.add_argument("name",          help="Name of the capability to run")
     p_run.add_argument("extra_args",    nargs=argparse.REMAINDER, help="Arguments passed to the tool")
 
+    p_gemini = subparsers.add_parser("gemini"); p_gem_s = p_gemini.add_subparsers(dest="sub")
+    p_gem_s.add_parser("context")
+    p_gem_prompt = p_gem_s.add_parser("prompt")
+    p_gem_prompt.add_argument("--task", required=True)
+    p_gem_prompt.add_argument("--context-file")
+    p_gem_s.add_parser("status")
+    p_gem_run = p_gem_s.add_parser("run")
+    p_gem_run.add_argument("--task", required=True)
+    p_gem_run.add_argument("--context-file")
+    p_gem_run.add_argument("--dry-run", action="store_true")
+
+
     args = parser.parse_args()
     import time as _time
     _t0 = _time.monotonic()
@@ -2351,6 +2463,11 @@ def main():
         elif args.command == "test": cmd_test(args)
         elif args.command == "bench": cmd_bench(args)
         elif args.command == "query": cmd_query(args)
+        elif args.command == "gemini":
+            if args.sub == "context": cmd_gemini_context(args)
+            elif args.sub == "prompt": cmd_gemini_prompt(args)
+            elif args.sub == "status": cmd_gemini_status(args)
+            elif args.sub == "run": cmd_gemini_run(args)
         elif args.command == "gen":
             if args.sub == "tool": cmd_gen_tool(args)
             elif args.sub == "test": cmd_gen_test(args)
