@@ -1,6 +1,6 @@
 # EVOLVE_PROPOSAL
 
-## Bottleneck: Latency Inefficiency
-Detected 3 high-latency calls and negative efficiency.
-## Proposal: Enable Hybrid Parallelism
-Adjust `core/router.py` to trigger parallel local + cloud pre-fetch for complex tasks.
+## Hardware State: High VRAM Headroom
+Detected 2045MB free VRAM. System can handle GPU-accelerated 1.5B model.
+## Proposal: Switch to LOCALFAST-1.5B (GPU)
+Configure NinaFlash to use the 1.5B model exclusively for fast local tasks.

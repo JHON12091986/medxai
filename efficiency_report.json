@@ -10,6 +10,12 @@
     "end_ts": 1779558381.0,
     "offload_opportunities": 0,
     "parallel_count": 0,
+    "hw": {
+        "cpu_load_pct": 7.6,
+        "ram_available_mb": 7160,
+        "vram_used_mb": 3,
+        "vram_total_mb": 2048
+    },
     "wall_time_s": 85313.0,
     "rpm": 0.09,
     "sequential_time_s": 65.63,

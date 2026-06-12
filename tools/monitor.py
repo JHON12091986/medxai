@@ -2,26 +2,55 @@ import json
 import os
 import re
 import glob
+import subprocess
 from pathlib import Path
 from datetime import datetime
+
+try:
+    import psutil
+except ImportError:
+    psutil = None
 
 def parse_iso_ts(ts_str):
     """Parses ISO 8601 timestamps, handling common variations."""
     try:
-        # Handle +HHMM by inserting colon if needed
         if re.search(r'\+\d{4}$', ts_str):
             ts_str = ts_str[:-2] + ":" + ts_str[-2:]
-        # Handle Z
         ts_str = ts_str.replace('Z', '+00:00')
         return datetime.fromisoformat(ts_str).timestamp()
     except Exception:
-        # Fallback for older formats or malformed strings
         try:
             base = re.split(r'[\+\Z]', ts_str)[0]
             if len(base) > 19: base = base[:19]
             return datetime.strptime(base, "%Y-%m-%dT%H:%M:%S").timestamp()
         except Exception:
             return 0
+
+def get_hw_metrics():
+    """Collects CPU, RAM, and VRAM metrics."""
+    metrics = {
+        "cpu_load_pct": 0,
+        "ram_available_mb": 0,
+        "vram_used_mb": 0,
+        "vram_total_mb": 0
+    }
+    
+    if psutil:
+        metrics["cpu_load_pct"] = psutil.cpu_percent(interval=0.1)
+        metrics["ram_available_mb"] = int(psutil.virtual_memory().available / 1024 / 1024)
+    
+    try:
+        # Check dGPU (NVIDIA)
+        res = subprocess.run(["nvidia-smi", "--query-gpu=memory.used,memory.total", "--format=csv,noheader,nounits"], 
+                            capture_output=True, text=True)
+        if res.returncode == 0:
+            parts = res.stdout.strip().split(',')
+            metrics["vram_used_mb"] = int(parts[0])
+            metrics["vram_total_mb"] = int(parts[1])
+    except Exception:
+        pass
+        
+    return metrics
 
 def parse_logs():
     data = {
@@ -41,7 +70,6 @@ def parse_logs():
     def process_entry(entry):
         nonlocal data
         prov = str(entry.get("provider", "")).upper()
-        # Classify provider
         is_local = any(x in prov for x in ("OLLAMA", "NINAFLASH", "LOCAL", "QWEN"))
         is_cached = bool(entry.get("cached", False)) or prov == "CACHE"
         
@@ -119,10 +147,10 @@ def update_dashboard(score_pct):
 
 def generate_efficiency_report():
     data = parse_logs()
+    data["hw"] = get_hw_metrics()
     
     total_reqs = data["local_requests"] + data["cloud_requests"] + data["cached_requests"]
     
-    # Correct start_ts if no logs found
     if data["start_ts"] == float('inf'):
         data["start_ts"] = 0
         
@@ -145,14 +173,13 @@ def generate_efficiency_report():
 if __name__ == "__main__":
     report = generate_efficiency_report()
     print("========================================")
-    print("  NINA DEEP METRICS ENGINE v4.0")
+    print("  NINA DEEP METRICS ENGINE v5.0")
     print("========================================")
     print(f"  Token Savings:    {report['token_savings_pct']}% ({report['tokens_saved']} tokens)")
-    print(f"  Time Efficiency:  {report['time_efficiency_s']}s (Saved vs Sequential)")
+    print(f"  Time Efficiency:  {report['time_efficiency_s']}s")
     print(f"  Throughput Rank:  {report['rpm']} RPM")
-    print(f"  Wall Time:        {report['wall_time_s']}s")
+    print(f"  Hardware Load:    CPU {report['hw']['cpu_load_pct']}% | VRAM {report['hw']['vram_used_mb']}MB")
     print("----------------------------------------")
     print(f"  Local Requests:   {report['local_requests']}")
     print(f"  Cloud Requests:   {report['cloud_requests']}")
-    print(f"  Cached Requests:  {report['cached_requests']}")
     print("========================================")

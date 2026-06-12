@@ -7,3 +7,7 @@
 - Fact: System evolved via OPTIMIZE_PARALLELISM on 1781245920.2279916.
 
 - Fact: System evolved via OPTIMIZE_PARALLELISM on 1781248256.6405487.
+
+- Fact: System evolved via HARDWARE_OPTIMIZE_GPU based on real-time hardware metrics.
+
+- Fact: System evolved via HARDWARE_OPTIMIZE_GPU based on real-time hardware metrics.

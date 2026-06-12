@@ -363,3 +363,7 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 - OPTIMIZATION: NINA-Evolve identified latency bottleneck. Parallel pre-fetch enabled.
 
 - OPTIMIZATION: NINA-Evolve identified latency bottleneck. Parallel pre-fetch enabled.
+
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
