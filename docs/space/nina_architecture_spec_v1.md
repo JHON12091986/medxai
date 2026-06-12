@@ -1,5 +1,5 @@
 # NINA Modular Monolith — Architecture Spec v1.0
-**Author:** Baizid Bostami (aibony)  
+**Author:** M. Baizid Alam (aibony)  
 **Date:** 2026-06-10  
 **Status:** PROPOSED — Pre-migration planning artifact  
 **Source:** Combined analysis: GitHub Copilot (codebase scan) + Perplexity (architecture review) + live codebase backup 2026-06-09

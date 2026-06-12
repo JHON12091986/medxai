@@ -208,8 +208,15 @@ async def monitor_and_resolve_prs_parallel():
 
 async def run_orchestrator_cycle(nina_os=None):
     """The main 3-minute high-capacity cycle."""
-    logger.info("--- Starting Orchestrator v5.1 ---")
+    logger.info("--- Starting Orchestrator v5.2 (Evolutionary) ---")
     
+    # Step -1: Sense & Evolve (Run Metrics & Evolution logic)
+    try:
+        await asyncio.to_thread(subprocess.run, ["python3", "tools/monitor.py"], capture_output=True, cwd=str(REPO_ROOT))
+        await asyncio.to_thread(subprocess.run, ["python3", "tools/evolve.py"], capture_output=True, cwd=str(REPO_ROOT))
+    except Exception as e:
+        logger.error(f"Evolution phase failed: {e}")
+
     # Step 0: Notify Telegram of any items needing attention
     await watch_and_notify()
     
