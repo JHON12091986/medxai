@@ -60,9 +60,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `nina_update_log.md` | system_of_record | active | keep | Canonical live activity log (Entry 001-167). Newest entries at top. | ✅ YES |
 | `ninagate_load_test.log` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `ninagate_load_test.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `pr146.diff` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `pr147.diff` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `pr148.diff` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pr_desc.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pytest.ini` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `requirements.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
