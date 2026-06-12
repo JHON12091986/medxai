@@ -68,7 +68,7 @@ Perplexity reads backlog each session
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
 | B-001 | Sentinel: remove shell=True from run_cmd in guardianengine.py | `DONE` | guardianengine.py | — | PR #60 merged 2026-06-07 |
-| B-002 | Wire model_overrides dict to .env hot-reload | `IN_PROGRESS` | core/router.py, core/config.py | — | model_overrides in NinaConfig but not wired to hot-reload |
+| B-002 | Wire model_overrides dict to .env hot-reload | `DONE` | core/router.py, core/config.py | — | PR merged 2026-06-12 |
 | B-003 | Add timeout to all subprocess calls in compact_exporter.py | `DONE` | tools/compact_exporter.py | — | No timeout = potential hang / DoS risk |
 | B-004 | Validate TELEGRAM_CHAT_ID exists before any send attempt | `IN_PROGRESS` | interfaces/telegraminterface.py | — | Silent failure if env var missing; non-blocking open item |
 
@@ -2933,9 +2933,24 @@ DO NOT touch: .env, guardian_engine.py, tools/shell.py
 | 04:00 | SCHED-13 Pin audit |
 | 04:10 | SCHED-14 Arch docs freshness |
 | 04:20 | SCHED-15 Circuit breaker stats |
+| 04:30 | SCHED-16 Free provider hunt |
 
-> All tasks run between 02:00–04:30 AM local time while NINA is in low-traffic overnight window.
+> All tasks run between 02:00–04:40 AM local time while NINA is in low-traffic overnight window.
 > Every task has a silent exit condition — if nothing is wrong, no PR is opened and no noise is generated.
 > The only output you see is PRs that actually need attention.
 
 
+
+---
+
+### TASK 16 — Daily Provider Discovery & Validation (SCHED-16)
+**Cadence:** Daily @ 04:30 AM
+**Objective:** Search for new free cloud inference providers and validate existing ones.
+**Process:**
+1. Use `google_web_search` or browser tools to find new "OpenAI compatible free api" or "free LLM API 2026".
+2. Run `python3 tools/providerhunter.py` to validate candidate health.
+3. If new healthy providers are found (> 80% success rate):
+   - Update `data/discoveredproviders.json`.
+   - Open PR titled "ops(discovery): SCHED-16 new free providers found - [PROVIDER_NAMES]"
+   - PR body: latency comparison table and onboarding links.
+4. If zero new providers: exit silently.

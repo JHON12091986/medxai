@@ -2494,59 +2494,12 @@
 
 **Verification:** git push OK, nina.service active
 
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
 ---
 
-## Entry 227 — 2026-06-12 · merge: PR-142 chore(core): add missing type hints to core module
-**Triggered by:** nf maintain automation.
+## Entry 227 — 2026-06-12 · D-sync Post-session sync
 
-**What changed:**
-- Merged via local fallback.
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Rollback:** `git revert -m 1 HEAD`
+**Files changed:** .env.example,core/config.py,core/hotreload.py,crons/manager.py,data/router_cache.json,data/session_memory.jsonl,docs/space/claude_feed.md,docs/space/jules_backlog.md,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md,tools/providerhunter.py
 
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
----
-
-## Entry 228 — 2026-06-12 · merge: PR-143 feat(ninaflash): implement Local Call Graph Generator task
-**Triggered by:** nf maintain automation.
-
-**What changed:**
-- Merged via local fallback.
-
-**Rollback:** `git revert -m 1 HEAD`
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
----
-
-## Entry 229 — 2026-06-12 · merge: PR-144 fix: correct table appending logic for error register
-**Triggered by:** nf maintain automation.
-
-**What changed:**
-- Merged via local fallback.
-
-**Rollback:** `git revert -m 1 HEAD`
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+**Verification:** git push OK, nina.service active

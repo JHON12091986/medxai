@@ -7,6 +7,7 @@ import logging
 from crons.backup_jobs import run_memory_backup, run_py_backup
 from tools.market import run_market_monitor
 from tools.mega_orchestrator import run_orchestrator_cycle
+from tools import jules_api
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger

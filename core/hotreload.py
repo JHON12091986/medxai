@@ -2,7 +2,7 @@
 Watches .env every 60s. Reloads reloadable fields without restart.
 Non-reloadable fields require restart -- changes are logged but ignored.
 """
-import asyncio, logging
+import asyncio, logging, json
 from pathlib import Path
 from dotenv import dotenv_values
 from pydantic.fields import PydanticUndefined
@@ -28,6 +28,7 @@ RELOADABLE = {
     "THERMAL_GUARD_GPU":    ("thermal_guard_gpu",      int),
     "THERMAL_CRITICAL_CPU": ("thermal_critical_cpu",   int),
     "THERMAL_CRITICAL_GPU": ("thermal_critical_gpu",   int),
+    "MODEL_OVERRIDES":      ("model_overrides",        json.loads),
 }
 
 

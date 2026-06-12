@@ -1,11 +1,13 @@
 """NINA v12 — NinaConfig + RATELIMITS (Stage 1+2)."""
-import os
+import os, json, logging
 from pathlib import Path
 from pydantic import BaseModel
 from typing import ClassVar, Optional
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = logging.getLogger("nina.config")
 
 RATELIMITS = {
     "GROQ":       {"rpm":30,  "tpd":None,    "rpd":14400, "min_spacing_s":2},
@@ -144,4 +146,9 @@ def load_config() -> NinaConfig:
         cfg.idle_threshold_min = int(v)
     if v := os.getenv("IDLE_REPORT_MIN"):
         cfg.idle_report_min = int(v)
+    if v := os.getenv("MODEL_OVERRIDES"):
+        try:
+            cfg.model_overrides = json.loads(v)
+        except Exception as e:
+            logger.error(f"config_load_model_overrides_failed {e}")
     return cfg
