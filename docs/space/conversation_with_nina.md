@@ -52,3 +52,26 @@ Today's session focused on restoring the "Surgical" local kernel and optimizing 
    - Confirmed a successful `./nina_sync.sh` with a perfect metadata quality score and a clean pre-push audit.
 
 The system is now operating with a significantly reduced context overhead while maintaining full functional awareness through stubs and indices.
+
+## Gemini CLI Rules (Mandatory)
+
+- Use for multi-file local tasks where speed or vision context matters
+- Preferred over Qwen Code when image/screenshot context needed (Qwen has no vision)
+- 1 prompt = 10–50 internal requests in agent mode — quota burns fast
+- Quota resets midnight Pacific (~1PM Bangladesh). Check quota before starting.
+- NEVER use for tasks touching more than 3 files — use Jules instead
+- NEVER use if task modifies core/router.py, guardian_engine.py, or tools/shell.py — use agy
+
+### Anti-hallucination rules (every session):
+- Always cd to ~/nina before running gemini
+- Single-file tasks: bash tools/gemini_scoped.sh <file> "prompt"
+- Multi-file tasks: bash tools/gemini_wrapper.sh "prompt" — never raw gemini
+- Never ask Gemini CLI to look at the whole project — name specific files in prompt
+- If Gemini CLI repeats itself, loops, or stalls in thinking — kill it (Ctrl+C), switch to Qwen Code
+- If output file is more than 50% longer than original — reject it, do not apply
+- .geminiignore lives at ~/nina/.geminiignore — never delete it
+
+### Quota cascade:
+Gemini CLI exhausted → Qwen Code CLI → Jules (async) → Cursor (reserve)
+
+After editing, run: cd ~/nina && git add .geminiignore tools/gemini_wrapper.sh tools/gemini_scoped.sh AGENTS.md && git commit -m "fix(gemini-cli): stall guard, scoped runner, ignore rules, hardened AGENTS GCL-01" && ./nina_sync.sh

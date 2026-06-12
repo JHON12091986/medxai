@@ -397,3 +397,9 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
   - Overall Rank: NINA-Evolve Protocol ACTIVE.
 - OPTIMIZATION: NINA-Evolve identified latency bottleneck. Parallel pre-fetch enabled.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+### [2026-06-13] Session Update — Gemini CLI
+- OFFLOAD_OPPORTUNITY: Script scaffolding and permission management → route to NinaFlash.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Scoped execution via `gemini_scoped.sh` prevents context pollution.
+- CONTEXT_HINT: Scoped runs effectively "compress" task context to a single file.
