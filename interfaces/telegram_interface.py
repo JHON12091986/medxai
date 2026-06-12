@@ -42,7 +42,7 @@ sec_log = logging.getLogger("nina.security")
 COMMANDS = {
     "task", "ask", "email", "shell", "remember", "forget",
     "patch", "generate", "approve", "reject", "rollback",
-    "addkey", "status", "router", "logs", "abort", "start", "reset", "help"
+    "addkey", "status", "router", "models", "logs", "abort", "start", "reset", "help"
 }
 
 HELP_TEXT = """*NINA v12 Commands*
@@ -60,6 +60,7 @@ HELP_TEXT = """*NINA v12 Commands*
 `rollback <file>` -- Restore previous version
 `addkey <P> <key>` -- Add a provider API key
 `addkey list` -- Show provider status & signup links
+`models` -- Show current model per provider
 `status` -- System health snapshot
 `router` -- Provider routing table
 `logs` -- Last 50 lines of nina.log
@@ -218,6 +219,10 @@ class TelegramInterface:
 
         elif cmd == "status":
             reply = await self.nina.get_status()
+            await self._reply(update, reply)
+
+        elif cmd == "models":
+            reply = await router.get_models_status()
             await self._reply(update, reply)
 
         elif cmd == "router":

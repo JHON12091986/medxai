@@ -272,3 +272,16 @@ def test_cache_persistence(dummy_config):
         os.remove(cache_path)
 
 
+
+@pytest.mark.asyncio
+async def test_get_models_status(monkeypatch):
+    config = NinaConfig(telegram_bot_token="dummy", authorized_user_id="123")
+    config.model_overrides = {'GEMINI': 'gemini-1.5-pro'}
+    router = HybridRouter(config)
+    await router.initialize()
+    # Mock the _has_key logic directly
+    monkeypatch.setattr(router, '_has_key', lambda pid: True)
+    status = await router.get_models_status()
+    assert 'Router  Current Models' in status
+    assert 'GEMINI' in status
+    assert 'gemini-1.5-pro' in status
