@@ -1807,6 +1807,47 @@ def cmd_ops_rotate_logs(args):
 
 
 
+
+def cmd_code_call_stack(args):
+    """[043] Extract a function and the local functions it calls."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        functions = {}
+        for node in tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                functions[node.name] = node
+
+        if args.name not in functions:
+            print(f"❌ Symbol '{args.name}' not found in {path}")
+            return
+
+        visited = set()
+        stack = [functions[args.name]]
+
+        while stack:
+            current_node = stack.pop()
+            if current_node.name in visited:
+                continue
+            visited.add(current_node.name)
+
+            print(f"--- {current_node.name} ---")
+            print(ast.unparse(current_node))
+            print()
+
+            for child in ast.walk(current_node):
+                if isinstance(child, ast.Call):
+                    if isinstance(child.func, ast.Name):
+                        func_name = child.func.id
+                        if func_name in functions and func_name not in visited:
+                            stack.append(functions[func_name])
+
+    except Exception as e:
+        print(f"❌ Error parsing {path}: {e}")
+
 def cmd_code_symbol(args):
     """[037] Extract source code of a specified class or function using AST."""
     path = _path_resolve(args.file)
@@ -2056,6 +2097,7 @@ def main():
     p_docs.add_parser("consolidate")
 
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
+    p_call_stack = p_cs.add_parser("call-stack"); p_call_stack.add_argument("file"); p_call_stack.add_argument("name")
     p_sym = p_cs.add_parser("symbol")
     p_sym.add_argument("file")
     p_sym.add_argument("name")
@@ -2185,6 +2227,7 @@ def main():
             if args.sub == "outline": cmd_code_outline(args)
             elif args.sub == "dep-map": cmd_code_dep_map(args)
             elif args.sub == "index": cmd_code_index(args)
+            elif args.sub == "call-stack": cmd_code_call_stack(args)
             elif args.sub == "symbol": cmd_code_symbol(args)
             elif args.sub == "sigs": cmd_code_sigs(args)
             elif args.sub == "doc": cmd_code_doc(args)

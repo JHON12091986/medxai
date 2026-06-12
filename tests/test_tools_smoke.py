@@ -124,7 +124,7 @@ async def test_jules_api_smoke():
     from tools import jules_api
 
     with patch.dict("os.environ", {"JULES_API_KEY": "dummy"}):
-        with patch("tools.jules_api.requests.get") as mock_get:
+        with patch("tools.jules_api.requests.request") as mock_get:
             mock_response = MagicMock()
             mock_response.status_code = 200
             mock_response.json.return_value = {"sources": [{"name": "mocked_source"}]}
