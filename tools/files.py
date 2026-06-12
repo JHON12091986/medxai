@@ -8,6 +8,36 @@ MAX_READ = 1 * 1024 * 1024  # 1MB
 MAX_WRITE = 5 * 1024 * 1024  # 5MB
 
 
+def _load_geminiignore() -> list[str]:
+    ignore_file = Path('.geminiignore')
+    if not ignore_file.exists():
+        return []
+
+    patterns = []
+    for line in ignore_file.read_text(encoding='utf-8').splitlines():
+        line = line.strip()
+        if line and not line.startswith('#') and not line.startswith('!'):
+            patterns.append(line)
+    return patterns
+
+def _is_ignored(path_str: str, patterns: list[str]) -> bool:
+    if not patterns:
+        return False
+    import fnmatch
+    import os
+    for pattern in patterns:
+        if pattern.endswith('/'):
+            if path_str == pattern[:-1] or path_str.startswith(pattern):
+                return True
+        elif fnmatch.fnmatch(path_str, pattern) or fnmatch.fnmatch(os.path.basename(path_str), pattern):
+            return True
+        elif path_str.startswith(pattern + '/'):
+            return True
+    return False
+
+
+
+
 def _safe(path: str) -> Path:
     p = (WORKSPACE / path).resolve()
     if not str(p).startswith(str(WORKSPACE)):
@@ -21,7 +51,12 @@ def _disk_guard(config):
         raise OSError(f"Disk {pct:.0f}% full — write blocked.")
 
 
+
 async def read(path: str, lines: str = None, symbol: str = None) -> str:
+    patterns = _load_geminiignore()
+    if _is_ignored(path, patterns):
+        return f"Access Denied: '{path}' is blocked by SEC-IGNORE (.geminiignore)."
+
     p = _safe(path)
     if not p.exists():
         return f"File not found: {path}"
