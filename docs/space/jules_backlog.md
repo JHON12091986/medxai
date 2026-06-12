@@ -76,6 +76,15 @@ Perplexity reads backlog each session
 
 ## ██ P1 — HIGH
 
+| B-048 | Auto-close stale Jules sessions (>24h blocked) | `READY` | TBD | — | Auto-ingested via Goal Intake |
+
+
+| B-047 | Build a NinaGate routing telemetry dashboard | `READY` | TBD | — | Auto-ingested via Goal Intake |
+
+
+| B-046 | Implement conflict-skip and error register logging | `READY` | TBD | — | Auto-ingested via Goal Intake |
+
+
 | ID | Title | Status | Files Touched | Blocks | Notes |
 |----|-------|--------|---------------|--------|-------|
 | B-005 | F-09 ModelDiscoveryService — build tools/model_discovery.py | `DONE` | tools/model_discovery.py, core/router.py, crons/manager.py | — | PR #25 merged 2026-06-07 |
