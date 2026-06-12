@@ -2464,107 +2464,12 @@
 
 **Verification:** git push OK, nina.service deactivating
 
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
 ---
 
-## Entry 224 — 2026-06-12 · merge: UNKNOWN feat(ninaflash): add Local Call Graph Generator
-**Triggered by:** nf maintain automation.
+## Entry 224 — 2026-06-12 · D-sync Post-session sync
 
-**What changed:**
-- Autonomously merged via NINA Parallel Orchestrator.
+**Triggered by:** nina_sync.sh v5 automated run
 
-**Rollback:** `git revert -m 1 HEAD`
+**Files changed:** data/router_cache.json,data/session_memory.jsonl,nina_update_log.md
 
----
-
-## Entry 225 — 2026-06-12 · merge: PR-123 feat(core): add automated script to enforce type hints
-**Triggered by:** nf maintain automation.
-
-**What changed:**
-- Merged via local fallback.
-
-**Rollback:** `git revert -m 1 HEAD`
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
----
-
-## Entry 226 — 2026-06-12 · merge: PR-130 feat(core): Automated type hint enforcer using libcst
-**Triggered by:** nf maintain automation.
-
-**What changed:**
-- Merged via local fallback.
-
-**Rollback:** `git revert -m 1 HEAD`
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
-
-## Auto-doc patch — 2026-06-12
-- Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+**Verification:** git push OK, nina.service active
