@@ -1901,8 +1901,62 @@ def cmd_ops_rotate_logs(args):
 
     print(f"✅ Rotated and compressed {rotated} log files to {archive_dir.relative_to(REPO_ROOT)}/")
 
+
+
+# --- ADD 6: Session Ledger ---
+def cmd_session_start(args):
+    try:
+        from tools.session_ledger import SessionLedger
+        ledger = SessionLedger(tool=args.tool, task_id=args.task_id)
+        ledger._save()
+        print(f"Session {ledger.session_id} started for {args.tool}")
+    except Exception as e:
+        print(f"Error starting session: {e}")
+        sys.exit(1)
+
+def cmd_session_log(args):
+    try:
+        from tools.session_ledger import get_active_session
+        ledger = get_active_session(args.tool)
+        if ledger:
+            ledger.log_step(args.step, args.action, args.outcome, args.detail)
+            print(f"Logged step {args.step}: {args.outcome}")
+        else:
+            print(f"No active session found for tool {args.tool}")
+            sys.exit(1)
+    except Exception as e:
+        print(f"Error logging step: {e}")
+        sys.exit(1)
+
+def cmd_session_preamble(args):
+    try:
+        from tools.session_preamble import write_preamble_file
+        path = write_preamble_file(args.tool)
+        if path:
+            with open(path, "r") as f:
+                content = f.read()
+            if content:
+                print(content)
+            else:
+                print("No recovery needed — clean slate")
+        else:
+            print("No recovery needed — clean slate")
+    except Exception as e:
+        print(f"Error writing preamble: {e}")
+        sys.exit(1)
+
+def cmd_session_done(args):
+    try:
+        from tools.session_preamble import clear_preamble
+        clear_preamble(args.tool)
+        print("Session closed. Preamble cleared.")
+    except Exception as e:
+        print(f"Error closing session: {e}")
+        sys.exit(1)
+
 # ------------------------------------------------------------------
 # THE UNIFIED DISPATCHER
+
 # ------------------------------------------------------------------
 
 
@@ -2157,6 +2211,23 @@ def main():
     p_sc.add_argument("--goal", default="", help="Active goal for this session")
     p_ss.add_parser("resume")
 
+    p_sstart = p_ss.add_parser("start")
+    p_sstart.add_argument("--tool", default="gemini_cli", help="Tool name")
+    p_sstart.add_argument("--task", dest="task_id", default="", help="Task ID")
+
+    p_slog = p_ss.add_parser("log")
+    p_slog.add_argument("--tool", default="gemini_cli", help="Tool name")
+    p_slog.add_argument("--step", type=int, required=True, help="Step index")
+    p_slog.add_argument("--action", required=True, help="Action taken")
+    p_slog.add_argument("--outcome", choices=["success", "failure", "partial", "skipped"], required=True, help="Outcome")
+    p_slog.add_argument("--detail", default="", help="Detail")
+
+    p_spreamble = p_ss.add_parser("preamble")
+    p_spreamble.add_argument("--tool", default="gemini_cli", help="Tool name")
+
+    p_sdone = p_ss.add_parser("done")
+    p_sdone.add_argument("--tool", default="gemini_cli", help="Tool name")
+
     p_memory = subparsers.add_parser("memory"); p_ms = p_memory.add_subparsers(dest="sub")
     p_ms_stash = p_ms.add_parser("stash")
     p_ms_stash.add_argument("text", help="Text to stash in working memory")
@@ -2300,6 +2371,10 @@ def main():
         elif args.command == "session":
             if args.sub == "checkpoint": cmd_session_checkpoint(args)
             elif args.sub == "resume": cmd_session_resume(args)
+            elif args.sub == "start": cmd_session_start(args)
+            elif args.sub == "log": cmd_session_log(args)
+            elif args.sub == "preamble": cmd_session_preamble(args)
+            elif args.sub == "done": cmd_session_done(args)
         elif args.command == "memory":
             if args.sub == "stash": cmd_memory_stash(args)
             elif args.sub == "session-save": cmd_memory_session_save(args)
