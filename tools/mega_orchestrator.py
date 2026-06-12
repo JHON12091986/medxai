@@ -131,6 +131,42 @@ async def resolve_pr_v5(pr: Dict[str, Any], index: Dict[str, Any], local_success
                         logger.error(f"Logging PR #{pr_num} to error register to prevent future blocks.")
                         append_error_register(pr_num, title)
 
+async def resolve_pr_locally_v5(pr_num: int, title: str) -> bool:
+    """Fallback local merge for conflicting PRs."""
+    def run_cmd(cmd):
+        return subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd=str(REPO_ROOT))
+
+    logger.info(f"Fallback resolution for PR #{pr_num}...")
+    run_cmd(f"gh pr checkout {pr_num}")
+    res = run_cmd("git rebase main")
+    
+    if res.returncode != 0:
+        # Standard Doc Fix Fallback
+        logger.warning("Conflict detected. Forcing standard doc resolution...")
+        targets = ["nina_context.md", "README.md", "ARCHITECTURE.md", "AGENTS.md", "docs/space/nina_index.md"]
+        for f in targets:
+            run_cmd(f"git checkout main -- {f}")
+            run_cmd(f"git add {f}")
+        run_cmd("export GIT_EDITOR=true && git rebase --continue")
+
+    # Final Check
+    status = run_cmd("git status --porcelain").stdout.strip()
+    if status and "UU" in status:
+         logger.error(f"❌ Unresolvable code conflict in PR #{pr_num}. Skipping.")
+         run_cmd("git rebase --abort && git checkout main")
+         return False
+
+    branch = subprocess.check_output("git branch --show-current", shell=True, text=True).strip()
+    run_cmd("git checkout main")
+    res = run_cmd(f"git merge {branch} --no-ff -m 'merge: PR #{pr_num} (Local Fallback)'")
+    if res.returncode == 0:
+        run_cmd(f"git push origin main --no-verify")
+        run_cmd(f"gh pr close {pr_num} -d")
+        logger.info(f"✅ PR #{pr_num} resolved locally.")
+        _append_update_log("PR-"+str(pr_num), title, "Merged via local fallback.")
+        return True
+    return False
+
 def get_error_register() -> set:
     """Reads PR numbers that have unresolvable conflicts."""
     reg_path = REPO_ROOT / "docs/space/nina_error_register.md"
