@@ -2466,3 +2466,13 @@
 
 ## Auto-doc patch — 2026-06-12
 - Model: gemini-3-flash-preview, NinaGate: 8080, Providers: 19
+
+---
+
+## Entry 224 — 2026-06-12 · merge: UNKNOWN feat(ninaflash): add Local Call Graph Generator
+**Triggered by:** nf maintain automation.
+
+**What changed:**
+- Autonomously merged via NINA Parallel Orchestrator.
+
+**Rollback:** `git revert -m 1 HEAD`
