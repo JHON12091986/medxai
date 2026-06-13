@@ -5,3 +5,7 @@
 ## 2026-06-08 - [Cold Path vs Hot Path Optimization]
 **Learning:** Optimizing code that only executes during fallback/exception handling (cold path) yields no measurable performance impact. We must target hot paths (like message masking which runs on every single output) for optimizations to be worthwhile.
 **Action:** When looking for performance improvements, ensure the target code runs frequently enough to make a difference before optimizing it.
+
+## 2026-06-13 - [Pre-computing regex conditions in hot paths]
+**Learning:** Evaluating regex on static config keys in a hot path causes significant overhead. By pre-computing and caching the matched keys at initialization, the hot path avoids redundant regex searches, improving execution time.
+**Action:** Identify static conditions evaluated with regex inside hot paths and cache their results during initialization.
