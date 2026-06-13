@@ -578,7 +578,7 @@ def cmd_code_index(args):
 
 
 def cmd_code_call_graph(args):
-    """[038] Local Call Graph Generator: Trace function calls locally without LLM."""
+    """[039] Local Call Graph Generator: Trace function calls locally without LLM."""
 
     class CallVisitor(ast.NodeVisitor):
         def __init__(self):
@@ -601,20 +601,21 @@ def cmd_code_call_graph(args):
         if not py_file.exists():
             continue
         try:
+            rel_path = str(py_file.relative_to(REPO_ROOT))
+        except ValueError:
+            rel_path = str(py_file)
+
+        try:
             tree = ast.parse(py_file.read_text(encoding="utf-8"))
             for node in ast.walk(tree):
                 if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                     visitor = CallVisitor()
                     visitor.visit(node)
                     if visitor.calls:
-                        if node.name not in graph:
-                            graph[node.name] = []
-                        graph[node.name].extend(list(visitor.calls))
+                        key = f"{rel_path}:{node.name}"
+                        graph[key] = sorted(list(set(visitor.calls)))
         except Exception:
             pass
-
-    for key in graph:
-        graph[key] = list(set(graph[key]))
 
     print(json.dumps(graph, indent=2))
 
