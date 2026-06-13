@@ -42,7 +42,7 @@ def cmd_check_complexity(args):
     if not path.exists(): return
     try:
         tree = ast.parse(path.read_text())
-        cx = 1 + sum(1 for n in ast.walk(tree) if isinstance(n, (ast.If, ast.For, ast.AsyncFor, ast.While, ast.ExceptHandler, ast.With, ast.AsyncWith, ast.BoolOp)))
+        cx = 1 + sum(1 for n in ast.walk(tree) if isinstance(n, (ast.If, ast.For, ast.While, ast.Try, ast.ExceptHandler, ast.With)))
         print(f"Complexity of {path.name}: {cx}")
     except Exception as e: print(f"❌ Error: {e}")
 

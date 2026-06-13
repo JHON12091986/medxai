@@ -128,7 +128,7 @@ PROVIDERS_TIER3 = {
     },
 }
 # Precomputed to avoid O(N) dict merging overhead in hot paths like routing lookups
-ALL_PROVIDERS = {**PROVIDERS_TIER1, **PROVIDERS_TIER2, **PROVIDERS_TIER3}
+ALL_PROVIDERS = PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3
 LOCAL_PROVIDERS = {
     "LOCALFAST": {"model": "qwen2.5:1.5b"},
     "LOCALHEAVY": {"model": "qwen2.5:7b"},
