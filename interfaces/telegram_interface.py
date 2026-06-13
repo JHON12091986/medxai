@@ -64,6 +64,7 @@ COMMANDS = {
     "addkey",
     "status",
     "router",
+    "models",
     "logs",
     "abort",
     "start",
@@ -89,7 +90,8 @@ HELP_TEXT = """*NINA v12 Commands*
 `rollback <file>` -- Restore previous version
 `addkey <P> <key>` -- Add a provider API key
 `addkey list` -- Show provider status & signup links
-`backlog` -- shows top 5 READY items
+`models` -- Show current model per provider
+`backlog` -- Show top 5 READY items
 `status` -- System health snapshot
 `errors` -- Show open error register items
 `router` -- Provider routing table
@@ -268,6 +270,10 @@ class TelegramInterface:
         elif cmd == "status":
             s = await self.nina.get_status()
             reply = f"{s}\n\n{self.nina.router.get_health_summary()}"
+            await self._reply(update, reply)
+
+        elif cmd == "models":
+            reply = await router.get_models_status()
             await self._reply(update, reply)
 
         elif cmd == "router":

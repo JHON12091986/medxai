@@ -1079,6 +1079,25 @@ class HybridRouter:
             h.reset_daily()
         self.cost.reset_daily()
 
+
+    async def get_models_status(self) -> str:
+        lines = ["Router  Current Models"]
+        for pid in sorted(self.health.keys()):
+            if pid in LOCAL_PROVIDERS or self._has_key(pid):
+                if pid in LOCAL_PROVIDERS:
+                    model = LOCAL_PROVIDERS[pid].get("model", "default")
+                else:
+                    meta = ALL_PROVIDERS.get(pid, {})
+                    fallback = meta.get("model", "default")
+                    discovered = await self._model_discovery.get_model(pid)
+                    model = self.config.model_overrides.get(pid) or discovered or fallback
+
+                state = "available" if self.health[pid].is_available(True) else "unavailable"
+                if self.health[pid].is_exhausted(pid):
+                    state = "exhausted"
+                lines.append(f"{pid:<14} {state:<12} {model}")
+        return "\n".join(lines)
+
     def get_status(self) -> str:
         lines = ["Router  Provider Status"]
         for pid, h in sorted(self.health.items()):
