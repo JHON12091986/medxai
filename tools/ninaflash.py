@@ -499,58 +499,6 @@ def cmd_code_call_graph(args):
 
     print(json.dumps(graph, indent=2))
 
-def cmd_code_call_stack(args):
-    """[040] Symbol-Based Context Injector: Read only the call stack of a function."""
-    class CallVisitor(ast.NodeVisitor):
-        def __init__(self):
-            self.calls = set()
-        def visit_Call(self, node):
-            if isinstance(node.func, ast.Name):
-                self.calls.add(node.func.id)
-            elif isinstance(node.func, ast.Attribute):
-                self.calls.add(node.func.attr)
-            self.generic_visit(node)
-
-    if hasattr(args, 'file') and args.file:
-        files = [_path_resolve(args.file)]
-    else:
-        files = _find_py_files()
-
-    source_map = {}
-    ast_map = {}
-
-    for py_file in files:
-        if not py_file.exists(): continue
-        try:
-            content = py_file.read_text(encoding="utf-8")
-            tree = ast.parse(content)
-            for node in ast.walk(tree):
-                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
-                    source_map[node.name] = ast.get_source_segment(content, node)
-                    if not isinstance(node, ast.ClassDef):
-                        ast_map[node.name] = node
-        except Exception:
-            pass
-
-    visited = set()
-    def trace(name, depth=0):
-        if name in visited or depth > 5: return
-        visited.add(name)
-        source = source_map.get(name)
-        if not source: return
-
-        print(f"--- {name} ---")
-        print(source)
-
-        node = ast_map.get(name)
-        if node:
-            visitor = CallVisitor()
-            visitor.visit(node)
-            for call in visitor.calls:
-                trace(call, depth + 1)
-
-    trace(args.target)
-
 
 # ------------------------------------------------------------------
 # MODULE 3: CONTEXT COMPRESSION
@@ -2006,6 +1954,47 @@ def cmd_session_done(args):
 
 
 
+
+def cmd_code_call_stack(args):
+    """[043] Extract a function and the local functions it calls."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        functions = {}
+        for node in tree.body:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                functions[node.name] = node
+
+        if args.name not in functions:
+            print(f"❌ Symbol '{args.name}' not found in {path}")
+            return
+
+        visited = set()
+        stack = [functions[args.name]]
+
+        while stack:
+            current_node = stack.pop()
+            if current_node.name in visited:
+                continue
+            visited.add(current_node.name)
+
+            print(f"--- {current_node.name} ---")
+            print(ast.unparse(current_node))
+            print()
+
+            for child in ast.walk(current_node):
+                if isinstance(child, ast.Call):
+                    if isinstance(child.func, ast.Name):
+                        func_name = child.func.id
+                        if func_name in functions and func_name not in visited:
+                            stack.append(functions[func_name])
+
+    except Exception as e:
+        print(f"❌ Error parsing {path}: {e}")
+
 def cmd_code_symbol(args):
     """[037] Extract source code of a specified class or function using AST."""
     path = _path_resolve(args.file)
@@ -2428,6 +2417,7 @@ def main():
     p_docs.add_parser("consolidate")
 
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
+    p_call_stack = p_cs.add_parser("call-stack"); p_call_stack.add_argument("file"); p_call_stack.add_argument("name")
     p_sym = p_cs.add_parser("symbol")
     p_sym.add_argument("file")
     p_sym.add_argument("name")
@@ -2442,8 +2432,6 @@ def main():
     p_cs.add_parser("dep-map")
     p_cs.add_parser("index")
     p_cs.add_parser("call-graph").add_argument("file", nargs="?")
-    p_cs.add_parser("call-stack").add_argument("target")
-    p_cs.choices["call-stack"].add_argument("file", nargs="?")
     p_cs.add_parser("pack").add_argument("file")
     p_cs.add_parser("dead-code").add_argument("target")
     
