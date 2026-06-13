@@ -3,9 +3,9 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-13 11:09 +06
-- Git HEAD: b8cdf776ac1ed28bd2f1bbf8bd0c2a0e9726e720
-- Last commit: docs: post-session sync 2026-06-13 11:09
+- Generated: 2026-06-13 11:16 +06
+- Git HEAD: 2d01719bdb47fd3805ced3f060036f62562e32c8
+- Last commit: docs: post-session sync 2026-06-13 11:15
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
@@ -14,17 +14,17 @@
  Invocation: 004ebd9fe7714d10940bb5cb7d3ba5ee
    Main PID: 533517 (python)
       Tasks: 29 (limit: 15177)
-     Memory: 411.7M (peak: 514.9M)
-        CPU: 2min 1.938s
+     Memory: 411.9M (peak: 514.9M)
+        CPU: 2min 3.837s
      CGroup: /system.slice/nina.service
              ├─533517 /home/aibony/nina/.venv/bin/python main.py
              └─626035 python3 /home/aibony/nina/tools/alert_beep.py
 
-Jun 13 11:09:23 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:nina.tools.jules:Dispatched batch ['AG-M-01', 'AG-M-06', 'AG-N-02', 'AG-N-03', 'AG-N-04'] -> SID: 286998758916366173
-Jun 13 11:09:23 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:nina.scheduler:{"event": "job_run", "job": "mega_orchestrator", "duration": 25.17021679878235, "success": true}
-Jun 13 11:09:23 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:03:00], next run at: 2026-06-13 11:11:57 +06)" executed successfully
-Jun 13 11:09:30 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 11:09:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:15:58 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:16:08 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:16:18 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:16:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:16:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -33,78 +33,16 @@ Jun 13 11:09:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:ht
 - jules_lock.txt not found — all files available
 
 ## 4. READY Items (eligible for new Jules specs)
-_Found 10 READY items_
-
-### AG-M — Throughput Maximizer
-_MEGA-TASK: V2.0 Architecture Upgrade_
-_Dependency: AG-B-01 and AG-B-02 must be DONE first_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `READY` | AG-B-01 |
-| AG-M-02 | Multi-module | 📉 MEGA-TAS
-
-### AG-N — Advanced Code Intelligence
-_Focus: Zero-token research and semantic mapping_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `DONE` | — |
-| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `READY` | A
-
-### AG-O — Automated Testing & QA
-_Focus: Reducing debug turns through local verification_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-O-01 | `tests/` | Test Scaffold Generator — Create test stubs for every new function. | `READY` | — |
-| AG-O-02 | `tests/` | Mutation Test Suite — Implement basic mutation testing for core modules. | `READY` | — |
-| A
-
-### AG-P — Performance & Latency
-_Focus: High-velocity execution and low overhead_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-P-01 | `core/router.py` | Router Latency Optimizer — Profile and reduce router overhead. | `READY` | — |
-| AG-P-02 | `core/router.py` | Persistent Response Cache — Move cache to SQLite for speed. | `READY` | — |
-| AG-P-03 | `
-
-### AG-Q — Memory & Knowledge
-_Focus: Precision retrieval and minimal noise_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-Q-01 | `data/memory/` | ChromaDB Cluster — Shard vector memory by domain. | `READY` | — |
-| AG-Q-02 | `core/memory.py` | Automatic Fact Extraction — LLM-driven mining of logs. | `READY` | — |
-| AG-Q-03 | `core/memory.py` | Memory C
-
-### AG-R — Repository Hygiene
-_Focus: Minimal repo size and clean structure_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-R-01 | `ninaflash.py` | Stale File Archiver — Auto-move 60-day untouched files. | `READY` | — |
-| AG-R-02 | `requirements.txt`| Requirement Pinner — Lock dependencies to exact hashes. | `READY` | — |
-| AG-R-03 | `ninaflash.py` | La
-
-### AG-S — Interface & Interaction
-_Focus: Fast feedback and low-overhead communication_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-S-01 | `interfaces/telegram_interface.py`| Telegram Batching — Consolidate short messages. | `READY` | — |
-| AG-S-02 | `ninaflash.py` | CLI Progress Bars — Rich bars for long nf commands. | `READY` | — |
-| AG-S-03 | `co
+_Found 3 READY items_
 
 ### AG-T — Token & Context Engineering
 _Focus: Absolute minimum context overhead_
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-T-01 | `core/agent.py` | Dynamic Prompting — Adjust prompt length by task diff. | `READY` | — |
-| AG-T-02 | `ninaflash.py` | Context Window Estimator — Predict token usage before call. | `READY` | — |
-| AG-T-03 | `core/agent.p
+| AG-T-01 | `core/agent.py` | Dynamic Prompting — Adjust prompt length by task diff. | `PAUSED` | — |
+| AG-T-02 | `ninaflash.py` | Context Window Estimator — Predict token usage before call. | `PAUSED` | — |
+| AG-T-03 | `core/agent
 
 ### From: jules_spec_backlog_inc.md
 📊 MEGA-TASK: NF-BACKLOG Incremental State (AG-M-05)
@@ -129,11 +67,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
+2d01719 docs: post-session sync 2026-06-13 11:15
 b8cdf77 docs: post-session sync 2026-06-13 11:09
 84aa5a0 merge: resolve conflicts and merge feat/doc-audit
 0d88a7f merge: resolve conflicts and merge feat/method-extraction
 15a8df6 merge: manual merge and integration of multiple feature branches
-bb33036 merge: resolve conflicts and merge feat/telegram-models-command
 ```
 
 ## 6. Open Blockers
@@ -142,10 +80,10 @@ bb33036 merge: resolve conflicts and merge feat/telegram-models-command
 - | AG-F-02 | `tools/agents/market_agent.py` | MarketAgent — watches DSE/CSE prices on schedule, emits ALERT event when watchlist threshold crossed | `NEEDS_SPEC` | AG-F-01 |
 - | AG-F-03 | `tools/agents/expense_agent.py` | ExpenseAgent — monitors Telegram messages for expense patterns, auto-logs to finance tool | `NEEDS_SPEC` | AG-F-01 |
 - | AG-J-06 | `tests/test_market_agent.py` | Unit tests for MarketAgent: mock price feed, threshold crossing, alert emission | `NEEDS_SPEC` | AG-F-02 |
-- | AG-O-02 | `tests/` | Mutation Test Suite — Implement basic mutation testing for core modules. | `READY` | — |
-- | AG-O-06 | `tests/` | Flaky Test Detector — Identify intermittent test failures. | `READY` | — |
-- | AG-S-01 | `interfaces/telegram_interface.py`| Telegram Batching — Consolidate short messages. | `READY` | — |
-- | AG-S-02 | `ninaflash.py` | CLI Progress Bars — Rich bars for long nf commands. | `READY` | — |
+- | AG-O-02 | `tests/` | Mutation Test Suite — Implement basic mutation testing for core modules. | `PAUSED` | — |
+- | AG-O-06 | `tests/` | Flaky Test Detector — Identify intermittent test failures. | `PAUSED` | — |
+- | AG-S-01 | `interfaces/telegram_interface.py`| Telegram Batching — Consolidate short messages. | `PAUSED` | — |
+- | AG-S-02 | `ninaflash.py` | CLI Progress Bars — Rich bars for long nf commands. | `PAUSED` | — |
 - AG-F-01 → AG-F-02            ← BaseAgent + MarketAgent (first real autonomous agent)
 - | F-02 | memory: deterministic personal_context | E-sync | — | 2026-06-09 |
 
@@ -186,4 +124,4 @@ bb33036 merge: resolve conflicts and merge feat/telegram-models-command
 
 
 ---
-_Feed size: 10452 bytes_
+_Feed size: 7624 bytes_
