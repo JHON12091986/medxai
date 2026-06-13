@@ -158,6 +158,13 @@ if [ "$DRY_RUN" = false ]; then
   git add -u 2>/dev/null || true
 fi
 
+echo "[5b/8] RULE 0 compliance audit..."
+if [ "$DRY_RUN" = false ]; then
+  python3 "$NINA/tools/rule0_audit.py" --hours 8 || true
+else
+  echo "  (dry-run: skipping)"
+fi
+
 echo "[6/8] Committing and pushing..."
 if [ "$DRY_RUN" = true ]; then
   echo "  (dry-run: skipping commit)"

@@ -249,6 +249,7 @@ class ProviderHealth:
     success_count: int = 0
     failure_count: int = 0
     latencies: deque = field(default_factory=lambda: deque(maxlen=20))
+    _latency_sum: float = 0.0
     requests_today: int = 0
     tokens_today: int = 0
     last_request_ts: float = 0.0
@@ -265,7 +266,7 @@ class ProviderHealth:
         return self.cb.open_until
 
     def avg_latency_ms(self) -> float:
-        return sum(self.latencies) / len(self.latencies) if self.latencies else 999.0
+        return self._latency_sum / len(self.latencies) if self.latencies else 999.0
 
     def success_rate(self) -> float:
         total = self.success_count + self.failure_count
@@ -315,6 +316,10 @@ class ProviderHealth:
         self.requests_today += 1
         self.tokens_today += max(0, int(total_tokens))
         self.last_request_ts = time.time()
+        # O(1) latency sum tracking
+        if len(self.latencies) == self.latencies.maxlen:
+            self._latency_sum -= self.latencies[0]
+        self._latency_sum += float(latency_ms)
         self.latencies.append(float(latency_ms))
         self.cb.record_success()
 

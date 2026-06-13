@@ -38,6 +38,14 @@ Three routing layers are always available and MUST be leveraged:
 ## Source: 27-session lifetime audit | 45,700+ tool calls analyzed
 ## Realistic optimization: 66% of calls → local nf (zero tokens, zero quota)
 
+⚡ PRE-FLIGHT — run before EVERY tool call:
+□ Is this read/cat/head/tail/grep/ls/find? → nf file read / nf file grep / nf code index
+□ Is this a single string replace? → nf file patch
+□ Is this git log/diff/status/blame? → nf git [subcommand]
+□ Is this < 512 token output? → nf query "<task>" (CPU mode)
+□ Can NinaFlash do it in 2 attempts? → never escalate on attempt 1
+Only if ALL above = NO → use cloud tool
+
 ### BEFORE EVERY TOOL CALL — run this mental check:
 1. Is this cat / grep / ls / find / head / tail / git log / git diff / git status?
    → USE nf instead. Never call run_shell_command for these.
@@ -443,5 +451,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: None.
 - ROUTING_WIN: Consolidating multiple markdown documents into single-file references (`docs/jules_agent_memory.md` and `docs/jules_pipeline.md`) significantly reduces repository clutter and context token usage.
 - CONTEXT_HINT: Keep 'jules' in consolidated filenames to preserve ease of reference and discovery.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - RULE 0 Local Enforcement
+- OFFLOAD_OPPORTUNITY: Simple audits, file reads, and index updates -> route to NinaFlash.
+- ESCALATION_TRIGGER: Core routing classifier upgrades and quota security overrides -> Cloud LLM required.
+- ROUTING_WIN: Integrated `rule0_audit` hook in nina_sync.sh enforces local-first compliance programmatically.
+- CONTEXT_HINT: Keep daily limits like QUOTA_SOFT_LIMIT visible to both the daemon and the CLI monitor.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
 

@@ -159,6 +159,10 @@ QUOTA_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "q
 quota_manager = QuotaManager(QUOTA_FILE)
 health_tracker = {}
 
+# Soft quota limit — stop dispatching to cloud 100 requests before the hard 900 cap.
+# This preserves quota headroom for truly COMPLEX tasks that cannot run locally.
+QUOTA_SOFT_LIMIT = 800
+
 def load_providers():
     global providers
     try:
@@ -228,22 +232,61 @@ async def health():
     return {"status": "ok", "timestamp": datetime.datetime.now().isoformat()}
 
 async def classify_request(payload):
+    """Classify request as SIMPLE / MEDIUM / COMPLEX.
+
+    SIMPLE  → always local (ollama/NinaFlash), never cloud.
+    MEDIUM  → try local first; escalate to cloud only on failure.
+    COMPLEX → cloud preferred; local only as emergency fallback.
+    """
     messages = payload.get("messages", [])
-    if not messages: return "SIMPLE"
+    if not messages:
+        return "SIMPLE"
+
     last_content = messages[-1].get("content", "")
     text = last_content.lower()
-    
+    total_history_chars = sum(len(m.get("content", "")) for m in messages)
+
+    # ── SIMPLE signals: mechanical, filesystem, or trivially short ───────────
     SIMPLE_KEYWORDS = [
+        # filesystem / shell ops
+        "cat ", "head ", "tail ", "wc ", "ls ", "find ", "grep",
+        "sed ", "awk ", "chmod ", "mkdir ", "touch ", "echo ",
+        # git read-only
+        "git log", "git diff", "git status", "git blame", "git show",
+        # code ops
         "fix", "rename", "format", "docstring", "type hint", "boilerplate",
-        "grep", "sort", "read", "show", "list", "print", "check", "verify",
-        "compile", "status", "outline", "symbol", "signature", "log", "tail",
-        "sync", "commit", "diff", "import", "lint", "echo"
+        "sort", "read", "show", "list", "print", "check", "verify",
+        "compile", "status", "outline", "symbol", "signature",
+        "sync", "commit", "import", "lint",
+        # nf ops
+        "nf file", "nf git", "nf code", "nf log", "nf query",
+        # summarise / inspect
+        "summarize", "summarise", "index", "count", "move", "copy",
+        "delete", "clean", "patch", "diff",
     ]
-    if any(x in text for x in SIMPLE_KEYWORDS):
+    if any(kw in text for kw in SIMPLE_KEYWORDS):
         return "SIMPLE"
-    if len(last_content) < 200:
+
+    # Short single-turn with no conversation history → SIMPLE
+    if len(last_content) < 300 and len(messages) <= 2:
         return "SIMPLE"
-    return "COMPLEX"
+
+    # ── COMPLEX signals: architectural, cross-file, high-stakes ──────────────
+    COMPLEX_KEYWORDS = [
+        "architect", "redesign", "refactor across", "migrate", "merge conflict",
+        "multi-file", "system design", "dependency graph", "breaking change",
+        "performance regression", "security audit", "rewrite",
+        "across multiple", "end-to-end", "full pipeline",
+    ]
+    if any(kw in text for kw in COMPLEX_KEYWORDS):
+        return "COMPLEX"
+
+    # Large accumulated conversation context → COMPLEX
+    if total_history_chars > 8000:
+        return "COMPLEX"
+
+    # ── MEDIUM: everything else — try local, escalate on failure ─────────────
+    return "MEDIUM"
 
 async def forward_to_provider(payload, providers_to_try, is_stream):
     for score, provider, api_key, h in providers_to_try:
@@ -338,75 +381,103 @@ async def proxy_chat_completions(request: Request):
                 
     cloud_providers.sort(key=lambda x: x[0], reverse=True)
     
-    # Async Pipeline
-    classification_task = asyncio.create_task(classify_request(payload))
-    cloud_task = asyncio.create_task(forward_to_provider(payload, cloud_providers, is_stream))
-    
-    task_type = await classification_task
-    
-    if task_type == "SIMPLE" and local_providers and not target_provider_name:
-        cloud_task.cancel()
-        local_response, lh, l_start, l_name = await forward_to_provider(payload, local_providers, is_stream)
-        if local_response:
-            logger.info(f"SIMPLE task -> local ({l_name})")
-            total_ms = (time.time() - l_start) * 1000
-            if is_stream:
-                # For streaming, we can't easily get tokens here, but we can log provider and latency
-                write_log({"provider": l_name, "total_ms": total_ms, "cached": False, "task_type": "SIMPLE"})
-                return StreamingResponse(stream_response(local_response, lh, l_start), status_code=local_response.status_code)
-            else:
-                data = local_response.json()
-                lh.record_success()
-                usage = data.get("usage", {})
-                write_log({
-                    "provider": l_name, 
-                    "input_tokens": usage.get("prompt_tokens", 0),
-                    "output_tokens": usage.get("completion_tokens", 0),
-                    "total_ms": total_ms,
-                    "cached": False,
-                    "task_type": "SIMPLE"
-                })
-                return JSONResponse(status_code=local_response.status_code, content=data)
+    # ── RULE 0: Classify BEFORE dispatching to cloud ─────────────────────────
+    # We classify first so that SIMPLE/MEDIUM tasks never start a cloud HTTP
+    # request at all. Previously, the cloud_task was eagerly created and then
+    # cancelled — this still consumed quota and added latency.
+    task_type = await classify_request(payload)
 
-    response, h, start_time, provider_name = await cloud_task
-    if response:
-        logger.info(f"Forwarded to {provider_name}")
-        total_ms = (time.time() - start_time) * 1000
+    # Quota guard: if we are within 100 requests of the daily cap, force all
+    # traffic to local regardless of task classification.
+    quota_ok = quota_manager.is_available("gemini", limit=QUOTA_SOFT_LIMIT)
+    force_local = not quota_ok and not target_provider_name
+    if force_local:
+        logger.warning(f"Quota soft-limit reached ({QUOTA_SOFT_LIMIT}). Forcing local routing.")
+
+    def _make_local_response(response, h, start, name, task_type, escalated=False):
+        """Build the HTTP response object for a local provider result."""
+        total_ms = (time.time() - start) * 1000
         if is_stream:
-            write_log({"provider": provider_name, "total_ms": total_ms, "cached": False})
-            return StreamingResponse(stream_response(response, h, start_time), status_code=response.status_code)
-        else:
-            data = response.json()
-            h.record_success()
-            usage = data.get("usage", {})
-            write_log({
-                "provider": provider_name,
-                "input_tokens": usage.get("prompt_tokens", 0),
-                "output_tokens": usage.get("completion_tokens", 0),
-                "total_ms": total_ms,
-                "cached": False
-            })
-            return JSONResponse(status_code=response.status_code, content=data)
+            write_log({"provider": name, "total_ms": total_ms, "cached": False,
+                       "task_type": task_type, "escalated": escalated})
+            return StreamingResponse(stream_response(response, h, start),
+                                     status_code=response.status_code)
+        data = response.json()
+        h.record_success()
+        usage = data.get("usage", {})
+        write_log({
+            "provider": name,
+            "input_tokens": usage.get("prompt_tokens", 0),
+            "output_tokens": usage.get("completion_tokens", 0),
+            "total_ms": total_ms,
+            "cached": False,
+            "task_type": task_type,
+            "escalated": escalated,
+        })
+        return JSONResponse(status_code=response.status_code, content=data)
 
-    if local_providers:
-        response, h, start_time, provider_name = await forward_to_provider(payload, local_providers, is_stream)
-        if response:
-            total_ms = (time.time() - start_time) * 1000
-            if is_stream:
-                write_log({"provider": provider_name, "total_ms": total_ms, "cached": False})
-                return StreamingResponse(stream_response(response, h, start_time), status_code=response.status_code)
-            else:
-                data = response.json()
-                h.record_success()
-                usage = data.get("usage", {})
-                write_log({
-                    "provider": provider_name,
-                    "input_tokens": usage.get("prompt_tokens", 0),
-                    "output_tokens": usage.get("completion_tokens", 0),
-                    "total_ms": total_ms,
-                    "cached": False
-                })
-                return JSONResponse(status_code=response.status_code, content=data)
+    def _make_cloud_response(response, h, start, name, task_type, escalated=False):
+        """Build the HTTP response object for a cloud provider result."""
+        total_ms = (time.time() - start) * 1000
+        if is_stream:
+            write_log({"provider": name, "total_ms": total_ms, "cached": False,
+                       "task_type": task_type, "escalated": escalated})
+            return StreamingResponse(stream_response(response, h, start),
+                                     status_code=response.status_code)
+        data = response.json()
+        h.record_success()
+        usage = data.get("usage", {})
+        write_log({
+            "provider": name,
+            "input_tokens": usage.get("prompt_tokens", 0),
+            "output_tokens": usage.get("completion_tokens", 0),
+            "total_ms": total_ms,
+            "cached": False,
+            "task_type": task_type,
+            "escalated": escalated,
+        })
+        return JSONResponse(status_code=response.status_code, content=data)
+
+    # ── SIMPLE: always local, never touch cloud ───────────────────────────────
+    if (task_type == "SIMPLE" or force_local) and local_providers and not target_provider_name:
+        local_response, lh, l_start, l_name = await forward_to_provider(
+            payload, local_providers, is_stream)
+        if local_response:
+            logger.info(f"{task_type} task -> local ({l_name})")
+            return _make_local_response(local_response, lh, l_start, l_name, task_type)
+        # Local unavailable for SIMPLE: fall through to cloud as last resort
+        logger.warning(f"{task_type} task: local unavailable, falling back to cloud")
+
+    # ── MEDIUM: try local first, escalate to cloud only on failure ────────────
+    elif task_type == "MEDIUM" and local_providers and not target_provider_name:
+        local_response, lh, l_start, l_name = await forward_to_provider(
+            payload, local_providers, is_stream)
+        if local_response:
+            logger.info(f"MEDIUM task -> local ({l_name}) [no escalation needed]")
+            return _make_local_response(local_response, lh, l_start, l_name, task_type)
+        # Local failed for MEDIUM — escalate to cloud
+        logger.info("MEDIUM task: local failed, escalating to cloud")
+        cloud_response, ch, c_start, c_name = await forward_to_provider(
+            payload, cloud_providers, is_stream)
+        if cloud_response:
+            logger.info(f"MEDIUM task -> cloud ({c_name}) [escalated]")
+            return _make_cloud_response(cloud_response, ch, c_start, c_name, task_type, escalated=True)
+        return JSONResponse(status_code=503, content={"error": "MEDIUM task: all providers exhausted"})
+
+    # ── COMPLEX: cloud preferred, local as emergency fallback ─────────────────
+    else:
+        cloud_response, ch, c_start, c_name = await forward_to_provider(
+            payload, cloud_providers, is_stream)
+        if cloud_response:
+            logger.info(f"COMPLEX task -> cloud ({c_name})")
+            return _make_cloud_response(cloud_response, ch, c_start, c_name, task_type)
+        # Cloud exhausted → emergency local fallback
+        if local_providers:
+            local_response, lh, l_start, l_name = await forward_to_provider(
+                payload, local_providers, is_stream)
+            if local_response:
+                logger.warning(f"COMPLEX task: cloud failed, using local ({l_name}) as fallback")
+                return _make_local_response(local_response, lh, l_start, l_name, task_type, escalated=True)
 
     return JSONResponse(status_code=503, content={"error": "All providers exhausted"})
 
