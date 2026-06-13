@@ -12,3 +12,4 @@
 {"ts": "2026-06-13T04:38:20.115819", "summary": "Fixed watch_cycle pagination to resolve missing conversation alerts", "git_head": "79f356bc783d58ac1d208cbdf7bcb9e3185d59d6", "branch": "main"}
 {"ts": "2026-06-13T04:48:35.041111", "summary": "Added hardcoded rules to AGENTS.md for refactoring, pagination, and Jules hygiene safety", "git_head": "e51b9561cf2a9631f8cd5df28ef1cb62601d5885", "branch": "main"}
 {"ts": "2026-06-13T04:51:23.612533", "summary": "Verification and final sync of AGENTS.md rules for refactoring safety, pagination, and Jules hygiene.", "git_head": "58eeef451ccdba5ccf847092aa445f7ecd329b38", "branch": "main"}
+{"ts": "2026-06-13T12:35:44.427367", "summary": "Consolidated agent-memory and pipeline-autopilot documentation files to reduce repository sprawl while retaining Jules references", "git_head": "68393e7b2fb6531cb0b4955664ba55bc1fd7fbe7", "branch": "main"}
