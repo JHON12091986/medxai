@@ -502,3 +502,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ROUTING_WIN: Adding `git stash` checks before rebase operations in `_try_rebase` cleanly handles working tree changes made during concurrent triage phases.
 - CONTEXT_HINT: Look for git command return values and restore stashes on all exit paths to preserve uncommitted data.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Jules Dispatch Queue Setup
+- OFFLOAD_OPPORTUNITY: Parsing markdown and updating index -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Defining a dedicated Jules dispatch queue (`jules_queue.md`) and enforcing it via feed section updates ensures single-file development isolation.
+- CONTEXT_HINT: Always update index files via `update_index.py` when adding new MD documents to docs/space to prevent hygiene audit blocks.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
