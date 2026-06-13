@@ -302,7 +302,7 @@ from pathlib import Path
 NINA = Path.home() / "nina"
 OUT = NINA / "docs/space/claude_feed.md"
 BACKLOG = NINA / "docs/space/jules_backlog.md"
-LOCK = NINA / "jules_lock.txt"
+LOCK = NINA / "juleslock.txt"
 STATE = NINA / "docs/space/nina_state.md"
 LOGS_DIR = NINA / "logs"
 
@@ -338,11 +338,12 @@ except Exception as e:
 lines.append("")
 
 # 3. File lock registry
-lines.append("## 3. Locked Files (do not touch in new specs)")
-if LOCK.exists():
+if LOCK.exists() and LOCK.read_text().strip():
+    lines.append("## 3. Locked Files (do not touch in new specs)")
     lines.append(f"```\n{LOCK.read_text().strip()}\n```")
 else:
-    lines.append("- jules_lock.txt not found — all files available")
+    lines.append("## 3. Locked Files")
+    lines.append("- No files locked — juleslock.txt empty or missing")
 lines.append("")
 
 # 4. READY backlog items
