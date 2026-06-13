@@ -47,7 +47,7 @@ def main():
     subparsers = parser.add_subparsers(dest="command", required=True)
     
     # Primitives
-    p_find = subparsers.add_parser("find"); p_find.add_argument("query"); p_find.add_argument("--regex", action="store_true")
+    p_find = subparsers.add_parser("find"); p_find.add_argument("query"); p_find.add_argument("--regex", action="store_true"); p_find_sym = subparsers.add_parser("find-symbol"); p_find_sym.add_argument("name")
     p_edit = subparsers.add_parser("edit"); p_edit.add_argument("file"); p_edit.add_argument("edits")
     subparsers.add_parser("list"); subparsers.add_parser("status").add_argument("--pulse", action="store_true")
     subparsers.add_parser("monitor"); subparsers.add_parser("batch").add_argument("--cmds", required=True)
@@ -69,7 +69,8 @@ def main():
     # Code & Docs
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
     p_cs.add_parser("outline").add_argument("file"); p_cs.add_parser("dep-map"); p_cs.add_parser("index")
-    p_cs.add_parser("call-graph").add_argument("file", nargs="?"); p_cs.add_parser("cycles")
+    p_cs.add_parser("call-graph").add_argument("file", nargs="?"); p_cs.add_parser("cycles"); p_cs.add_parser("sigs").add_argument("dir"); p_cs.add_parser("doc").add_argument("keyword"); p_cs.add_parser("call-stack").add_argument("file"); p_cs.choices["call-stack"].add_argument("name")
+    p_cs.add_parser("migrate").add_argument("old_name"); p_cs.choices["migrate"].add_argument("new_name"); p_cs.choices["migrate"].add_argument("--dir", default=".")
     p_sym = p_cs.add_parser("symbol"); p_sym.add_argument("file"); p_sym.add_argument("name")
     p_ext = p_cs.add_parser("extract-method"); p_ext.add_argument("file"); p_ext.add_argument("func_name")
     p_ext.add_argument("start_line"); p_ext.add_argument("end_line"); p_ext.add_argument("new_name")
@@ -92,7 +93,7 @@ def main():
     
     # Guard & Triage
     p_check = subparsers.add_parser("check"); p_cks = p_check.add_subparsers(dest="sub")
-    p_cc = p_cks.add_parser("code"); p_cc.add_argument("file"); p_cc.add_argument("--strict", action="store_true")
+    p_cc = p_cks.add_parser("code"); p_cc.add_argument("file"); p_cc.add_argument("--strict", action="store_true"); p_cx = p_cks.add_parser("complexity"); p_cx.add_argument("file")
     p_cd = p_cks.add_parser("doc"); p_cd.add_argument("file"); p_cd.add_argument("--agents", action="store_true")
     
     p_maintain = subparsers.add_parser("maintain"); p_mts = p_maintain.add_subparsers(dest="sub")
@@ -107,7 +108,7 @@ def main():
         cmd, sub = args.command, getattr(args, 'sub', None)
         # Normalize hyphens to underscores for function lookup
         sub_norm = sub.replace("-", "_") if sub else None
-        func = globals().get(f"cmd_{cmd}_{sub_norm}") or globals().get(f"cmd_{cmd}")
+        func = globals().get(f"cmd_{cmd.replace('-', '_')}_{sub_norm}") if sub_norm else globals().get(f"cmd_{cmd.replace('-', '_')}")
         if func: func(args)
         else: print(f"Unknown command: {cmd} {sub}")
         
