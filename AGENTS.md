@@ -486,3 +486,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ROUTING_WIN: Migrating the orchestrator scheduler completely out of NINA and into systemd enables standalone daemon resilience.
 - CONTEXT_HINT: argparse ValueError conflicts must be caught early by testing CLI help outputs.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - PR Cleanup and Repo Hygiene
+- OFFLOAD_OPPORTUNITY: Simple git status checks and checking branch names locally -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Automated sequential PR closure and branch deletion via `gh pr close --delete-branch` ensures repository and branch hygiene.
+- CONTEXT_HINT: Always check current branch first and checkout `main` prior to running sync script to prevent pushing branch tips behind remote counterparts.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
