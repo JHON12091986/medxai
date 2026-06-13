@@ -1030,6 +1030,32 @@ def cmd_check_code(args):
     write_nf_log("check", "code", outcome=f"{path} → {verdict}")
 
 
+def cmd_check_complexity(args):
+    """[046] Calculate cyclomatic complexity for a Python file."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+
+    try:
+        content = path.read_text(encoding="utf-8")
+        tree = ast.parse(content)
+        complexity = 1
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.If, ast.For, ast.While, ast.Try, ast.ExceptHandler, ast.With, ast.AsyncFor, ast.AsyncWith)):
+                complexity += 1
+            elif isinstance(node, ast.BoolOp):
+                complexity += len(node.values) - 1
+
+        try:
+            rel_path = path.relative_to(REPO_ROOT)
+        except ValueError:
+            rel_path = path
+
+        print(f"Complexity of {rel_path}: {complexity}")
+    except Exception as e:
+        print(f"❌ Error parsing {path}: {e}")
+
 def cmd_check_ignore(args):
     """[045] Show which files are currently being hidden from the agent."""
     patterns = _load_geminiignore()
@@ -2333,8 +2359,13 @@ def cmd_code_symbol(args):
 
 def cmd_code_migrate(args):
     """[060] Automate renaming and moving symbols."""
-    import re
     import ast
+    try:
+        import libcst as cst
+    except ImportError:
+        print("❌ Error: libcst is required for cmd_code_migrate. Run 'pip install libcst'.")
+        return
+
     old_name = args.old_name
     new_name = args.new_name
     target_dir = _path_resolve(args.dir)
@@ -2351,6 +2382,16 @@ def cmd_code_migrate(args):
             if any(skip in py_file.parts for skip in _SKIP_DIRS):
                 continue
             files_to_check.append(py_file)
+
+    class RenameTransformer(cst.CSTTransformer):
+        def __init__(self, old_name, new_name):
+            self.old_name = old_name
+            self.new_name = new_name
+
+        def leave_Name(self, original_node, updated_node):
+            if original_node.value == self.old_name:
+                return updated_node.with_changes(value=self.new_name)
+            return updated_node
 
     migrated_count = 0
     for py_file in files_to_check:
@@ -2383,7 +2424,11 @@ def cmd_code_migrate(args):
             if not found:
                 continue
 
-            new_source = re.sub(rf'\b{old_name}\b', new_name, source)
+            cst_tree = cst.parse_module(source)
+            transformer = RenameTransformer(old_name, new_name)
+            modified_tree = cst_tree.visit(transformer)
+            new_source = modified_tree.code
+
             if new_source != source:
                 py_file.write_text(new_source, encoding="utf-8")
                 try:
@@ -2843,6 +2888,9 @@ def main():
     p_cd.add_argument("--agents", action="store_true", default=False)
     p_cd.add_argument("--stale",  action="store_true", default=False)
 
+    p_cpx = p_cks.add_parser("complexity")
+    p_cpx.add_argument("file")
+
     p_cks.add_parser("ignore")
 
     p_doc = subparsers.add_parser("doc"); p_docs = p_doc.add_subparsers(dest="sub")
@@ -3008,6 +3056,7 @@ def main():
             if args.sub == "code": cmd_check_code(args)
             elif args.sub == "doc": cmd_check_doc(args)
             elif args.sub == "ignore": cmd_check_ignore(args)
+            elif args.sub == "complexity": cmd_check_complexity(args)
         elif args.command == "doc":
             if args.sub == "check": cmd_check_doc(args)
             elif args.sub == "consolidate": cmd_doc_consolidate(args)

@@ -86,6 +86,27 @@ def func_d():
     assert "def func_c():" in output
     assert "def func_d():" in output
 
+def test_cmd_check_complexity(tmp_path):
+    source_code = """
+def complex_func(x):
+    if x > 0:
+        return 1
+    elif x < 0:
+        return -1
+    else:
+        for i in range(10):
+            pass
+        return 0
+"""
+    test_file = tmp_path / "test_complexity.py"
+    test_file.write_text(source_code)
+
+    res = run_nf("check", "complexity", str(test_file))
+    assert res.returncode == 0
+    # Expected complexity: 1 (base) + 1 (if) + 1 (elif) + 1 (for) = 4
+    assert "Complexity of " in res.stdout
+    assert "4" in res.stdout
+
 def test_cmd_code_migrate(tmp_path):
     test_file = tmp_path / "dummy_migrate.py"
     test_file.write_text("def old_sym():\n    pass\nold_sym()", encoding="utf-8")
