@@ -33,6 +33,16 @@ from typing import Any
 
 import requests
 
+# Lazy import to avoid circular load — jules imports happen at call-site
+_jules = None
+
+def _get_jules():
+    global _jules
+    if _jules is None:
+        from tools import jules as _j
+        _jules = _j
+    return _jules
+
 # ── Paths ─────────────────────────────────────────────────────────────────────
 REPO_ROOT     = Path(__file__).parent.parent.resolve()
 BACKLOG_PATH  = REPO_ROOT / "docs" / "space" / "jules_backlog.md"
@@ -633,7 +643,30 @@ def phase3_backlog_sync() -> int:
     else:
         logger.info("Phase 3: backlog already up to date")
 
+    # Auto-dispatch READY tasks that have no active Jules session
+    if not BACKLOG_PATH.exists():
+        return updated
+
+    active_task_ids: set[str] = set()
+    for entry in registry.values():
+        if entry.get("status") in ("IN_PROGRESS", "AWAITING_RESPONSE", "PR_OPEN"):
+            active_task_ids.update(entry.get("tasks", []))
+
+    ready_rows = re.findall(r"\|\s*([A-Z]{1,3}-[A-Z\d-]+|\d{8,})\s*\|([^|]+)\|[^|]*\|\s*`READY`", content)
+    for task_id, title_raw in ready_rows:
+        if task_id in active_task_ids:
+            continue
+        title = title_raw.strip()
+        try:
+            asyncio.get_event_loop().run_until_complete(
+                _get_jules().goal_to_backlog(title, auto_dispatch=True)
+            )
+            logger.info(f"Phase 3: auto-dispatched READY task {task_id}: {title[:60]}")
+        except Exception as exc:
+            logger.warning(f"Phase 3: auto-dispatch failed for {task_id}: {exc}")
+
     return updated
+
 
 
 # ── Phase 4 — Poll loop ────────────────────────────────────────────────────────
@@ -673,7 +706,6 @@ def phase5_cleanup() -> int:
     removed = 0
 
     for sid, entry in registry.items():
-        # Registry is keyed by session_id — just keep all but mark old FAILED ones
         cleaned[sid] = entry
 
     # Group by task_id to find duplicates
@@ -685,7 +717,6 @@ def phase5_cleanup() -> int:
     for tid, sids in task_to_sids.items():
         if len(sids) <= 1:
             continue
-        # Sort by created_at, keep newest active
         active = [s for s in sids if cleaned.get(s, {}).get("status") not in ("FAILED", "BLOCKED", "MERGED")]
         if len(active) > 1:
             active.sort(key=lambda s: cleaned.get(s, {}).get("created_at", ""), reverse=True)
@@ -696,6 +727,18 @@ def phase5_cleanup() -> int:
                     logger.info(f"Marked session {old_sid} as DUPLICATE for task {tid}")
 
     _save_registry(cleaned)
+
+    # Session-end: flush insights to .jules/bolt.md (dry-run so no sync here)
+    try:
+        _get_jules().session_end(
+            title="Pipeline Autopilot Cycle",
+            learning=f"Cleaned {removed} duplicate sessions.",
+            action="Continue autopilot cycle.",
+            dry_run=True,
+        )
+    except Exception as exc:
+        logger.warning(f"Phase 5 session_end flush failed: {exc}")
+
     return removed
 
 

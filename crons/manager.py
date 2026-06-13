@@ -6,7 +6,7 @@ import functools
 import logging
 from crons.backup_jobs import run_memory_backup, run_py_backup
 from tools.market import run_market_monitor
-from tools.mega_orchestrator import run_orchestrator_cycle
+from tools.jules import orchestrate_cycle as run_orchestrator_cycle
 from tools.pipeline_autopilot import run_pipeline_autopilot
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler

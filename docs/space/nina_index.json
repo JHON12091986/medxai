@@ -974,29 +974,6 @@
       ]
     },
     {
-      "path": "test_dispatch.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "SECURITY.md",
       "category": "doc",
       "role": "source_of_truth",
@@ -12708,6 +12685,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_docbase_backup_20260613_120744.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_docbase_backup_20260613_120744.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_logbase_backup_20260611_232819.md",
       "category": "backup",
       "role": "archive",
@@ -13317,6 +13317,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_logbase_backup_20260610_231950.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_codebase_backup_20260613_120745.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_codebase_backup_20260613_120745.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -18538,6 +18561,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_codebase_backup_20260612_005650.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_logbase_backup_20260613_120744.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_logbase_backup_20260613_120744.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -46342,29 +46388,6 @@
       ]
     },
     {
-      "path": "tools/session_end.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": true,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "tools/session_ledger.py",
       "category": "code",
       "role": "source_of_truth",
@@ -46781,29 +46804,6 @@
       ]
     },
     {
-      "path": "tools/mega_orchestrator.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": true,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "tools/git_ops.py",
       "category": "code",
       "role": "source_of_truth",
@@ -47034,29 +47034,6 @@
       ]
     },
     {
-      "path": "tools/goal_intake.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": true,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
       "path": "tools/live_monitor.py",
       "category": "code",
       "role": "source_of_truth",
@@ -47081,29 +47058,6 @@
     },
     {
       "path": "tools/model_discovery.py",
-      "category": "code",
-      "role": "source_of_truth",
-      "governed": true,
-      "canonical": true,
-      "lifecycle": "active",
-      "retention_policy": "keep",
-      "origin": "manual",
-      "owner": "engineering",
-      "duplicate_cluster_id": null,
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": true,
-      "doc_required": true,
-      "guardrails": [],
-      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
-      "tags": [
-        "code",
-        "source_of_truth",
-        "active"
-      ]
-    },
-    {
-      "path": "tools/append_lock.py",
       "category": "code",
       "role": "source_of_truth",
       "governed": true,
@@ -48095,6 +48049,29 @@
     },
     {
       "path": "tests/test_smoke.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "tests/test_dispatch.py",
       "category": "code",
       "role": "source_of_truth",
       "governed": true,

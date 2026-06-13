@@ -296,7 +296,81 @@ async def run(cmd: str) -> str:
                 deleted.append(sid)
         return f"Deleted {len(deleted)} sessions: {', '.join(deleted)}"
 
+    elif action == "goal":
+        if not arg:
+            return "Usage: goal <plain English description of task>"
+        no_dispatch = "--no-dispatch" in arg
+        goal_text = arg.replace("--no-dispatch", "").strip()
+        return await goal_to_backlog(goal_text, auto_dispatch=not no_dispatch)
+
+    elif action == "session-end":
+        # arg format: title="..." learning="..." action="..." history="..."
+        return session_end(title=arg or "Session Complete", dry_run=False) or "Session end complete."
+
     return f"Unknown action: {action}"
+
+# --- Session End (absorbed from tools/session_end.py) ---
+
+def session_end(title: str = "Session Complete", learning: str = "No major learnings recorded.",
+                action: str = "Continue standard operating procedure.",
+                history: str = "", dry_run: bool = False) -> None:
+    """Append session insights to .jules/bolt.md and AGENTS.md, then run nina_sync.sh."""
+    date_str = datetime.utcnow().strftime("%Y-%m-%d")
+    entry = f"\n## {date_str} - [{title}]\n**Learning:** {learning}\n**Action:** {action}\n"
+
+    bolt_md = REPO_ROOT / ".jules" / "bolt.md"
+    bolt_md.parent.mkdir(parents=True, exist_ok=True)
+    with open(bolt_md, "a") as f:
+        f.write(entry)
+
+    agents_md = REPO_ROOT / "AGENTS.md"
+    if history and agents_md.exists():
+        with open(agents_md, "a") as f:
+            f.write(f"\n<!-- NinaGate Routing History: {history} -->\n")
+
+    if not dry_run:
+        subprocess.run(["bash", "./nina_sync.sh"], cwd=str(REPO_ROOT))
+    else:
+        logger.info("session_end dry-run: insights appended, sync skipped")
+
+
+# --- Goal Intake (absorbed from tools/goal_intake.py) ---
+
+def _next_backlog_id() -> str:
+    """Generate the next B-NNN id from the backlog."""
+    import re as _re
+    if not BACKLOG_PATH.exists():
+        return "B-001"
+    text = BACKLOG_PATH.read_text()
+    ids = _re.findall(r"^\|\s*(B-\d+)\s*\|", text, _re.M)
+    if not ids:
+        return "B-001"
+    return f"B-{max(int(i.split('-')[1]) for i in ids) + 1:03d}"
+
+
+async def goal_to_backlog(goal_text: str, auto_dispatch: bool = True) -> str:
+    """Convert plain-English goal → backlog row → optionally dispatch to Jules."""
+    new_id = _next_backlog_id()
+    new_row = f"| {new_id} | {goal_text[:60]} | `READY` | TBD | — | Auto-ingested via goal_to_backlog |"
+
+    if BACKLOG_PATH.exists():
+        content = BACKLOG_PATH.read_text()
+        marker = "## ██ P1 — HIGH"
+        if marker in content:
+            parts = content.split(marker, 1)
+            BACKLOG_PATH.write_text(parts[0] + marker + "\n\n" + new_row + "\n" + parts[1])
+        else:
+            BACKLOG_PATH.write_text(content.rstrip() + "\n" + new_row + "\n")
+        logger.info(f"goal_to_backlog: added {new_id} to backlog")
+
+    if auto_dispatch:
+        sid = await run_dispatch(goal_text, title=f"[AUTO] {goal_text[:80]}")
+        register_session(sid, [new_id], f"[AUTO] {goal_text[:80]}")
+        logger.info(f"goal_to_backlog: dispatched as Jules session {sid}")
+        return f"Added {new_id} to backlog and dispatched as Jules session {sid}"
+
+    return f"Added {new_id} to backlog (dispatch skipped)"
+
 
 # --- CLI Implementation ---
 

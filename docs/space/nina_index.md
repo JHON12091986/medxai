@@ -64,7 +64,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `requirements.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `system_templates.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test.lock` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `test_dispatch.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_httpx_hook.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_ninagate_logic.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_router.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
