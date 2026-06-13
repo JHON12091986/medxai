@@ -3,33 +3,45 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-13 23:44 +06
-- Git HEAD: 731e999936d98c1e86eb0aa3ccf353b016e21243
-- Last commit: docs: post-session sync 2026-06-13 23:43
+- Generated: 2026-06-13 23:51 +06
+- Git HEAD: bd57643d65f0b5138119a33823605197b3d733a6
+- Last commit: docs: post-session sync 2026-06-13 23:50
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sat 2026-06-13 19:37:39 +06; 4h 7min ago
+     Active: active (running) since Sat 2026-06-13 19:37:39 +06; 4h 14min ago
  Invocation: 5962f356deeb4ed98951d3ac8d81393e
    Main PID: 844847 (python)
       Tasks: 19 (limit: 15177)
-     Memory: 186M (peak: 204.1M, swap: 2.4M, swap peak: 32.3M)
-        CPU: 1min 21.544s
+     Memory: 186.9M (peak: 204.1M, swap: 2.4M, swap peak: 32.3M)
+        CPU: 1min 22.528s
      CGroup: /system.slice/nina.service
              └─844847 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 13 23:43:58 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 23:44:09 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 23:44:19 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 23:44:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 23:44:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 23:51:08 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: 2026-06-13 23:51:08.661 | WARNING  | core.router:_idle_monitor:1053 - quality_probe_fail provider=%s marked degraded
+Jun 13 23:51:09 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 23:51:19 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 23:51:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 23:51:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
 
 ## 3. Locked Files
 - No files locked — juleslock.txt empty or missing
+
+## 3b. Jules Queue (ACTIVE tasks)
+## ACTIVE (in-flight Jules tasks)
+| File | Task ID | Jules Session | PR # | Submitted |
+|------|---------|---------------|------|-----------|
+| _empty_ | — | — | — | — |
+
+## QUEUE (waiting — do not submit yet)
+| File | Task ID | Blocked By | Priority |
+|------|---------|------------|----------|
+| _empty_ | — | — | — |
+
 
 ## 4. READY Items (eligible for new Jules specs)
 _Found 3 READY items_
@@ -66,11 +78,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
+bd57643 docs: post-session sync 2026-06-13 23:50
+167f200 docs: post-session sync 2026-06-13 23:50
+b888479 docs(agents): log stash guard update in AGENTS.md
+df05445 chore: log final step for jules rebase patch
 731e999 docs: post-session sync 2026-06-13 23:43
-39466a3 chore(sync): integrate juleslock.txt into claude feed generation
-ea3dd30 docs: post-session sync 2026-06-13 23:27
-48db6ed docs(agents): update AGENTS.md routing history
-d7380f7 chore: complete pr cleanup and log final step
 ```
 
 ## 6. Open Blockers
@@ -132,4 +144,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 7133 bytes_
+_Feed size: 7453 bytes_

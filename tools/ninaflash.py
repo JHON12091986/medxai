@@ -79,6 +79,17 @@ def main():
     p_bs.add_parser("summary"); p_bs.add_parser("triage"); p_bs.add_parser("dag").add_argument("task_id", nargs="?")
     p_ba = p_bs.add_parser("add"); p_ba.add_argument("--title"); p_ba.add_argument("--priority"); p_ba.add_argument("--component")
     
+    p_session = subparsers.add_parser("session"); p_ss = p_session.add_subparsers(dest="sub")
+    p_ss.add_parser("checkpoint").add_argument("--goal"); p_ss.add_parser("resume"); p_ss.add_parser("inject")
+    p_sstart = p_ss.add_parser("start"); p_sstart.add_argument("--tool"); p_sstart.add_argument("--task", dest="task_id")
+    p_slog = p_ss.add_parser("log"); p_slog.add_argument("--tool"); p_slog.add_argument("--step", type=int); p_slog.add_argument("--action")
+    p_slog.add_argument("--outcome"); p_slog.add_argument("--detail")
+    p_ss.add_parser("preamble").add_argument("--tool"); p_ss.add_parser("done").add_argument("--tool")
+
+    p_memory = subparsers.add_parser("memory"); p_ms = p_memory.add_subparsers(dest="sub")
+    p_ms.add_parser("stash").add_argument("text"); p_ms.add_parser("inject")
+    p_ms.add_parser("session-save").add_argument("--summary"); p_ms.add_parser("session-recall").add_argument("--n", type=int)
+    
     # Guard & Triage
     p_check = subparsers.add_parser("check"); p_cks = p_check.add_subparsers(dest="sub")
     p_cc = p_cks.add_parser("code"); p_cc.add_argument("file"); p_cc.add_argument("--strict", action="store_true")

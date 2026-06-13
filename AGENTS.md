@@ -509,3 +509,9 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ROUTING_WIN: Defining a dedicated Jules dispatch queue (`jules_queue.md`) and enforcing it via feed section updates ensures single-file development isolation.
 - CONTEXT_HINT: Always update index files via `update_index.py` when adding new MD documents to docs/space to prevent hygiene audit blocks.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+### [2026-06-14] Session Update — Gemini CLI
+- OFFLOAD_OPPORTUNITY: Script scaffolding and initial code extraction -> NinaFlash.
+- ESCALATION_TRIGGER: Complex argparse conflict resolution and logic-heavy extraction (AST) -> Gemini Pro / Flash.
+- ROUTING_WIN: Modularization of large tools (ninaflash) improves CLI stability and startup efficiency.
+- CONTEXT_HINT: Explicit dependency management between kernel submodules prevents circular import loops.
