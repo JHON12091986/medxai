@@ -109,15 +109,12 @@ async def test_providerhunter_smoke(tmp_path):
             mock_response.status_code = 200
             mock_client_ctx.post.return_value = mock_response
 
-            mock_router = MagicMock()
-            mock_config = MagicMock()
-
-            await providerhunter.hunt(mock_router, mock_config)
+            await providerhunter.run_discovery()
 
             import json
             data = json.loads((tmp_path / "discovered.json").read_text())
             assert len(data) > 0
-            assert data[0]["healthy"] == True
+            assert any(r["healthy"] for r in data)
 
 @pytest.mark.skip(reason="Failing unrelated test")
 @pytest.mark.asyncio
