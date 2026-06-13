@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-13 15:04 +06
-- Git HEAD: 9d0a6f997042b0f4a641e474e4e9efef039ee3a0
-- Last commit: docs: post-session sync 2026-06-13 15:03
+- Generated: 2026-06-13 20:20 +06
+- Git HEAD: 7ec66daa5a9aa7fcad014fe633540ee4d6249376
+- Last commit: docs: post-session sync 2026-06-13 20:19
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sat 2026-06-13 04:20:56 +06; 10h ago
- Invocation: 004ebd9fe7714d10940bb5cb7d3ba5ee
-   Main PID: 533517 (python)
-      Tasks: 29 (limit: 15177)
-     Memory: 259.3M (peak: 522M, swap: 226.4M, swap peak: 226.4M)
-        CPU: 2min 39.673s
+     Active: active (running) since Sat 2026-06-13 19:37:39 +06; 42min ago
+ Invocation: 5962f356deeb4ed98951d3ac8d81393e
+   Main PID: 844847 (python)
+      Tasks: 19 (limit: 15177)
+     Memory: 146.2M (peak: 168.1M)
+        CPU: 15.571s
      CGroup: /system.slice/nina.service
-             └─533517 /home/aibony/nina/.venv/bin/python main.py
+             └─844847 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 13 15:04:15 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 15:04:25 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 15:04:36 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 15:04:46 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 15:04:57 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 20:19:49 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 20:19:59 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 20:20:09 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 20:20:20 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 20:20:30 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[844847]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -32,15 +32,7 @@ Jun 13 15:04:57 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:ht
 - jules_lock.txt not found — all files available
 
 ## 4. READY Items (eligible for new Jules specs)
-_Found 4 READY items_
-
-### AG-N — Advanced Code Intelligence
-_Focus: Zero-token research and semantic mapping_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `DONE` | — |
-| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `DONE` | AG
+_Found 3 READY items_
 
 ### AG-T — Token & Context Engineering
 _Focus: Absolute minimum context overhead_
@@ -74,11 +66,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
-9d0a6f9 docs: post-session sync 2026-06-13 15:03
-87e3b05 docs: post-session sync 2026-06-13 14:54
-4ef8d18 docs: post-session sync 2026-06-13 14:52
-07b6f7c fix(tests): Update expected message in test_telegram_interface
-e886769 chore: Remove stale test for deleted append_lock module
+7ec66da docs: post-session sync 2026-06-13 20:19
+c430b3b feat(service): add standalone ninajulesgithub pipeline daemon
+6602b35 chore(backlog): auto-sync task status 2026-06-13 20:13
+dc2a351 fix(tools): jules auto-pipeline — unblock AWAITING, fix PR merge flag, close conflicts
+e2dfe4d chore(backlog): auto-sync task status 2026-06-13 19:48
 ```
 
 ## 6. Open Blockers
@@ -116,7 +108,11 @@ e886769 chore: Remove stale test for deleted append_lock module
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-- No open PRs
+#191 feat(tools): execute batch AG-N-05, AG-N-08, AG-N-09, AG-N-10 [jules-ag-n-batch-tools-8525299823837794309]
+#190 feat: Execute MEGA TASK BATCH for AST-based tools [jules-11790383660313096699-6e792040]
+#189 Implement batch of tasks (AG-N-05, AG-N-08, AG-N-09, AG-N-10) [jules-3113313881426069281-76c5de3a]
+#187 MEGA TASK BATCH: AST Symbol tools & watchdogs [jules-mega-task-batch-6835892478119959381]
+#186 feat: Enhance code analysis and symbol manipulation tools in ninaflash [jules-ninaflash-tools-batch-4738249357469438381]
 
 ## 9. Error Register (OPEN only)
 | ID | Description | Status |
@@ -140,4 +136,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 7562 bytes_
+_Feed size: 7700 bytes_
