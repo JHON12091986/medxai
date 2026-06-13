@@ -19,6 +19,7 @@ dotenv.load_dotenv()
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Optional, Tuple
+from core.config import load_config
 
 # --- Configuration & Constants ---
 REPO_ROOT = Path(__file__).parent.parent.resolve()
@@ -28,7 +29,6 @@ BACKLOG_PATH = REPO_ROOT / "docs/space" / "jules_backlog.md"
 INDEX_PATH = REPO_ROOT / "docs/space" / "nina_index.json"
 BEEP_SCRIPT = REPO_ROOT / "tools" / "alert_beep.py"
 
-MAX_CONCURRENT_SESSIONS = 15
 JULES_BASE_URL = "https://jules.googleapis.com/v1alpha"
 
 TELEGRAM_TOKEN = os.environ.get("TELEGRAMBOTTOKEN")
@@ -315,9 +315,10 @@ async def orchestrate_cycle():
         return
     # ----------------------------------------------------------
 
+    config = load_config() # Load config inside orchestrate_cycle
     reg = load_registry()
     active_count = len([v for v in reg.values() if v["status"] in ("IN_PROGRESS", "AWAITING_USER_FEEDBACK")])
-    slots = MAX_CONCURRENT_SESSIONS - active_count
+    slots = config.max_concurrent_sessions - active_count
 
     if slots > 0:
         from tools.ninaflash import get_backlog_tasks, _save_task_status
@@ -438,7 +439,10 @@ def session_end(title: str = "Session Complete", learning: str = "No major learn
             f.write(f"\n<!-- NinaGate Routing History: {history} -->\n")
 
     if not dry_run:
-        subprocess.run(["bash", "./nina_sync.sh"], cwd=str(REPO_ROOT))
+        try:
+            subprocess.run(["bash", "./nina_sync.sh"], cwd=str(REPO_ROOT), check=True)
+        except subprocess.CalledProcessError as e:
+            logger.error(f"nina_sync.sh failed: {e}")
     else:
         logger.info("session_end dry-run: insights appended, sync skipped")
 

@@ -16,6 +16,7 @@ import httpx
 import psutil
 from core.logger import get_logger
 from core.config import NinaConfig, RATELIMITS
+from core.task_classifier import classify_task, ClassifiedTask
 from tools import jules
 from tools.model_discovery import ModelDiscoveryService
 
@@ -24,12 +25,6 @@ _ = jules
 
 logger = get_logger("nina.router")
 
-# F-03f: Bangla Unicode block U+0980–U+09FF
-_BANGLA_RE = re.compile(r"[\u0980-\u09FF]")
-# Instruction-compliant providers in preference order for Bangla requests.
-# GEMINI is first (best multilingual instruction-following).
-# The normal scored chain is appended as fallback so nothing is ever lost.
-_BANGLA_PREFERRED = ["GEMINI", "OPENAI", "MISTRAL", "CEREBRAS", "GROQ", "PERPLEXITY"]
 PROVIDERS_TIER1 = {
     "POLLINATIONS": {
         "base_url": "https://text.pollinations.ai/openai",
@@ -70,7 +65,7 @@ PROVIDERS_TIER2 = {
     },
     "GEMINI": {
         "base_url": "https://generativelanguage.googleapis.com",
-        "model": "gemini-3-flash-preview",
+        "model": "gemini-2.5-flash",
         "key_field": "gemini_api_key",
     },
     "TOGETHER": {
@@ -133,28 +128,6 @@ LOCAL_PROVIDERS = {
     "LOCALFAST": {"model": "qwen2.5:1.5b"},
     "LOCALHEAVY": {"model": "qwen2.5:7b"},
 }
-TASK_TYPES = (
-    "sensitive",
-    "coding",
-    "research",
-    "math",
-    "multilingual",
-    "document",
-    "vision",
-    "quick",
-    "general",
-)
-STEP_BUDGETS = {
-    "quick": 3,
-    "general": 5,
-    "multilingual": 5,
-    "math": 6,
-    "coding": 8,
-    "document": 8,
-    "research": 10,
-    "sensitive": 5,
-}
-DEFAULT_MAX_STEPS = 5
 CACHE_TTL = {
     "sensitive": 0,
     "quick": 3600,
@@ -335,76 +308,7 @@ class ProviderHealth:
         self.reserved_tokens = 0
 
 
-@dataclass
-class ClassifiedTask:
-    task_type: str
-    estimated_tokens: int
-    is_parallel_candidate: bool
-    is_sensitive: bool
 
-
-async def classify_task(text: str, local_fast_fn: Any) -> ClassifiedTask:
-    try:
-        raw = await local_fast_fn(
-            f"Classify into one of {','.join(TASK_TYPES)}. Reply JSON only "
-            f'{{"task_type":"general","estimated_tokens":500}} User Input: <text>{text[:500]}</text>'
-        )
-        data = json.loads(raw.strip())
-        tt = data.get("task_type", "general")
-        if tt not in TASK_TYPES:
-            tt = "general"
-        est = int(data.get("estimated_tokens", 500))
-        est = max(50, min(est, 200000))
-        return ClassifiedTask(
-            tt,
-            est,
-            tt in ("research", "coding", "math") and est > 800,
-            tt == "sensitive",
-        )
-    except Exception:
-        t = (text or "").lower()
-        if any(
-            k in t
-            for k in (
-                "password",
-                "secret",
-                "token",
-                "private",
-                "confidential",
-                "bank",
-                "account",
-            )
-        ):
-            return ClassifiedTask("sensitive", 300, False, True)
-        if any(
-            k in t
-            for k in (
-                "code",
-                "python",
-                "bug",
-                "traceback",
-                "function",
-                "class",
-                "patch",
-            )
-        ):
-            return ClassifiedTask("coding", 800, True, False)
-        if any(
-            k in t for k in ("research", "compare", "search", "latest", "find", "news")
-        ):
-            return ClassifiedTask("research", 1200, True, False)
-        if any(k in t for k in ("calculate", "equation", "math", "solve")):
-            return ClassifiedTask("math", 700, False, False)
-        logger.warning(
-            f"nlp_classification_failed input={text[:80]!r} falling through to general task",
-            extra={"log": "nina.log"},
-        )
-        return ClassifiedTask("general", 500, False, False)
-
-
-class ResponseCache:
-    def __init__(self) -> None:
-        self.s: dict = {}
 
     def _k(self, prompt: str, messages: list | None = None) -> str:
         ctx = prompt.strip().lower()

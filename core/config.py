@@ -115,6 +115,8 @@ class NinaConfig(BaseModel):
     thermal_critical_cpu: int = 95
     thermal_critical_gpu: int = 90
     model_overrides: dict = {}
+    max_concurrent_sessions: int = 15
+    quota_soft_limit: int = 800
 
 def load_config() -> NinaConfig:
     tok = os.getenv("TELEGRAMBOTTOKEN")

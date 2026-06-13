@@ -17,6 +17,8 @@ from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse, StreamingResponse
 import psutil
 from watchfiles import awatch
+from core.config import load_config
+from core.task_classifier import classify_task, ClassifiedTask
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -233,10 +235,6 @@ QUOTA_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "q
 quota_manager = QuotaManager(QUOTA_FILE)
 health_tracker = {}
 
-# Soft quota limit — stop dispatching to cloud 100 requests before the hard 900 cap.
-# This preserves quota headroom for truly COMPLEX tasks that cannot run locally.
-QUOTA_SOFT_LIMIT = 800
-
 def load_providers():
     global providers
     try:
@@ -314,62 +312,12 @@ async def list_models():
 async def health():
     return {"status": "ok", "timestamp": datetime.datetime.now().isoformat()}
 
-async def classify_request(payload):
-    """Classify request as SIMPLE / MEDIUM / COMPLEX.
-
-    SIMPLE  → always local (ollama/NinaFlash), never cloud.
-    MEDIUM  → try local first; escalate to cloud only on failure.
-    COMPLEX → cloud preferred; local only as emergency fallback.
-    """
+async def _classify_request_proxy(payload):
+    """Internal helper to classify requests using the unified classifier."""
     messages = payload.get("messages", [])
-    if not messages:
-        return "SIMPLE"
-
-    last_content = messages[-1].get("content", "")
-    text = last_content.lower()
-    total_history_chars = sum(len(m.get("content", "")) for m in messages)
-
-    # ── SIMPLE signals: mechanical, filesystem, or trivially short ───────────
-    SIMPLE_KEYWORDS = [
-        # filesystem / shell ops
-        "cat ", "head ", "tail ", "wc ", "ls ", "find ", "grep",
-        "sed ", "awk ", "chmod ", "mkdir ", "touch ", "echo ",
-        # git read-only
-        "git log", "git diff", "git status", "git blame", "git show",
-        # code ops
-        "fix", "rename", "format", "docstring", "type hint", "boilerplate",
-        "sort", "read", "show", "list", "print", "check", "verify",
-        "compile", "status", "outline", "symbol", "signature",
-        "sync", "commit", "import", "lint",
-        # nf ops
-        "nf file", "nf git", "nf code", "nf log", "nf query",
-        # summarise / inspect
-        "summarize", "summarise", "index", "count", "move", "copy",
-        "delete", "clean", "patch", "diff",
-    ]
-    if any(kw in text for kw in SIMPLE_KEYWORDS):
-        return "SIMPLE"
-
-    # Short single-turn with no conversation history → SIMPLE
-    if len(last_content) < 300 and len(messages) <= 2:
-        return "SIMPLE"
-
-    # ── COMPLEX signals: architectural, cross-file, high-stakes ──────────────
-    COMPLEX_KEYWORDS = [
-        "architect", "redesign", "refactor across", "migrate", "merge conflict",
-        "multi-file", "system design", "dependency graph", "breaking change",
-        "performance regression", "security audit", "rewrite",
-        "across multiple", "end-to-end", "full pipeline",
-    ]
-    if any(kw in text for kw in COMPLEX_KEYWORDS):
-        return "COMPLEX"
-
-    # Large accumulated conversation context → COMPLEX
-    if total_history_chars > 8000:
-        return "COMPLEX"
-
-    # ── MEDIUM: everything else — try local, escalate on failure ─────────────
-    return "MEDIUM"
+    text = messages[-1].get("content", "") if messages else ""
+    classified = await classify_task(text=text, messages=messages)
+    return classified.task_type
 
 async def forward_to_provider(payload, providers_to_try, is_stream):
     for score, provider, api_key, h in providers_to_try:
@@ -424,6 +372,7 @@ async def forward_to_provider(payload, providers_to_try, is_stream):
 
 @app.post("/v1/chat/completions")
 async def proxy_chat_completions(request: Request):
+    config = load_config() # Load config
     try:
         payload = await request.json()
     except Exception: return JSONResponse(status_code=400, content={"error": "Invalid JSON"})
@@ -468,14 +417,14 @@ async def proxy_chat_completions(request: Request):
     # We classify first so that SIMPLE/MEDIUM tasks never start a cloud HTTP
     # request at all. Previously, the cloud_task was eagerly created and then
     # cancelled — this still consumed quota and added latency.
-    task_type = await classify_request(payload)
+    task_type = await _classify_request_proxy(payload)
 
     # Quota guard: if we are within 100 requests of the daily cap, force all
     # traffic to local regardless of task classification.
-    quota_ok = quota_manager.is_available("gemini", limit=QUOTA_SOFT_LIMIT)
+    quota_ok = quota_manager.is_available("gemini", limit=config.quota_soft_limit)
     force_local = not quota_ok and not target_provider_name
     if force_local:
-        logger.warning(f"Quota soft-limit reached ({QUOTA_SOFT_LIMIT}). Forcing local routing.")
+        logger.warning(f"Quota soft-limit reached ({config.quota_soft_limit}). Forcing local routing.")
 
     def _make_local_response(response, h, start, name, task_type, escalated=False):
         """Build the HTTP response object for a local provider result."""
