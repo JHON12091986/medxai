@@ -180,7 +180,11 @@ def cmd_code_migrate(args):
             new_source = cst_tree.visit(RenameTransformer()).code
             if new_source != source:
                 py_file.write_text(new_source, encoding="utf-8")
-                print(f"✅ Migrated '{old_name}' in {py_file.relative_to(REPO_ROOT)}")
+                try:
+                    rel_path = py_file.relative_to(REPO_ROOT)
+                except ValueError:
+                    rel_path = py_file
+                print(f"✅ Migrated '{old_name}' in {rel_path}")
         except Exception as e: print(f"❌ Error in {py_file}: {e}")
 
 # --- cmd_find_symbol ---
