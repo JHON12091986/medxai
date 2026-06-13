@@ -493,3 +493,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ROUTING_WIN: Automated sequential PR closure and branch deletion via `gh pr close --delete-branch` ensures repository and branch hygiene.
 - CONTEXT_HINT: Always check current branch first and checkout `main` prior to running sync script to prevent pushing branch tips behind remote counterparts.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Stash Guard for Rebase
+- OFFLOAD_OPPORTUNITY: Simple compilation checks -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Adding `git stash` checks before rebase operations in `_try_rebase` cleanly handles working tree changes made during concurrent triage phases.
+- CONTEXT_HINT: Look for git command return values and restore stashes on all exit paths to preserve uncommitted data.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
