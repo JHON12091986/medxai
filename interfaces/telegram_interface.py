@@ -116,6 +116,7 @@ class TelegramInterface:
         self._flood_window: list[float] = []
         self._active_task: Optional[asyncio.Task] = None
         self._app: Optional[Application] = None
+        self._secret_keys = [k for k in self.config.dict().keys() if _SECRET_KEYS_RE.search(k)]
 
     async def start(self):
         self._app = Application.builder().token(self.config.telegram_bot_token).build()
@@ -143,11 +144,12 @@ class TelegramInterface:
         # Last-mile secret masking helper to prevent API keys and credentials leaking
         if not isinstance(text, str):
             return text
-        for k, v in self.config.dict().items():
-            if v and isinstance(v, str) and _SECRET_KEYS_RE.search(k):
-                if v in text:
-                    masked = v[:4] + "***" + v[-4:] if len(v) > 8 else "***"
-                    text = text.replace(v, masked)
+        cfg_dict = self.config.dict()
+        for k in self._secret_keys:
+            v = cfg_dict.get(k)
+            if v and isinstance(v, str) and v in text:
+                masked = v[:4] + "***" + v[-4:] if len(v) > 8 else "***"
+                text = text.replace(v, masked)
         return text
 
     async def _reply(self, update, text: str, **kwargs):
