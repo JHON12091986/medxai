@@ -30,6 +30,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `SECURITY.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `WORKFLOW.md` | source_of_truth | active | keep | Repository rules of engagement and development lifecycle. | ✅ YES |
 | `bench_report.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `call_graph_test.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `commit_message.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `efficiency_report.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `fix_caps_again.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
