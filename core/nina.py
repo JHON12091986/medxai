@@ -228,7 +228,7 @@ class NinaOS:
     async def run_cost_report(self) -> None:
         await self.telegram.send_message(f"Daily cost: ${self.router.cost.daily_cost_usd:.4f}")
 
-    async def run_circuit_breaker_stats(self):
+    async def run_circuit_breaker_stats(self) -> None:
         logging.getLogger("nina.scheduler").info("circuit_breaker_stats_report")
         stats = self.router.get_status()
         await self.telegram.send_message(f"Daily Circuit Breaker Stats:\n\n{stats}")
