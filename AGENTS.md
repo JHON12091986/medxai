@@ -430,3 +430,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Watcher notification failures are direct symptoms of main scheduler/daemon crash.
 
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - PR Merge Resolution
+- OFFLOAD_OPPORTUNITY: Mechanical conflict resolutions with no functional imports.
+- ESCALATION_TRIGGER: Overlap of high-risk file `interfaces/telegram_interface.py` → always require cloud LLM review.
+- ROUTING_WIN: Automatic `git merge` strategy for non-conflicting branches.
+- CONTEXT_HINT: Close duplicate PR branches first to prevent cluttering local working directory.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
