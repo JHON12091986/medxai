@@ -23,6 +23,7 @@ SPACE_FILES=(
   docs/space/nina_error_register.md
   docs/space/nina_exporter_contract.md
   docs/space/nina_state.md
+  docs/space/jules_queue.md
 )
 
 echo "================================================"
