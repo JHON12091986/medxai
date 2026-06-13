@@ -1718,10 +1718,55 @@ def cmd_context_pack(args):
         print(f"Path: {path.relative_to(REPO_ROOT)}")
         print(f"Size: {len(content)} bytes | {len(content.splitlines())} lines\n")
 
+        def extract_args_str(node_with_args):
+            try:
+                source_segment = ast.get_source_segment(content, node_with_args)
+                if not source_segment:
+                    return ""
+                start = source_segment.find('(')
+                if start == -1:
+                    return ""
+
+                open_parens = 0
+                in_string = False
+                string_char = None
+                escape = False
+
+                for i in range(start, len(source_segment)):
+                    char = source_segment[i]
+
+                    if escape:
+                        escape = False
+                        continue
+
+                    if char == '\\':
+                        escape = True
+                        continue
+
+                    if in_string:
+                        if char == string_char:
+                            in_string = False
+                        continue
+
+                    if char in ('"', "'"):
+                        in_string = True
+                        string_char = char
+                        continue
+
+                    if char == '(':
+                        open_parens += 1
+                    elif char == ')':
+                        open_parens -= 1
+                        if open_parens == 0:
+                            return source_segment[start+1:i].replace('\n', ' ').strip()
+            except Exception:
+                pass
+            return ""
+
         for node in ast.iter_child_nodes(tree):
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 doc = ast.get_docstring(node)
-                sig = f"def {node.name}({ast.unparse(node.args)}):"
+                sig = f"def {node.name}({extract_args_str(node)}):"
                 print(f"{sig} {'\"\"\"' + doc.splitlines()[0] + '...\"\"\"' if doc else '...'}")
             elif isinstance(node, ast.ClassDef):
                 doc = ast.get_docstring(node)
@@ -1729,7 +1774,7 @@ def cmd_context_pack(args):
                 for item in node.body:
                     if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
                         m_doc = ast.get_docstring(item)
-                        m_sig = f"    def {item.name}({ast.unparse(item.args)}):"
+                        m_sig = f"    def {item.name}({extract_args_str(item)}):"
                         print(f"{m_sig} {'\"\"\"' + m_doc.splitlines()[0] + '...\"\"\"' if m_doc else '...'}")
 
         print("\n--- END PACK ---")
