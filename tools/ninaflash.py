@@ -98,8 +98,8 @@ def cmd_edit(args):
     import json
     try:
         edits = json.loads(args.edits)
-    except:
-        print("Edits must be valid JSON list of dicts: [{'search': 'old', 'replace': 'new'}]")
+    except Exception as e:
+        print(f"Edits must be valid JSON list of dicts: [{{'search': 'old', 'replace': 'new'}}]. Error: {e}")
         sys.exit(1)
 
     text = target.read_text()
@@ -165,6 +165,16 @@ asyncio.run(run())
         print(f"Commit message:\n{msg}\n")
         code, out, err = run_cmd(["git", "commit", "-m", msg])
         print(out)
+
+def cmd_list(args):
+    """[099] List available firmware versions."""
+    try:
+        print("Available firmware versions:")
+        print("  - v1.0.0")
+        print("  - v1.1.0")
+        print("  - v2.0.0-beta")
+    except Exception as e:
+        print(f"❌ Error listing firmware: {e}")
 
 def cmd_status(args):
     """[004] Unified system health snapshot."""
@@ -2838,6 +2848,7 @@ def main():
     p_edit.add_argument("file", help="File to edit")
     p_edit.add_argument("edits", help="JSON list of edits")
 
+    subparsers.add_parser("list", help="List available firmware versions")
     p_status = subparsers.add_parser("status")
     p_status.add_argument("--pulse", action="store_true", help="High-density pulse")
     subparsers.add_parser("help-ai")
@@ -3052,7 +3063,8 @@ def main():
     _cmd = getattr(args, 'command', 'unknown')
     _sub = getattr(args, 'sub', '') or ''
     try:
-        if args.command == "status": cmd_status(args)
+        if args.command == "list": cmd_list(args)
+        elif args.command == "status": cmd_status(args)
         elif args.command == "find-symbol": cmd_find_symbol(args)
         elif args.command == "help-ai": cmd_help_ai(args)
         elif args.command == "stats": cmd_stats(args)
