@@ -3,28 +3,28 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-13 11:16 +06
-- Git HEAD: 2d01719bdb47fd3805ced3f060036f62562e32c8
-- Last commit: docs: post-session sync 2026-06-13 11:15
+- Generated: 2026-06-13 11:57 +06
+- Git HEAD: 969a673e425a8c7099f39411a2f09c71fcb464c7
+- Last commit: docs: post-session sync 2026-06-13 11:56
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sat 2026-06-13 04:20:56 +06; 6h ago
+     Active: active (running) since Sat 2026-06-13 04:20:56 +06; 7h ago
  Invocation: 004ebd9fe7714d10940bb5cb7d3ba5ee
    Main PID: 533517 (python)
       Tasks: 29 (limit: 15177)
-     Memory: 411.9M (peak: 514.9M)
-        CPU: 2min 3.837s
+     Memory: 418.2M (peak: 522M)
+        CPU: 2min 14.120s
      CGroup: /system.slice/nina.service
              ├─533517 /home/aibony/nina/.venv/bin/python main.py
-             └─626035 python3 /home/aibony/nina/tools/alert_beep.py
+             └─663029 python3 /home/aibony/nina/tools/alert_beep.py
 
-Jun 13 11:15:58 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 11:16:08 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 11:16:18 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 11:16:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 11:16:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:57:11 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:03:00], next run at: 2026-06-13 11:59:57 +06)" executed successfully
+Jun 13 11:57:17 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:57:27 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:57:37 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 11:57:47 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -33,7 +33,15 @@ Jun 13 11:16:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:ht
 - jules_lock.txt not found — all files available
 
 ## 4. READY Items (eligible for new Jules specs)
-_Found 3 READY items_
+_Found 4 READY items_
+
+### AG-N — Advanced Code Intelligence
+_Focus: Zero-token research and semantic mapping_
+
+| ID | File | Task | Status | Depends On |
+|----|------|------|--------|------------|
+| AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `DONE` | — |
+| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `DONE` | AG
 
 ### AG-T — Token & Context Engineering
 _Focus: Absolute minimum context overhead_
@@ -67,11 +75,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
-2d01719 docs: post-session sync 2026-06-13 11:15
-b8cdf77 docs: post-session sync 2026-06-13 11:09
-84aa5a0 merge: resolve conflicts and merge feat/doc-audit
-0d88a7f merge: resolve conflicts and merge feat/method-extraction
-15a8df6 merge: manual merge and integration of multiple feature branches
+969a673 docs: post-session sync 2026-06-13 11:56
+b82ebcc docs(governance): update project index
+b8eaa97 chore(hygiene): remove temporary patch scripts
+9240c07 Merge remote-tracking branch 'origin/task-store-additions-10700815354040855410'
+2aa6e18 Merge remote-tracking branch 'origin/jules/ag-m-06-ag-n-02-04-fix-1504453495226165126'
 ```
 
 ## 6. Open Blockers
@@ -109,19 +117,8 @@ b8cdf77 docs: post-session sync 2026-06-13 11:09
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-#164 feat(throughput): implement AG-M-01, AG-M-06, AG-N-02, AG-N-03, AG-N-04 [jules-6608087518271029302-9c781548]
-#163 feat(telegram): add /models command to show current model per provider [feat/telegram-models-command-59556177804248575]
-#162 feat(core): implement method extraction via AST [feat/method-extraction-ast-5318563581237263749]
-#161 feat: AST-based method extraction [feat-ag-n-07-ast-method-extraction-16516675731429448379]
-#160 feat(ninaflash): add local call graph generator [feat/ag-n-02-local-call-graph-11012039011884606206]
-#159 feat(ninaflash): add dependency cycle detector [feat/dependency-cycle-detector-691305556097000458]
-#158 feat: Docstring Quality Audit [feat/docstring-quality-audit-1500208126602188686]
-#157 feat(security): implement SEC-IGNORE global context filtering [jules-sec-ignore-global-8261678623607038143]
-#156 feat: Add Symbol Migration Tool to ninaflash [feat/cmd-code-migrate-12433136950609509093]
-#155 feat(telegram): implement provider health summary for /status command [feat/provider-health-summary-7589483823890561272]
-#154 Dependency Cycle Detector — Identify circular imports locally [feat/dependency-cycle-detector-2590444877765026733]
-#153 feat: add call-stack command to resolve and extract local functions [feat/code-call-stack-11856651123247013161]
+- No open PRs
 
 
 ---
-_Feed size: 7624 bytes_
+_Feed size: 6796 bytes_
