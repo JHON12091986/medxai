@@ -18,6 +18,8 @@ PROTECTED = [
 DANGEROUS_PATTERNS = [
     (r"os\.system",              "Shell injection — use subprocess with shell=False"),
     (r"subprocess\.[^\n]+shell\s*=\s*True", "subprocess shell=True — remove shell=True"),
+    (r"subprocess\.call\([^)]*shell\s*=\s*True", "subprocess.call shell=True — remove shell=True"),
+    (r"shutil\.rmtree",          "shutil.rmtree — forbidden"),
     (r"\beval\b",                 "eval on non-literal — forbidden"),
     (r"\bexec\b",                 "exec on non-literal — forbidden"),
     (r"\b__import__\b",          "dynamic __import__ — forbidden"),

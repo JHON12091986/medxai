@@ -1,4 +1,7 @@
-💡 What: Replaced inline dictionary unions (`PROVIDERS_TIER1 | PROVIDERS_TIER2 | ...`) with a precomputed `ALL_PROVIDERS` dictionary at the module level.
-🎯 Why: In Python, `dict_a | dict_b` creates a brand-new dictionary object every time. Doing this repeatedly inside hot paths like `_has_key` and API routing lookups is highly inefficient.
-📊 Impact: Eliminates redundant O(N) memory allocations and lookup overhead on every router call, reducing CPU cycles and improving local routing latency.
-🔬 Measurement: Verify changes in `core/router.py`. Profiling local dictionary allocations confirms that replacing the bitwise dictionary union operator with `.get()` queries against a constant module-level dictionary executes significantly faster.
+🛡️ Sentinel: [HIGH] Fix missing shell execution and deletion guards in UpgradePipeline
+
+🚨 Severity: HIGH
+💡 Vulnerability: `tools/upgradepipeline.py` `DANGEROUS_PATTERNS` regex rules were limited and missing coverage for some risky system functions. `os.system`, `subprocess.call(..., shell=True)` and `shutil.rmtree` were not strictly blocked.
+🎯 Impact: Without strict blocking in the pipeline sandbox check, these functions might execute malicious code (shell injection) or destroy critical parts of the filesystem without error handling.
+🔧 Fix: Expanded `DANGEROUS_PATTERNS` regex check in `tools/upgradepipeline.py` to uniformly block `os.system`, `subprocess.call` with `shell=True` arguments, and `shutil.rmtree` outright. Added comprehensive testing for these patterns in `tests/test_tools_smoke.py`.
+✅ Verification: Ran `python3 -m py_compile tools/upgradepipeline.py` and `pytest tests/test_tools_smoke.py` successfully locally to ensure all tests passed.

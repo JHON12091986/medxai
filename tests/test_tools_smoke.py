@@ -145,3 +145,15 @@ async def test_gputuner_smoke(tmp_path):
             result = await gputuner.tune() if __import__('inspect').iscoroutinefunction(gputuner.tune) else gputuner.tune()
             assert "GPU tuned" in result
             assert "LOCALFAST" in result
+
+@pytest.mark.asyncio
+async def test_upgradepipeline_dangerous_patterns():
+    from tools.upgradepipeline import DANGEROUS_PATTERNS
+    patterns_to_check = [
+        r"os\.system",
+        r"subprocess\.call\([^)]*shell\s*=\s*True",
+        r"shutil\.rmtree"
+    ]
+    patterns_found = [p[0] for p in DANGEROUS_PATTERNS]
+    for p in patterns_to_check:
+        assert p in patterns_found, f"Pattern {p} not found in DANGEROUS_PATTERNS"
