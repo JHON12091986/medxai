@@ -20,7 +20,7 @@ DEFAULT_CAPS = {
 class CapabilityRegistry:
     _lock: asyncio.Lock = None
 
-    def __init__(self):
+    def __init__(self) -> None:
         if CapabilityRegistry._lock is None:
             CapabilityRegistry._lock = asyncio.Lock()
         self._lock = CapabilityRegistry._lock
@@ -29,7 +29,7 @@ class CapabilityRegistry:
             CAP_FILE.write_text(json.dumps(DEFAULT_CAPS, indent=2))
         self._caps: dict = json.loads(CAP_FILE.read_text())
 
-    def register(self, name: str, path: str, description: str = "", role: str = "tool"):
+    def register(self, name: str, path: str, description: str = "", role: str = "tool") -> None:
         """Register a new dynamic capability."""
         self._caps[name] = {
             "path": path,
@@ -51,7 +51,7 @@ class CapabilityRegistry:
     def is_healthy(self, tool_name: str) -> bool:
         return self._caps.get(tool_name, {}).get("healthy", True)
 
-    async def mark_unhealthy(self, tool_name: str, error: str = ""):
+    async def mark_unhealthy(self, tool_name: str, error: str = "") -> None:
         if tool_name in self._caps:
             async with self._lock:
                 self._caps[tool_name].update({"healthy": False, "error": error,
@@ -60,7 +60,7 @@ class CapabilityRegistry:
                     CAP_FILE.write_text, json.dumps(self._caps, indent=2))
             logger.warning(f"capability_unhealthy tool={tool_name} error={error}")
 
-    async def mark_healthy(self, tool_name: str):
+    async def mark_healthy(self, tool_name: str) -> None:
         if tool_name in self._caps:
             async with self._lock:
                 self._caps[tool_name].update({"healthy": True,

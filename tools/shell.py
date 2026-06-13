@@ -73,7 +73,32 @@ async def run(cmd: str) -> str:
         logger.error(f"shell_error cmd={cmd!r} err={e}", extra={"log": "tools.log", "tool_name": "shell"})
         return f"Error: {e}"
 
+import fnmatch
+from pathlib import Path
+
+def _load_geminiignore() -> list[str]:
+    ignore_file = Path('.geminiignore')
+    if not ignore_file.exists(): return []
+    return [line.strip() for line in ignore_file.read_text().splitlines() if line.strip() and not line.startswith('#')]
+
+def _is_ignored(path_str: str) -> bool:
+    patterns = _load_geminiignore()
+    for pattern in patterns:
+        if pattern.startswith('!'): continue
+        if fnmatch.fnmatch(path_str, pattern) or fnmatch.fnmatch(path_str, f"*/{pattern}") or fnmatch.fnmatch(path_str, f"{pattern}*"):
+            return True
+    return False
+
 def is_command_safe(cmd: str) -> bool:
     """Minimal security stub for Rule 0 compliance."""
     blocked = ['rm -rf /', 'mkfs', 'dd if=', ':(){ :|:& };:']
-    return not any(b in cmd for b in blocked)
+    if any(b in cmd for b in blocked):
+        return False
+
+    parts = shlex.split(cmd) if cmd else []
+    base = parts[0] if parts else ""
+    if base in ['cat', 'grep', 'ls', 'find', 'head', 'tail']:
+        for part in parts[1:]:
+            if not part.startswith('-') and _is_ignored(part):
+                return False
+    return True

@@ -2,6 +2,7 @@
 Watches .env every 60s. Reloads reloadable fields without restart.
 Non-reloadable fields require restart -- changes are logged but ignored.
 """
+from typing import Any
 import asyncio, logging, json
 from pathlib import Path
 from dotenv import dotenv_values
@@ -33,7 +34,7 @@ RELOADABLE = {
 
 
 class ConfigHotReload:
-    def __init__(self, config, telegram=None):
+    def __init__(self, config: Any, telegram: Any=None) -> None:
         self.config    = config
         self.telegram  = telegram
         self._env_path = Path(".env")
@@ -47,11 +48,11 @@ class ConfigHotReload:
             logger.warning(f"config_hotreload_mtime_failed {e}")
             return 0.0
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         self._task = asyncio.create_task(self._watch())
         logger.info("ConfigHotReload watching .env every 60s")
 
-    async def _watch(self):
+    async def _watch(self) -> None:
         while True:
             try:
                 await asyncio.sleep(60)
@@ -65,7 +66,7 @@ class ConfigHotReload:
             except Exception as e:
                 logger.warning(f"config_hotreload_error {e}")
 
-    async def _reload(self):
+    async def _reload(self) -> None:
         try:
             env     = dotenv_values(".env")
             changed = []
