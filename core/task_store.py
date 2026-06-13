@@ -31,7 +31,7 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime, timezone
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Literal
 
 from filelock import FileLock, Timeout as FileLockTimeout
 
@@ -61,10 +61,12 @@ class TaskStatus(str, Enum):
     """Lifecycle states for a Task."""
 
     PENDING     = "pending"
-    IN_PROGRESS = "in_progress"
-    COMPLETED   = "completed"
+    IN_PROGRESS = "running"
+    COMPLETED   = "done"
     FAILED      = "failed"
     CANCELLED   = "cancelled"
+    PAUSED      = "paused"
+
 
 
 def _now_iso() -> str:
@@ -74,90 +76,75 @@ def _now_iso() -> str:
 
 @dataclass
 class Task:
-    """Represents a single agentic task.
-
-    Attributes:
-        id:          UUID-based unique identifier (auto-generated).
-        description: Human-readable goal / instruction.
-        status:      Current lifecycle state (TaskStatus enum).
-        created_at:  ISO 8601 UTC timestamp of creation.
-        updated_at:  ISO 8601 UTC timestamp of last update.
-        metadata:    Arbitrary extensible dict for planner, verifier, etc.
-    """
-
+    """Represents a single agentic task."""
     description: str
     id:          str        = field(default_factory=lambda: str(uuid.uuid4()))
+    goal:        str        = ""
+    plan_steps:  List[Dict[str, Any]] = field(default_factory=list)
     status:      TaskStatus = field(default=TaskStatus.PENDING)
+    priority:    Literal["high", "normal", "low"] = "normal"
     created_at:  str        = field(default_factory=_now_iso)
     updated_at:  str        = field(default_factory=_now_iso)
+    retries:     int        = 0
+    result:      Optional[str] = None
+    ttl_days:    Optional[int] = None
+    depends_on:  List[str]  = field(default_factory=list)
     metadata:    Dict[str, Any] = field(default_factory=dict)
 
-    # ------------------------------------------------------------------
-    # Serialisation helpers
-    # ------------------------------------------------------------------
-
     def to_dict(self) -> Dict[str, Any]:
-        """Serialise to a JSON-compatible dict.
-
-        Returns:
-            dict with all fields; ``status`` stored as its string value.
-        """
         data = asdict(self)
-        data["status"] = self.status.value          # enum → str
+        if hasattr(self.status, 'value'):
+            data["status"] = self.status.value
         return data
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> "Task":
-        """Deserialise from a raw dict (e.g. loaded from JSON).
-
-        Performs backward-compatibility migration for legacy fields
-        (``goal``, ``plan_steps``, ``retries``, ``tool_used``, etc.) that
-        are folded into ``metadata`` so existing dashboard integrations
-        continue to work.
-
-        Args:
-            data: Raw dict representation.
-
-        Returns:
-            A fully-initialised :class:`Task` instance.
-
-        Raises:
-            TaskStoreCorruptedError: If required fields are missing.
-        """
-        data = dict(data)  # shallow copy — do not mutate caller's dict
-
-        # --- legacy field migration -------------------------------------------
-        legacy_keys = ("goal", "plan_steps", "retries", "result",
-                       "tool_used", "priority", "tags")
+        data = dict(data)
+        legacy_keys = ("tool_used", "tags")
         metadata = data.pop("metadata", {}) or {}
         for key in legacy_keys:
             if key in data:
                 metadata.setdefault(key, data.pop(key))
-        # If legacy records used 'goal' as the primary description
-        if "description" not in data and "goal" in metadata:
-            data["description"] = metadata["goal"]
-        # running → in_progress status rename
-        raw_status = data.get("status", "pending")
-        if raw_status == "running":
-            raw_status = "in_progress"
-        # Validate description present
+        if data.get("goal"):
+            metadata.setdefault("goal", data["goal"])
+
         if "description" not in data:
-            raise TaskStoreCorruptedError(
-                f"Task record missing 'description' field: {data!r}"
-            )
+            if data.get("goal"):
+                data["description"] = data["goal"]
+            elif "goal" in metadata:
+                data["description"] = metadata["goal"]
+
+        if "description" not in data:
+            raise TaskStoreCorruptedError(f"Task record missing 'description' field: {data!r}")
+
+        raw_status = data.get("status", "pending")
+        if hasattr(raw_status, "value"):
+            raw_status = raw_status.value
+
+        if raw_status == "in_progress":
+            raw_status = "running"
+        elif raw_status == "completed":
+            raw_status = "done"
+
         try:
             return cls(
                 id          = data.get("id", str(uuid.uuid4())),
                 description = data["description"],
+                goal        = data.get("goal", data.get("description", "")),
+                plan_steps  = data.get("plan_steps", []),
                 status      = TaskStatus(raw_status),
+                priority    = data.get("priority", "normal"),
                 created_at  = data.get("created_at", _now_iso()),
                 updated_at  = data.get("updated_at", _now_iso()),
+                retries     = data.get("retries", 0),
+                result      = data.get("result", None),
+                ttl_days    = data.get("ttl_days", None),
+                depends_on  = data.get("depends_on", []),
                 metadata    = metadata,
             )
         except (ValueError, KeyError) as exc:
-            raise TaskStoreCorruptedError(
-                f"Cannot deserialise Task record: {exc}  data={data!r}"
-            ) from exc
+            raise TaskStoreCorruptedError(f"Cannot deserialise Task record: {exc}  data={data!r}") from exc
+
 
 
 # ---------------------------------------------------------------------------
@@ -460,7 +447,10 @@ class TaskStore:
                 )
             task = tasks[task_id]
             for key, value in kwargs.items():
-                if key == "status" and isinstance(value, str):
+                if key == "status":
+                    if hasattr(value, "value"): value = value.value
+                    if value == "in_progress": value = "running"
+                    if value == "completed": value = "done"
                     value = TaskStatus(value)
                 if hasattr(task, key):
                     setattr(task, key, value)
@@ -512,7 +502,7 @@ class TaskStore:
             self._lock.release()
     def list_tasks(
         self,
-        status: Optional[TaskStatus] = None,
+        status: Optional[Any] = None,
         limit:  Optional[int]        = None,
     ) -> List[Task]:
         """Return tasks optionally filtered by status and/or paginated.
@@ -528,8 +518,12 @@ class TaskStore:
             List of matching :class:`Task` objects.
         """
         with self._lock:
-            if isinstance(status, str):
-                status = TaskStatus(status)
+            if hasattr(status, "value"):
+                status = status.value
+            if status == "in_progress":
+                status = "running"
+            if status == "completed":
+                status = "done"
 
             # Optimization: Filter by status before sorting to reduce sort payload from O(N log N) to O(k log k)
             tasks_iter = self._read_tasks().values()
@@ -548,6 +542,130 @@ class TaskStore:
     # ------------------------------------------------------------------
     # Convenience helpers (used by router / dashboard)
     # ------------------------------------------------------------------
+
+    def get_by_status(self, status: str) -> List[Task]:
+        """Retrieve all tasks with the given status."""
+        with self._lock:
+            tasks = self._read_tasks().values()
+            return [t for t in tasks if t.status.value == status or t.status == status]
+
+    def get_by_tool(self, tool_name: str) -> List[Task]:
+        """Retrieve all tasks that have the given tool in their plan_steps."""
+        with self._lock:
+            tasks = self._read_tasks().values()
+            return [
+                t for t in tasks
+                if any(step.get("tool") == tool_name for step in t.plan_steps)
+            ]
+
+    def get_by_date_range(self, start: str, end: str) -> List[Task]:
+        """Retrieve all tasks created between start and end (inclusive)."""
+        with self._lock:
+            tasks = self._read_tasks().values()
+            return [
+                t for t in tasks
+                if start <= t.created_at <= end
+            ]
+
+    def archive_expired(self) -> int:
+        """Move expired 'done' tasks to the archive.
+
+        Returns:
+            Count of archived tasks.
+        """
+        if not self._lock.acquire(timeout=self.lock_timeout):
+            raise TaskStoreLockError("TaskStore internal lock acquisition timed out")
+        try:
+            now = datetime.now(tz=timezone.utc)
+            tasks = self._read_tasks()
+
+            to_archive = []
+            keys_to_delete = []
+
+            for tid, t in tasks.items():
+                if t.status == TaskStatus.COMPLETED and t.ttl_days is not None:
+                    try:
+                        # parse ISO string: 2026-06-08T16:30:00Z
+                        dt_str = t.updated_at.replace("Z", "+00:00")
+                        updated_dt = datetime.fromisoformat(dt_str)
+                        if (now - updated_dt).days >= t.ttl_days:
+                            to_archive.append(t)
+                            keys_to_delete.append(tid)
+                    except ValueError:
+                        pass
+
+            if not to_archive:
+                return 0
+
+            # Write to archive (append)
+            archive_path = Path(self.storage_path).parent / "tasks_archive.json"
+
+            # Use FileLock for archive
+            archive_lock_path = Path(str(archive_path) + ".lock")
+            archive_lock = FileLock(archive_lock_path, timeout=self.lock_timeout)
+
+            with archive_lock:
+                archived_tasks = {}
+                if archive_path.exists():
+                    try:
+                        archived_tasks = json.loads(archive_path.read_text(encoding="utf-8"))
+                        if isinstance(archived_tasks, list):
+                            archived_tasks = {item["id"]: item for item in archived_tasks if "id" in item}
+                    except Exception:
+                        pass
+
+                for t in to_archive:
+                    archived_tasks[t.id] = t.to_dict()
+
+                # Write back with atomic rename
+                tmp_fd, tmp_path = tempfile.mkstemp(
+                    dir=archive_path.parent,
+                    prefix=".tasks_archive_tmp_",
+                    suffix=".json",
+                )
+                try:
+                    with os.fdopen(tmp_fd, "w", encoding="utf-8") as fh:
+                        json.dump(
+                            archived_tasks,
+                            fh,
+                            indent=2,
+                            ensure_ascii=False,
+                        )
+                    os.replace(tmp_path, archive_path)
+                except Exception as exc:
+                    try:
+                        os.unlink(tmp_path)
+                    except OSError:
+                        pass
+                    raise TaskStoreCorruptedError(f"Failed to write archive: {exc}") from exc
+
+            # Delete from active tasks
+            for tid in keys_to_delete:
+                del tasks[tid]
+            self._write_tasks(tasks)
+
+            return len(to_archive)
+        finally:
+            self._lock.release()
+
+    def load_archive(self) -> List[Task]:
+        """Read archived tasks."""
+        archive_path = Path(self.storage_path).parent / "tasks_archive.json"
+        if not archive_path.exists():
+            return []
+
+        archive_lock_path = Path(str(archive_path) + ".lock")
+        archive_lock = FileLock(archive_lock_path, timeout=self.lock_timeout)
+
+        with archive_lock:
+            try:
+                payload = json.loads(archive_path.read_text(encoding="utf-8"))
+                if isinstance(payload, list):
+                    return [Task.from_dict(item) for item in payload if "id" in item]
+                else:
+                    return [Task.from_dict(record) for record in payload.values()]
+            except Exception:
+                return []
 
     def get_task_metrics(self) -> Dict[str, Any]:
         """Return aggregate counts by status.
