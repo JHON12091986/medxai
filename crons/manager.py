@@ -92,6 +92,7 @@ class TaskScheduler:
         add(n.run_heartbeat,         IntervalTrigger(hours=1),                               id="heartbeat")
         add(functools.partial(_cache_purge_job, n), CronTrigger(hour=3, minute=5, timezone="Asia/Dhaka"), id="cache_purge")
         add(n.run_cost_report,       CronTrigger(hour=23, minute=0,  timezone="Asia/Dhaka"), id="cost_report")
+        add(n.run_circuit_breaker_stats, CronTrigger(hour=4,  minute=20, timezone="Asia/Dhaka"), id="circuit_breaker_stats")
         add(n.router.reset_daily_counters, CronTrigger(hour=0, minute=1, second=0,
                                            timezone="UTC"),                                  id="rate_limit_reset")
         add(n.run_idle_summary,      IntervalTrigger(minutes=30),                            id="idle_summary")
