@@ -13,3 +13,4 @@
 {"ts": "2026-06-13T04:48:35.041111", "summary": "Added hardcoded rules to AGENTS.md for refactoring, pagination, and Jules hygiene safety", "git_head": "e51b9561cf2a9631f8cd5df28ef1cb62601d5885", "branch": "main"}
 {"ts": "2026-06-13T04:51:23.612533", "summary": "Verification and final sync of AGENTS.md rules for refactoring safety, pagination, and Jules hygiene.", "git_head": "58eeef451ccdba5ccf847092aa445f7ecd329b38", "branch": "main"}
 {"ts": "2026-06-13T12:35:44.427367", "summary": "Consolidated agent-memory and pipeline-autopilot documentation files to reduce repository sprawl while retaining Jules references", "git_head": "68393e7b2fb6531cb0b4955664ba55bc1fd7fbe7", "branch": "main"}
+{"ts": "2026-06-13T12:38:34.577489", "summary": "Updated ARCHITECTURE.md and AGENTS.md references to point to unified tools/jules.py engine", "git_head": "0c85f31606bc49d5bff32f163d46b7e2cad9abd1", "branch": "main"}
