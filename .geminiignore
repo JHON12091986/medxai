@@ -36,3 +36,4 @@ data/plans/
 upgrades/backups/
 !data/session_checkpoint.json
 !data/workspace/
+!data/memory_stash.json
