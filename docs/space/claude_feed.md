@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-13 13:36 +06
-- Git HEAD: e78ddc042f29cb39a9e177797aac56c13bdb4dcf
-- Last commit: docs: post-session sync 2026-06-13 13:35
+- Generated: 2026-06-13 14:52 +06
+- Git HEAD: 07b6f7caf0ebbb198a506b50165513661206e390
+- Last commit: fix(tests): Update expected message in test_telegram_interface
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sat 2026-06-13 04:20:56 +06; 9h ago
+     Active: active (running) since Sat 2026-06-13 04:20:56 +06; 10h ago
  Invocation: 004ebd9fe7714d10940bb5cb7d3ba5ee
    Main PID: 533517 (python)
       Tasks: 29 (limit: 15177)
-     Memory: 340.6M (peak: 522M, swap: 148M, swap peak: 148M)
-        CPU: 2min 26.986s
+     Memory: 264.4M (peak: 522M, swap: 223.5M, swap peak: 223.5M)
+        CPU: 2min 38.545s
      CGroup: /system.slice/nina.service
              └─533517 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 13 13:36:28 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: WARNING:nina.tools.jules:PR #170 merge failed. Requires manual check.
-Jun 13 13:36:28 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:nina.scheduler:{"event": "job_run", "job": "mega_orchestrator", "duration": 30.720131397247314, "success": true}
-Jun 13 13:36:28 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:03:00], next run at: 2026-06-13 13:38:57 +06)" executed successfully
-Jun 13 13:36:31 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 13 13:36:41 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 14:51:37 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 14:51:47 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 14:51:57 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 14:52:07 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 13 14:52:17 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[533517]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -74,11 +74,11 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 
 ## 5. Last 5 Completions
 ```
-e78ddc0 docs: post-session sync 2026-06-13 13:35
-ff3a1a1 docs: post-session sync 2026-06-13 12:38
-0c85f31 docs(jules): update references to consolidated files in AGENTS.md and ARCHITECTURE.md
-0d002a4 docs: post-session sync 2026-06-13 12:35
-68393e7 docs(agents): update AGENTS.md with documentation consolidation learnings
+07b6f7c fix(tests): Update expected message in test_telegram_interface
+e886769 chore: Remove stale test for deleted append_lock module
+fa720cd Merge branch 'jules-mega-batch-286998758916366173' into main
+4c1944c Merge branch 'jules-6608087518271029302-9c781548' into main
+745f19f Merge branch 'jules-1574419446092272855-fa63bff5' into main
 ```
 
 ## 6. Open Blockers
@@ -116,9 +116,28 @@ ff3a1a1 docs: post-session sync 2026-06-13 12:38
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-#171 🛡️ Sentinel: [HIGH] Fix missing shell execution and deletion guards in UpgradePipeline [jules-1574419446092272855-fa63bff5]
-#170 ⚡ Bolt: Optimize avg_latency_ms in ProviderHealth to O(1) [bolt-optimize-avg-latency-6046696942059836419]
+- No open PRs
+
+## 9. Error Register (OPEN only)
+| ID | Description | Status |
+|----|-------------|--------|
+| F-01 | B-1 · Self-check pass for complex tasks | OPEN |
+| F-04 | C-1 · Expenditure tracker tool | OPEN |
+| F-05 | C-2 · Share market monitor (DSE/CSE alerts) | OPEN |
+| F-06 | C-3 · Proactive reminder engine | OPEN |
+| F-07 | C-4 · Email triage improvement | OPEN |
+| F-08 | C-5 · Personal knowledge base (`/remember` and `/recall`) | OPEN |
+| R-77 | A-1 · Fix `parallel_route` RAM guard crash | OPEN |
+| R-78 | A-3 · Fix tool grammar fragility (minimum viable guard) | OPEN |
+| config.missing_env.telegramchatid | TELEGRAMCHATID missing from .env (non-blocking) | OPEN |
+| feature.ews_blocked | EWS email feature blocked (open issue O-02) | OPEN |
+
+## 10. Quota Snapshot
+gemini_api: 0/1000 | ollama: unlimited | ninagate_up: yes
+
+## 11. Guardian Last Run
+Guardian log not found
 
 
 ---
-_Feed size: 6892 bytes_
+_Feed size: 7642 bytes_

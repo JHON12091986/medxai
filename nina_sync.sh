@@ -408,6 +408,85 @@ pr_list = subprocess.getoutput(
 lines.append(pr_list if pr_list else "- No open PRs")
 lines.append("")
 
+# 9. Error Register (OPEN only)
+lines.append("## 9. Error Register (OPEN only)")
+error_reg = NINA / "docs/space/nina_error_register.md"
+if error_reg.exists():
+    try:
+        err_lines = error_reg.read_text().splitlines()
+        open_errors = []
+        for el in err_lines:
+            if "|" in el and "Status" not in el and "---" not in el:
+                parts = [p.strip() for p in el.split("|")]
+                if len(parts) > 5 and parts[5] == "OPEN":
+                    err_id = parts[1]
+                    err_desc = parts[4]
+                    err_status = parts[5]
+                    open_errors.append((err_id, err_desc, err_status))
+        if open_errors:
+            lines.append("| ID | Description | Status |")
+            lines.append("|----|-------------|--------|")
+            for err in open_errors[:10]:
+                lines.append(f"| {err[0]} | {err[1]} | {err[2]} |")
+        else:
+            lines.append("No open errors")
+    except Exception as e:
+        lines.append(f"Error reading error register: {e}")
+else:
+    lines.append("No open errors")
+lines.append("")
+
+# 10. Quota Snapshot
+lines.append("## 10. Quota Snapshot")
+quota_file = NINA / "data/quota_state.json"
+if quota_file.exists():
+    try:
+        quota_data = json.loads(quota_file.read_text())
+        gemini_used = quota_data.get("quotas", {}).get("gemini", 0)
+        
+        import socket
+        try:
+            with socket.create_connection(("127.0.0.1", 8080), timeout=0.5):
+                ninagate_up = "yes"
+        except OSError:
+            ninagate_up = "no"
+            
+        lines.append(f"gemini_api: {gemini_used}/1000 | ollama: unlimited | ninagate_up: {ninagate_up}")
+    except Exception:
+        lines.append("quota_state.json not found")
+else:
+    lines.append("quota_state.json not found")
+lines.append("")
+
+# 11. Guardian Last Run
+lines.append("## 11. Guardian Last Run")
+guardian_log = LOGS_DIR / "guardian.log"
+if not guardian_log.exists():
+    logs = list(LOGS_DIR.glob("*guardian*"))
+    if logs:
+        guardian_log = logs[0]
+
+if guardian_log.exists():
+    try:
+        last_line = guardian_log.read_text().strip().splitlines()[-1]
+        ts_match = re.search(r'(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d+)?)', last_line)
+        pf_match = re.search(r'\b(PASS|FAIL|SUCCESS|BLOCKED)\b', last_line, re.IGNORECASE)
+        violation_match = re.search(r'(\d+)\s*(?:violations|errors|issues)', last_line, re.IGNORECASE)
+        
+        ts = ts_match.group(1) if ts_match else "unknown_time"
+        pf = pf_match.group(1).upper() if pf_match else "unknown_result"
+        if pf == "SUCCESS": pf = "PASS"
+        if pf == "BLOCKED": pf = "FAIL"
+        
+        violations = violation_match.group(1) if violation_match else "0"
+        
+        lines.append(f"{ts} | {pf} | {violations} violations")
+    except Exception:
+        lines.append("Guardian log not found")
+else:
+    lines.append("Guardian log not found")
+lines.append("")
+
 size = len("\n".join(lines))
 lines.append(f"\n---\n_Feed size: {size} bytes_")
 

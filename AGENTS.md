@@ -467,3 +467,9 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Cache keys based on sorted payload representation ensure robustness across stream and non-stream requests.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
 
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Claude Feed Expansion
+- OFFLOAD_OPPORTUNITY: Simple directory listing, git status checks, and local file reading -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Direct python checks (such as socket connection tests and regex log parsing) are highly robust when embedded inside bash sync runs.
+- CONTEXT_HINT: Appending structured markdown tables for open errors and single-line snapshots of quota and guardian status maintains a high-density, low-context feed.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
