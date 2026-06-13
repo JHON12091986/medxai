@@ -378,12 +378,12 @@ _Dependency: AG-B-01 and AG-B-02 must be DONE first_
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `READY` | AG-B-01 |
+| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `DONE` | AG-B-01 |
 | AG-M-02 | Multi-module | 📉 MEGA-TASK: Token-Surgical Architecture (v2.1) — Aggressive cloud token reduction via local RAG and surgical context selection. | `DONE` | AG-M-01 |
 | AG-M-03 | Multi-module | 🛠️ NF-EXT: Surgical Code Intelligence — Add `nf code symbol`, `find-symbol`, and `sigs` for zero-token code research. | `DONE` | — |
 | AG-M-04 | `AGENTS.md` | 📝 DOC-COMP: Instruction Compression — Refactor `AGENTS.md` into high-density directives; move guides to `docs/agent-memory/`. | `DONE` | — |
 | AG-M-05 | `ninaflash.py` | 📊 NF-BACKLOG: Incremental State Monitoring — Add `backlog summary` and `task active` to avoid reading full backlog tables. | `DONE` | — |
-| AG-M-06 | `.geminiignore` | 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiignore` for automated context pruning. | `READY` | — |
+| AG-M-06 | `.geminiignore` | 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiignore` for automated context pruning. | `DONE` | — |
 | AG-M-07 | `ninaflash.py` | 🧹 NF-CLEAN: Automated Hygiene — Add `nf check code --fix` and `nf doc check --fix` for local error resolution. | `DONE` | — |
 | AG-M-08 | `ninaflash.py` | 💓 NF-STATUS: High-Density Pulse — Implement `nf status --pulse` and `nf log next-id` for 10-line project heartbeats. | `DONE` | — |
 | AG-M-09 | `ninaflash.py` | 📦 NF-ARCHIVE: Historical Offloading — Implement `nf backlog archive` to move `DONE` tasks to historical storage. | `DONE` | — |
@@ -399,9 +399,9 @@ _Focus: Zero-token research and semantic mapping_
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
 | AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `DONE` | — |
-| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `READY` | AG-N-01 |
-| AG-N-03 | `core/` | Type Hint Enforcement — Automated script to add missing type hints. | `READY` | — |
-| AG-N-04 | `ninaflash.py` | Dead Code Detector — Identify and flag unused functions/imports. | `READY` | — |
+| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `DONE` | AG-N-01 |
+| AG-N-03 | `core/` | Type Hint Enforcement — Automated script to add missing type hints. | `DONE` | — |
+| AG-N-04 | `ninaflash.py` | Dead Code Detector — Identify and flag unused functions/imports. | `DONE` | — |
 | AG-N-05 | `ninaflash.py` | Symbol-Based Context Injector — Read only the call stack of a function. | `READY` | AG-N-02 |
 | AG-N-06 | `ninaflash.py` | Docstring Quality Audit — Score docstrings on clarity and completeness. | `READY` | — |
 | AG-N-07 | `core/` | Automated Refactoring: Method Extraction — Split large functions via AST. | `READY` | — |
