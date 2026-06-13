@@ -28,16 +28,16 @@ class NinaMetrics:
     error_rate: float = 0.0
     memory_mb: float = 0.0
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if self.active_providers is None:
             self.active_providers = []
 
 class ObservabilityHub:
-    def __init__(self):
+    def __init__(self) -> None:
         self.metrics = NinaMetrics()
         self.start_time = time.time()
 
-    def record_task(self, ok: bool):
+    def record_task(self, ok: bool) -> None:
         self.metrics.tasks_total += 1
         if ok:
             self.metrics.tasks_ok += 1
@@ -45,19 +45,19 @@ class ObservabilityHub:
             self.metrics.tasks_fail += 1
         self.metrics.error_rate = self.metrics.tasks_fail / self.metrics.tasks_total if self.metrics.tasks_total > 0 else 0.0
 
-    def record_router_call(self):
+    def record_router_call(self) -> None:
         self.metrics.router_calls += 1
 
-    def set_sync_ts(self):
+    def set_sync_ts(self) -> None:
         # Format: ISO8601
         from datetime import datetime, timezone
         self.metrics.last_sync_ts = datetime.now(timezone.utc).isoformat()
 
-    def set_health_ts(self):
+    def set_health_ts(self) -> None:
         from datetime import datetime, timezone
         self.metrics.last_health_check_ts = datetime.now(timezone.utc).isoformat()
 
-    def set_active_providers(self, names: list[str]):
+    def set_active_providers(self, names: list[str]) -> None:
         self.metrics.active_providers = names
 
     def get_status(self) -> HealthStatus:
@@ -73,7 +73,7 @@ class ObservabilityHub:
         data["status"] = self.get_status().value
         return data
 
-    def emit_log(self):
+    def emit_log(self) -> None:
         logger.info(json.dumps(self.to_dict()))
 
 _hub = None

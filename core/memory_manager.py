@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 
 class ScratchpadManager:
-    def __init__(self):
+    def __init__(self) -> None:
         self.file_path = Path("data/memory/scratchpad.json")
         self.file_path.parent.mkdir(parents=True, exist_ok=True)
         if not self.file_path.exists():
@@ -16,12 +16,12 @@ class ScratchpadManager:
         except Exception:
             return {}
 
-    def _write(self, data: dict):
+    def _write(self, data: dict) -> None:
         tmp = self.file_path.with_suffix(".tmp")
         tmp.write_text(json.dumps(data, indent=2))
         tmp.replace(self.file_path)
 
-    def store(self, key: str, value: Any, ttl_seconds: int = 300):
+    def store(self, key: str, value: Any, ttl_seconds: int = 300) -> None:
         data = self._read()
         from datetime import timedelta
         expires_at = (datetime.now(timezone.utc) + timedelta(seconds=ttl_seconds)).isoformat()
@@ -48,7 +48,7 @@ class ScratchpadManager:
 
         return entry.get("value")
 
-    def clear_expired(self):
+    def clear_expired(self) -> None:
         data = self._read()
         now = datetime.now(timezone.utc).isoformat()
 
@@ -58,5 +58,5 @@ class ScratchpadManager:
                 del data[k]
             self._write(data)
 
-    def clear_all(self):
+    def clear_all(self) -> None:
         self._write({})

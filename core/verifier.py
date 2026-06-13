@@ -1,3 +1,4 @@
+from typing import Any
 import re
 import logging
 import json
@@ -17,7 +18,7 @@ class VerificationResult:
     check_name: str
 
 class StepVerifier:
-    def verify_non_empty(self, output) -> VerificationResult:
+    def verify_non_empty(self, output: Any) -> VerificationResult:
         if output is None:
             passed, score, reason = False, 0.0, "output is None"
         elif isinstance(output, str) and output == "":
@@ -47,7 +48,7 @@ class StepVerifier:
             check_name="non_empty"
         )
 
-    async def verify_success_criteria(self, output, criteria: str) -> VerificationResult:
+    async def verify_success_criteria(self, output: Any, criteria: str) -> VerificationResult:
         prompt = f'Does this output satisfy the criteria? Output: <{output}>. Criteria: <{criteria}>. Reply with JSON only: {{"passed": true, "reason": "one sentence"}}'
         passed = False
         reason = "verification failed: unknown error"
@@ -124,7 +125,7 @@ class StepVerifier:
 
         return {"score": score, "reason": reason, "passed": passed}
 
-    def verify_numeric_range(self, output, min_val: float = None, max_val: float = None) -> VerificationResult:
+    def verify_numeric_range(self, output: Any, min_val: float = None, max_val: float = None) -> VerificationResult:
         passed = False
         reason = ""
         score = 0.0
@@ -242,7 +243,7 @@ class StepVerifier:
             check_name="schema"
         )
 
-    async def verify_all(self, output, checks: List[dict]) -> List[VerificationResult]:
+    async def verify_all(self, output: Any, checks: List[dict]) -> List[VerificationResult]:
         results = []
         for check in checks:
             check_type = check.get("type")
@@ -265,7 +266,7 @@ class StepVerifier:
 
         return results
 
-def is_valid_output(output) -> bool:
+def is_valid_output(output: Any) -> bool:
     verifier = StepVerifier()
     result = verifier.verify_non_empty(output)
     return result.passed

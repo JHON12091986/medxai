@@ -1,4 +1,5 @@
 # NINA v12 MemorySystem Stage 5
+from typing import Any
 import asyncio, json, logging, shutil, time, uuid
 from pathlib import Path
 import chromadb
@@ -14,7 +15,7 @@ REMINDERS_FILE = Path("data/reminders.json")
 PREF_KEYS = {"name", "language", "timezone", "bank", "email", "role", "style"}
 
 class MemorySystem:
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = None
         self.col    = None
         self.facts: dict = {}
@@ -22,7 +23,7 @@ class MemorySystem:
         self.reminders: list = []
         self._reminders_lock = asyncio.Lock()
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         CHROMA_DIR.mkdir(parents=True, exist_ok=True)
         FACTS_FILE.parent.mkdir(parents=True, exist_ok=True)
         try:
@@ -83,13 +84,13 @@ class MemorySystem:
             docs = []
 
         # ── F-02: personal_context — fixed top section, always injected ─────
-        def get_val(key, default="unknown"):
+        def get_val(key: Any, default: Any="unknown") -> Any:
             fact = self.facts.get(key)
             if fact is None: return default
             val = fact.get("value", default) if isinstance(fact, dict) else fact
             return val if val != "" else default
 
-        def format_list(val):
+        def format_list(val: Any) -> Any:
             if isinstance(val, list): return ", ".join(val)
             if isinstance(val, str): return val
             return str(val)
@@ -121,7 +122,7 @@ class MemorySystem:
     def get_facts(self) -> dict:
         return self.facts
 
-    async def save_turn(self, role: str, content: str):
+    async def save_turn(self, role: str, content: str) -> None:
 
         try:
             if not self.col:
@@ -136,7 +137,7 @@ class MemorySystem:
         except Exception as e:
             logger.warning(f"memory_save_failed err={e}")
 
-    async def remember(self, text: str):
+    async def remember(self, text: str) -> None:
         parts = text.split(":", 1)
         key = parts[0].strip()
         val = parts[1].strip() if len(parts) == 2 else text
@@ -149,7 +150,7 @@ class MemorySystem:
             )
             tmp.replace(FACTS_FILE)
 
-    async def forget(self, key: str):
+    async def forget(self, key: str) -> None:
         async with self._facts_lock:
             self.facts.pop(key, None)
             tmp = FACTS_FILE.with_suffix(".tmp")
@@ -189,7 +190,7 @@ class MemorySystem:
                 if r.get("status") == "pending" and r.get("due_time", 0) <= now
             ]
 
-    async def mark_reminder_done(self, rem_id: str):
+    async def mark_reminder_done(self, rem_id: str) -> None:
         async with self._reminders_lock:
             for r in self.reminders:
                 if r.get("id") == rem_id:
@@ -197,7 +198,7 @@ class MemorySystem:
                     break
             await self._save_reminders()
 
-    async def _save_reminders(self):
+    async def _save_reminders(self) -> None:
         tmp = REMINDERS_FILE.with_suffix(".tmp")
         await asyncio.to_thread(
             tmp.write_text,
@@ -205,7 +206,7 @@ class MemorySystem:
         )
         tmp.replace(REMINDERS_FILE)
 
-    async def wipe_and_reinitialize(self):
+    async def wipe_and_reinitialize(self) -> None:
         async with self._facts_lock:
             shutil.rmtree(CHROMA_DIR, ignore_errors=True)
             FACTS_FILE.write_text("{}")
@@ -296,15 +297,15 @@ class MemorySystem:
 
         return results
 
-    async def close(self):
+    async def close(self) -> None:
         pass
 
     @property
-    def conversation_count(self):
+    def conversation_count(self) -> Any:
         return self.col.count() if self.col else 0
 
     @property
-    def fact_count(self):
+    def fact_count(self) -> Any:
         return len(self.facts)
 
 class MemoryHealth:

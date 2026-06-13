@@ -40,7 +40,7 @@ _Dependency: AG-B-01 and AG-B-02 must be DONE first_
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `READY` | AG-B-01 |
+| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `DONE` | AG-B-01 |
 | AG-M-02 | Multi-module | 📉 MEGA-TAS
 
 ### AG-N — Advanced Code Intelligence
@@ -49,7 +49,7 @@ _Focus: Zero-token research and semantic mapping_
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
 | AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `DONE` | — |
-| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `READY` | A
+| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `DONE` | A
 
 ### AG-O — Automated Testing & QA
 _Focus: Reducing debug turns through local verification_

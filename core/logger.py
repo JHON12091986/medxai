@@ -1,3 +1,4 @@
+from typing import Any
 import sys
 from loguru import logger
 from pathlib import Path
@@ -26,7 +27,7 @@ logger.add(
     retention="7 days",
 )
 
-def get_logger(name=None):
+def get_logger(name: Any=None) -> Any:
     if name:
         return logger.bind(name=name)
     return logger

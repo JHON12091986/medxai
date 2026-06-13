@@ -1,4 +1,5 @@
 """NINA v12 — NinaOS orchestrator (Stage 1)."""
+from typing import Any
 import logging, os, time
 from core.config import load_config
 from core.router import HybridRouter
@@ -62,7 +63,7 @@ Hard constraints: Never send banking/sensitive data to cloud. Never bypass appro
 
 
 class NinaOS:
-    def __init__(self):
+    def __init__(self) -> None:
         self.config  = load_config()
         self.router  = HybridRouter(self.config)
         self.memory  = MemorySystem()
@@ -77,14 +78,14 @@ class NinaOS:
         self.system_prompt = ""
         self._force_local_fast = False
 
-    async def start(self):
+    async def start(self) -> None:
         # Single-instance lock moved to main.py
         os.makedirs("data", exist_ok=True)
 
         import logging.handlers
         os.makedirs("logs", exist_ok=True)
 
-        def file_handler(filename, level=logging.DEBUG):
+        def file_handler(filename: Any, level: Any=logging.DEBUG) -> Any:
             h = logging.handlers.TimedRotatingFileHandler(
                 f"logs/{filename}", when="midnight", backupCount=7, encoding="utf-8")
             h.setLevel(level)
@@ -94,7 +95,7 @@ class NinaOS:
         root = logging.getLogger()
         root.setLevel(logging.DEBUG)
 
-        def _has_handler(logger_obj, filename=None, stream=False):
+        def _has_handler(logger_obj: Any, filename: Any=None, stream: Any=False) -> Any:
             for h in logger_obj.handlers:
                 if stream and isinstance(h, logging.StreamHandler):
                     return True
@@ -167,7 +168,7 @@ class NinaOS:
         await self.hotreload.initialize()
         await self._send_startup_message()
 
-    async def _send_startup_message(self):
+    async def _send_startup_message(self) -> None:
         temps  = await systool.get_temps()
         ram    = await systool.get_ram_used_gb()
         vram   = "N/A"
@@ -191,14 +192,14 @@ class NinaOS:
         s = await systool.get_status(self.config)
         return f"{s}\n\n{self.router.get_status()}"
 
-    async def shutdown(self):
+    async def shutdown(self) -> None:
         self.scheduler.shutdown(wait=False)
         await self.router.close()
         await self.memory.close()
         await self.telegram.stop()
         logging.getLogger("nina").info("NINA shutdown complete")
 
-    async def run_morning_report(self):
+    async def run_morning_report(self) -> None:
         from tools import officemail
         from tools import system as systool
         import httpx, time
@@ -215,7 +216,7 @@ class NinaOS:
         lines.append(f"Cost yesterday: ${self.router.cost.daily_cost_usd:.4f}")
         await self.telegram.send_message("\n".join(lines))
 
-    async def run_heartbeat(self):
+    async def run_heartbeat(self) -> None:
         import httpx, logging
         logging.getLogger("nina.scheduler").info("NINA operational")
         if self.config.dead_man_ping_url:
@@ -224,10 +225,10 @@ class NinaOS:
                     await c.get(self.config.dead_man_ping_url, timeout=10)
             except Exception: pass
 
-    async def run_cost_report(self):
+    async def run_cost_report(self) -> None:
         await self.telegram.send_message(f"Daily cost: ${self.router.cost.daily_cost_usd:.4f}")
 
-    async def run_idle_summary(self):
+    async def run_idle_summary(self) -> None:
         import json
         q = _IDLE_QUEUE  # P5: canonical path from upgradepipeline
         if q.exists():
@@ -244,17 +245,17 @@ class NinaOS:
                     else:
                         await self.telegram.send_message(f"⚠️ Idle queue item rejected: {oldest.get('filename')}")
 
-    async def run_log_rotation(self):
+    async def run_log_rotation(self) -> None:
         logging.getLogger("nina.scheduler").info("log_rotation_tick")
 
-    async def run_provider_health(self):
+    async def run_provider_health(self) -> None:
         logging.getLogger("nina.scheduler").info("provider_health_probe")
 
-    async def run_provider_hunter(self):
+    async def run_provider_hunter(self) -> None:
         from tools.providerhunter import hunt
         await hunt(self.router, self.config)
 
-    async def run_thermal_health(self):
+    async def run_thermal_health(self) -> None:
         from tools import system as s
         temps = await s.get_temps()
         cfg = self.config
@@ -263,7 +264,7 @@ class NinaOS:
         if temps["gpu"] and temps["gpu"] >= cfg.thermal_warn_gpu:
             await self.telegram.send_message(f"GPU temp {temps['gpu']}°C approaching limit.")
 
-    async def run_reminder_check(self):
+    async def run_reminder_check(self) -> None:
         logging.getLogger("nina.scheduler").info("reminder_check")
         import time
         due = await self.memory.get_due_reminders(time.time())

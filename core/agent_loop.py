@@ -76,7 +76,7 @@ def act(plan_result: PlanResult, context: dict) -> ActResult:
     return ActResult(ok=ok, output=output, error=error, tokens_used=5)
 
 class AgentLoop:
-    def __init__(self, router, tools: list[str]):
+    def __init__(self, router: Any, tools: list[str]) -> None:
         self.router = router
         self.tools = tools
         self.logger = logging.getLogger("nina.agent")
@@ -89,7 +89,7 @@ class AgentLoop:
 
         async def scout_task() -> str:
             # Run blocking file operations in a thread pool
-            def _scout():
+            def _scout() -> Any:
                 try:
                     import glob
                     files = glob.glob("**/*.py", recursive=True)[:3]
@@ -104,11 +104,11 @@ class AgentLoop:
 
         async def scaffold_task() -> str:
             # Start local tool scaffolding (imports, docstrings)
-            def _scaffold():
+            def _scaffold() -> Any:
                 return 'import os\nimport sys\n\n"""\nAuto-generated scaffolding.\n"""\n'
             return await asyncio.to_thread(_scaffold)
 
-        async def cloud_task(scout_future) -> ActResult:
+        async def cloud_task(scout_future: Any) -> ActResult:
             # We must wait for the scout to provide the summary to the agent
             pre_flight_summary = await scout_future
 
@@ -116,7 +116,7 @@ class AgentLoop:
             local_context = context.copy()
             local_context["pre_flight_summary"] = pre_flight_summary
 
-            def _cloud():
+            def _cloud() -> Any:
                 t_res = think(input, local_context)
                 self.logger.debug(f"THINK: {t_res}")
                 p_res = plan(t_res, self.tools)
