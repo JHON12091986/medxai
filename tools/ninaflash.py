@@ -360,42 +360,6 @@ def _is_ignored_path(path: Path) -> bool:
         return False
     return _is_ignored(rel_path, patterns)
 
-def cmd_check_complexity(args):
-    """[065] Code Complexity Watchdog: Calculate cyclomatic complexity."""
-    path = _path_resolve(args.file)
-    if not path.exists():
-        print(f"❌ File not found: {path}")
-        return
-
-    try:
-        source = path.read_text(encoding="utf-8")
-        tree = ast.parse(source)
-    except Exception as e:
-        print(f"Error parsing file: {e}")
-        return
-
-    def calculate_complexity(node):
-        complexity = 1
-        for child in ast.walk(node):
-            if isinstance(child, (ast.If, ast.While, ast.For, ast.AsyncFor, ast.ExceptHandler, ast.With, ast.AsyncWith)):
-                complexity += 1
-            elif isinstance(child, ast.BoolOp):
-                complexity += len(child.values) - 1
-        return complexity
-
-    results = []
-    for node in tree.body:
-        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            results.append({"name": node.name, "complexity": calculate_complexity(node), "line": getattr(node, 'lineno', 0)})
-        elif isinstance(node, ast.ClassDef):
-            for method in node.body:
-                 if isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                     results.append({"name": f"{node.name}.{method.name}", "complexity": calculate_complexity(method), "line": getattr(method, 'lineno', 0)})
-
-    print(f"Complexity for {path}:")
-    for r in sorted(results, key=lambda x: x['complexity'], reverse=True):
-        print(f"  {r['name']} (line {r['line']}): {r['complexity']}")
-
 def cmd_check_ignore(args):
     """[037] Diagnostic command to list files hidden by .geminiignore."""
     print("── ninaflash check ignore ───────────────────")
@@ -500,7 +464,8 @@ def cmd_code_cycles(args):
     def get_module_name(file_path, root):
         rel_path = file_path.relative_to(root)
         if rel_path.name == "__init__.py":
-            return ".".join(rel_path.parent.parts)
+            parts = ".".join(rel_path.parent.parts)
+            return f"{parts}.__init__" if parts else "__init__"
         else:
             return ".".join(rel_path.with_suffix("").parts)
 
@@ -598,7 +563,7 @@ def cmd_code_cycles(args):
             elif neighbor in stack:
                 cycle_idx = path.index(neighbor)
                 cycle = path[cycle_idx:] + [neighbor]
-                if len(cycle) > 2:
+                if len(cycle) >= 2:
                     cycles.append(cycle)
 
         stack.remove(node)
@@ -1097,26 +1062,6 @@ def cmd_check_complexity(args):
     except Exception as e:
         print(f"❌ Error parsing {path}: {e}")
 
-def cmd_check_ignore(args):
-    """[045] Show which files are currently being hidden from the agent."""
-    patterns = _load_geminiignore()
-    print(f"Loaded {len(patterns)} patterns from .geminiignore")
-    if not patterns:
-        return
-
-    ignored_files = []
-    for root, dirs, files in os.walk(REPO_ROOT):
-        dirs[:] = [d for d in dirs if not _is_ignored(str((Path(root) / d).relative_to(REPO_ROOT)), patterns)]
-        for file in files:
-            path = Path(root) / file
-            if _is_ignored(str(path.relative_to(REPO_ROOT)), patterns):
-                ignored_files.append(str(path.relative_to(REPO_ROOT)))
-
-    print(f"Found {len(ignored_files)} ignored files.")
-    for f in sorted(ignored_files)[:50]:
-        print(f"  {f}")
-    if len(ignored_files) > 50:
-        print(f"  ... and {len(ignored_files) - 50} more")
 
 def cmd_check_doc(args):
     """[034] Doc quality gate: validate required sections and stale references."""
@@ -2394,11 +2339,12 @@ def cmd_code_symbol(args):
         print(f"❌ File not found: {path}")
         return
     try:
-        tree = ast.parse(path.read_text(encoding="utf-8"))
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
         for node in ast.walk(tree):
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
                 if node.name == args.name:
-                    print(ast.unparse(node))
+                    print(ast.get_source_segment(source, node))
                     return
         print(f"❌ Symbol '{args.name}' not found in {path}")
     except Exception as e:
@@ -2785,7 +2731,8 @@ def cmd_code_audit_doc(args):
         return
 
     try:
-        tree = ast.parse(path.read_text(encoding="utf-8"))
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
     except SyntaxError as e:
         print(f"❌ Syntax error in file: {e}")
         return
@@ -3129,7 +3076,6 @@ def main():
         elif args.command == "query-capability": cmd_query_capability(args)
         elif args.command == "pr":
             if args.sub == "reconcile": cmd_pr_reconcile(args)
-            elif args.sub == "merge-surgical": cmd_pr_merge_surgical(args)
         elif args.command == "task":
             if args.sub == "active": cmd_task_active(args)
         elif args.command == "log":
