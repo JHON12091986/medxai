@@ -71,7 +71,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `test_router_http.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools.log` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `agent/` | subsystem | active | keep | Subsystem directory containing agent logic/docs. | ✅ YES |
-| `agy_prompts/` | subsystem | active | keep | Subsystem directory containing agy_prompts logic/docs. | ✅ YES |
 | `bin/` | subsystem | active | keep | Subsystem directory containing bin logic/docs. | ✅ YES |
 | `checks/` | subsystem | active | keep | Subsystem directory containing checks logic/docs. | ✅ YES |
 | `core/` | subsystem | active | keep | System orchestrator, router, memory, and config modules. | ✅ YES |
