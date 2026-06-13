@@ -288,6 +288,8 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 - Before merging: python3 -m py_compile + pyflakes on changed files, check juleslock.txt.
 - After merging: ./nina_sync.sh — no exceptions.
 - Jules specs must include: file, function, exact change, what NOT to touch, acceptance criteria.
+- QUEUE CHECK (mandatory): Before submitting any Jules spec, check ~/nina/docs/space/jules_queue.md ACTIVE table. If the target file is already listed, add to QUEUE instead — do not submit.
+- ONE FILE ONE TASK: Never submit two Jules specs that touch the same file simultaneously. Wait for the PR to merge and the file to clear from ACTIVE before submitting the next spec for that file.
 
 ---
 

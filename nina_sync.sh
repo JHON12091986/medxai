@@ -346,6 +346,27 @@ else:
     lines.append("- No files locked — juleslock.txt empty or missing")
 lines.append("")
 
+# 3b. Jules Queue (ACTIVE tasks)
+QUEUE_FILE = NINA / "docs/space/jules_queue.md"
+lines.append("## 3b. Jules Queue (ACTIVE tasks)")
+if QUEUE_FILE.exists():
+    try:
+        q_lines = QUEUE_FILE.read_text().splitlines()
+        active_idx = -1
+        for i, ql in enumerate(q_lines):
+            if "## ACTIVE" in ql:
+                active_idx = i
+                break
+        if active_idx != -1:
+            lines.extend(q_lines[active_idx:active_idx+10])
+        else:
+            lines.append("- ## ACTIVE header not found in jules_queue.md")
+    except Exception as e:
+        lines.append(f"- Error reading jules_queue.md: {e}")
+else:
+    lines.append("- jules_queue.md not found")
+lines.append("")
+
 # 4. READY backlog items
 lines.append("## 4. READY Items (eligible for new Jules specs)")
 if BACKLOG.exists():
