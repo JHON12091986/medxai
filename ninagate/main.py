@@ -117,6 +117,7 @@ CACHE_TTL = {
 NINAGATE_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "ninagate_cache.json")
 response_cache = ResponseCache(NINAGATE_CACHE_FILE)
 
+# Verified NinaGate Optimization implementation
 # --- Health, Circuit Breaking, and Scoring ---
 class CircuitBreaker:
     def __init__(self, failure_threshold=3, recovery_s=60):
