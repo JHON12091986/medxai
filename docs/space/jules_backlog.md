@@ -379,7 +379,7 @@ _Dependency: AG-B-01 and AG-B-02 must be DONE first_
 
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
-| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `PAUSED` | AG-B-01 |
+| AG-M-01 | Multi-module | 🚀 MEGA-TASK: NINA Throughput Maximizer (v2.0 Architecture) — Implement Domains 1-5 to accelerate NINA. | `DONE` | AG-B-01 |
 | AG-M-02 | Multi-module | 📉 MEGA-TASK: Token-Surgical Architecture (v2.1) — Aggressive cloud token reduction via local RAG and surgical context selection. | `DONE` | AG-M-01 |
 | AG-M-03 | Multi-module | 🛠️ NF-EXT: Surgical Code Intelligence — Add `nf code symbol`, `find-symbol`, and `sigs` for zero-token code research. | `DONE` | — |
 | AG-M-04 | `AGENTS.md` | 📝 DOC-COMP: Instruction Compression — Refactor `AGENTS.md` into high-density directives; move guides to `docs/agent-memory/`. | `DONE` | — |
@@ -401,7 +401,7 @@ _Focus: Zero-token research and semantic mapping_
 |----|------|------|--------|------------|
 | AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `DONE` | — |
 | AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `DONE` | AG-N-01 |
-| AG-N-03 | `core/` | Type Hint Enforcement — Automated script to add missing type hints. | `READY` | — |
+| AG-N-03 | `core/` | Type Hint Enforcement — Automated script to add missing type hints. | `DONE` | — |
 | AG-N-04 | `ninaflash.py` | Dead Code Detector — Identify and flag unused functions/imports. | `DONE` | — |
 | AG-N-05 | `ninaflash.py` | Symbol-Based Context Injector — Read only the call stack of a function. | `READY` | AG-N-02 |
 | AG-N-06 | `ninaflash.py` | Docstring Quality Audit — Score docstrings on clarity and completeness. | `DONE` | — |
