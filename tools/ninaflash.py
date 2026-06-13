@@ -105,7 +105,9 @@ def main():
     t0 = _time.monotonic()
     try:
         cmd, sub = args.command, getattr(args, 'sub', None)
-        func = globals().get(f"cmd_{cmd}_{sub}") or globals().get(f"cmd_{cmd}")
+        # Normalize hyphens to underscores for function lookup
+        sub_norm = sub.replace("-", "_") if sub else None
+        func = globals().get(f"cmd_{cmd}_{sub_norm}") or globals().get(f"cmd_{cmd}")
         if func: func(args)
         else: print(f"Unknown command: {cmd} {sub}")
         
