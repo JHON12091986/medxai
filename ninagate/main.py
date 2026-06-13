@@ -622,8 +622,17 @@ async def websocket_telemetry(websocket: WebSocket):
 
     try:
         while True:
+            # Cache the psutil result locally to reduce CPU usage during high traffic periods.
+            if not hasattr(websocket_telemetry, '_cached_cpu'):
+                websocket_telemetry._cached_cpu = psutil.cpu_percent(interval=None)
+                websocket_telemetry._cached_time = time.time()
+            else:
+                now = time.time()
+                if now - websocket_telemetry._cached_time > 2.0:
+                    websocket_telemetry._cached_cpu = psutil.cpu_percent(interval=None)
+                    websocket_telemetry._cached_time = now
             metrics = {
-                "cpu_percent": psutil.cpu_percent(interval=None),
+                "cpu_percent": websocket_telemetry._cached_cpu,
                 "gpu_memory_used_mb": 0,
                 "router_events": []
             }
