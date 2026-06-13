@@ -1481,7 +1481,172 @@ def cmd_kernel_upgrade(args):
     print("Kernel upgrade initialized.")
 
 
+
+def cmd_code_extract_method(args):
+    """[042] Extract a block of code into a new method/function using AST."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+
+    try:
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+    except Exception as e:
+        print(f"❌ Failed to parse {path}: {e}")
+        return
+
+    target_node = None
+    parent_node = None
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.ClassDef):
+            for child in node.body:
+                if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)) and child.name == args.func_name:
+                    target_node = child
+                    parent_node = node
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == args.func_name:
+            if target_node is None:
+                target_node = node
+                parent_node = tree
+
+    if not target_node:
+        print(f"❌ Function {args.func_name} not found.")
+        return
+
+    start_line = int(args.start_line)
+    end_line = int(args.end_line)
+
+    before_stmts = []
+    block_stmts = []
+    after_stmts = []
+
+    for stmt in target_node.body:
+        if getattr(stmt, 'lineno', 0) < start_line:
+            before_stmts.append(stmt)
+        elif getattr(stmt, 'lineno', 0) <= end_line:
+            block_stmts.append(stmt)
+        else:
+            after_stmts.append(stmt)
+
+    if not block_stmts:
+        print("❌ No statements found in the specified line range.")
+        return
+
+    def get_names(nodes):
+        reads = set()
+        writes = set()
+        for node in nodes:
+            for subnode in ast.walk(node):
+                if isinstance(subnode, ast.Name):
+                    if isinstance(subnode.ctx, ast.Load):
+                        reads.add(subnode.id)
+                    elif isinstance(subnode.ctx, ast.Store):
+                        writes.add(subnode.id)
+        return reads, writes
+
+    before_reads, before_writes = get_names(before_stmts)
+    block_reads, block_writes = get_names(block_stmts)
+    after_reads, after_writes = get_names(after_stmts)
+
+    available_before = set()
+    for arg in target_node.args.args:
+        available_before.add(arg.arg)
+    if hasattr(target_node.args, 'kwarg') and target_node.args.kwarg:
+        available_before.add(target_node.args.kwarg.arg)
+    if hasattr(target_node.args, 'vararg') and target_node.args.vararg:
+        available_before.add(target_node.args.vararg.arg)
+
+    available_before.update(before_writes)
+
+    inputs = sorted(list((block_reads.union(block_writes)).intersection(available_before)))
+    outputs = sorted(list(block_writes.intersection(after_reads)))
+
+    if isinstance(parent_node, ast.ClassDef) and target_node.args.args and target_node.args.args[0].arg == 'self':
+        if 'self' in inputs:
+            inputs.remove('self')
+        inputs.insert(0, 'self')
+        if 'self' in outputs:
+            outputs.remove('self')
+
+    new_args = ast.arguments(
+        posonlyargs=[],
+        args=[ast.arg(arg=name) for name in inputs],
+        vararg=None,
+        kwonlyargs=[],
+        kw_defaults=[],
+        kwarg=None,
+        defaults=[]
+    )
+
+    is_async = isinstance(target_node, ast.AsyncFunctionDef)
+
+    new_func_body = list(block_stmts)
+    if outputs:
+        if len(outputs) == 1:
+            ret_val = ast.Name(id=outputs[0], ctx=ast.Load())
+        else:
+            ret_val = ast.Tuple(elts=[ast.Name(id=o, ctx=ast.Load()) for o in outputs], ctx=ast.Load())
+        new_func_body.append(ast.Return(value=ret_val))
+
+    if is_async:
+        new_func = ast.AsyncFunctionDef(
+            name=args.new_name,
+            args=new_args,
+            body=new_func_body,
+            decorator_list=[],
+            returns=None,
+            type_comment=None
+        )
+    else:
+        new_func = ast.FunctionDef(
+            name=args.new_name,
+            args=new_args,
+            body=new_func_body,
+            decorator_list=[],
+            returns=None,
+            type_comment=None
+        )
+
+    if parent_node is tree:
+        idx = tree.body.index(target_node)
+        tree.body.insert(idx, new_func)
+    else:
+        idx = parent_node.body.index(target_node)
+        parent_node.body.insert(idx, new_func)
+
+    call_args = [ast.Name(id=name, ctx=ast.Load()) for name in inputs]
+
+    call_expr = ast.Call(
+        func=ast.Name(id=args.new_name if parent_node is tree else f"self.{args.new_name}", ctx=ast.Load()) if 'self' in inputs else ast.Name(id=args.new_name, ctx=ast.Load()),
+        args=call_args if 'self' not in inputs else call_args[1:],
+        keywords=[]
+    )
+    if 'self' in inputs:
+        call_expr.func = ast.Attribute(value=ast.Name(id='self', ctx=ast.Load()), attr=args.new_name, ctx=ast.Load())
+
+    if is_async:
+        call_expr = ast.Await(value=call_expr)
+
+    if outputs:
+        if len(outputs) == 1:
+            assign_target = ast.Name(id=outputs[0], ctx=ast.Store())
+        else:
+            assign_target = ast.Tuple(elts=[ast.Name(id=o, ctx=ast.Store()) for o in outputs], ctx=ast.Store())
+        new_stmt = ast.Assign(targets=[assign_target], value=call_expr)
+    else:
+        new_stmt = ast.Expr(value=call_expr)
+
+    target_node.body = before_stmts + [new_stmt] + after_stmts
+
+    ast.fix_missing_locations(tree)
+    new_source = ast.unparse(tree)
+
+    path.write_text(new_source, encoding="utf-8")
+    print(f"✅ Successfully extracted {args.new_name} and updated {path}")
+
 def cmd_context_pack(args):
+
     """[041] Context Pack: Distill a file into a token-efficient skeletal summary."""
     path = _path_resolve(args.file)
     if not path.exists():
@@ -2557,6 +2722,12 @@ def main():
     p_cs.add_parser("cycles")
     p_cs.add_parser("pack").add_argument("file")
     p_cs.add_parser("dead-code").add_argument("target")
+    p_ext = p_cs.add_parser("extract-method")
+    p_ext.add_argument("file")
+    p_ext.add_argument("func_name")
+    p_ext.add_argument("start_line")
+    p_ext.add_argument("end_line")
+    p_ext.add_argument("new_name")
     
     subparsers.add_parser("bench", help="Run a standardized reasoning task twice (Cloud vs Hybrid)")
 
@@ -2696,6 +2867,7 @@ def main():
             elif args.sub == "doc": cmd_code_doc(args)
             elif args.sub == "pack": cmd_context_pack(args)
             elif args.sub == "dead-code": cmd_code_dead_code(args)
+            elif args.sub == "extract-method": cmd_code_extract_method(args)
         elif args.command == "query": cmd_query(args)
         elif args.command == "query-capability": cmd_query_capability(args)
         elif args.command == "pr":
