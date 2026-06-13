@@ -192,6 +192,17 @@ async def run_dispatch(prompt: str, title: Optional[str] = None):
 async def orchestrate_cycle():
     """The unified 3-minute high-capacity loop."""
     logger.info("Jules Orchestration Cycle Start")
+    
+    # --- GLOBAL PAUSE CHECK ---
+    from pathlib import Path
+    backlog_path = Path("docs/space/jules_backlog.md")
+    if backlog_path.exists() and "GLOBAL PAUSE ACTIVE" in backlog_path.read_text():
+        logger.warning("🛑 GLOBAL PAUSE ACTIVE: Skipping task dispatch.")
+        await watch_cycle()
+        await resolve_prs_parallel()
+        return
+    # --------------------------
+
     await watch_cycle()
     await resolve_prs_parallel()
     

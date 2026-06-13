@@ -273,6 +273,7 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 - If merge conflict: stop, escalate to Perplexity for re-spec.
 
 ### Jules RULES (Jules only)
+- **🛑 GLOBAL PAUSE ACTIVE:** Do NOT dispatch any new tasks to Jules. All task generation and submission is suspended until explicitly re-enabled by the user.
 - Do NOT pause for confirmation. Complete all batches sequentially. Open PR when done.
 - Jules is fire-and-forget async — NOT a chat tool.
 - Jules does NOT merge its own PRs — agy always merges after review.

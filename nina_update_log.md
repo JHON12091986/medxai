@@ -2743,3 +2743,13 @@
 **Files changed:** data/router_cache.json,docs/space/nina_index.json,docs/space/nina_index.md,nina_update_log.md
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 252 — 2026-06-13 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,data/router_cache.json,docs/space/claude_feed.md,docs/space/jules_backlog.md,tools/jules.py
+
+**Verification:** git push OK, nina.service active
