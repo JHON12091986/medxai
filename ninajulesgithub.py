@@ -329,14 +329,26 @@ def _try_rebase(pr: dict) -> tuple[bool, str]:
         return False, f"high-risk conflict: {hits}"
     if _git("fetch", "origin", branch).returncode != 0:
         return False, "fetch failed"
+
+    # Stash any working-tree modifications (e.g. registry/responded JSON writes
+    # from Phase 1) so git rebase can proceed cleanly.
+    dirty = bool(_git("status", "--porcelain").stdout.strip())
+    if dirty:
+        _git("stash", "--include-untracked", "-q")
+
     _git("checkout", "-B", branch, f"origin/{branch}")
     rebase = _git("rebase", "origin/main")
     if rebase.returncode != 0:
         _git("rebase", "--abort")
         _git("checkout", "main")
+        if dirty:
+            _git("stash", "pop", "-q")
         return False, f"rebase conflict: {rebase.stderr[:200]}"
+
     push = _git("push", "origin", branch, "--force-with-lease")
     _git("checkout", "main")
+    if dirty:
+        _git("stash", "pop", "-q")
     if push.returncode != 0:
         return False, f"force-push failed: {push.stderr[:200]}"
     return True, "rebased"
