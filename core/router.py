@@ -510,6 +510,18 @@ class CostTracker:
         self.daily_cost_usd = 0.0
 
 
+def _get_size_rank(name: str) -> float:
+    s = name.lower()
+    for token, rank in (
+        ("0.5b", 0.5), ("1b", 1), ("1.5b", 1.5), ("2b", 2),
+        ("3b", 3), ("4b", 4), ("7b", 7), ("8b", 8),
+        ("9b", 9), ("13b", 13), ("14b", 14), ("27b", 27),
+        ("32b", 32), ("34b", 34), ("70b", 70), ("72b", 72),
+    ):
+        if token in s:
+            return rank
+    return 10.0
+
 class HybridRouter:
     def __init__(self, config: NinaConfig) -> None:
         self.config = config
@@ -587,29 +599,8 @@ class HybridRouter:
             if not models:
                 return
 
-            def size_rank(name: str) -> Any:
-                s = name.lower()
-                for token, rank in (
-                    ("0.5b", 0.5),
-                    ("1b", 1),
-                    ("1.5b", 1.5),
-                    ("2b", 2),
-                    ("3b", 3),
-                    ("4b", 4),
-                    ("7b", 7),
-                    ("8b", 8),
-                    ("9b", 9),
-                    ("13b", 13),
-                    ("14b", 14),
-                    ("27b", 27),
-                    ("32b", 32),
-                    ("34b", 34),
-                    ("70b", 70),
-                    ("72b", 72),
-                ):
-                    if token in s:
-                        return rank
-                return 10
+            def size_rank(name: str) -> float:
+                return _get_size_rank(name)
 
             sorted_models = sorted(models, key=size_rank)
             LOCAL_PROVIDERS["LOCALFAST"]["model"] = sorted_models[0]
@@ -645,7 +636,7 @@ class HybridRouter:
             if not h.is_available(True):
                 continue
             (degraded if h.is_degraded() else avail).append(pid)
-        def sk(p):
+        def sk(p: str) -> float:
             return self.health[p].composite_score(p)
         ordered = sorted(avail, key=sk, reverse=True) + sorted(
             degraded, key=sk, reverse=True

@@ -360,6 +360,42 @@ def _is_ignored_path(path: Path) -> bool:
         return False
     return _is_ignored(rel_path, patterns)
 
+def cmd_check_complexity(args):
+    """[065] Code Complexity Watchdog: Calculate cyclomatic complexity."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+
+    try:
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+    except Exception as e:
+        print(f"Error parsing file: {e}")
+        return
+
+    def calculate_complexity(node):
+        complexity = 1
+        for child in ast.walk(node):
+            if isinstance(child, (ast.If, ast.While, ast.For, ast.AsyncFor, ast.ExceptHandler, ast.With, ast.AsyncWith)):
+                complexity += 1
+            elif isinstance(child, ast.BoolOp):
+                complexity += len(child.values) - 1
+        return complexity
+
+    results = []
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            results.append({"name": node.name, "complexity": calculate_complexity(node), "line": getattr(node, 'lineno', 0)})
+        elif isinstance(node, ast.ClassDef):
+            for method in node.body:
+                 if isinstance(method, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                     results.append({"name": f"{node.name}.{method.name}", "complexity": calculate_complexity(method), "line": getattr(method, 'lineno', 0)})
+
+    print(f"Complexity for {path}:")
+    for r in sorted(results, key=lambda x: x['complexity'], reverse=True):
+        print(f"  {r['name']} (line {r['line']}): {r['complexity']}")
+
 def cmd_check_ignore(args):
     """[037] Diagnostic command to list files hidden by .geminiignore."""
     print("── ninaflash check ignore ───────────────────")
@@ -476,11 +512,13 @@ def cmd_code_cycles(args):
 
         imports = set()
         module_name = get_module_name(file_path, root)
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
+        class ImportVisitor(ast.NodeVisitor):
+            def visit_Import(self, node):
                 for alias in node.names:
                     imports.add(alias.name)
-            elif isinstance(node, ast.ImportFrom):
+                self.generic_visit(node)
+
+            def visit_ImportFrom(self, node):
                 if node.module:
                     level = node.level
                     if level > 0:
@@ -502,6 +540,9 @@ def cmd_code_cycles(args):
                              imports.add(f"{base}.{alias.name}")
                          else:
                              imports.add(alias.name)
+                self.generic_visit(node)
+
+        ImportVisitor().visit(tree)
         return imports
 
     root = Path(REPO_ROOT)
@@ -1562,6 +1603,12 @@ def cmd_code_extract_method(args):
         print("❌ No statements found in the specified line range.")
         return
 
+    for stmt in block_stmts:
+        for subnode in ast.walk(stmt):
+            if isinstance(subnode, (ast.Return, ast.Break, ast.Continue)):
+                print("❌ ValueError: Control flow statement found in extracted block")
+                return
+
     def get_names(nodes):
         reads = set()
         writes = set()
@@ -2280,7 +2327,8 @@ def cmd_code_call_stack(args):
         print(f"❌ File not found: {path}")
         return
     try:
-        tree = ast.parse(path.read_text(encoding="utf-8"))
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
         functions = {}
         for node in tree.body:
             if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -2300,7 +2348,7 @@ def cmd_code_call_stack(args):
             visited.add(current_node.name)
 
             print(f"--- {current_node.name} ---")
-            print(ast.unparse(current_node))
+            print(ast.get_source_segment(source, current_node))
             print()
 
             for child in ast.walk(current_node):
@@ -2845,6 +2893,9 @@ def main():
 
     p_cks.add_parser("ignore")
 
+    p_cplx = p_cks.add_parser("complexity")
+    p_cplx.add_argument("file")
+
     p_doc = subparsers.add_parser("doc"); p_docs = p_doc.add_subparsers(dest="sub")
     p_doc_check = p_docs.add_parser("check")
     p_doc_check.add_argument("file", nargs="?", default="docs/space/nina_update_log.md")
@@ -3008,6 +3059,7 @@ def main():
             if args.sub == "code": cmd_check_code(args)
             elif args.sub == "doc": cmd_check_doc(args)
             elif args.sub == "ignore": cmd_check_ignore(args)
+            elif args.sub == "complexity": cmd_check_complexity(args)
         elif args.command == "doc":
             if args.sub == "check": cmd_check_doc(args)
             elif args.sub == "consolidate": cmd_doc_consolidate(args)
