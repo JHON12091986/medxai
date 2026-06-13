@@ -464,33 +464,105 @@ def _read_file_section(filepath: str, keyword: str, lines: int = 30) -> str:
     return snippet[:1500]
 
 
-def _auto_answer(question: str) -> str:
-    """Generate a safe automated answer for Jules questions."""
-    q = question.lower()
+_NINAGATE_URL = "http://localhost:8080/v1/chat/completions"
+_NINAGATE_TIMEOUT = 45  # seconds — ollama can take 3-8s for longer responses
 
+_SYSTEM_PROMPT = """\
+You are an autonomous pipeline manager for the NINA AI OS codebase (Python, FastAPI, APScheduler).
+You are responding to a Jules AI coding agent that is blocked and waiting for feedback.
+
+CONSTRAINTS you must enforce in every response:
+- Never approve touching: core/router.py, interfaces/telegram_interface.py, guardian_engine.py, .env
+- Always require: python3 -m py_compile <file> after every edit
+- Always use conventional commits: fix(scope): | feat(scope): | docs(scope):
+- Prefer minimal, surgical changes — never restructure unrelated code
+- If the task cannot be completed safely, say: "Close this session. Mark task NEEDS_REVIEW."
+- If global pause was active and is now lifted, explicitly say: "Global pause is lifted. You may proceed."
+- End every response with a clear next action for Jules to take.
+
+Be concise and specific. Jules acts immediately on your reply."""
+
+
+def _build_context(question: str, session_title: str) -> str:
+    """Assemble file snippets and backlog context relevant to the question."""
+    chunks: list[str] = []
+
+    # Pull any referenced .py files from the question
+    for match in re.findall(r"[\w./][\w/.-]+\.py", question):
+        snippet = _read_file_section(match, "def ")
+        if "not found" not in snippet and snippet.strip():
+            chunks.append(f"### {match} (relevant excerpt)\n```python\n{snippet[:800]}\n```")
+
+    # Pull relevant backlog entry if task ID mentioned
+    task_ids = re.findall(r"AG-[A-Z]-\d+|B-\d{3}", question + " " + session_title)
+    if task_ids and BACKLOG_PATH.exists():
+        text = BACKLOG_PATH.read_text()
+        for tid in task_ids[:3]:
+            idx = text.find(tid)
+            if idx != -1:
+                line = text[max(0, text.rfind("\n", 0, idx)):text.find("\n", idx) + 1].strip()
+                chunks.append(f"### Backlog entry: {tid}\n{line}")
+
+    return "\n\n".join(chunks) if chunks else ""
+
+
+def _auto_answer_fallback(question: str) -> str:
+    """Original pattern-matcher — used when NinaGate is unreachable."""
+    q = question.lower()
     if any(kw in q for kw in ("what does", "read", "content of", "show me")):
-        # Try to find a filename in the question
         m = re.search(r"[\w/]+\.py", question)
         if m:
             return _read_file_section(m.group(0), "def ")
         return "Read the file locally and use minimal targeted changes."
-
     if any(kw in q for kw in ("function", "def ", "signature", "api")):
         m = re.search(r"[\w/]+\.py", question)
         if m:
             return _read_file_section(m.group(0), "def ")
         return "Look up the function definition in the referenced file."
-
     if "overwrite or append" in q or "replace" in q:
         return "Append unless the task description explicitly says 'replace' or 'overwrite'."
-
     if "import" in q or "module" in q or "path" in q:
         return "Use the canonical module path from docs/space/nina_index.md."
-
     if any(kw in q for kw in HIGH_RISK):
         return "Read the file and make a minimal targeted change. Do not restructure."
-
     return "Proceed with the most conservative implementation. Do not modify unrelated code."
+
+
+def _auto_answer(question: str, session_title: str = "") -> str:
+    """Route Jules question through NinaGate for intelligent response.
+
+    Falls back to pattern-matcher if NinaGate is unreachable or times out.
+    """
+    context = _build_context(question, session_title)
+
+    user_content = f"Session title: {session_title}\n\n"
+    if context:
+        user_content += f"Relevant codebase context:\n{context}\n\n"
+    user_content += f"Jules is asking:\n{question}"
+
+    try:
+        resp = requests.post(
+            _NINAGATE_URL,
+            json={
+                "model": "auto",
+                "stream": False,
+                "messages": [
+                    {"role": "system", "content": _SYSTEM_PROMPT},
+                    {"role": "user",   "content": user_content},
+                ],
+                "max_tokens": 600,
+                "temperature": 0.2,
+            },
+            timeout=_NINAGATE_TIMEOUT,
+        )
+        resp.raise_for_status()
+        answer = resp.json()["choices"][0]["message"]["content"].strip()
+        logger.info(f"_auto_answer: NinaGate response ({len(answer)} chars)")
+        return answer
+
+    except Exception as exc:
+        logger.warning(f"_auto_answer: NinaGate unreachable ({exc}) — using fallback")
+        return _auto_answer_fallback(question)
 
 
 def phase2_session_health() -> dict:
@@ -521,7 +593,7 @@ def phase2_session_health() -> dict:
                 for act in reversed(acts.get("activities", [])):
                     if "agentMessaged" in act:
                         question = act["agentMessaged"].get("agentMessage", "")
-                        answer = _auto_answer(question)
+                        answer = _auto_answer(question, session_title=title)
                         _jules_api("POST", f"sessions/{sid}/activities",
                                    json={"userMessage": answer})
                         result["responded"] += 1
