@@ -5,6 +5,7 @@ import logging
 import os
 import time
 import datetime
+import hashlib
 from pathlib import Path
 from collections import deque
 from contextlib import asynccontextmanager
@@ -42,6 +43,79 @@ def write_log(entry, log_path=None):
             f.write(json.dumps(entry) + "\n")
     except Exception as e:
         logger.error(f"Failed to write log: {e}")
+
+# --- Response Caching ---
+class ResponseCache:
+    def __init__(self, cache_file):
+        self.cache_file = Path(cache_file)
+        self.cache = {}
+        self.load()
+
+    def _make_key(self, payload):
+        key_payload = payload.copy()
+        key_payload.pop("stream", None)
+        key_payload.pop("stream_options", None)
+        key_payload.pop("cache_control", None)
+        serialized = json.dumps(key_payload, sort_keys=True)
+        return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+    def get(self, payload):
+        key = self._make_key(payload)
+        entry = self.cache.get(key)
+        if entry:
+            if time.time() < entry["expires_at"]:
+                return entry
+            else:
+                self.cache.pop(key, None)
+                self.save()
+        return None
+
+    def set(self, payload, response_data, ttl, provider):
+        if ttl <= 0:
+            return
+        key = self._make_key(payload)
+        self.cache[key] = {
+            "response_data": response_data,
+            "expires_at": time.time() + ttl,
+            "provider": provider
+        }
+        if len(self.cache) > 1000:
+            self.purge_expired()
+        self.save()
+
+    def purge_expired(self):
+        now = time.time()
+        expired = [k for k, v in self.cache.items() if now >= v["expires_at"]]
+        for k in expired:
+            self.cache.pop(k, None)
+        self.save()
+
+    def load(self):
+        if not self.cache_file.exists():
+            return
+        try:
+            self.cache = json.loads(self.cache_file.read_text(encoding="utf-8"))
+            self.purge_expired()
+        except Exception as e:
+            logger.warning(f"Failed to load ninagate cache: {e}")
+
+    def save(self):
+        try:
+            self.cache_file.parent.mkdir(parents=True, exist_ok=True)
+            tmp = self.cache_file.with_suffix(".tmp")
+            tmp.write_text(json.dumps(self.cache), encoding="utf-8")
+            tmp.replace(self.cache_file)
+        except Exception as e:
+            logger.warning(f"Failed to save ninagate cache: {e}")
+
+CACHE_TTL = {
+    "SIMPLE": 1200,
+    "MEDIUM": 600,
+    "COMPLEX": 300
+}
+
+NINAGATE_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "ninagate_cache.json")
+response_cache = ResponseCache(NINAGATE_CACHE_FILE)
 
 # --- Health, Circuit Breaking, and Scoring ---
 class CircuitBreaker:
@@ -214,12 +288,21 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-async def stream_response(response: httpx.Response, h: ProviderHealth, start_time: float):
+async def stream_response(response: httpx.Response, h: ProviderHealth, start_time: float, cache_info: dict = None):
+    full_body = b""
     try:
         async for chunk in response.aiter_bytes():
+            if cache_info:
+                full_body += chunk
             yield chunk
         h.record_success()
         h.latencies.append((time.time() - start_time) * 1000)
+        if cache_info and full_body:
+            try:
+                body_str = full_body.decode("utf-8", errors="replace")
+                response_cache.set(cache_info["payload"], body_str, cache_info["ttl"], cache_info["name"])
+            except Exception as e:
+                logger.error(f"Failed to cache stream response: {e}")
     finally:
         await response.aclose()
 
@@ -400,7 +483,12 @@ async def proxy_chat_completions(request: Request):
         if is_stream:
             write_log({"provider": name, "total_ms": total_ms, "cached": False,
                        "task_type": task_type, "escalated": escalated})
-            return StreamingResponse(stream_response(response, h, start),
+            cache_info = None
+            if not target_provider_name:
+                ttl = CACHE_TTL.get(task_type, 0)
+                if ttl > 0:
+                    cache_info = {"payload": payload, "ttl": ttl, "name": name}
+            return StreamingResponse(stream_response(response, h, start, cache_info),
                                      status_code=response.status_code)
         data = response.json()
         h.record_success()
@@ -414,6 +502,9 @@ async def proxy_chat_completions(request: Request):
             "task_type": task_type,
             "escalated": escalated,
         })
+        if not target_provider_name:
+            ttl = CACHE_TTL.get(task_type, 0)
+            response_cache.set(payload, data, ttl, name)
         return JSONResponse(status_code=response.status_code, content=data)
 
     def _make_cloud_response(response, h, start, name, task_type, escalated=False):
@@ -422,7 +513,12 @@ async def proxy_chat_completions(request: Request):
         if is_stream:
             write_log({"provider": name, "total_ms": total_ms, "cached": False,
                        "task_type": task_type, "escalated": escalated})
-            return StreamingResponse(stream_response(response, h, start),
+            cache_info = None
+            if not target_provider_name:
+                ttl = CACHE_TTL.get(task_type, 0)
+                if ttl > 0:
+                    cache_info = {"payload": payload, "ttl": ttl, "name": name}
+            return StreamingResponse(stream_response(response, h, start, cache_info),
                                      status_code=response.status_code)
         data = response.json()
         h.record_success()
@@ -436,7 +532,44 @@ async def proxy_chat_completions(request: Request):
             "task_type": task_type,
             "escalated": escalated,
         })
+        if not target_provider_name:
+            ttl = CACHE_TTL.get(task_type, 0)
+            response_cache.set(payload, data, ttl, name)
         return JSONResponse(status_code=response.status_code, content=data)
+
+    # ── Cache Lookup ──────────────────────────────────────────────────────────
+    if not target_provider_name:
+        cached_entry = response_cache.get(payload)
+        if cached_entry:
+            resp_data = cached_entry["response_data"]
+            prov_name = cached_entry["provider"]
+            logger.info(f"Cache HIT: serving from cached response ({prov_name})")
+            if is_stream:
+                async def stream_cached():
+                    chunk_size = 1024
+                    data_bytes = resp_data.encode("utf-8", errors="replace")
+                    for i in range(0, len(data_bytes), chunk_size):
+                        yield data_bytes[i:i+chunk_size]
+                        await asyncio.sleep(0.005)
+                
+                write_log({
+                    "provider": prov_name,
+                    "total_ms": 0,
+                    "cached": True,
+                    "task_type": task_type,
+                })
+                return StreamingResponse(stream_cached(), status_code=200)
+            else:
+                usage = resp_data.get("usage", {}) if isinstance(resp_data, dict) else {}
+                write_log({
+                    "provider": prov_name,
+                    "input_tokens": usage.get("prompt_tokens", 0),
+                    "output_tokens": usage.get("completion_tokens", 0),
+                    "total_ms": 0,
+                    "cached": True,
+                    "task_type": task_type,
+                })
+                return JSONResponse(status_code=200, content=resp_data)
 
     # ── SIMPLE: always local, never touch cloud ───────────────────────────────
     if (task_type == "SIMPLE" or force_local) and local_providers and not target_provider_name:

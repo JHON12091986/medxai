@@ -460,3 +460,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Keep daily limits like QUOTA_SOFT_LIMIT visible to both the daemon and the CLI monitor.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
 
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Proxy Response Caching
+- OFFLOAD_OPPORTUNITY: Testing and duplicate status/request logs -> cache hits in NinaGate.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Response caching layer in ninagate/main.py eliminates redundant LLM calls and Ollama inference latency.
+- CONTEXT_HINT: Cache keys based on sorted payload representation ensure robustness across stream and non-stream requests.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+

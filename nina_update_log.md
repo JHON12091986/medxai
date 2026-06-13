@@ -2833,3 +2833,6 @@
 **Files changed:** AGENTS.md,core/router.py,data/gemini_scratch.jsonl,data/router_cache.json,data/session_memory.jsonl,docs/space/nina_index.json,docs/space/nina_index.md,nina_sync.sh,ninagate/main.py,tools/gemini_watch.py,tools/rule0_audit.py
 
 **Verification:** git push OK, nina.service active
+
+## Auto-doc patch — 2026-06-13
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
