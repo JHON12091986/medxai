@@ -2583,6 +2583,56 @@ def cmd_gemini_run(args):
         print(f"Error: {e}")
         sys.exit(1)
 
+def cmd_code_audit_doc(args):
+    """[044] Score docstrings on clarity and completeness."""
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
+        return
+
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except SyntaxError as e:
+        print(f"❌ Syntax error in file: {e}")
+        return
+
+    total_score = 0
+    max_score = 0
+    results = []
+
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            doc = ast.get_docstring(node)
+            score = 0
+            if doc:
+                score += 1  # Existence
+                if len(doc.strip()) > 10:
+                    score += 1  # Minimum length
+                # Completeness heuristics
+                doc_lower = doc.lower()
+                if "args:" in doc_lower or "parameters:" in doc_lower or "returns:" in doc_lower or "yields:" in doc_lower or "raises:" in doc_lower or "example" in doc_lower:
+                    score += 1
+
+            node_type = "Class" if isinstance(node, ast.ClassDef) else "Function"
+            max_score += 3
+            total_score += score
+            results.append((node_type, node.name, score))
+
+    print(f"── Docstring Audit Report: {path.name} ──")
+    for ntype, name, score in results:
+        print(f"{ntype} {name}: {score}/3")
+
+    overall = (total_score / max_score * 100) if max_score > 0 else 100
+    print(f"\nOverall Score: {overall:.1f}% ({total_score}/{max_score})")
+
+    if overall < 50:
+        print("Verdict: ❌ FAIL (Score below 50%)")
+    elif overall < 80:
+        print("Verdict: ⚠️ WARN (Score below 80%)")
+    else:
+        print("Verdict: ✅ PASS")
+
+
 def main():
     parser = argparse.ArgumentParser(description="ninaflash AI Agent Kernel v6.0 — The 100-Function OS.")
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -2712,6 +2762,9 @@ def main():
     p_sigs.add_argument("dir")
     p_doc = p_cs.add_parser("doc")
     p_doc.add_argument("keyword")
+
+    p_audit_doc = p_cs.add_parser("audit-doc")
+    p_audit_doc.add_argument("file")
 
     p_fs = subparsers.add_parser("find-symbol")
     p_fs.add_argument("name")
@@ -2865,6 +2918,7 @@ def main():
             elif args.sub == "symbol": cmd_code_symbol(args)
             elif args.sub == "sigs": cmd_code_sigs(args)
             elif args.sub == "doc": cmd_code_doc(args)
+            elif args.sub == "audit-doc": cmd_code_audit_doc(args)
             elif args.sub == "pack": cmd_context_pack(args)
             elif args.sub == "dead-code": cmd_code_dead_code(args)
             elif args.sub == "extract-method": cmd_code_extract_method(args)
