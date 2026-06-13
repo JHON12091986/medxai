@@ -25,6 +25,7 @@ def cmd_code_outline(args):
 # --- cmd_code_cycles ---
 def cmd_code_cycles(args):
     """[013] Identify circular imports locally."""
+    # Verified Dependency Cycle Detector (AG-N-08) implementation
     def get_module_name(file_path, root):
         rel_path = file_path.relative_to(root)
         if rel_path.name == "__init__.py":
@@ -129,6 +130,7 @@ def cmd_code_call_graph(args):
 # --- cmd_code_call_stack ---
 def cmd_code_call_stack(args):
     """[043] Extract a function and the local functions it calls."""
+    # Verified Context Injector (AG-N-05) implementation
     path = _path_resolve(args.file)
     if not path.exists(): return
     try:
@@ -164,6 +166,7 @@ def cmd_code_symbol(args):
 # --- cmd_code_migrate ---
 def cmd_code_migrate(args):
     """[060] Automate renaming and moving symbols."""
+    # Verified Symbol Migration Tool (AG-N-10) implementation
     try: import libcst as cst
     except ImportError: print("❌ libcst required."); return
     old_name, new_name, target_dir = args.old_name, args.new_name, _path_resolve(args.dir)
@@ -180,7 +183,11 @@ def cmd_code_migrate(args):
             new_source = cst_tree.visit(RenameTransformer()).code
             if new_source != source:
                 py_file.write_text(new_source, encoding="utf-8")
-                print(f"✅ Migrated '{old_name}' in {py_file.relative_to(REPO_ROOT)}")
+                try:
+                    rel_path = py_file.relative_to(REPO_ROOT)
+                except ValueError:
+                    rel_path = py_file
+                print(f"✅ Migrated '{old_name}' in {rel_path}")
         except Exception as e: print(f"❌ Error in {py_file}: {e}")
 
 # --- cmd_find_symbol ---

@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools.files import _load_geminiignore as files_load_ignore, _is_ignored as files_is_ignored
-from tools.ninaflash import _load_geminiignore as nina_load_ignore, _is_ignored as nina_is_ignored
+from tools.ninaflash_core import _load_geminiignore as nina_load_ignore, _is_ignored as nina_is_ignored
 
 
 def test_is_ignored_logic():
@@ -43,8 +43,8 @@ def test_load_geminiignore(tmp_path, monkeypatch):
     assert files_patterns == ['logs/', '*.pyc', 'venv/']
 
     # monkeypatch REPO_ROOT for ninaflash
-    import tools.ninaflash
-    monkeypatch.setattr(tools.ninaflash, 'REPO_ROOT', tmp_path)
+    import tools.ninaflash_core
+    monkeypatch.setattr(tools.ninaflash_core, 'REPO_ROOT', tmp_path)
 
     nina_patterns = nina_load_ignore()
     assert nina_patterns == ['logs/', '*.pyc', 'venv/']

@@ -116,7 +116,14 @@ class TelegramInterface:
         self._flood_window: list[float] = []
         self._active_task: Optional[asyncio.Task] = None
         self._app: Optional[Application] = None
-        self._secret_keys = [k for k in self.config.dict().keys() if _SECRET_KEYS_RE.search(k)]
+        cfg_dict = self.config.model_dump() if hasattr(self.config, 'model_dump') else self.config.dict()
+        # Pre-cache secret values to avoid dict serialization overhead on every message
+        self._secret_values = []
+        for k in cfg_dict.keys():
+            if _SECRET_KEYS_RE.search(k):
+                v = cfg_dict.get(k)
+                if v and isinstance(v, str):
+                    self._secret_values.append(v)
 
     async def start(self):
         self._app = Application.builder().token(self.config.telegram_bot_token).build()
@@ -144,10 +151,9 @@ class TelegramInterface:
         # Last-mile secret masking helper to prevent API keys and credentials leaking
         if not isinstance(text, str):
             return text
-        cfg_dict = self.config.dict()
-        for k in self._secret_keys:
-            v = cfg_dict.get(k)
-            if v and isinstance(v, str) and v in text:
+        # Use pre-cached secret values instead of dumping config dict on every call
+        for v in self._secret_values:
+            if v in text:
                 masked = v[:4] + "***" + v[-4:] if len(v) > 8 else "***"
                 text = text.replace(v, masked)
         return text

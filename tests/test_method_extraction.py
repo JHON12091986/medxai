@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 
 # Assuming tools directory is in PYTHONPATH
-from tools.ninaflash import cmd_code_extract_method
+from tools.ninaflash_code import cmd_code_extract_method
 
 class TestMethodExtraction(unittest.TestCase):
     def setUp(self):
@@ -34,7 +34,7 @@ def calculate(a, b):
         args.end_line = 7
         args.new_name = "extracted_calc"
 
-        with patch("tools.ninaflash.REPO_ROOT", pathlib.Path(self.temp_dir.name)):
+        with patch("tools.ninaflash_code.REPO_ROOT", pathlib.Path(self.temp_dir.name)):
             cmd_code_extract_method(args)
 
         content = self.test_file.read_text(encoding="utf-8")
@@ -61,7 +61,7 @@ class MyClass:
         args.end_line = 6
         args.new_name = "extracted_process"
 
-        with patch("tools.ninaflash.REPO_ROOT", pathlib.Path(self.temp_dir.name)):
+        with patch("tools.ninaflash_code.REPO_ROOT", pathlib.Path(self.temp_dir.name)):
             cmd_code_extract_method(args)
 
         content = class_file.read_text(encoding="utf-8")

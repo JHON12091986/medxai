@@ -4,15 +4,11 @@ import sys
 import os
 import shlex
 import re
-import argparse
-import asyncio
 import subprocess
 import json
-import shutil
-import ast
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Tuple, Union
+from typing import List, Dict, Any, Tuple
 
 try:
     import dotenv
@@ -209,7 +205,7 @@ def _print_pulse():
         err_lines = [l for l in err_path.read_text().splitlines() if l.startswith("|") and "ID" not in l and "---" not in l]
         for i, e in enumerate(err_lines[-3:]): errors[i] = e[:50]
     print(f"6. Err1: {errors[0]}\n7. Err2: {errors[1]}\n8. Err3: {errors[2]}")
-    print(f"9. Thermal: SAFE\n10. VRAM: 20%")
+    print("9. Thermal: SAFE\n10. VRAM: 20%")
 
 # --- Public API Commands ---
 
@@ -344,7 +340,7 @@ def cmd_monitor(args):
 def cmd_batch(args):
     for c in args.cmds.split("|"):
         print(f"Running: nf {c}")
-        os.system(f"python3 {__file__} {c}")
+        subprocess.run([sys.executable, __file__] + shlex.split(c), shell=False)
 
 def cmd_hw_gate(args):
     print("Hardware Gate: GO (v6.1)")
