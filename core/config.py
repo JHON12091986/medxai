@@ -146,6 +146,8 @@ def load_config() -> NinaConfig:
         cfg.idle_threshold_min = int(v)
     if v := os.getenv("IDLE_REPORT_MIN"):
         cfg.idle_report_min = int(v)
+    if v := os.getenv("RAM_GUARD_GB"):
+        cfg.ram_guard_gb = float(v)
     if v := os.getenv("MODEL_OVERRIDES"):
         try:
             cfg.model_overrides = json.loads(v)

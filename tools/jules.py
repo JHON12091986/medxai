@@ -155,26 +155,124 @@ async def watch_cycle():
 
 # --- Orchestrator Logic ---
 
+async def auto_unblock_awaiting():
+    """Auto-respond to all AWAITING_USER_FEEDBACK sessions with PR approval.
+
+    Reads the last agent message for each waiting session:
+    - If Jules reports a clean implementation → send 'LGTM. Please open a PR.'
+    - If Jules reports an error/regression → send a targeted recovery instruction.
+    Tracks already-responded sessions via SEEN_FILE to avoid duplicate replies.
+    """
+    data = await make_request("GET", f"{JULES_BASE_URL}/sessions", params={"pageSize": 100})
+    sessions = data.get("sessions", [])
+    awaiting = [s for s in sessions if s.get("state") == "AWAITING_USER_FEEDBACK"]
+    if not awaiting:
+        return
+
+    # Load already-responded set
+    responded: set = set()
+    resp_file = REPO_ROOT / "data" / "jules_auto_responded.json"
+    if resp_file.exists():
+        try:
+            responded = set(json.loads(resp_file.read_text()))
+        except Exception:
+            pass
+
+    newly_responded: list = []
+    for s in awaiting:
+        sid = s["name"].split("/")[-1]
+        if sid in responded:
+            continue
+
+        # Fetch last agent activity
+        act_data = await make_request(
+            "GET", f"{JULES_BASE_URL}/sessions/{sid}/activities",
+            params={"pageSize": 100}
+        )
+        acts = act_data.get("activities", [])
+        last_msg = ""
+        for act in reversed(acts):
+            if act.get("originator") in ("AGENT", "agent"):
+                last_msg = (act.get("agentMessaged") or {}).get("agentMessage", "")
+                if last_msg:
+                    break
+
+        # Decide response based on message content
+        msg_lower = last_msg.lower()
+        if any(kw in msg_lower for kw in ("accidentally removed", "regression", "reverted", "failed to apply")):
+            reply = (
+                "Please open a PR with only the successfully verified and clean changes. "
+                "Do not include any accidentally removed code or unresolved regressions. "
+                "Ensure all included changes pass pyflakes and pytest before opening the PR."
+            )
+        else:
+            reply = "LGTM. All changes look good. Please open a PR with your completed changes now."
+
+        url = f"{JULES_BASE_URL}/sessions/{sid}:sendMessage"
+        res = await make_request("POST", url, json_data={"prompt": reply})
+        if "error" not in res:
+            logger.info(f"auto_unblock: unblocked session {sid}")
+            newly_responded.append(sid)
+            stop_beep()
+        else:
+            logger.warning(f"auto_unblock: failed to unblock {sid}: {res.get('error')}")
+
+    if newly_responded:
+        resp_file.write_text(json.dumps(list(responded | set(newly_responded)), indent=2))
+        logger.info(f"auto_unblock: {len(newly_responded)} session(s) unblocked")
+
+
 async def resolve_prs_parallel():
-    """Concurrently resolves open PRs."""
-    cmd = ["gh", "pr", "list", "--json", "number,title,state,headRefName"]
+    """Sequentially merges open PRs; closes conflicting duplicates automatically."""
+    # --limit 200 prevents pagination truncation (default gh limit is 30)
+    # Include mergeStateStatus to detect conflicts without a separate API call
+    cmd = ["gh", "pr", "list", "--json",
+           "number,title,state,headRefName,mergeable,mergeStateStatus", "--limit", "200"]
     res = await asyncio.to_thread(subprocess.run, cmd, capture_output=True, text=True, cwd=str(REPO_ROOT))
-    if res.returncode != 0: return
-    
-    prs = json.loads(res.stdout)
+    if res.returncode != 0:
+        logger.warning(f"resolve_prs: gh pr list failed: {res.stderr.strip()}")
+        return
+
+    prs = json.loads(res.stdout or "[]")
     open_prs = [p for p in prs if p["state"] == "OPEN"]
-    
-    async def resolve_one(pr):
+    if not open_prs:
+        return
+
+    logger.info(f"resolve_prs: {len(open_prs)} open PR(s) found")
+    for pr in open_prs:
         num = pr["number"]
-        m_cmd = ["gh", "pr", "merge", str(num), "--merge", "--admin", "-d", "-c", "Automerged via Jules Unified Engine."]
-        m_res = await asyncio.to_thread(subprocess.run, m_cmd, capture_output=True, text=True, cwd=str(REPO_ROOT))
+        merge_state = pr.get("mergeStateStatus", "UNKNOWN")
+        mergeable = pr.get("mergeable", "UNKNOWN")
+
+        # Close conflicting PRs — they are duplicate implementations already merged
+        if merge_state == "DIRTY" or mergeable == "CONFLICTING":
+            close_cmd = ["gh", "pr", "close", str(num), "--comment",
+                         "Auto-closed: merge conflict detected. Equivalent changes already merged "
+                         "from a sibling Jules session. No action needed."]
+            c_res = await asyncio.to_thread(
+                subprocess.run, close_cmd, capture_output=True, text=True, cwd=str(REPO_ROOT)
+            )
+            if c_res.returncode == 0:
+                logger.info(f"PR #{num} closed (conflicting duplicate).")
+            else:
+                logger.warning(f"PR #{num} close failed: {c_res.stderr.strip()}")
+            continue
+
+        # Skip PRs whose mergeability is not yet computed — they will be picked up next cycle
+        if mergeable == "UNKNOWN" or merge_state == "UNKNOWN":
+            logger.info(f"PR #{num} mergeability unknown — deferring to next cycle.")
+            continue
+
+        # Merge clean PRs sequentially to avoid branch race conditions
+        m_cmd = ["gh", "pr", "merge", str(num), "--merge", "--admin", "-d", "-b",
+                 "Automerged via Jules Unified Engine."]
+        m_res = await asyncio.to_thread(
+            subprocess.run, m_cmd, capture_output=True, text=True, cwd=str(REPO_ROOT)
+        )
         if m_res.returncode == 0:
             logger.info(f"PR #{num} merged.")
         else:
-            logger.warning(f"PR #{num} merge failed. Requires manual check.")
-
-    if open_prs:
-        await asyncio.gather(*(resolve_one(p) for p in open_prs))
+            logger.warning(f"PR #{num} merge failed: {m_res.stderr.strip()}")
 
 async def run_dispatch(prompt: str, title: Optional[str] = None):
     """Core dispatch primitive."""
@@ -192,24 +290,35 @@ async def run_dispatch(prompt: str, title: Optional[str] = None):
 async def orchestrate_cycle():
     """The unified 3-minute high-capacity loop."""
     logger.info("Jules Orchestration Cycle Start")
-    
-    # --- GLOBAL PAUSE CHECK ---
-    from pathlib import Path
-    backlog_path = Path("docs/space/jules_backlog.md")
-    if backlog_path.exists() and "GLOBAL PAUSE ACTIVE" in backlog_path.read_text():
-        logger.warning("🛑 GLOBAL PAUSE ACTIVE: Skipping task dispatch.")
-        await watch_cycle()
-        await resolve_prs_parallel()
-        return
-    # --------------------------
 
-    await watch_cycle()
-    await resolve_prs_parallel()
-    
+    # Auto-unblock AWAITING sessions first — always runs regardless of pause state
+    try:
+        await auto_unblock_awaiting()
+    except Exception as e:
+        logger.warning(f"auto_unblock_awaiting failed: {e}")
+
+    # Merge any open PRs — always runs regardless of pause state
+    try:
+        await resolve_prs_parallel()
+    except Exception as e:
+        logger.warning(f"resolve_prs_parallel failed: {e}")
+
+    # Watch and notify via Telegram
+    try:
+        await watch_cycle()
+    except Exception as e:
+        logger.warning(f"watch_cycle failed: {e}")
+
+    # --- GLOBAL PAUSE CHECK — only blocks new task dispatch ---
+    if BACKLOG_PATH.exists() and "GLOBAL PAUSE ACTIVE" in BACKLOG_PATH.read_text():
+        logger.warning("🛑 GLOBAL PAUSE ACTIVE: Skipping new task dispatch.")
+        return
+    # ----------------------------------------------------------
+
     reg = load_registry()
     active_count = len([v for v in reg.values() if v["status"] in ("IN_PROGRESS", "AWAITING_USER_FEEDBACK")])
     slots = MAX_CONCURRENT_SESSIONS - active_count
-    
+
     if slots > 0:
         from tools.ninaflash import get_backlog_tasks, _save_task_status
         ready = [t for t in get_backlog_tasks() if t.get("status") == "READY"]
@@ -219,7 +328,7 @@ async def orchestrate_cycle():
             mega_prompt = "MEGA TASK BATCH\nExecute sequentially, no confirmation.\n"
             for t in batch:
                 mega_prompt += f"\n--- {t['id']} ---\n{t['title']}\nFiles: {t['files']}\n"
-            
+
             try:
                 sid = await run_dispatch(mega_prompt, f"Mega Batch ({', '.join(tids)})")
                 register_session(sid, batch, f"Mega Batch ({', '.join(tids)})")

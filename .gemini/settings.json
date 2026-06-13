@@ -1,5 +1,6 @@
-{ 
+{
   "model": { "name": "gemini-2.5-flash" },
+  "maxRetries": 2,
   "preview": true,
   "context": { "fileName": ["AGENTS.md", "docs/space/nina_index.md"] }
 }
