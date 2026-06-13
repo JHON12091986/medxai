@@ -641,7 +641,12 @@ def cmd_code_call_graph(args):
         except Exception:
             pass
 
-    print(json.dumps(graph, indent=2))
+    try:
+        print(json.dumps(graph, indent=2))
+    except BrokenPipeError:
+        import sys, os
+        sys.stdout = open(os.devnull, 'w')
+        sys.exit(0)
 
 
 # ------------------------------------------------------------------

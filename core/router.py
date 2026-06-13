@@ -1,4 +1,5 @@
 # core/router.py
+from typing import Any
 import asyncio
 import hashlib
 import json
@@ -171,7 +172,7 @@ class CircuitBreaker:
     WINDOW_S = 120
     RECOVERY_S = 60
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.state = "CLOSED"
         self.failures = deque()
         self.open_until = 0.0
@@ -184,13 +185,13 @@ class CircuitBreaker:
             "failures": list(self.failures),
         }
 
-    def from_dict(self, data: dict):
+    def from_dict(self, data: dict) -> None:
         self.state = data.get("state", "CLOSED")
         self.open_until = data.get("open_until", 0.0)
         self.failures = deque(data.get("failures", []))
         self.half_open_in_flight = False
 
-    def _prune(self):
+    def _prune(self) -> None:
         now = time.time()
         while self.failures and now - self.failures[0] > self.WINDOW_S:
             self.failures.popleft()
@@ -212,13 +213,13 @@ class CircuitBreaker:
             return True
         return True
 
-    def record_success(self):
+    def record_success(self) -> None:
         self.failures.clear()
         self.state = "CLOSED"
         self.open_until = 0.0
         self.half_open_in_flight = False
 
-    def record_failure(self, cooldown_s: Optional[float] = None):
+    def record_failure(self, cooldown_s: Optional[float] = None) -> None:
         now = time.time()
         if self.state == "HALF_OPEN":
             self.state = "OPEN"
@@ -236,7 +237,7 @@ class CircuitBreaker:
             )
             self.half_open_in_flight = False
 
-    def set_cooldown(self, seconds: float):
+    def set_cooldown(self, seconds: float) -> None:
         self.state = "OPEN"
         self.open_until = time.time() + max(1.0, float(seconds))
         self.half_open_in_flight = False
@@ -309,7 +310,7 @@ class ProviderHealth:
             - degraded_penalty
         )
 
-    def record_success(self, latency_ms: float, total_tokens: int):
+    def record_success(self, latency_ms: float, total_tokens: int) -> None:
         self.success_count += 1
         self.requests_today += 1
         self.tokens_today += max(0, int(total_tokens))
@@ -317,12 +318,12 @@ class ProviderHealth:
         self.latencies.append(float(latency_ms))
         self.cb.record_success()
 
-    def record_failure(self, cooldown_s: Optional[float] = None):
+    def record_failure(self, cooldown_s: Optional[float] = None) -> None:
         self.failure_count += 1
         self.last_request_ts = time.time()
         self.cb.record_failure(cooldown_s=cooldown_s)
 
-    def reset_daily(self):
+    def reset_daily(self) -> None:
         self.requests_today = 0
         self.tokens_today = 0
         self.reserved_requests = 0
@@ -337,7 +338,7 @@ class ClassifiedTask:
     is_sensitive: bool
 
 
-async def classify_task(text: str, local_fast_fn) -> ClassifiedTask:
+async def classify_task(text: str, local_fast_fn: Any) -> ClassifiedTask:
     try:
         raw = await local_fast_fn(
             f"Classify into one of {','.join(TASK_TYPES)}. Reply JSON only "
@@ -397,7 +398,7 @@ async def classify_task(text: str, local_fast_fn) -> ClassifiedTask:
 
 
 class ResponseCache:
-    def __init__(self):
+    def __init__(self) -> None:
         self.s: dict = {}
 
     def _k(self, prompt: str, messages: list | None = None) -> str:
@@ -421,7 +422,7 @@ class ResponseCache:
         response: str,
         provider: str,
         messages: list | None = None,
-    ):
+    ) -> None:
         if len(self.s) > 500:
             self.purge_expired()
         ttl = CACHE_TTL.get(tt, 0)
@@ -432,10 +433,10 @@ class ResponseCache:
                 "provider": provider,
             }
 
-    def clear(self):
+    def clear(self) -> None:
         self.s.clear()
 
-    def purge_expired(self):
+    def purge_expired(self) -> None:
         now = time.time()
         # ⚡ Bolt: Use list comprehension over view instead of list(self.s.items())
         # to avoid O(N) memory allocation and improve execution speed by ~40%
@@ -443,7 +444,7 @@ class ResponseCache:
         for k in dead:
             self.s.pop(k, None)
 
-    def save(self, path: str):
+    def save(self, path: str) -> None:
         try:
             os.makedirs(os.path.dirname(path), exist_ok=True)
             tmp = f"{path}.tmp"
@@ -453,7 +454,7 @@ class ResponseCache:
         except Exception as e:
             logger.warning(f"cache_save_failed: {e}")
 
-    def load(self, path: str):
+    def load(self, path: str) -> None:
         if not os.path.exists(path):
             return
         try:
@@ -465,24 +466,24 @@ class ResponseCache:
 
 
 class CostTracker:
-    def __init__(self):
+    def __init__(self) -> None:
         self.daily_cost_usd = 0.0
         self._rlog = logging.getLogger("nina.routerlog")
 
     def record(
         self,
-        provider,
-        tt,
-        in_t,
-        out_t,
-        cost,
-        ttf,
-        total,
-        parallel=False,
-        cached=False,
-        error=None,
-        req_id="",
-    ):
+        provider: Any,
+        tt: Any,
+        in_t: Any,
+        out_t: Any,
+        cost: Any,
+        ttf: Any,
+        total: Any,
+        parallel: Any=False,
+        cached: Any=False,
+        error: Any=None,
+        req_id: Any="",
+    ) -> None:
         row = {
             "ts": time.strftime("%Y-%m-%dT%H:%M:%S.000+0600"),
             "req_id": req_id or "",
@@ -505,12 +506,12 @@ class CostTracker:
         if not error:
             self.daily_cost_usd += float(cost or 0.0)
 
-    def reset_daily(self):
+    def reset_daily(self) -> None:
         self.daily_cost_usd = 0.0
 
 
 class HybridRouter:
-    def __init__(self, config: NinaConfig):
+    def __init__(self, config: NinaConfig) -> None:
         self.config = config
         self._model_discovery = ModelDiscoveryService(config)
         self.health: dict[str, ProviderHealth] = {}
@@ -521,7 +522,7 @@ class HybridRouter:
         self._state_path = "data/circuit_state.json"
         self._cache_path = "data/router_cache.json"
 
-    def _save_circuit_state(self):
+    def _save_circuit_state(self) -> None:
         try:
             state = {pid: h.cb.to_dict() for pid, h in self.health.items()}
             tmp_path = f"{self._state_path}.tmp"
@@ -533,7 +534,7 @@ class HybridRouter:
         except Exception as e:
             logger.warning(f"failed_to_save_circuit_state: {e}")
 
-    def _load_circuit_state(self):
+    def _load_circuit_state(self) -> None:
         if not os.path.exists(self._state_path):
             self.cache.load(self._cache_path)
             return
@@ -548,7 +549,7 @@ class HybridRouter:
         except Exception as e:
             logger.warning(f"failed_to_load_circuit_state: {e}")
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         self.http = httpx.AsyncClient(timeout=60.0)
         for pid in [
             *PROVIDERS_TIER1,
@@ -563,7 +564,7 @@ class HybridRouter:
         self._idle_task = asyncio.create_task(self._idle_monitor())
         logger.info("HybridRouter initialized")
 
-    async def close(self):
+    async def close(self) -> None:
         if self._idle_task:
             self._idle_task.cancel()
             try:
@@ -576,7 +577,7 @@ class HybridRouter:
         if self.http:
             await self.http.aclose()
 
-    async def _discover_local_models(self):
+    async def _discover_local_models(self) -> None:
         try:
             r = await asyncio.wait_for(
                 self.http.get(f"{self.config.ollama_host}/api/tags"), timeout=5.0
@@ -586,7 +587,7 @@ class HybridRouter:
             if not models:
                 return
 
-            def size_rank(name: str):
+            def size_rank(name: str) -> Any:
                 s = name.lower()
                 for token, rank in (
                     ("0.5b", 0.5),
@@ -656,7 +657,7 @@ class HybridRouter:
             return ordered + ["LOCALHEAVY", "LOCALFAST"]
         return ordered + ["LOCALFAST", "LOCALHEAVY"]
 
-    async def _call_provider(self, pid: str, messages: list, task: ClassifiedTask):
+    async def _call_provider(self, pid: str, messages: list, task: ClassifiedTask) -> Any:
         if self.http is None:
             raise RuntimeError("router_not_initialized")
         start = time.time()
@@ -753,7 +754,7 @@ class HybridRouter:
             (time.time() - start) * 1000,
         )
 
-    async def call_provider(self, pid: str, messages: list, task: ClassifiedTask):
+    async def call_provider(self, pid: str, messages: list, task: ClassifiedTask) -> Any:
         backoffs = [0.0, 1.0]
         last_exc: Exception | None = None
         for attempt, delay in enumerate(backoffs):
@@ -927,7 +928,7 @@ class HybridRouter:
         return "⚠️ All providers are currently unavailable. Try again in a moment, or send `status` to check provider health."
 
     async def parallel_route(
-        self, prompt: str, messages: list, task: ClassifiedTask, local_fast_fn
+        self, prompt: str, messages: list, task: ClassifiedTask, local_fast_fn: Any
     ) -> str:
         if psutil.virtual_memory().used / 1e9 > self.config.ram_guard_gb:
             return await self.route(prompt, messages, task)
@@ -958,7 +959,7 @@ class HybridRouter:
             self.health[p].reserved_requests += 1
             self.health[p].reserved_tokens += reserved
 
-        async def fetch(pid, q):
+        async def fetch(pid: Any, q: Any) -> Any:
             try:
                 t, i, o, la = await asyncio.wait_for(
                     self.call_provider(
@@ -1002,7 +1003,7 @@ class HybridRouter:
             prompt, msgs, ClassifiedTask("quick", 300, False, False)
         )
 
-    async def _idle_monitor(self):
+    async def _idle_monitor(self) -> None:
         last_cache_purge = 0.0
         while True:
             try:
@@ -1074,7 +1075,7 @@ class HybridRouter:
         self.health[provider] = ProviderHealth(provider_id=provider)
         return f"✅ Key set for {provider}."
 
-    def reset_daily_counters(self):
+    def reset_daily_counters(self) -> None:
         for h in self.health.values():
             h.reset_daily()
         self.cost.reset_daily()

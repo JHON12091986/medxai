@@ -1,0 +1,6104 @@
+{
+  "test": [
+    "get",
+    "print",
+    "post"
+  ],
+  "acquire_lock": [
+    "str",
+    "sleep",
+    "kill",
+    "strip",
+    "exit",
+    "makedirs",
+    "flock",
+    "error",
+    "int",
+    "exists",
+    "info",
+    "range",
+    "write",
+    "read",
+    "warning",
+    "open",
+    "getpid"
+  ],
+  "main": [
+    "NinaOS",
+    "sleep",
+    "flush",
+    "write",
+    "dumps",
+    "add_argument",
+    "getattr",
+    "run_cli",
+    "cmd_code_call_graph",
+    "cmd_pr_reconcile",
+    "unlink",
+    "cmd_log_summarize",
+    "build_table",
+    "export_full_backup",
+    "process_file",
+    "cmd_gemini_prompt",
+    "cmd_run_capability",
+    "cmd_code_index",
+    "cmd_code_dep_map",
+    "cmd_log_tail",
+    "cmd_code_dead_code",
+    "cmd_context_pack",
+    "wait",
+    "cmd_log_find_id",
+    "cmd_install_hooks",
+    "open",
+    "cmd_git_search",
+    "cmd_session_resume",
+    "loads",
+    "cmd_file_grep",
+    "start",
+    "cmd_hw_gate",
+    "cmd_monitor",
+    "cmd_capability_map",
+    "patch_file",
+    "cmd_memory_session_recall",
+    "cmd_help_ai",
+    "get",
+    "signal",
+    "update",
+    "run_orchestrator_cycle",
+    "cmd_git_changed",
+    "cmd_bench",
+    "extract_facts",
+    "cmd_task_active",
+    "export_summary",
+    "cmd_status",
+    "Event",
+    "exists",
+    "strftime",
+    "range",
+    "cmd_gen_tool",
+    "run_command",
+    "cmd_session_start",
+    "cmd_query_capability",
+    "cmd_code_call_stack",
+    "virtual_memory",
+    "print",
+    "append",
+    "cmd_batch",
+    "execvp",
+    "cmd_ops_compress_logs",
+    "cmd_log_next_id",
+    "cmd_gemini_context",
+    "cmd_check_ignore",
+    "cmd_code_sigs",
+    "Path",
+    "ArgumentParser",
+    "cmd_backlog_dag",
+    "home",
+    "cmd_backlog_summary",
+    "cmd_code_doc",
+    "cmd_file_read",
+    "cmd_session_checkpoint",
+    "cmd_session_log",
+    "parse_args",
+    "cmd_query",
+    "cmd_backlog_archive",
+    "ensure_upload_dir",
+    "cmd_git_stash_quick",
+    "exit",
+    "cmd_code_symbol",
+    "readline",
+    "alarm",
+    "cmd_gen_test",
+    "cmd_register_capability",
+    "export_diff",
+    "Panel",
+    "cmd_check_code",
+    "beep",
+    "AsyncClient",
+    "cmd_check_doc",
+    "cmd_find_symbol",
+    "cmd_memory_stash",
+    "cmd_ops_thermal",
+    "read_tail",
+    "build_request",
+    "clear_screen",
+    "add_subparsers",
+    "cmd_code_outline",
+    "str",
+    "tail_file",
+    "mkdir",
+    "cmd_backlog_add",
+    "get_temps",
+    "add_parser",
+    "join",
+    "cmd_file_insert",
+    "write_nf_log",
+    "cmd_backlog_triage",
+    "cpu_percent",
+    "Live",
+    "cmd_gemini_status",
+    "cmd_file_diff",
+    "cmd_gemini_run",
+    "is_file",
+    "now",
+    "cmd_git_blame",
+    "cmd_file_patch",
+    "cmd_session_preamble",
+    "read_text",
+    "cmd_maintain_pr",
+    "cmd_git_log",
+    "cmd_doc_consolidate",
+    "count",
+    "cmd_memory_inject",
+    "add_header",
+    "cmd_ops_vram",
+    "cmd_ops_rotate_logs",
+    "int",
+    "cmd_session_done",
+    "cmd_memory_session_save",
+    "get_vram_free",
+    "is_dir",
+    "monotonic",
+    "cmd_stats",
+    "cmd_test",
+    "run",
+    "endswith",
+    "walk"
+  ],
+  "section": [
+    "len",
+    "print",
+    "max"
+  ],
+  "ok": [
+    "print",
+    "green"
+  ],
+  "warn": [
+    "print",
+    "yellow"
+  ],
+  "fail": [
+    "print",
+    "red"
+  ],
+  "info": [
+    "print",
+    "cyan"
+  ],
+  "run_cmd": [
+    "str",
+    "split",
+    "isinstance",
+    "strip",
+    "splitlines",
+    "run"
+  ],
+  "file_sha256": [
+    "iter",
+    "update",
+    "sha256",
+    "read",
+    "open",
+    "hexdigest"
+  ],
+  "read_file_safe": [
+    "read",
+    "open"
+  ],
+  "load_env_file": [
+    "strip",
+    "partition",
+    "splitlines",
+    "exists",
+    "startswith",
+    "read_file_safe",
+    "Path"
+  ],
+  "now_iso": [
+    "now",
+    "strftime"
+  ],
+  "now_stamp": [
+    "now",
+    "strftime"
+  ],
+  "relative_time": [
+    "int"
+  ],
+  "collect_journal_recent": [
+    "run_cmd"
+  ],
+  "collect_journal_errors": [
+    "run_cmd"
+  ],
+  "collect_journal_15min": [
+    "run_cmd"
+  ],
+  "collect_service_status": [
+    "run_cmd"
+  ],
+  "collect_nina_logs": [
+    "strip",
+    "glob",
+    "exists",
+    "read_file_safe",
+    "sorted"
+  ],
+  "collect_incident_reports": [
+    "append",
+    "is_dir",
+    "exists",
+    "iterdir",
+    "read_file_safe",
+    "sorted"
+  ],
+  "collect_downloads_clues": [
+    "is_file",
+    "strip",
+    "append",
+    "lower",
+    "search",
+    "iterdir",
+    "exists",
+    "read_file_safe",
+    "sorted",
+    "stat"
+  ],
+  "collect_all_log_text": [
+    "collect_journal_errors",
+    "strip",
+    "append",
+    "collect_service_status",
+    "collect_journal_15min",
+    "join",
+    "collect_journal_recent",
+    "items",
+    "collect_nina_logs"
+  ],
+  "match_signatures": [
+    "enumerate",
+    "sort",
+    "strip",
+    "append",
+    "len",
+    "get",
+    "readlines",
+    "add",
+    "search",
+    "splitlines",
+    "items",
+    "set",
+    "open"
+  ],
+  "resolve_root_cause": [
+    "enumerate",
+    "lower",
+    "any"
+  ],
+  "compute_confidence": [
+    "get"
+  ],
+  "inspect_service_state": [
+    "group",
+    "len",
+    "strip",
+    "lower",
+    "collect_service_status",
+    "search",
+    "int",
+    "findall",
+    "run_cmd",
+    "bool"
+  ],
+  "compute_health_score": [
+    "round",
+    "max"
+  ],
+  "load_baseline": [
+    "loads",
+    "exists",
+    "read_text"
+  ],
+  "compute_file_hashes": [
+    "str",
+    "file_sha256",
+    "relative_to"
+  ],
+  "pip_freeze_sha": [
+    "strip",
+    "sha256",
+    "encode",
+    "exists",
+    "run_cmd",
+    "hexdigest"
+  ],
+  "compute_baseline_drift": [
+    "append",
+    "get",
+    "join",
+    "items",
+    "keys",
+    "set",
+    "sorted"
+  ],
+  "save_baseline": [
+    "str",
+    "mkdir",
+    "now_iso",
+    "exists",
+    "dumps",
+    "sorted",
+    "keys",
+    "write_text"
+  ],
+  "build_timeline": [
+    "time",
+    "group",
+    "append",
+    "add",
+    "search",
+    "splitlines",
+    "set"
+  ],
+  "build_evidence_list": [
+    "strip",
+    "append",
+    "search",
+    "list",
+    "splitlines",
+    "items"
+  ],
+  "build_suggested_actions": [
+    "append",
+    "get",
+    "any"
+  ],
+  "collect_recent_changes": [
+    "str",
+    "fromisoformat",
+    "get",
+    "append",
+    "relative_to",
+    "exists",
+    "timestamp",
+    "stat"
+  ],
+  "find_latest_backup": [
+    "str",
+    "is_dir",
+    "glob",
+    "exists",
+    "iterdir",
+    "sorted",
+    "stat"
+  ],
+  "write_incident_artifacts": [
+    "mkdir",
+    "sub",
+    "get",
+    "append",
+    "extend",
+    "join",
+    "dumps",
+    "write_text"
+  ],
+  "write_summary_md": [
+    "append",
+    "get",
+    "join",
+    "write_text"
+  ],
+  "write_pass_summary_md": [
+    "get",
+    "mkdir",
+    "join",
+    "write_text"
+  ],
+  "print_diagnosis": [
+    "red",
+    "color",
+    "get",
+    "print",
+    "green",
+    "join"
+  ],
+  "run_engine": [
+    "time",
+    "loads",
+    "gethostname",
+    "collect_service_status",
+    "section",
+    "collect_journal_15min",
+    "relative_to",
+    "compute_baseline_drift",
+    "dumps",
+    "compute_health_score",
+    "read_file_safe",
+    "compute_confidence",
+    "fail",
+    "collect_recent_changes",
+    "now_stamp",
+    "get",
+    "print_diagnosis",
+    "write_incident_artifacts",
+    "collect_downloads_clues",
+    "compute_file_hashes",
+    "search",
+    "inspect_service_state",
+    "pip_freeze_sha",
+    "bool",
+    "write_summary_md",
+    "resolve_root_cause",
+    "ok",
+    "values",
+    "score_color",
+    "build_timeline",
+    "warn",
+    "collect_journal_recent",
+    "exists",
+    "getcwd",
+    "run_cmd",
+    "write_pass_summary_md",
+    "collect_journal_errors",
+    "str",
+    "locals",
+    "match_signatures",
+    "mkdir",
+    "strip",
+    "append",
+    "len",
+    "load_baseline",
+    "print",
+    "extend",
+    "save_baseline",
+    "now_iso",
+    "join",
+    "splitlines",
+    "items",
+    "info",
+    "build_suggested_actions",
+    "find_latest_backup",
+    "build_evidence_list",
+    "collect_nina_logs",
+    "Path",
+    "write_text",
+    "load_env_file"
+  ],
+  "__init__": [
+    "getLogger",
+    "_load_state",
+    "_setup_logging",
+    "time",
+    "load_config",
+    "loads",
+    "ModelDiscoveryService",
+    "defaultdict",
+    "CostTracker",
+    "dumps",
+    "getattr",
+    "setdefault",
+    "CircuitBreaker",
+    "get",
+    "HybridRouter",
+    "MemorySystem",
+    "NinaMetrics",
+    "read_text",
+    "bool",
+    "UpgradePipeline",
+    "CronRegistry",
+    "resolve",
+    "Event",
+    "int",
+    "exists",
+    "ResponseCache",
+    "set",
+    "load",
+    "_ensure_storage",
+    "mkdir",
+    "RLock",
+    "_write",
+    "strip",
+    "AsyncIOScheduler",
+    "expanduser",
+    "_load_ninaignore",
+    "join",
+    "deque",
+    "_mtime",
+    "Lock",
+    "Path",
+    "write_text"
+  ],
+  "initialize": [
+    "create_task",
+    "PersistentClient",
+    "loads",
+    "_discover_local_models",
+    "warning",
+    "isinstance",
+    "read_text",
+    "count",
+    "AsyncClient",
+    "exists",
+    "critical",
+    "ProviderHealth",
+    "str",
+    "mkdir",
+    "len",
+    "_loop",
+    "_load_circuit_state",
+    "_watch",
+    "items",
+    "info",
+    "get_or_create_collection",
+    "OllamaEmbeddingFunction",
+    "_idle_monitor"
+  ],
+  "record_user_message": [
+    "time"
+  ],
+  "_is_idle": [
+    "time"
+  ],
+  "_loop": [
+    "sleep",
+    "virtual_memory",
+    "_is_idle",
+    "_generate_proposal",
+    "info",
+    "warning"
+  ],
+  "_generate_proposal": [
+    "sub",
+    "ClassifiedTask",
+    "relative_to",
+    "write",
+    "warning",
+    "rglob",
+    "stat",
+    "write_text",
+    "now",
+    "search",
+    "sorted",
+    "exists",
+    "strftime",
+    "str",
+    "route",
+    "title",
+    "replace",
+    "len",
+    "strip",
+    "group",
+    "join",
+    "any",
+    "info",
+    "Path",
+    "open"
+  ],
+  "show_idle_queue": [
+    "len",
+    "append",
+    "glob",
+    "join",
+    "sorted"
+  ],
+  "record": [
+    "append",
+    "print",
+    "int",
+    "info",
+    "dumps",
+    "strftime",
+    "bool",
+    "float"
+  ],
+  "emit_report": [
+    "sum",
+    "len",
+    "print",
+    "now",
+    "__import__",
+    "strftime",
+    "dumps"
+  ],
+  "get_prometheus_metrics": [
+    "loads",
+    "strip",
+    "append",
+    "len",
+    "get",
+    "join",
+    "read_text",
+    "int",
+    "exists",
+    "error",
+    "findall",
+    "warning"
+  ],
+  "run_metrics_server": [
+    "server_close",
+    "print",
+    "send_response",
+    "encode",
+    "write",
+    "HTTPServer",
+    "end_headers",
+    "send_header",
+    "get_prometheus_metrics",
+    "serve_forever"
+  ],
+  "do_GET": [
+    "send_response",
+    "encode",
+    "write",
+    "end_headers",
+    "send_header",
+    "get_prometheus_metrics"
+  ],
+  "check_cron_ids": [
+    "get",
+    "append",
+    "search",
+    "join",
+    "read_text",
+    "record",
+    "exists",
+    "findall",
+    "items"
+  ],
+  "check_core_imports": [
+    "str",
+    "spec_from_file_location",
+    "insert",
+    "module_from_spec",
+    "get",
+    "replace",
+    "type",
+    "record",
+    "exists",
+    "pop",
+    "exec_module",
+    "warning"
+  ],
+  "check_syntax": [
+    "str",
+    "replace",
+    "parse",
+    "read_text",
+    "record",
+    "exists",
+    "warning"
+  ],
+  "check_env_file": [
+    "exists",
+    "record"
+  ],
+  "load_env": [
+    "strip",
+    "partition",
+    "read_text",
+    "splitlines",
+    "exists",
+    "startswith"
+  ],
+  "check_env_keys": [
+    "strip",
+    "get",
+    "lower",
+    "record"
+  ],
+  "check_packages": [
+    "find_spec",
+    "record"
+  ],
+  "run_all": [
+    "load_env",
+    "check_pipeline_security",
+    "check_router_regressions",
+    "check_python_version",
+    "check_env_keys",
+    "check_syntax",
+    "check_env_file",
+    "check_ssrf_guard",
+    "check_duplicate_log_handler",
+    "emit_report",
+    "check_ollama",
+    "check_log_dir",
+    "check_cron_ids",
+    "check_idle_queue_path",
+    "check_packages",
+    "check_core_imports",
+    "print",
+    "check_data_dir",
+    "run_metrics_server",
+    "check_shell_allowlist"
+  ],
+  "check_router_regressions": [
+    "search",
+    "read_text",
+    "record",
+    "exists"
+  ],
+  "check_idle_queue_path": [
+    "search",
+    "read_text",
+    "record",
+    "exists"
+  ],
+  "check_duplicate_log_handler": [
+    "len",
+    "read_text",
+    "findall",
+    "record",
+    "exists"
+  ],
+  "check_data_dir": [
+    "strip",
+    "read_text",
+    "record",
+    "exists"
+  ],
+  "check_log_dir": [
+    "mkdir",
+    "record",
+    "exists",
+    "warning",
+    "access"
+  ],
+  "check_python_version": [
+    "record"
+  ],
+  "check_ollama": [
+    "run",
+    "lower",
+    "record",
+    "warning"
+  ],
+  "check_shell_allowlist": [
+    "search",
+    "read_text",
+    "record",
+    "exists"
+  ],
+  "check_ssrf_guard": [
+    "search",
+    "read_text",
+    "record",
+    "exists"
+  ],
+  "check_pipeline_security": [
+    "search",
+    "read_text",
+    "record",
+    "exists"
+  ],
+  "build_context": [
+    "str",
+    "to_thread",
+    "len",
+    "min",
+    "get",
+    "isinstance",
+    "zip",
+    "append",
+    "join",
+    "get_val",
+    "format_list",
+    "sorted",
+    "count",
+    "float"
+  ],
+  "save_turn": [
+    "time",
+    "to_thread",
+    "uuid4",
+    "int",
+    "warning"
+  ],
+  "remember": [
+    "with_suffix",
+    "time",
+    "to_thread",
+    "replace",
+    "split",
+    "len",
+    "strip",
+    "dumps"
+  ],
+  "forget": [
+    "with_suffix",
+    "to_thread",
+    "replace",
+    "pop",
+    "dumps"
+  ],
+  "backup": [
+    "str",
+    "mkdir",
+    "copytree",
+    "exists",
+    "copy2",
+    "strftime",
+    "info"
+  ],
+  "add_reminder": [
+    "_save_reminders",
+    "time",
+    "append",
+    "uuid4",
+    "int"
+  ],
+  "get_due_reminders": [
+    "get"
+  ],
+  "mark_reminder_done": [
+    "get",
+    "_save_reminders"
+  ],
+  "_save_reminders": [
+    "with_suffix",
+    "dumps",
+    "to_thread",
+    "replace"
+  ],
+  "wipe_and_reinitialize": [
+    "rmtree",
+    "write_text",
+    "initialize"
+  ],
+  "kb_add_entry": [
+    "time",
+    "to_thread",
+    "uuid4",
+    "join",
+    "int",
+    "warning"
+  ],
+  "kb_search": [
+    "to_thread",
+    "sort",
+    "split",
+    "min",
+    "get",
+    "append",
+    "zip",
+    "count",
+    "warning"
+  ],
+  "conversation_count": [
+    "count"
+  ],
+  "fact_count": [
+    "len"
+  ],
+  "check": [
+    "str",
+    "PersistentClient",
+    "loads",
+    "emit_log",
+    "get_hub",
+    "read_text",
+    "exists",
+    "count",
+    "get_collection"
+  ],
+  "get_val": [
+    "get",
+    "isinstance"
+  ],
+  "format_list": [
+    "str",
+    "isinstance",
+    "join"
+  ],
+  "get_logger": [
+    "bind"
+  ],
+  "classify_task": [
+    "loads",
+    "strip",
+    "get",
+    "min",
+    "ClassifiedTask",
+    "lower",
+    "join",
+    "max",
+    "int",
+    "any",
+    "warning",
+    "local_fast_fn"
+  ],
+  "to_dict": [
+    "list",
+    "get_status",
+    "time",
+    "asdict"
+  ],
+  "from_dict": [
+    "str",
+    "setdefault",
+    "TaskStoreCorruptedError",
+    "cls",
+    "TaskStatus",
+    "get",
+    "uuid4",
+    "_now_iso",
+    "deque",
+    "pop",
+    "dict"
+  ],
+  "_prune": [
+    "time",
+    "popleft"
+  ],
+  "allow_request": [
+    "time"
+  ],
+  "record_success": [
+    "time",
+    "append",
+    "float",
+    "max",
+    "int",
+    "record_success",
+    "clear"
+  ],
+  "record_failure": [
+    "time",
+    "len",
+    "append",
+    "_prune",
+    "popleft",
+    "record_failure"
+  ],
+  "set_cooldown": [
+    "max",
+    "time",
+    "float"
+  ],
+  "avg_latency_ms": [
+    "len",
+    "sum"
+  ],
+  "is_available": [
+    "allow_request",
+    "get",
+    "check_reset"
+  ],
+  "is_near_limit": [
+    "get",
+    "cast",
+    "bool"
+  ],
+  "is_exhausted": [
+    "get",
+    "cast",
+    "bool"
+  ],
+  "composite_score": [
+    "min",
+    "success_rate",
+    "is_near_limit",
+    "avg_latency_ms"
+  ],
+  "_k": [
+    "strip",
+    "get",
+    "lower",
+    "sha256",
+    "join",
+    "encode",
+    "hexdigest"
+  ],
+  "get": [
+    "time",
+    "_write",
+    "all",
+    "get",
+    "now",
+    "append",
+    "zip",
+    "isoformat",
+    "items",
+    "_k",
+    "_read"
+  ],
+  "set": [
+    "time",
+    "len",
+    "get",
+    "_k",
+    "purge_expired"
+  ],
+  "clear": [
+    "clear"
+  ],
+  "purge_expired": [
+    "items",
+    "time",
+    "pop"
+  ],
+  "save": [
+    "dirname",
+    "replace",
+    "values",
+    "makedirs",
+    "any",
+    "dump",
+    "warning",
+    "open"
+  ],
+  "load": [
+    "load",
+    "get",
+    "check_reset",
+    "exists",
+    "purge_expired",
+    "warning",
+    "open"
+  ],
+  "_save_circuit_state": [
+    "save",
+    "dirname",
+    "replace",
+    "makedirs",
+    "items",
+    "to_dict",
+    "dump",
+    "warning",
+    "open"
+  ],
+  "_load_circuit_state": [
+    "load",
+    "from_dict",
+    "exists",
+    "items",
+    "info",
+    "warning",
+    "open"
+  ],
+  "close": [
+    "aclose",
+    "cancel",
+    "_save_circuit_state"
+  ],
+  "_discover_local_models": [
+    "get",
+    "lower",
+    "wait_for",
+    "json",
+    "info",
+    "raise_for_status",
+    "warning",
+    "sorted"
+  ],
+  "_has_key": [
+    "str",
+    "strip",
+    "get",
+    "cast",
+    "getattr",
+    "bool"
+  ],
+  "_ordered_providers": [
+    "is_available",
+    "composite_score",
+    "append",
+    "is_exhausted",
+    "_has_key",
+    "remove",
+    "items",
+    "is_degraded",
+    "sorted"
+  ],
+  "_call_provider": [
+    "time",
+    "set_cooldown",
+    "append",
+    "get",
+    "get_model",
+    "json",
+    "cast",
+    "join",
+    "int",
+    "HTTPStatusError",
+    "RuntimeError",
+    "raise_for_status",
+    "getattr",
+    "copy",
+    "float",
+    "post"
+  ],
+  "call_provider": [
+    "sleep",
+    "enumerate",
+    "_call_provider",
+    "len",
+    "RuntimeError"
+  ],
+  "route": [
+    "sleep",
+    "create_task",
+    "time",
+    "next",
+    "uuid4",
+    "bind",
+    "record",
+    "_ordered_providers",
+    "getattr",
+    "warning",
+    "float",
+    "get",
+    "search",
+    "allow_request",
+    "open",
+    "cast",
+    "_has_key",
+    "exists",
+    "int",
+    "record_success",
+    "str",
+    "load",
+    "call_provider",
+    "len",
+    "append",
+    "add",
+    "record_failure",
+    "error",
+    "info",
+    "startswith",
+    "set",
+    "hasattr"
+  ],
+  "parallel_route": [
+    "loads",
+    "zip",
+    "removesuffix",
+    "_ordered_providers",
+    "isinstance",
+    "fetch",
+    "gather",
+    "max",
+    "record_success",
+    "removeprefix",
+    "str",
+    "route",
+    "call_provider",
+    "virtual_memory",
+    "len",
+    "strip",
+    "wait_for",
+    "record_failure",
+    "join",
+    "local_fast_fn"
+  ],
+  "single_turn": [
+    "route",
+    "ClassifiedTask"
+  ],
+  "_idle_monitor": [
+    "sleep",
+    "time",
+    "call_provider",
+    "purge_expired",
+    "virtual_memory",
+    "ClassifiedTask",
+    "wait_for",
+    "_has_key",
+    "record_failure",
+    "_save_circuit_state",
+    "record_success",
+    "warning"
+  ],
+  "activate_key": [
+    "get",
+    "upper",
+    "setattr",
+    "sk",
+    "info",
+    "ProviderHealth",
+    "cast",
+    "warning"
+  ],
+  "reset_daily_counters": [
+    "reset_daily",
+    "values"
+  ],
+  "get_status": [
+    "_load_state",
+    "time",
+    "composite_score",
+    "cpu_percent",
+    "success_rate",
+    "get_status",
+    "process_iter",
+    "sorted",
+    "boot_time",
+    "_has_key",
+    "int",
+    "avg_latency_ms",
+    "is_available",
+    "get_temps",
+    "virtual_memory",
+    "append",
+    "is_exhausted",
+    "disk_usage",
+    "join",
+    "items"
+  ],
+  "fetch": [
+    "close",
+    "launch",
+    "EWSConnection",
+    "getattr",
+    "warning",
+    "inner_text",
+    "_is_internal",
+    "async_playwright",
+    "triage_messages",
+    "record_success",
+    "call_provider",
+    "len",
+    "append",
+    "wait_for",
+    "record_failure",
+    "join",
+    "error",
+    "fetch_messages",
+    "new_page",
+    "info",
+    "goto",
+    "is_configured"
+  ],
+  "size_rank": [
+    "lower"
+  ],
+  "_read": [
+    "loads",
+    "read_text"
+  ],
+  "_write": [
+    "with_suffix",
+    "dumps",
+    "write_text",
+    "replace"
+  ],
+  "store": [
+    "str",
+    "_write",
+    "now",
+    "timedelta",
+    "isoformat",
+    "fixture",
+    "_read",
+    "TaskStore"
+  ],
+  "clear_expired": [
+    "_write",
+    "get",
+    "now",
+    "isoformat",
+    "items",
+    "_read"
+  ],
+  "clear_all": [
+    "_write"
+  ],
+  "_now_iso": [
+    "now",
+    "strftime"
+  ],
+  "_ensure_storage": [
+    "mkdir",
+    "debug",
+    "exists",
+    "write_text"
+  ],
+  "_read_tasks": [
+    "loads",
+    "strip",
+    "_recover_from_backup",
+    "len",
+    "isinstance",
+    "type",
+    "read_text",
+    "from_dict",
+    "items",
+    "info",
+    "error",
+    "warning"
+  ],
+  "_recover_from_backup": [
+    "loads",
+    "TaskStoreCorruptedError",
+    "len",
+    "isinstance",
+    "error",
+    "exists",
+    "read_text",
+    "items",
+    "from_dict",
+    "info",
+    "copy2"
+  ],
+  "_write_tasks": [
+    "str",
+    "TaskStoreCorruptedError",
+    "mkstemp",
+    "unlink",
+    "replace",
+    "TaskStoreLockError",
+    "acquire",
+    "exists",
+    "FileLock",
+    "copy2",
+    "release",
+    "items",
+    "to_dict",
+    "dump",
+    "warning",
+    "fdopen"
+  ],
+  "create_task": [
+    "_write_tasks",
+    "_read_tasks",
+    "Task",
+    "TaskStoreLockError",
+    "acquire",
+    "info",
+    "release"
+  ],
+  "get_task": [
+    "_read_tasks",
+    "TaskNotFoundError"
+  ],
+  "update_task": [
+    "_read_tasks",
+    "_write_tasks",
+    "TaskStatus",
+    "isinstance",
+    "TaskStoreLockError",
+    "setattr",
+    "acquire",
+    "_now_iso",
+    "items",
+    "info",
+    "release",
+    "hasattr",
+    "TaskNotFoundError"
+  ],
+  "delete_task": [
+    "_read_tasks",
+    "_write_tasks",
+    "TaskStoreLockError",
+    "acquire",
+    "_now_iso",
+    "info",
+    "release"
+  ],
+  "list_tasks": [
+    "_read_tasks",
+    "TaskStatus",
+    "values",
+    "isinstance",
+    "sorted"
+  ],
+  "get_task_metrics": [
+    "_read_tasks",
+    "values",
+    "len",
+    "get",
+    "list"
+  ],
+  "format_tasks_summary": [
+    "_read_tasks",
+    "sort",
+    "values",
+    "len",
+    "get",
+    "append",
+    "join"
+  ],
+  "get_by_status": [
+    "list_tasks"
+  ],
+  "get_by_tool": [
+    "_read_tasks",
+    "get",
+    "values"
+  ],
+  "archive_expired": [
+    "loads",
+    "dump",
+    "warning",
+    "TaskStoreCorruptedError",
+    "unlink",
+    "now",
+    "update",
+    "read_text",
+    "release",
+    "_write_tasks",
+    "mkstemp",
+    "TaskStoreLockError",
+    "with_name",
+    "acquire",
+    "exists",
+    "_read_tasks",
+    "fromisoformat",
+    "replace",
+    "strip",
+    "len",
+    "from_dict",
+    "items",
+    "to_dict",
+    "fdopen"
+  ],
+  "load_archive": [
+    "loads",
+    "strip",
+    "isinstance",
+    "append",
+    "with_name",
+    "read_text",
+    "exists",
+    "items",
+    "from_dict",
+    "error",
+    "sorted"
+  ],
+  "get_hub": [
+    "ObservabilityHub"
+  ],
+  "set_sync_ts": [
+    "now",
+    "isoformat"
+  ],
+  "set_health_ts": [
+    "now",
+    "isoformat"
+  ],
+  "emit_log": [
+    "to_dict",
+    "info",
+    "dumps"
+  ],
+  "is_valid_output": [
+    "verify_non_empty",
+    "StepVerifier"
+  ],
+  "verify_non_empty": [
+    "VerificationResult",
+    "isinstance",
+    "type",
+    "info",
+    "dumps"
+  ],
+  "verify_success_criteria": [
+    "NinaConfig",
+    "loads",
+    "VerificationResult",
+    "strip",
+    "split",
+    "HybridRouter",
+    "single_turn",
+    "get",
+    "initialize",
+    "info",
+    "dumps",
+    "bool"
+  ],
+  "semantic_score": [
+    "NinaConfig",
+    "route",
+    "loads",
+    "strip",
+    "ClassifiedTask",
+    "HybridRouter",
+    "split",
+    "get",
+    "initialize",
+    "int",
+    "info",
+    "dumps",
+    "bool"
+  ],
+  "verify_numeric_range": [
+    "dumps",
+    "info",
+    "VerificationResult",
+    "float"
+  ],
+  "numeric_assert": [
+    "group",
+    "isinstance",
+    "search",
+    "abs",
+    "info",
+    "dumps",
+    "float"
+  ],
+  "verify_schema": [
+    "VerificationResult",
+    "isinstance",
+    "join",
+    "info",
+    "dumps"
+  ],
+  "verify_all": [
+    "verify_success_criteria",
+    "VerificationResult",
+    "append",
+    "get",
+    "verify_numeric_range",
+    "verify_schema",
+    "items",
+    "verify_non_empty"
+  ],
+  "load_config": [
+    "NinaConfig",
+    "loads",
+    "lower",
+    "error",
+    "int",
+    "items",
+    "RuntimeError",
+    "getenv"
+  ],
+  "validate_env": [
+    "items",
+    "getenv"
+  ],
+  "_should_self_check": [
+    "lower",
+    "getattr"
+  ],
+  "_self_check": [
+    "strip",
+    "_should_self_check",
+    "route",
+    "warning"
+  ],
+  "run": [
+    "create_task",
+    "_inner",
+    "load_config",
+    "result",
+    "lower",
+    "watch_cycle",
+    "get_status",
+    "warning",
+    "get",
+    "run_in_executor",
+    "glob",
+    "search",
+    "fetch",
+    "make_request",
+    "tune",
+    "cloud_task",
+    "gather",
+    "plan",
+    "to_thread",
+    "split",
+    "orchestrate_cycle",
+    "think",
+    "append_to_backlog",
+    "read",
+    "copy",
+    "parse_goal",
+    "scout_task",
+    "len",
+    "append",
+    "strip",
+    "get_running_loop",
+    "wait_for",
+    "join",
+    "scaffold_task",
+    "run_dispatch",
+    "error",
+    "info",
+    "run",
+    "debug",
+    "act",
+    "open"
+  ],
+  "_is_bangla": [
+    "search",
+    "bool"
+  ],
+  "_inner": [
+    "getLogger",
+    "sub",
+    "single_turn",
+    "lower",
+    "unknown_tool",
+    "zip",
+    "build_context",
+    "getattr",
+    "warning",
+    "finditer",
+    "run_tool_with_fix",
+    "get",
+    "is_healthy",
+    "isinstance",
+    "get_ram_used_gb",
+    "search",
+    "gather",
+    "fail_tool",
+    "split",
+    "ValueError",
+    "critical",
+    "chr",
+    "range",
+    "copy",
+    "str",
+    "route",
+    "_is_bangla",
+    "get_temps",
+    "strip",
+    "urlparse",
+    "append",
+    "group",
+    "len",
+    "_self_check",
+    "list",
+    "join",
+    "splitlines",
+    "info",
+    "run",
+    "debug",
+    "endswith"
+  ],
+  "run_tool_with_fix": [
+    "route",
+    "sub",
+    "strip",
+    "append",
+    "lower",
+    "group",
+    "get",
+    "range",
+    "search",
+    "join",
+    "splitlines",
+    "chr",
+    "run",
+    "endswith"
+  ],
+  "write_log": [
+    "dirname",
+    "mkdir",
+    "now",
+    "makedirs",
+    "error",
+    "write",
+    "isoformat",
+    "strftime",
+    "dumps",
+    "Path",
+    "open"
+  ],
+  "start": [
+    "getLogger",
+    "Thread",
+    "IdleUpgradeLoop",
+    "start",
+    "setLevel",
+    "makedirs",
+    "lower",
+    "get_jobs",
+    "getattr",
+    "add_handler",
+    "format",
+    "build",
+    "schedule",
+    "isinstance",
+    "log_event",
+    "initialize",
+    "_LocalChangeHandler",
+    "AgentLoop",
+    "add_job",
+    "setFormatter",
+    "file_handler",
+    "TelegramInterface",
+    "builder",
+    "_run_git",
+    "Formatter",
+    "read_text",
+    "MessageHandler",
+    "TimedRotatingFileHandler",
+    "StreamHandler",
+    "Observer",
+    "partial",
+    "start_polling",
+    "addHandler",
+    "ConfigHotReload",
+    "_send_startup_message",
+    "IntervalTrigger",
+    "submit",
+    "_setup_signal_handlers",
+    "TaskScheduler",
+    "_has_handler",
+    "exists",
+    "strftime",
+    "str",
+    "_save_state",
+    "strip",
+    "urlparse",
+    "len",
+    "type",
+    "add",
+    "_wrap_job",
+    "_schedule_commit",
+    "join",
+    "splitlines",
+    "CronTrigger",
+    "items",
+    "any",
+    "info",
+    "endswith",
+    "hasattr",
+    "token"
+  ],
+  "_send_startup_message": [
+    "get_temps",
+    "strip",
+    "get_ram_used_gb",
+    "send_message",
+    "strftime",
+    "run",
+    "next_job_time"
+  ],
+  "shutdown": [
+    "close",
+    "getLogger",
+    "shutdown",
+    "stop",
+    "info"
+  ],
+  "run_morning_report": [
+    "append",
+    "get",
+    "json",
+    "AsyncClient",
+    "join",
+    "send_message",
+    "strftime",
+    "fetch",
+    "get_status"
+  ],
+  "run_heartbeat": [
+    "getLogger",
+    "get",
+    "info",
+    "AsyncClient"
+  ],
+  "run_cost_report": [
+    "send_message"
+  ],
+  "run_idle_summary": [
+    "loads",
+    "len",
+    "get",
+    "handle_command",
+    "submit",
+    "read_text",
+    "exists",
+    "send_message",
+    "pop",
+    "dumps",
+    "write_text"
+  ],
+  "run_log_rotation": [
+    "getLogger",
+    "info"
+  ],
+  "run_provider_health": [
+    "getLogger",
+    "info"
+  ],
+  "run_provider_hunter": [
+    "hunt"
+  ],
+  "run_thermal_health": [
+    "send_message",
+    "get_temps"
+  ],
+  "run_reminder_check": [
+    "getLogger",
+    "time",
+    "get",
+    "get_due_reminders",
+    "send_message",
+    "info",
+    "mark_reminder_done"
+  ],
+  "file_handler": [
+    "TimedRotatingFileHandler",
+    "setFormatter",
+    "setLevel",
+    "Formatter"
+  ],
+  "_has_handler": [
+    "isinstance",
+    "endswith",
+    "getattr"
+  ],
+  "_mtime": [
+    "warning",
+    "stat"
+  ],
+  "_watch": [
+    "sleep",
+    "_mtime",
+    "_reload",
+    "warning"
+  ],
+  "_reload": [
+    "strip",
+    "get",
+    "append",
+    "getattr",
+    "setattr",
+    "join",
+    "error",
+    "items",
+    "info",
+    "send_message",
+    "dotenv_values",
+    "cast"
+  ],
+  "think": [
+    "ThinkResult",
+    "lower",
+    "any"
+  ],
+  "plan": [
+    "GoalDecomposer",
+    "PlanResult"
+  ],
+  "act": [
+    "str",
+    "record_task",
+    "replace",
+    "get_hub",
+    "print",
+    "exists",
+    "write",
+    "read",
+    "open",
+    "ActResult"
+  ],
+  "scout_task": [
+    "to_thread",
+    "len",
+    "append",
+    "glob",
+    "join",
+    "read",
+    "open"
+  ],
+  "scaffold_task": [
+    "to_thread"
+  ],
+  "cloud_task": [
+    "plan",
+    "to_thread",
+    "think",
+    "debug",
+    "act",
+    "copy"
+  ],
+  "_scout": [
+    "len",
+    "append",
+    "glob",
+    "join",
+    "read",
+    "open"
+  ],
+  "_cloud": [
+    "debug",
+    "act",
+    "plan",
+    "think"
+  ],
+  "register": [
+    "ValueError",
+    "dumps",
+    "info",
+    "strftime",
+    "write_text"
+  ],
+  "get_capability": [
+    "get"
+  ],
+  "list_capabilities": [
+    "items"
+  ],
+  "is_healthy": [
+    "get"
+  ],
+  "mark_unhealthy": [
+    "to_thread",
+    "update",
+    "strftime",
+    "dumps",
+    "warning"
+  ],
+  "mark_healthy": [
+    "to_thread",
+    "update",
+    "pop",
+    "strftime",
+    "dumps"
+  ],
+  "status": [
+    "str",
+    "sum",
+    "len",
+    "append",
+    "get",
+    "join",
+    "max",
+    "error",
+    "int",
+    "items",
+    "run"
+  ],
+  "load_providers": [
+    "load",
+    "len",
+    "error",
+    "info",
+    "ProviderHealth",
+    "open"
+  ],
+  "watch_providers": [
+    "awatch",
+    "load_providers"
+  ],
+  "fetch_models_background": [
+    "sleep",
+    "get",
+    "append",
+    "json",
+    "getenv"
+  ],
+  "lifespan": [
+    "create_task",
+    "fetch_models_background",
+    "aclose",
+    "AsyncClient",
+    "cancel",
+    "watch_providers",
+    "Timeout"
+  ],
+  "stream_response": [
+    "time",
+    "aclose",
+    "append",
+    "aiter_bytes",
+    "record_success"
+  ],
+  "list_models": [
+    "get",
+    "JSONResponse"
+  ],
+  "health": [
+    "route",
+    "get_hub",
+    "get",
+    "now",
+    "isoformat",
+    "response_class",
+    "dumps",
+    "to_dict"
+  ],
+  "classify_request": [
+    "len",
+    "get",
+    "lower",
+    "any"
+  ],
+  "forward_to_provider": [
+    "sleep",
+    "time",
+    "aclose",
+    "get",
+    "record_failure",
+    "increment",
+    "send",
+    "pop",
+    "build_request",
+    "range",
+    "copy",
+    "float"
+  ],
+  "proxy_chat_completions": [
+    "StreamingResponse",
+    "create_task",
+    "time",
+    "score",
+    "sort",
+    "json",
+    "classify_request",
+    "JSONResponse",
+    "getenv",
+    "get",
+    "isinstance",
+    "search",
+    "write_log",
+    "allow_request",
+    "forward_to_provider",
+    "split",
+    "cancel",
+    "record_success",
+    "post",
+    "is_available",
+    "replace",
+    "group",
+    "append",
+    "stream_response",
+    "lstrip",
+    "info"
+  ],
+  "websocket_telemetry": [
+    "sleep",
+    "loads",
+    "cpu_percent",
+    "readlines",
+    "seek",
+    "websocket",
+    "communicate",
+    "create_subprocess_exec",
+    "tell",
+    "int",
+    "decode",
+    "exists",
+    "dirname",
+    "strip",
+    "append",
+    "accept",
+    "wait_for",
+    "join",
+    "error",
+    "info",
+    "send_json",
+    "open"
+  ],
+  "avg_latency": [
+    "len",
+    "sum"
+  ],
+  "score": [
+    "max",
+    "success_rate",
+    "avg_latency"
+  ],
+  "check_reset": [
+    "save",
+    "time",
+    "replace",
+    "timedelta",
+    "fromtimestamp"
+  ],
+  "increment": [
+    "get_event_loop",
+    "run_in_executor",
+    "check_reset"
+  ],
+  "run_cli": [
+    "close",
+    "ArgumentParser",
+    "_call_provider",
+    "ClassifiedTask",
+    "lower",
+    "write",
+    "add_argument",
+    "parse_args",
+    "exit",
+    "get",
+    "HybridRouter",
+    "isatty",
+    "initialize",
+    "MemorySystem",
+    "AgentLoop",
+    "classify_task",
+    "dotenv_values",
+    "NinaConfig",
+    "upper",
+    "int",
+    "read",
+    "print_help",
+    "strip",
+    "print",
+    "join",
+    "items",
+    "run",
+    "open"
+  ],
+  "local_fast": [
+    "ClassifiedTask",
+    "_call_provider"
+  ],
+  "is_allowed": [
+    "len",
+    "append",
+    "time"
+  ],
+  "get_all": [
+    "list",
+    "values"
+  ],
+  "stop": [
+    "shutdown",
+    "log_event",
+    "join",
+    "stop",
+    "set",
+    "hasattr"
+  ],
+  "_mask_secrets": [
+    "replace",
+    "len",
+    "isinstance",
+    "search",
+    "items",
+    "dict"
+  ],
+  "_reply": [
+    "_mask_secrets",
+    "reply_text",
+    "str"
+  ],
+  "_edit_message": [
+    "_mask_secrets",
+    "edit_text",
+    "str"
+  ],
+  "_handle_document_update": [
+    "str",
+    "create_task",
+    "_reply",
+    "delete",
+    "_handle_upgrade_file",
+    "endswith",
+    "warning"
+  ],
+  "_handle_update": [
+    "str",
+    "getLogger",
+    "create_task",
+    "time",
+    "_reply",
+    "strip",
+    "len",
+    "append",
+    "warning",
+    "reply_text",
+    "error",
+    "send_message",
+    "_dispatch",
+    "is_allowed",
+    "record_user_message",
+    "hasattr"
+  ],
+  "_dispatch": [
+    "_handle_nlp",
+    "split",
+    "len",
+    "lower",
+    "_handle_command",
+    "lstrip"
+  ],
+  "_handle_command": [
+    "ClassifiedTask",
+    "_handle_reset",
+    "_stream_reply",
+    "get_status",
+    "done",
+    "clear",
+    "_handle_addkey",
+    "_reply",
+    "classify_task",
+    "read_text",
+    "remember",
+    "forget",
+    "split",
+    "cancel",
+    "exists",
+    "strip",
+    "len",
+    "append",
+    "handle_command",
+    "join",
+    "splitlines",
+    "startswith",
+    "run",
+    "Path"
+  ],
+  "_handle_nlp": [
+    "_reply",
+    "get",
+    "lower",
+    "_handle_command",
+    "search",
+    "classify_task",
+    "items",
+    "_stream_reply"
+  ],
+  "_stream_reply": [
+    "str",
+    "route",
+    "create_task",
+    "_reply",
+    "len",
+    "append",
+    "exception",
+    "type",
+    "pop",
+    "_edit_message",
+    "range",
+    "run",
+    "getattr"
+  ],
+  "_handle_reset": [
+    "wipe_and_reinitialize",
+    "backup",
+    "_reply",
+    "clear"
+  ],
+  "_handle_addkey": [
+    "_reply",
+    "strip",
+    "len",
+    "split",
+    "lower",
+    "upper",
+    "delete",
+    "activate_key",
+    "info",
+    "get_status"
+  ],
+  "_handle_upgrade_file": [
+    "_reply",
+    "handle_command",
+    "get_file",
+    "download_as_bytearray",
+    "decode"
+  ],
+  "_local_fast": [
+    "ClassifiedTask",
+    "warning",
+    "_call_provider"
+  ],
+  "send_message": [
+    "sub",
+    "esc",
+    "_mask_secrets",
+    "send_message",
+    "warning"
+  ],
+  "esc": [
+    "sub"
+  ],
+  "search": [
+    "sleep",
+    "get_event_loop",
+    "choice",
+    "json",
+    "warning",
+    "get",
+    "run_in_executor",
+    "_clean_query",
+    "text",
+    "DDGS",
+    "AsyncClient",
+    "range",
+    "post",
+    "len",
+    "wait_for",
+    "list",
+    "join",
+    "info",
+    "raise_for_status"
+  ],
+  "ninaui": [
+    "str",
+    "send_file",
+    "route"
+  ],
+  "index": [
+    "check_output",
+    "getcode",
+    "render_template",
+    "format_tasks_summary",
+    "fromtimestamp",
+    "get_job_metrics",
+    "TaskStore",
+    "stat",
+    "now",
+    "urlopen",
+    "exists",
+    "decode",
+    "strftime",
+    "read",
+    "route",
+    "strip",
+    "expanduser",
+    "Request",
+    "Path"
+  ],
+  "write_ignore_file": [
+    "replace",
+    "strip",
+    "append",
+    "expanduser",
+    "join",
+    "exists",
+    "startswith",
+    "write",
+    "copy",
+    "open"
+  ],
+  "estimate_context_tokens": [
+    "len",
+    "expanduser",
+    "isfile",
+    "join",
+    "decode",
+    "read",
+    "open"
+  ],
+  "get_included_files": [
+    "strip",
+    "append",
+    "expanduser",
+    "relpath",
+    "fnmatch",
+    "join",
+    "remove",
+    "any",
+    "startswith",
+    "sorted",
+    "open",
+    "copy",
+    "walk"
+  ],
+  "get_stable_prefix": [
+    "lru_cache",
+    "rstrip",
+    "readlines",
+    "expanduser",
+    "join",
+    "open"
+  ],
+  "build_prompt": [
+    "len",
+    "get",
+    "max",
+    "int",
+    "get_stable_prefix",
+    "warning"
+  ],
+  "write_prompt_file": [
+    "dirname",
+    "build_prompt",
+    "expanduser",
+    "makedirs",
+    "write",
+    "open"
+  ],
+  "select": [
+    "sum",
+    "len",
+    "expanduser",
+    "lower",
+    "any",
+    "debug",
+    "open"
+  ],
+  "get_cli_flag": [
+    "select"
+  ],
+  "_load_state": [
+    "load",
+    "loads",
+    "get",
+    "now",
+    "read_text",
+    "exists",
+    "strftime",
+    "open"
+  ],
+  "_save_state": [
+    "dirname",
+    "mkdir",
+    "replace",
+    "write_text",
+    "makedirs",
+    "error",
+    "dumps",
+    "dump",
+    "open"
+  ],
+  "record_request": [
+    "_load_state",
+    "error",
+    "warning",
+    "_save_state"
+  ],
+  "check_invocation": [
+    "_load_state"
+  ],
+  "get_hash": [
+    "hexdigest",
+    "read_bytes",
+    "Path",
+    "md5"
+  ],
+  "scan": [
+    "str",
+    "resolve",
+    "len",
+    "append",
+    "relative_to",
+    "startswith",
+    "get_hash",
+    "endswith",
+    "Path",
+    "walk"
+  ],
+  "generate_index": [
+    "next",
+    "len",
+    "append",
+    "get",
+    "split",
+    "list",
+    "join",
+    "items",
+    "scan",
+    "write",
+    "open",
+    "dump",
+    "set",
+    "sorted"
+  ],
+  "run_cleanup_plan": [
+    "load",
+    "print",
+    "get",
+    "append",
+    "open"
+  ],
+  "run_orchestrator_cycle": [
+    "orchestrate_cycle"
+  ],
+  "_fetch_dummy_price": [
+    "get"
+  ],
+  "run_market_monitor": [
+    "str",
+    "success",
+    "append",
+    "now",
+    "_fetch_dummy_price",
+    "failure",
+    "join",
+    "round",
+    "error",
+    "isoformat",
+    "abs",
+    "info",
+    "dumps"
+  ],
+  "get_active_session": [
+    "load",
+    "SessionLedger",
+    "reversed",
+    "get",
+    "exists",
+    "warning",
+    "open"
+  ],
+  "set_plan": [
+    "debug",
+    "_save"
+  ],
+  "log_step": [
+    "utcnow",
+    "append",
+    "_auto_register_mistake",
+    "isoformat",
+    "_save"
+  ],
+  "_auto_register_mistake": [
+    "append",
+    "sha256",
+    "encode",
+    "_save",
+    "hexdigest"
+  ],
+  "register_mistake": [
+    "append",
+    "sha256",
+    "encode",
+    "_save",
+    "hexdigest"
+  ],
+  "set_resume_hint": [
+    "_save"
+  ],
+  "complete": [
+    "utcnow",
+    "isoformat",
+    "_save"
+  ],
+  "_save": [
+    "load",
+    "enumerate",
+    "mkdir",
+    "replace",
+    "get",
+    "append",
+    "exists",
+    "dump",
+    "warning",
+    "open",
+    "asdict"
+  ],
+  "check_doc_deltas": [
+    "split",
+    "get",
+    "append",
+    "strip",
+    "print",
+    "add",
+    "join",
+    "run",
+    "set"
+  ],
+  "notify_telegram": [
+    "urlopen",
+    "get",
+    "print",
+    "load_dotenv",
+    "encode",
+    "Request",
+    "urlencode"
+  ],
+  "validate": [
+    "listdir",
+    "load",
+    "resolve",
+    "str",
+    "print",
+    "get",
+    "relative_to",
+    "notify_telegram",
+    "exists",
+    "any",
+    "startswith",
+    "open",
+    "check_doc_deltas",
+    "endswith",
+    "Path",
+    "walk"
+  ],
+  "run_expenditure_report": [
+    "lower",
+    "failure",
+    "defaultdict",
+    "dumps",
+    "warning",
+    "float",
+    "success",
+    "StringIO",
+    "reader",
+    "dict",
+    "sorted",
+    "enumerate",
+    "str",
+    "strip",
+    "len",
+    "error",
+    "any",
+    "info",
+    "items"
+  ],
+  "extract_insights_and_append": [
+    "mkdir",
+    "get",
+    "now",
+    "exists",
+    "strftime",
+    "write",
+    "open"
+  ],
+  "append_routing_history": [
+    "exists",
+    "open",
+    "write"
+  ],
+  "run_sync": [
+    "print",
+    "run"
+  ],
+  "process_file": [
+    "TypeHintEnforcer",
+    "print",
+    "write",
+    "read",
+    "visit",
+    "open",
+    "parse_module"
+  ],
+  "leave_FunctionDef": [
+    "append",
+    "isinstance",
+    "ReturnVisitor",
+    "with_changes",
+    "Name",
+    "Annotation",
+    "visit"
+  ],
+  "leave_Module": [
+    "enumerate",
+    "ImportAlias",
+    "insert",
+    "tuple",
+    "isinstance",
+    "with_changes",
+    "list",
+    "SimpleStatementLine",
+    "Name",
+    "ImportFrom"
+  ],
+  "get_api_key": [
+    "ValueError"
+  ],
+  "make_request": [
+    "sleep",
+    "to_thread",
+    "range",
+    "json",
+    "request",
+    "error",
+    "info",
+    "get_api_key",
+    "raise_for_status"
+  ],
+  "load_registry": [
+    "loads",
+    "exists",
+    "read_text"
+  ],
+  "save_registry": [
+    "mkdir",
+    "write_text",
+    "dumps"
+  ],
+  "register_session": [
+    "utcnow",
+    "load_registry",
+    "isinstance",
+    "save_registry",
+    "isoformat"
+  ],
+  "update_registry_status": [
+    "utcnow",
+    "load_registry",
+    "isoformat",
+    "save_registry"
+  ],
+  "send_telegram": [
+    "to_thread",
+    "post"
+  ],
+  "start_beep": [
+    "str",
+    "Popen",
+    "poll"
+  ],
+  "stop_beep": [
+    "terminate",
+    "poll"
+  ],
+  "watch_cycle": [
+    "start_beep",
+    "update_registry_status",
+    "loads",
+    "reversed",
+    "split",
+    "get",
+    "add",
+    "list",
+    "read_text",
+    "exists",
+    "send_telegram",
+    "dumps",
+    "make_request",
+    "set",
+    "write_text"
+  ],
+  "resolve_prs_parallel": [
+    "str",
+    "gather",
+    "loads",
+    "to_thread",
+    "resolve_one",
+    "info",
+    "warning"
+  ],
+  "run_dispatch": [
+    "strip",
+    "get",
+    "make_request",
+    "split"
+  ],
+  "orchestrate_cycle": [
+    "_save_task_status",
+    "get_backlog_tasks",
+    "values",
+    "len",
+    "load_registry",
+    "get",
+    "resolve_prs_parallel",
+    "join",
+    "watch_cycle",
+    "run_dispatch",
+    "register_session",
+    "error",
+    "info"
+  ],
+  "cli_run": [
+    "ArgumentParser",
+    "print",
+    "join",
+    "run",
+    "add_argument",
+    "parse_args"
+  ],
+  "resolve_one": [
+    "str",
+    "to_thread",
+    "info",
+    "warning"
+  ],
+  "sync_req": [
+    "request"
+  ],
+  "call_model": [
+    "str",
+    "time",
+    "get",
+    "json",
+    "AsyncClient",
+    "raise_for_status",
+    "post"
+  ],
+  "run_benchmark": [
+    "print",
+    "call_model",
+    "append"
+  ],
+  "extract_facts": [
+    "load",
+    "group",
+    "len",
+    "get",
+    "print",
+    "now",
+    "search",
+    "findall",
+    "strftime",
+    "read",
+    "open"
+  ],
+  "patch_file": [
+    "format",
+    "sub",
+    "print",
+    "search",
+    "exists",
+    "write",
+    "read",
+    "open"
+  ],
+  "beep": [
+    "print"
+  ],
+  "query": [
+    "load",
+    "split",
+    "get",
+    "print",
+    "exit",
+    "append",
+    "lower",
+    "zip",
+    "join",
+    "items",
+    "any",
+    "all",
+    "open"
+  ],
+  "_log_access": [
+    "info",
+    "strftime",
+    "dumps"
+  ],
+  "fetch_messages": [
+    "_log_access",
+    "EmailItem",
+    "len",
+    "append",
+    "get_unread_inbox",
+    "getattr"
+  ],
+  "triage_messages": [
+    "strip",
+    "append",
+    "split",
+    "lower",
+    "search",
+    "join",
+    "compile",
+    "map"
+  ],
+  "get_unread_inbox": [
+    "order_by",
+    "Build",
+    "filter",
+    "list",
+    "ValueError",
+    "Account",
+    "Credentials",
+    "Version",
+    "Configuration",
+    "is_configured",
+    "getattr"
+  ],
+  "validate_provider": [
+    "str",
+    "time",
+    "get",
+    "int",
+    "strftime",
+    "post"
+  ],
+  "search_new_candidates": [
+    "info"
+  ],
+  "run_discovery": [
+    "gather",
+    "validate_provider",
+    "len",
+    "print",
+    "AsyncClient",
+    "dumps",
+    "write_text"
+  ],
+  "_load_geminiignore": [
+    "strip",
+    "append",
+    "read_text",
+    "exists",
+    "splitlines",
+    "startswith",
+    "Path"
+  ],
+  "_is_ignored": [
+    "str",
+    "len",
+    "range",
+    "fnmatch",
+    "relative_to",
+    "join",
+    "startswith",
+    "basename",
+    "_load_geminiignore",
+    "endswith",
+    "Path"
+  ],
+  "is_command_safe": [
+    "split",
+    "_is_ignored",
+    "any",
+    "startswith"
+  ],
+  "load_cache": [
+    "load",
+    "exists",
+    "warning",
+    "open"
+  ],
+  "save_cache": [
+    "dirname",
+    "makedirs",
+    "error",
+    "dump",
+    "open"
+  ],
+  "get_model": [
+    "create_task",
+    "time",
+    "discover_all",
+    "get",
+    "getmtime",
+    "load_cache",
+    "exists"
+  ],
+  "discover_all": [
+    "get",
+    "isinstance",
+    "lower",
+    "filter_fn",
+    "json",
+    "AsyncClient",
+    "save_cache",
+    "join",
+    "items",
+    "info",
+    "raise_for_status",
+    "getattr",
+    "warning"
+  ],
+  "safe_run_cmd": [
+    "_safe_run",
+    "print",
+    "any"
+  ],
+  "_safe_run": [
+    "is_command_safe",
+    "run_cmd"
+  ],
+  "_path_resolve": [
+    "resolve"
+  ],
+  "cmd_find": [
+    "is_file",
+    "len",
+    "print",
+    "_find_md_files",
+    "extend",
+    "relative_to",
+    "search",
+    "read_text",
+    "_find_py_files",
+    "rglob"
+  ],
+  "cmd_edit": [
+    "str",
+    "loads",
+    "replace",
+    "print",
+    "exit",
+    "read_text",
+    "exists",
+    "run_cmd",
+    "write_text"
+  ],
+  "cmd_git": [
+    "unlink",
+    "strip",
+    "print",
+    "exit",
+    "NamedTemporaryFile",
+    "repr",
+    "write",
+    "run_cmd"
+  ],
+  "cmd_status": [
+    "_print_pulse",
+    "get_backlog_tasks",
+    "len",
+    "print",
+    "run_cmd",
+    "getattr"
+  ],
+  "_append_update_log": [
+    "print",
+    "now",
+    "read_text",
+    "int",
+    "findall",
+    "exists",
+    "strftime",
+    "write",
+    "open"
+  ],
+  "_print_pulse": [
+    "fromtimestamp",
+    "_get_hw_status",
+    "stat",
+    "get_backlog_tasks",
+    "get",
+    "read_text",
+    "enumerate",
+    "split",
+    "exists",
+    "strftime",
+    "run_cmd",
+    "_get_locks",
+    "len",
+    "print",
+    "strip",
+    "append",
+    "join",
+    "splitlines",
+    "startswith"
+  ],
+  "_get_locks": [
+    "strip",
+    "split",
+    "group",
+    "search",
+    "read_text",
+    "exists"
+  ],
+  "get_backlog_tasks": [
+    "replace",
+    "strip",
+    "split",
+    "len",
+    "group",
+    "append",
+    "read_text",
+    "exists",
+    "splitlines",
+    "startswith",
+    "match",
+    "stat"
+  ],
+  "write_nf_log": [
+    "mkdir",
+    "now",
+    "round",
+    "isoformat",
+    "write",
+    "dumps",
+    "open"
+  ],
+  "_find_py_files": [
+    "str",
+    "len",
+    "relative_to",
+    "any",
+    "_load_geminiignore",
+    "_is_ignored",
+    "rglob"
+  ],
+  "_find_md_files": [
+    "str",
+    "relative_to",
+    "any",
+    "_load_geminiignore",
+    "_is_ignored",
+    "rglob"
+  ],
+  "_resolve_v13_docs": [
+    "exists",
+    "run_cmd"
+  ],
+  "cmd_maintain_pr": [
+    "_save_task_status",
+    "getoutput",
+    "print",
+    "_resolve_v13_docs",
+    "_append_update_log",
+    "run_cmd"
+  ],
+  "cmd_pr_reconcile": [
+    "_safe_run"
+  ],
+  "cmd_code_outline": [
+    "isinstance",
+    "print",
+    "unparse",
+    "parse",
+    "read_text",
+    "_path_resolve",
+    "exists",
+    "walk"
+  ],
+  "cmd_code_dep_map": [
+    "len",
+    "print",
+    "_find_py_files"
+  ],
+  "cmd_code_index": [
+    "str",
+    "isinstance",
+    "print",
+    "append",
+    "parse",
+    "relative_to",
+    "read_text",
+    "_find_py_files",
+    "dumps",
+    "walk"
+  ],
+  "cmd_code_call_graph": [
+    "generic_visit",
+    "hasattr",
+    "dumps",
+    "isinstance",
+    "exit",
+    "read_text",
+    "open",
+    "parse",
+    "_path_resolve",
+    "exists",
+    "visit",
+    "print",
+    "add",
+    "extend",
+    "list",
+    "_find_py_files",
+    "CallVisitor",
+    "set",
+    "walk"
+  ],
+  "cmd_code_call_stack": [
+    "isinstance",
+    "print",
+    "get",
+    "add",
+    "generic_visit",
+    "parse",
+    "set",
+    "_path_resolve",
+    "_find_py_files",
+    "exists",
+    "read_text",
+    "trace",
+    "get_source_segment",
+    "CallVisitor",
+    "hasattr",
+    "visit",
+    "walk"
+  ],
+  "cmd_context_mini_gen": [
+    "print"
+  ],
+  "_compress_diff": [
+    "join",
+    "splitlines",
+    "startswith"
+  ],
+  "cmd_log_find_id": [
+    "reversed",
+    "split",
+    "print",
+    "strip",
+    "read_text",
+    "exists"
+  ],
+  "_save_task_status": [
+    "sub",
+    "search",
+    "read_text",
+    "exists",
+    "write_text",
+    "escape"
+  ],
+  "_find_blockers": [
+    "next",
+    "get_backlog_tasks",
+    "replace",
+    "strip",
+    "get",
+    "split",
+    "append",
+    "group",
+    "search"
+  ],
+  "cmd_backlog_summary": [
+    "sum",
+    "get",
+    "print",
+    "get_backlog_tasks"
+  ],
+  "cmd_task_active": [
+    "_get_locks",
+    "get_backlog_tasks",
+    "get",
+    "print",
+    "join"
+  ],
+  "_get_log_entries": [
+    "read_text",
+    "exists"
+  ],
+  "cmd_log_tail": [
+    "split",
+    "print",
+    "strip",
+    "_get_log_entries",
+    "startswith",
+    "getattr"
+  ],
+  "cmd_log_next_id": [
+    "group",
+    "print",
+    "_get_log_entries",
+    "splitlines",
+    "int",
+    "match"
+  ],
+  "cmd_backlog_triage": [
+    "_save_task_status",
+    "get_backlog_tasks",
+    "get",
+    "print",
+    "all",
+    "_find_blockers"
+  ],
+  "cmd_backlog_dag": [
+    "get_backlog_tasks",
+    "replace",
+    "strip",
+    "print",
+    "get",
+    "split",
+    "add",
+    "group",
+    "search",
+    "print_tree",
+    "getattr",
+    "set"
+  ],
+  "cmd_backlog_add": [
+    "get_backlog_tasks",
+    "print",
+    "exit",
+    "upper",
+    "zfill",
+    "max",
+    "int",
+    "startswith",
+    "write",
+    "open"
+  ],
+  "cmd_backlog_archive": [
+    "print"
+  ],
+  "cmd_memory_stash": [
+    "load",
+    "mkdir",
+    "len",
+    "append",
+    "print",
+    "now",
+    "exists",
+    "isoformat",
+    "dump",
+    "open"
+  ],
+  "cmd_session_checkpoint": [
+    "mkdir",
+    "strip",
+    "split",
+    "now",
+    "print",
+    "getattr",
+    "isoformat",
+    "run_cmd",
+    "dump",
+    "open"
+  ],
+  "cmd_session_resume": [
+    "load",
+    "len",
+    "get",
+    "print",
+    "exists",
+    "run_cmd",
+    "open"
+  ],
+  "cmd_verify_all": [
+    "print"
+  ],
+  "cmd_check_code": [
+    "print",
+    "relative_to",
+    "which",
+    "_path_resolve",
+    "exists",
+    "write_nf_log",
+    "is_relative_to",
+    "getattr",
+    "run_cmd"
+  ],
+  "cmd_check_ignore": [
+    "str",
+    "walk",
+    "len",
+    "append",
+    "print",
+    "relative_to",
+    "_load_geminiignore",
+    "_is_ignored",
+    "Path",
+    "sorted"
+  ],
+  "cmd_check_doc": [
+    "sub",
+    "lower",
+    "relative_to",
+    "findall",
+    "startswith",
+    "getattr",
+    "walk",
+    "isinstance",
+    "read_text",
+    "parse",
+    "exists",
+    "str",
+    "replace",
+    "print",
+    "append",
+    "Path",
+    "join",
+    "splitlines",
+    "_find_py_files",
+    "write_nf_log",
+    "set",
+    "write_text"
+  ],
+  "cmd_install_hooks": [
+    "print",
+    "chmod",
+    "exists",
+    "write_text"
+  ],
+  "cmd_doc_consolidate": [
+    "strptime",
+    "relative_to",
+    "now",
+    "timedelta",
+    "read_text",
+    "is_relative_to",
+    "match",
+    "exists",
+    "compile",
+    "mkdir",
+    "group",
+    "print",
+    "append",
+    "len",
+    "extend",
+    "join",
+    "splitlines",
+    "startswith",
+    "write_text"
+  ],
+  "cmd_gen_tool": [
+    "print"
+  ],
+  "cmd_gen_test": [
+    "print"
+  ],
+  "cmd_ops_thermal": [
+    "print"
+  ],
+  "cmd_ops_vram": [
+    "print"
+  ],
+  "cmd_ops_compress_logs": [
+    "len",
+    "print",
+    "append",
+    "join",
+    "read_text",
+    "splitlines",
+    "exists",
+    "Path",
+    "write_text"
+  ],
+  "cmd_hw_gate": [
+    "print",
+    "getattr",
+    "_get_hw_status",
+    "dumps"
+  ],
+  "_get_hw_status": [
+    "get_temps",
+    "virtual_memory",
+    "cpu_percent",
+    "get",
+    "run",
+    "getenv",
+    "float"
+  ],
+  "cmd_register_capability": [
+    "print",
+    "CapabilityRegistry",
+    "_path_resolve",
+    "exists",
+    "register"
+  ],
+  "cmd_run_capability": [
+    "print",
+    "get",
+    "get_capability",
+    "join",
+    "CapabilityRegistry",
+    "run_cmd",
+    "endswith"
+  ],
+  "cmd_help_ai": [
+    "print"
+  ],
+  "cmd_capability_map": [
+    "print"
+  ],
+  "cmd_stats": [
+    "sum",
+    "loads",
+    "get_backlog_tasks",
+    "len",
+    "isinstance",
+    "print",
+    "get",
+    "upper",
+    "parse",
+    "round",
+    "read_text",
+    "_find_py_files",
+    "exists",
+    "splitlines",
+    "dumps",
+    "count",
+    "Path",
+    "walk"
+  ],
+  "cmd_kernel_upgrade": [
+    "print"
+  ],
+  "cmd_context_pack": [
+    "len",
+    "print",
+    "isinstance",
+    "unparse",
+    "parse",
+    "relative_to",
+    "_path_resolve",
+    "exists",
+    "read_text",
+    "splitlines",
+    "iter_child_nodes",
+    "get_docstring"
+  ],
+  "cmd_query": [
+    "getmembers",
+    "print",
+    "strip",
+    "getdoc",
+    "startswith",
+    "dumps"
+  ],
+  "cmd_query_capability": [
+    "print",
+    "lower",
+    "any"
+  ],
+  "cmd_log_summarize": [
+    "enumerate",
+    "group",
+    "print",
+    "len",
+    "start",
+    "list",
+    "read_text",
+    "compile",
+    "exists",
+    "splitlines",
+    "write_text",
+    "finditer"
+  ],
+  "cmd_file_read": [
+    "enumerate",
+    "print",
+    "read_text",
+    "exists",
+    "_path_resolve",
+    "splitlines",
+    "getattr"
+  ],
+  "cmd_file_grep": [
+    "str",
+    "enumerate",
+    "split",
+    "print",
+    "strip",
+    "getattr",
+    "relative_to",
+    "search",
+    "splitlines",
+    "read_text",
+    "any",
+    "_load_geminiignore",
+    "_is_ignored",
+    "endswith",
+    "Path",
+    "walk"
+  ],
+  "cmd_file_patch": [
+    "enumerate",
+    "replace",
+    "print",
+    "_path_resolve",
+    "exists",
+    "read_text",
+    "splitlines",
+    "run_cmd",
+    "write_text"
+  ],
+  "cmd_file_insert": [
+    "print",
+    "append",
+    "join",
+    "_path_resolve",
+    "read_text",
+    "exists",
+    "splitlines",
+    "write_text"
+  ],
+  "cmd_file_diff": [
+    "print",
+    "run_cmd"
+  ],
+  "cmd_git_log": [
+    "print",
+    "safe_run_cmd",
+    "getattr"
+  ],
+  "cmd_git_changed": [
+    "print",
+    "safe_run_cmd"
+  ],
+  "cmd_git_search": [
+    "print",
+    "safe_run_cmd"
+  ],
+  "cmd_git_blame": [
+    "print",
+    "safe_run_cmd",
+    "getattr"
+  ],
+  "cmd_git_stash_quick": [
+    "print",
+    "safe_run_cmd",
+    "getattr"
+  ],
+  "cmd_monitor_tools": [
+    "str",
+    "sum",
+    "loads",
+    "strip",
+    "get",
+    "split",
+    "lower",
+    "print",
+    "append",
+    "splitlines",
+    "read_text",
+    "items",
+    "sorted",
+    "rglob",
+    "stat"
+  ],
+  "cmd_monitor": [
+    "loads",
+    "home",
+    "lower",
+    "getattr",
+    "stat",
+    "get",
+    "glob",
+    "read_text",
+    "sorted",
+    "upper",
+    "exists",
+    "str",
+    "len",
+    "min",
+    "strip",
+    "print",
+    "splitlines",
+    "items",
+    "startswith",
+    "cmd_monitor_tools"
+  ],
+  "cmd_batch": [
+    "split",
+    "print",
+    "list",
+    "ThreadPoolExecutor",
+    "run_cmd",
+    "map"
+  ],
+  "cmd_memory_session_save": [
+    "mkdir",
+    "print",
+    "now",
+    "isoformat",
+    "dumps",
+    "write",
+    "open",
+    "getattr",
+    "run_cmd"
+  ],
+  "cmd_memory_session_recall": [
+    "loads",
+    "print",
+    "read_text",
+    "exists",
+    "splitlines",
+    "getattr"
+  ],
+  "cmd_memory_inject": [
+    "loads",
+    "reversed",
+    "print",
+    "splitlines",
+    "exists",
+    "read_text"
+  ],
+  "cmd_ops_rotate_logs": [
+    "mkdir",
+    "is_file",
+    "print",
+    "stat",
+    "glob",
+    "relative_to",
+    "exists",
+    "open",
+    "write_text",
+    "copyfileobj"
+  ],
+  "cmd_session_start": [
+    "print",
+    "SessionLedger",
+    "_save",
+    "exit"
+  ],
+  "cmd_session_log": [
+    "print",
+    "get_active_session",
+    "log_step",
+    "exit"
+  ],
+  "cmd_session_preamble": [
+    "write_preamble_file",
+    "print",
+    "exit",
+    "read",
+    "open"
+  ],
+  "cmd_session_done": [
+    "print",
+    "clear_preamble",
+    "exit"
+  ],
+  "cmd_code_symbol": [
+    "print",
+    "isinstance",
+    "unparse",
+    "parse",
+    "read_text",
+    "_path_resolve",
+    "exists",
+    "walk"
+  ],
+  "cmd_find_symbol": [
+    "isinstance",
+    "print",
+    "parse",
+    "relative_to",
+    "read_text",
+    "_find_py_files",
+    "walk"
+  ],
+  "cmd_code_sigs": [
+    "print",
+    "is_dir",
+    "isinstance",
+    "append",
+    "parse",
+    "relative_to",
+    "unparse",
+    "join",
+    "read_text",
+    "exists",
+    "any",
+    "get_docstring",
+    "walk",
+    "rglob"
+  ],
+  "cmd_bench": [
+    "sleep",
+    "time",
+    "print",
+    "write",
+    "open"
+  ],
+  "cmd_code_doc": [
+    "len",
+    "isinstance",
+    "print",
+    "lower",
+    "parse",
+    "relative_to",
+    "read_text",
+    "_find_py_files",
+    "splitlines",
+    "getattr",
+    "get_docstring",
+    "walk"
+  ],
+  "cmd_code_dead_code": [
+    "strip",
+    "print",
+    "exit",
+    "which",
+    "write_nf_log",
+    "run",
+    "open"
+  ],
+  "cmd_test": [
+    "time",
+    "virtual_memory",
+    "cpu_percent",
+    "print",
+    "extend",
+    "run_cmd",
+    "getattr"
+  ],
+  "cmd_gemini_context": [
+    "len",
+    "print",
+    "exit",
+    "get_included_files",
+    "write_ignore_file",
+    "ContextPruner",
+    "estimate_context_tokens"
+  ],
+  "cmd_gemini_prompt": [
+    "get_cli_flag",
+    "print",
+    "expanduser",
+    "exit",
+    "get_included_files",
+    "ModelTierSelector",
+    "write_prompt_file",
+    "ContextPruner",
+    "read",
+    "open",
+    "estimate_context_tokens",
+    "PrefixCacheWarmer"
+  ],
+  "cmd_gemini_status": [
+    "get_status",
+    "print",
+    "PromptBudgetGuard",
+    "exit"
+  ],
+  "cmd_gemini_run": [
+    "check_invocation",
+    "print",
+    "expanduser",
+    "exit",
+    "get_included_files",
+    "ModelTierSelector",
+    "select",
+    "join",
+    "write_prompt_file",
+    "write_ignore_file",
+    "ContextPruner",
+    "execvp",
+    "read",
+    "open",
+    "record_request",
+    "PromptBudgetGuard",
+    "estimate_context_tokens",
+    "PrefixCacheWarmer"
+  ],
+  "trace": [
+    "get",
+    "print",
+    "add",
+    "trace",
+    "CallVisitor",
+    "visit"
+  ],
+  "print_tree": [
+    "replace",
+    "strip",
+    "print",
+    "split",
+    "get",
+    "add",
+    "group",
+    "search",
+    "print_tree",
+    "set"
+  ],
+  "run_nf": [
+    "str",
+    "run",
+    "list",
+    "run_cmd"
+  ],
+  "visit_Call": [
+    "isinstance",
+    "add",
+    "generic_visit"
+  ],
+  "parse_iso_ts": [
+    "fromisoformat",
+    "replace",
+    "split",
+    "len",
+    "strptime",
+    "search",
+    "timestamp"
+  ],
+  "get_hw_metrics": [
+    "cpu_percent",
+    "split",
+    "strip",
+    "virtual_memory",
+    "int",
+    "run"
+  ],
+  "parse_logs": [
+    "parse_iso_ts",
+    "loads",
+    "cpu_percent",
+    "float",
+    "get_vram_used_mb",
+    "get",
+    "search",
+    "bool",
+    "upper",
+    "max",
+    "int",
+    "exists",
+    "str",
+    "group",
+    "min",
+    "join",
+    "process_entry",
+    "any",
+    "items",
+    "open"
+  ],
+  "update_dashboard": [
+    "sub",
+    "exists",
+    "write",
+    "read",
+    "open"
+  ],
+  "generate_efficiency_report": [
+    "round",
+    "parse_logs",
+    "get_hw_metrics",
+    "update_dashboard",
+    "open",
+    "dump",
+    "float"
+  ],
+  "process_entry": [
+    "str",
+    "parse_iso_ts",
+    "get",
+    "min",
+    "upper",
+    "max",
+    "int",
+    "any",
+    "bool",
+    "float"
+  ],
+  "_is_internal": [
+    "urlparse",
+    "gethostbyname",
+    "ip_address"
+  ],
+  "retry": [
+    "str",
+    "sleep",
+    "func",
+    "retry",
+    "range",
+    "warning"
+  ],
+  "success": [
+    "cls"
+  ],
+  "failure": [
+    "cls"
+  ],
+  "wrapper": [
+    "str",
+    "sleep",
+    "iscoroutinefunction",
+    "func",
+    "time",
+    "isinstance",
+    "now",
+    "isoformat",
+    "dumps",
+    "info",
+    "range",
+    "iscoroutine",
+    "warning"
+  ],
+  "decorator": [
+    "retry"
+  ],
+  "append_to_log": [
+    "print",
+    "int",
+    "findall",
+    "write",
+    "read",
+    "open"
+  ],
+  "get_git_tracked": [
+    "set",
+    "run_cmd"
+  ],
+  "get_stale_files": [
+    "set",
+    "get_git_tracked",
+    "run_cmd"
+  ],
+  "get_fs_all": [
+    "str",
+    "Path",
+    "add",
+    "relative_to",
+    "startswith",
+    "set",
+    "walk"
+  ],
+  "audit": [
+    "get_stale_files",
+    "write",
+    "get",
+    "now",
+    "exit",
+    "sorted",
+    "resolve",
+    "notify_telegram",
+    "exists",
+    "strftime",
+    "set",
+    "load",
+    "get_git_tracked",
+    "get_fs_all",
+    "len",
+    "append",
+    "print",
+    "list",
+    "load_dotenv",
+    "endswith",
+    "Path",
+    "open"
+  ],
+  "parse_logs_for_evolve": [
+    "loads",
+    "strip",
+    "append",
+    "get",
+    "group",
+    "search",
+    "exists",
+    "items",
+    "open",
+    "Counter"
+  ],
+  "check_bottlenecks": [
+    "load",
+    "len",
+    "get",
+    "print",
+    "parse_logs_for_evolve",
+    "exists",
+    "write",
+    "open"
+  ],
+  "pause": [
+    "_load_state",
+    "_save_state"
+  ],
+  "resume": [
+    "_load_state",
+    "_save_state"
+  ],
+  "request_stop": [
+    "_load_state",
+    "_save_state"
+  ],
+  "_setup_logging": [
+    "addHandler",
+    "mkdir",
+    "setLevel",
+    "setFormatter",
+    "RotatingFileHandler",
+    "Formatter",
+    "StreamHandler"
+  ],
+  "log_event": [
+    "str",
+    "isinstance",
+    "print",
+    "update",
+    "upper",
+    "setFormatter",
+    "items",
+    "strftime",
+    "dumps",
+    "info",
+    "Formatter"
+  ],
+  "_load_ninaignore": [
+    "strip",
+    "append",
+    "splitlines",
+    "exists",
+    "read_text",
+    "startswith"
+  ],
+  "_run_git": [
+    "strip",
+    "log_event",
+    "join",
+    "run"
+  ],
+  "_check_secrets": [
+    "_run_git",
+    "splitlines"
+  ],
+  "_schedule_commit": [
+    "_load_state",
+    "start",
+    "_load_ninaignore",
+    "add",
+    "cancel",
+    "Timer",
+    "_is_ignored",
+    "Path"
+  ],
+  "_do_commit_push": [
+    "_load_state",
+    "time",
+    "start",
+    "relative_to",
+    "clear",
+    "log_event",
+    "_run_git",
+    "set_sync_ts",
+    "_check_secrets",
+    "get_hub",
+    "Timer",
+    "exists",
+    "int",
+    "strftime",
+    "str",
+    "mkdir",
+    "len",
+    "strip",
+    "list",
+    "Path",
+    "write_text"
+  ],
+  "_poll_remote": [
+    "_load_state",
+    "sleep",
+    "log_event",
+    "is_set",
+    "_pull_remote",
+    "_run_git",
+    "stop",
+    "isdigit",
+    "int",
+    "range"
+  ],
+  "_pull_remote": [
+    "_handle_conflict",
+    "log_event",
+    "_run_git"
+  ],
+  "_handle_conflict": [
+    "NinaConfig",
+    "create_task",
+    "new_event_loop",
+    "build",
+    "get_event_loop",
+    "log_event",
+    "print",
+    "is_running",
+    "send_alert",
+    "pause",
+    "send_message",
+    "set_event_loop",
+    "ApplicationBuilder",
+    "run_until_complete",
+    "token"
+  ],
+  "on_modified": [
+    "_schedule_commit"
+  ],
+  "on_created": [
+    "_schedule_commit"
+  ],
+  "on_deleted": [
+    "_schedule_commit"
+  ],
+  "on_moved": [
+    "_schedule_commit"
+  ],
+  "send_alert": [
+    "ApplicationBuilder",
+    "send_message",
+    "build",
+    "token"
+  ],
+  "generate": [
+    "listdir",
+    "load",
+    "sort",
+    "len",
+    "print",
+    "get",
+    "append",
+    "now",
+    "join",
+    "exists",
+    "any",
+    "strftime",
+    "write",
+    "open",
+    "Path",
+    "sorted"
+  ],
+  "_safe": [
+    "str",
+    "resolve",
+    "PermissionError",
+    "startswith"
+  ],
+  "diff": [
+    "run",
+    "error"
+  ],
+  "stage": [
+    "str",
+    "run",
+    "error",
+    "_safe"
+  ],
+  "auto_commit": [
+    "strip",
+    "json",
+    "AsyncClient",
+    "error",
+    "run",
+    "raise_for_status",
+    "post"
+  ],
+  "_disk_guard": [
+    "OSError",
+    "disk_usage"
+  ],
+  "read": [
+    "_safe",
+    "isinstance",
+    "read_bytes",
+    "_load_geminiignore",
+    "split",
+    "parse",
+    "max",
+    "exists",
+    "decode",
+    "int",
+    "_is_ignored",
+    "len",
+    "min",
+    "strip",
+    "join",
+    "splitlines",
+    "encode",
+    "info",
+    "walk"
+  ],
+  "preview_diff": [
+    "_safe",
+    "list",
+    "join",
+    "read_text",
+    "exists",
+    "splitlines",
+    "unified_diff"
+  ],
+  "write": [
+    "mkdir",
+    "_safe",
+    "len",
+    "_disk_guard",
+    "encode",
+    "info",
+    "write_text"
+  ],
+  "update_lock_file": [
+    "enumerate",
+    "readlines",
+    "append",
+    "split",
+    "strip",
+    "print",
+    "join",
+    "startswith",
+    "writelines",
+    "open"
+  ],
+  "run_command": [
+    "strip",
+    "run",
+    "str"
+  ],
+  "generate_preamble": [
+    "load",
+    "sort",
+    "reversed",
+    "len",
+    "get",
+    "append",
+    "join",
+    "exists",
+    "open"
+  ],
+  "write_preamble_file": [
+    "str",
+    "mkdir",
+    "generate_preamble",
+    "write",
+    "open"
+  ],
+  "clear_preamble": [
+    "load",
+    "mkdir",
+    "replace",
+    "reversed",
+    "get",
+    "exists",
+    "write",
+    "dump",
+    "open"
+  ],
+  "parse_goal": [
+    "split",
+    "print",
+    "max",
+    "read_text",
+    "int",
+    "exists",
+    "findall"
+  ],
+  "append_to_backlog": [
+    "split",
+    "print",
+    "read_text",
+    "exists",
+    "write_text"
+  ],
+  "startup_event": [
+    "load_config",
+    "on_event",
+    "HybridRouter",
+    "initialize",
+    "info"
+  ],
+  "chat_completions": [
+    "str",
+    "route",
+    "time",
+    "reversed",
+    "get",
+    "isinstance",
+    "ClassifiedTask",
+    "HTTPException",
+    "json",
+    "uuid4",
+    "int",
+    "JSONResponse",
+    "post"
+  ],
+  "get_models": [
+    "get"
+  ],
+  "prune": [
+    "load",
+    "unlink",
+    "len",
+    "get",
+    "print",
+    "append",
+    "exists",
+    "startswith",
+    "Path",
+    "open"
+  ],
+  "_scan": [
+    "search",
+    "append"
+  ],
+  "_in_writable_scope": [
+    "str",
+    "resolve",
+    "_P",
+    "any",
+    "startswith"
+  ],
+  "submit": [
+    "str",
+    "time",
+    "append",
+    "_in_writable_scope",
+    "parse",
+    "join",
+    "ValueError",
+    "info",
+    "_scan",
+    "endswith",
+    "warning"
+  ],
+  "handle_command": [
+    "split",
+    "len",
+    "get",
+    "urlparse",
+    "_deploy",
+    "AsyncClient",
+    "submit",
+    "ValueError",
+    "decode",
+    "startswith",
+    "_generate",
+    "_rollback"
+  ],
+  "_deploy": [
+    "mkdir",
+    "exists",
+    "copy2",
+    "info",
+    "strftime",
+    "Path",
+    "write_text"
+  ],
+  "_rollback": [
+    "glob",
+    "copy2",
+    "info",
+    "Path",
+    "sorted"
+  ],
+  "_generate": [
+    "route",
+    "time",
+    "ClassifiedTask",
+    "submit",
+    "int"
+  ],
+  "_expire_pending": [
+    "loads",
+    "time",
+    "get",
+    "append",
+    "read_text",
+    "exists",
+    "strftime",
+    "dumps",
+    "info",
+    "write_text"
+  ],
+  "_handle_shadow": [
+    "split",
+    "len",
+    "start",
+    "get",
+    "lower",
+    "AsyncClient",
+    "ValueError",
+    "decode",
+    "ABShadowTester",
+    "startswith",
+    "status",
+    "hasattr",
+    "reject",
+    "approve"
+  ],
+  "approve": [
+    "_deploy"
+  ],
+  "ensure_upload_dir": [
+    "mkdir"
+  ],
+  "get_git_short_sha": [
+    "str",
+    "check_output",
+    "strip",
+    "error",
+    "decode"
+  ],
+  "get_git_long_sha": [
+    "str",
+    "check_output",
+    "strip",
+    "error",
+    "decode"
+  ],
+  "get_git_branch": [
+    "str",
+    "check_output",
+    "strip",
+    "error",
+    "decode"
+  ],
+  "get_state_section": [
+    "split",
+    "group",
+    "strip",
+    "search",
+    "join",
+    "read_text",
+    "compile",
+    "exists",
+    "startswith"
+  ],
+  "export_summary": [
+    "split",
+    "append",
+    "now",
+    "group",
+    "upper",
+    "extend",
+    "print",
+    "search",
+    "join",
+    "get_git_short_sha",
+    "get_state_section",
+    "exists",
+    "strftime",
+    "read_text",
+    "write_text",
+    "stat"
+  ],
+  "export_diff": [
+    "str",
+    "check_output",
+    "strip",
+    "append",
+    "now",
+    "print",
+    "join",
+    "get_git_short_sha",
+    "error",
+    "decode",
+    "strftime",
+    "write_text",
+    "stat"
+  ],
+  "export_full_backup": [
+    "sort",
+    "relpath",
+    "relative_to",
+    "fromtimestamp",
+    "get_git_long_sha",
+    "write_text",
+    "stat",
+    "get_git_branch",
+    "now",
+    "read_text",
+    "strftime",
+    "str",
+    "replace",
+    "append",
+    "print",
+    "join",
+    "any",
+    "startswith",
+    "Path",
+    "walk"
+  ],
+  "timeout_handler": [
+    "exit",
+    "error"
+  ],
+  "sort_key": [
+    "str",
+    "relative_to"
+  ],
+  "clear_screen": [
+    "print"
+  ],
+  "tail_file": [
+    "tell",
+    "reversed",
+    "append",
+    "seek",
+    "join",
+    "splitlines",
+    "exists",
+    "decode",
+    "read",
+    "count",
+    "open"
+  ],
+  "get_temps": [
+    "sensors_temperatures",
+    "strip",
+    "get",
+    "max",
+    "int",
+    "run"
+  ],
+  "get_ram_used_gb": [
+    "virtual_memory"
+  ],
+  "get_vram_used_mb": [
+    "strip",
+    "run",
+    "int"
+  ],
+  "get_disk_used_pct": [
+    "disk_usage"
+  ],
+  "tune": [
+    "strip",
+    "min",
+    "communicate",
+    "create_subprocess_exec",
+    "wait_for",
+    "max",
+    "int",
+    "decode",
+    "info",
+    "dumps",
+    "write_text"
+  ],
+  "_clean_query": [
+    "strip",
+    "split",
+    "sub"
+  ],
+  "read_tail": [
+    "loads",
+    "strip",
+    "append",
+    "splitlines",
+    "exists",
+    "read_text"
+  ],
+  "build_table": [
+    "str",
+    "add_row",
+    "get",
+    "Text",
+    "Table",
+    "add_column"
+  ],
+  "test_run_expenditure_report_happy_path": [
+    "loads",
+    "run_expenditure_report"
+  ],
+  "test_run_expenditure_report_empty_input": [
+    "loads",
+    "run_expenditure_report"
+  ],
+  "test_run_expenditure_report_bad_rows": [
+    "loads",
+    "run_expenditure_report"
+  ],
+  "test_run_expenditure_report_plain_text": [
+    "loads",
+    "run_expenditure_report"
+  ],
+  "mock_update": [
+    "MagicMock",
+    "AsyncMock"
+  ],
+  "mock_nina": [
+    "MagicMock",
+    "AsyncMock"
+  ],
+  "mock_config": [
+    "MagicMock"
+  ],
+  "test_errors_command_no_file": [
+    "assert_called_with",
+    "patch",
+    "_handle_command",
+    "assert_called_once_with",
+    "TelegramInterface",
+    "AsyncMock",
+    "MagicMock"
+  ],
+  "test_errors_command_no_open_errors": [
+    "patch",
+    "_handle_command",
+    "assert_called_once_with",
+    "TelegramInterface",
+    "AsyncMock",
+    "MagicMock"
+  ],
+  "test_errors_command_with_open_errors": [
+    "patch",
+    "_handle_command",
+    "assert_called_once_with",
+    "TelegramInterface",
+    "AsyncMock",
+    "MagicMock"
+  ],
+  "test_browser_smoke": [
+    "fetch",
+    "patch",
+    "AsyncMock",
+    "_is_internal"
+  ],
+  "test_officemail_smoke": [
+    "patch",
+    "MagicMock",
+    "fetch"
+  ],
+  "test_search_smoke": [
+    "search",
+    "patch",
+    "MagicMock",
+    "AsyncMock"
+  ],
+  "test_web_smoke": [
+    "search",
+    "patch",
+    "MagicMock"
+  ],
+  "test_files_smoke": [
+    "read",
+    "patch",
+    "MagicMock",
+    "write"
+  ],
+  "test_providerhunter_smoke": [
+    "hunt",
+    "loads",
+    "len",
+    "patch",
+    "read_text",
+    "AsyncMock",
+    "MagicMock"
+  ],
+  "test_jules_smoke": [
+    "run",
+    "dict",
+    "patch"
+  ],
+  "test_gputuner_smoke": [
+    "iscoroutinefunction",
+    "patch",
+    "MagicMock",
+    "__import__",
+    "tune"
+  ],
+  "test_allowlisted_bases": [
+    "run",
+    "patch",
+    "MagicMock"
+  ],
+  "test_blocked_bases": [
+    "run",
+    "patch",
+    "assert_not_called"
+  ],
+  "test_systemctl_allowlisted_subcommands": [
+    "run",
+    "patch",
+    "MagicMock"
+  ],
+  "test_systemctl_blocked_subcommands": [
+    "run",
+    "patch",
+    "assert_not_called"
+  ],
+  "test_ollama_allowlisted_subcommands": [
+    "run",
+    "patch",
+    "MagicMock"
+  ],
+  "test_ollama_blocked_subcommands": [
+    "run",
+    "patch",
+    "assert_not_called"
+  ],
+  "test_illegal_shell_operators": [
+    "run",
+    "patch",
+    "assert_not_called"
+  ],
+  "test_enforce_type_hints_basic": [
+    "str",
+    "run",
+    "read_text",
+    "write_text"
+  ],
+  "test_enforce_type_hints_with_docstring": [
+    "str",
+    "read_text",
+    "startswith",
+    "run",
+    "write_text"
+  ],
+  "test_enforce_type_hints_returns_any": [
+    "str",
+    "read_text",
+    "startswith",
+    "run",
+    "write_text"
+  ],
+  "test_enforce_type_hints_future_import": [
+    "str",
+    "read_text",
+    "startswith",
+    "run",
+    "write_text"
+  ],
+  "test_enforce_type_hints_nested_function": [
+    "str",
+    "run",
+    "read_text",
+    "write_text"
+  ],
+  "test_enforce_type_hints_generator": [
+    "str",
+    "run",
+    "read_text",
+    "write_text"
+  ],
+  "test_enforce_type_hints_yield_from": [
+    "str",
+    "run",
+    "read_text",
+    "write_text"
+  ],
+  "test_retry_succeeds_first_attempt": [
+    "my_func",
+    "append",
+    "len",
+    "retry"
+  ],
+  "test_retry_succeeds_on_second": [
+    "my_func",
+    "len",
+    "append",
+    "ValueError",
+    "retry"
+  ],
+  "test_retry_exhausted_raises": [
+    "my_func",
+    "len",
+    "append",
+    "ValueError",
+    "raises",
+    "retry"
+  ],
+  "test_tool_result_success": [
+    "success"
+  ],
+  "test_tool_result_failure": [
+    "failure"
+  ],
+  "test_finance_returns_tool_result": [
+    "isinstance",
+    "run_expenditure_report"
+  ],
+  "test_market_returns_tool_result": [
+    "isinstance",
+    "run_market_monitor",
+    "setattr"
+  ],
+  "my_func": [
+    "len",
+    "append",
+    "ValueError",
+    "retry"
+  ],
+  "test_finance_format_amount": [
+    "loads",
+    "run_expenditure_report"
+  ],
+  "test_finance_handles_zero": [
+    "loads",
+    "run_expenditure_report"
+  ],
+  "test_market_returns_structure": [
+    "isinstance",
+    "patch",
+    "run_market_monitor"
+  ],
+  "test_market_handles_network_error": [
+    "ConnectionError",
+    "isinstance",
+    "patch",
+    "setattr",
+    "xfail",
+    "run_market_monitor"
+  ],
+  "mock_fetch_price": [
+    "ConnectionError"
+  ],
+  "soft_store": [
+    "str",
+    "fixture",
+    "TaskStore"
+  ],
+  "test_to_dict_contains_string_status": [
+    "Task",
+    "to_dict",
+    "isinstance"
+  ],
+  "test_roundtrip_serialisation": [
+    "Task",
+    "to_dict",
+    "from_dict"
+  ],
+  "test_from_dict_accepts_string_status": [
+    "Task",
+    "to_dict",
+    "from_dict"
+  ],
+  "test_from_dict_invalid_status_raises": [
+    "Task",
+    "to_dict",
+    "from_dict",
+    "raises"
+  ],
+  "test_legacy_migration_goal_field": [
+    "get",
+    "from_dict"
+  ],
+  "test_legacy_migration_running_status": [
+    "Task",
+    "to_dict",
+    "from_dict"
+  ],
+  "test_create_task_returns_pending": [
+    "len",
+    "create_task"
+  ],
+  "test_create_task_with_metadata": [
+    "create_task"
+  ],
+  "test_get_task_found": [
+    "create_task",
+    "get_task"
+  ],
+  "test_get_task_not_found_raises_keyerror": [
+    "raises",
+    "get_task"
+  ],
+  "test_update_task_status": [
+    "create_task",
+    "get_task",
+    "update_task"
+  ],
+  "test_update_task_status_as_string": [
+    "create_task",
+    "update_task"
+  ],
+  "test_update_task_not_found_raises": [
+    "raises",
+    "update_task"
+  ],
+  "test_update_refreshes_updated_at": [
+    "sleep",
+    "create_task",
+    "update_task"
+  ],
+  "test_delete_task_hard": [
+    "delete_task",
+    "create_task",
+    "raises",
+    "get_task"
+  ],
+  "test_delete_task_returns_false_if_missing": [
+    "delete_task"
+  ],
+  "test_soft_delete_cancels_task": [
+    "delete_task",
+    "create_task",
+    "get_task"
+  ],
+  "_populate": [
+    "create_task",
+    "range",
+    "update_task"
+  ],
+  "test_list_all": [
+    "len",
+    "_populate",
+    "list_tasks"
+  ],
+  "test_list_by_status": [
+    "len",
+    "_populate",
+    "list_tasks",
+    "all"
+  ],
+  "test_list_by_status_string": [
+    "len",
+    "_populate",
+    "list_tasks"
+  ],
+  "test_list_with_limit": [
+    "len",
+    "_populate",
+    "list_tasks"
+  ],
+  "test_list_empty_store": [
+    "list_tasks"
+  ],
+  "test_tasks_survive_reload": [
+    "str",
+    "create_task",
+    "get_task",
+    "TaskStore"
+  ],
+  "test_backup_created_on_write": [
+    "str",
+    "create_task",
+    "exists",
+    "TaskStore"
+  ],
+  "test_no_partial_write_on_failure": [
+    "str",
+    "create_task",
+    "get_task",
+    "patch",
+    "read_text",
+    "raises",
+    "OSError",
+    "TaskStore"
+  ],
+  "test_auto_creates_data_directory": [
+    "str",
+    "create_task",
+    "exists",
+    "TaskStore"
+  ],
+  "test_graceful_empty_file": [
+    "str",
+    "write_text",
+    "list_tasks",
+    "TaskStore"
+  ],
+  "test_truncated_json_recovers_from_backup": [
+    "str",
+    "create_task",
+    "get_task",
+    "TaskStore",
+    "write_text"
+  ],
+  "test_no_backup_with_malformed_json_returns_empty": [
+    "str",
+    "write_text",
+    "list_tasks",
+    "TaskStore"
+  ],
+  "test_legacy_list_format_migrated": [
+    "str",
+    "TaskStore",
+    "len",
+    "list_tasks",
+    "dumps",
+    "write_text"
+  ],
+  "test_concurrent_creates_no_data_loss": [
+    "str",
+    "create_task",
+    "Thread",
+    "len",
+    "append",
+    "start",
+    "join",
+    "list_tasks",
+    "range",
+    "TaskStore"
+  ],
+  "test_lock_timeout_raises_task_store_lock_error": [
+    "str",
+    "create_task",
+    "patch",
+    "throw",
+    "raises",
+    "FileLockTimeout",
+    "TaskStore"
+  ],
+  "test_task_not_found_error_message": [
+    "raises",
+    "update_task"
+  ],
+  "test_custom_exceptions_are_subtypes": [
+    "issubclass"
+  ],
+  "test_exception_in_locked_section_releases_lock": [
+    "str",
+    "create_task",
+    "object",
+    "acquire",
+    "release",
+    "RuntimeError",
+    "TaskStore"
+  ],
+  "test_lock_timeout_raises_custom_error": [
+    "str",
+    "create_task",
+    "Thread",
+    "start",
+    "isinstance",
+    "acquire",
+    "join",
+    "release",
+    "TaskStore"
+  ],
+  "test_reentrancy_no_deadlock": [
+    "str",
+    "create_task",
+    "TaskStore"
+  ],
+  "test_concurrent_stress_no_data_loss": [
+    "str",
+    "create_task",
+    "Thread",
+    "len",
+    "append",
+    "start",
+    "join",
+    "list_tasks",
+    "range",
+    "update_task",
+    "TaskStore"
+  ],
+  "test_file_lock_timeout_raises_task_store_lock_error": [
+    "str",
+    "create_task",
+    "acquire",
+    "raises",
+    "FileLock",
+    "release",
+    "TaskStore"
+  ],
+  "test_get_by_status": [
+    "len",
+    "create_task",
+    "get_by_status",
+    "update_task"
+  ],
+  "test_get_by_status_empty": [
+    "get_by_status"
+  ],
+  "test_get_by_tool": [
+    "len",
+    "create_task",
+    "get_by_tool"
+  ],
+  "test_status_transitions": [
+    "create_task",
+    "update_task"
+  ],
+  "test_archive_expired": [
+    "str",
+    "load",
+    "datetime",
+    "create_task",
+    "replace",
+    "len",
+    "TaskStore",
+    "patch",
+    "timedelta",
+    "load_archive",
+    "archive_expired",
+    "isoformat",
+    "exists",
+    "list_tasks",
+    "update_task",
+    "dump",
+    "open"
+  ],
+  "test_load_archive_empty": [
+    "str",
+    "load_archive",
+    "write_text",
+    "TaskStore"
+  ],
+  "test_archive_expired_concurrent": [
+    "create_task",
+    "Thread",
+    "start",
+    "isoformat",
+    "update_task",
+    "dump",
+    "TaskStore",
+    "now",
+    "timedelta",
+    "archive_expired",
+    "list_tasks",
+    "range",
+    "str",
+    "load",
+    "replace",
+    "len",
+    "append",
+    "join",
+    "load_archive",
+    "open"
+  ],
+  "worker": [
+    "create_task",
+    "append",
+    "archive_expired",
+    "list_tasks",
+    "range",
+    "update_task",
+    "TaskStore"
+  ],
+  "mock_router": [
+    "patch",
+    "AsyncMock"
+  ],
+  "proxy_client": [
+    "ASGITransport",
+    "AsyncClient"
+  ],
+  "test_chat_completions_success": [
+    "len",
+    "assert_called_once",
+    "json",
+    "post"
+  ],
+  "test_chat_completions_empty_messages": [
+    "json",
+    "assert_not_called",
+    "post"
+  ],
+  "test_chat_completions_router_exception": [
+    "Exception",
+    "json",
+    "post"
+  ],
+  "test_health_endpoint": [
+    "get",
+    "json"
+  ],
+  "test_models_endpoint": [
+    "len",
+    "get",
+    "json"
+  ],
+  "test_missing_messages": [
+    "json",
+    "assert_not_called",
+    "post"
+  ],
+  "test_cmd_code_symbol": [
+    "run_nf"
+  ],
+  "test_cmd_find_symbol": [
+    "run_nf"
+  ],
+  "test_cmd_code_sigs": [
+    "run_nf"
+  ],
+  "test_cmd_code_doc": [
+    "run_nf"
+  ],
+  "test_cmd_code_call_graph": [
+    "str",
+    "loads",
+    "run_nf",
+    "write_text"
+  ],
+  "test_cmd_code_call_stack": [
+    "str",
+    "run_nf",
+    "write_text"
+  ],
+  "mock_paths": [
+    "str",
+    "patch",
+    "Path"
+  ],
+  "mock_chromadb": [
+    "patch",
+    "MagicMock"
+  ],
+  "test_facts_loads": [
+    "write_text",
+    "load",
+    "isinstance",
+    "open"
+  ],
+  "test_memory_health_returns_dict": [
+    "check",
+    "isinstance"
+  ],
+  "test_scratchpad_store_get": [
+    "store",
+    "ScratchpadManager",
+    "get"
+  ],
+  "test_scratchpad_ttl_expired": [
+    "store",
+    "ScratchpadManager",
+    "get",
+    "sleep"
+  ],
+  "test_scratchpad_clear_expired": [
+    "sleep",
+    "ScratchpadManager",
+    "load",
+    "store",
+    "clear_expired",
+    "open"
+  ],
+  "test_scratchpad_atomic_write": [
+    "load",
+    "ScratchpadManager",
+    "isinstance",
+    "store",
+    "open"
+  ],
+  "test_1_facts_loading": [
+    "mkdir",
+    "unlink",
+    "MemorySystem",
+    "initialize",
+    "exists",
+    "dumps",
+    "write_text"
+  ],
+  "test_2_personal_context_injection": [
+    "build_context",
+    "MemorySystem",
+    "initialize",
+    "startswith"
+  ],
+  "test_3_personal_context_fields": [
+    "build_context",
+    "MemorySystem",
+    "lower",
+    "initialize"
+  ],
+  "test_4_personal_context_fallback": [
+    "unlink",
+    "MemorySystem",
+    "lower",
+    "initialize",
+    "exists",
+    "build_context"
+  ],
+  "test_5_chromadb_results_appended": [
+    "find",
+    "build_context",
+    "MemorySystem",
+    "initialize"
+  ],
+  "test_6_get_facts_returns_dict": [
+    "isinstance",
+    "get_facts",
+    "MemorySystem"
+  ],
+  "test_7_build_context_nonempty": [
+    "len",
+    "isinstance",
+    "strip",
+    "MemorySystem",
+    "initialize",
+    "build_context"
+  ],
+  "test_8_add_memory": [
+    "MemorySystem",
+    "save_turn",
+    "initialize"
+  ],
+  "test_9_initialize_graceful": [
+    "Exception",
+    "MemorySystem",
+    "patch",
+    "initialize"
+  ],
+  "test_10_context_length_bounded": [
+    "len",
+    "MemorySystem",
+    "initialize",
+    "range",
+    "build_context"
+  ],
+  "side_effect": [
+    "str",
+    "Path",
+    "CalledProcessError",
+    "MagicMock"
+  ],
+  "test_registry_registers_job": [
+    "CronRegistry",
+    "CronJob",
+    "get",
+    "pop",
+    "register"
+  ],
+  "test_registry_duplicate_raises": [
+    "CronRegistry",
+    "CronJob",
+    "get",
+    "raises",
+    "pop",
+    "register"
+  ],
+  "test_registry_disable_enable": [
+    "CronRegistry",
+    "CronJob",
+    "disable",
+    "get",
+    "enable",
+    "pop",
+    "any",
+    "get_enabled",
+    "register"
+  ],
+  "test_runner_run_job_success": [
+    "str",
+    "CronJob",
+    "insert",
+    "remove",
+    "run_job",
+    "CronRunner",
+    "write_text"
+  ],
+  "test_runner_run_job_failure": [
+    "str",
+    "CronJob",
+    "insert",
+    "remove",
+    "run_job",
+    "CronRunner",
+    "write_text"
+  ],
+  "test_runner_logs_to_file": [
+    "str",
+    "CronJob",
+    "loads",
+    "run_all_enabled",
+    "insert",
+    "readlines",
+    "len",
+    "write_text",
+    "remove",
+    "exists",
+    "register",
+    "CronRunner",
+    "open"
+  ],
+  "nina_tmp_dir": [
+    "mkdir"
+  ],
+  "mock_env": [
+    "setenv"
+  ],
+  "test_idle_loop_single_iteration": [
+    "len",
+    "MockRouter",
+    "glob",
+    "setattr",
+    "list",
+    "_generate_proposal",
+    "read_text",
+    "exists",
+    "MockConfig",
+    "IdleProposalLoop"
+  ],
+  "test_idle_loop_handles_exception": [
+    "CancelledError",
+    "original_sleep",
+    "_loop",
+    "MockRouter",
+    "setattr",
+    "ValueError",
+    "MockConfig",
+    "IdleProposalLoop"
+  ],
+  "mock_generate_proposal": [
+    "CancelledError",
+    "ValueError"
+  ],
+  "mock_sleep": [
+    "original_sleep"
+  ],
+  "test_debounce_batches_rapid_changes": [
+    "str",
+    "sleep",
+    "len",
+    "_schedule_commit",
+    "range",
+    "NINASync",
+    "MagicMock",
+    "write_text"
+  ],
+  "test_ninaignore_excludes_env": [
+    "str",
+    "_load_ninaignore",
+    "_schedule_commit",
+    "NINASync",
+    "write_text"
+  ],
+  "test_stash_pull_pop_happy_path": [
+    "_pull_remote",
+    "NINASync",
+    "patch"
+  ],
+  "test_conflict_pauses_sync": [
+    "patch",
+    "CalledProcessError",
+    "_pull_remote",
+    "NINASync",
+    "MagicMock"
+  ],
+  "test_dry_run_no_git_calls": [
+    "_run_git",
+    "NINASync",
+    "patch"
+  ],
+  "test_rate_limiter_prevents_spam": [
+    "str",
+    "_do_commit_push",
+    "is_alive",
+    "add",
+    "cancel",
+    "NINASync",
+    "MagicMock"
+  ],
+  "test_cli_parsing": [
+    "NINASync"
+  ],
+  "test_setup_logging_rotation": [
+    "getLogger",
+    "isinstance",
+    "NINASync",
+    "any"
+  ],
+  "test_handle_command_backlog_found": [
+    "patch",
+    "_handle_command",
+    "assert_called_once_with",
+    "TelegramInterface",
+    "AsyncMock",
+    "MagicMock"
+  ],
+  "test_handle_command_backlog_not_found": [
+    "patch",
+    "_handle_command",
+    "assert_called_once_with",
+    "TelegramInterface",
+    "AsyncMock",
+    "MagicMock"
+  ],
+  "test_handle_command_backlog_empty_ready": [
+    "patch",
+    "_handle_command",
+    "assert_called_once_with",
+    "TelegramInterface",
+    "AsyncMock",
+    "MagicMock"
+  ],
+  "dummy_config": [
+    "NinaConfig"
+  ],
+  "test_init_success": [
+    "ModelDiscoveryService"
+  ],
+  "test_init_missing_env_vars": [
+    "NinaConfig",
+    "ModelDiscoveryService"
+  ],
+  "test_load_cache_missing_file": [
+    "load_cache",
+    "patch",
+    "ModelDiscoveryService"
+  ],
+  "test_save_cache_success": [
+    "mocked_open",
+    "patch",
+    "ModelDiscoveryService",
+    "save_cache",
+    "assert_called_once_with",
+    "mock_open"
+  ],
+  "test_get_model_fresh_cache": [
+    "time",
+    "assert_not_called",
+    "get_model",
+    "patch",
+    "ModelDiscoveryService",
+    "MagicMock"
+  ],
+  "test_get_model_stale_cache": [
+    "time",
+    "object",
+    "patch",
+    "ModelDiscoveryService",
+    "get_model",
+    "assert_called_once",
+    "MagicMock"
+  ],
+  "test_discover_all_success": [
+    "discover_all",
+    "patch",
+    "ModelDiscoveryService",
+    "assert_called_once",
+    "MagicMock"
+  ],
+  "test_discover_all_error_fallback": [
+    "discover_all",
+    "assert_called_once",
+    "ModelDiscoveryService",
+    "patch",
+    "RequestError",
+    "MagicMock"
+  ],
+  "test_discover_all_no_models_url": [
+    "MagicMock",
+    "patch",
+    "ModelDiscoveryService",
+    "discover_all"
+  ],
+  "test_discovery_returns_list": [
+    "str",
+    "discover_all",
+    "len",
+    "isinstance",
+    "ModelDiscoveryService",
+    "MockResponse",
+    "setattr",
+    "MockConfig"
+  ],
+  "test_discovery_entries_have_name": [
+    "str",
+    "discover_all",
+    "isinstance",
+    "ModelDiscoveryService",
+    "MockResponse",
+    "setattr",
+    "items",
+    "MockConfig"
+  ],
+  "test_discovery_handles_empty_env": [
+    "str",
+    "discover_all",
+    "isinstance",
+    "ModelDiscoveryService",
+    "MockResponse",
+    "setattr",
+    "MockConfig"
+  ],
+  "mock_get_error": [
+    "MagicMock",
+    "RequestError"
+  ],
+  "mock_get": [
+    "MockResponse"
+  ],
+  "test_preview_diff": [
+    "mkdir",
+    "preview_diff",
+    "unlink",
+    "Path",
+    "write_text"
+  ],
+  "test_git_status": [
+    "status",
+    "MockProcess",
+    "setattr"
+  ],
+  "test_git_diff": [
+    "diff",
+    "MockProcess",
+    "setattr"
+  ],
+  "test_git_ops_safe_path": [
+    "raises",
+    "_safe"
+  ],
+  "mock_run": [
+    "MockProcess"
+  ],
+  "test_is_ignored_logic": [
+    "nina_is_ignored",
+    "files_is_ignored"
+  ],
+  "test_load_geminiignore": [
+    "files_load_ignore",
+    "nina_load_ignore",
+    "setattr",
+    "Path",
+    "write_text"
+  ],
+  "test_files_read_ignored": [
+    "read",
+    "mkdir",
+    "write_text",
+    "setattr"
+  ],
+  "test_run_cmd_success": [
+    "patch",
+    "assert_called_once",
+    "MagicMock",
+    "run_cmd"
+  ],
+  "test_run_cmd_timeout": [
+    "TimeoutExpired",
+    "patch",
+    "run_cmd"
+  ],
+  "test_run_cmd_exception": [
+    "Exception",
+    "patch",
+    "run_cmd"
+  ],
+  "test_match_signatures_basic_match": [
+    "match_signatures",
+    "patch"
+  ],
+  "test_match_signatures_missing_env": [
+    "match_signatures",
+    "patch",
+    "any"
+  ],
+  "router": [
+    "ProviderHealth",
+    "HybridRouter"
+  ],
+  "test_circuit_breaker_state_transitions": [
+    "time",
+    "CircuitBreaker",
+    "record_success",
+    "record_failure",
+    "allow_request"
+  ],
+  "test_circuit_breaker_half_open_to_open": [
+    "CircuitBreaker",
+    "time",
+    "record_failure",
+    "allow_request"
+  ],
+  "test_router_ordered_providers_sensitive_and_force_local": [
+    "ClassifiedTask",
+    "_ordered_providers"
+  ],
+  "test_router_ordered_providers_ordering": [
+    "ClassifiedTask",
+    "_ordered_providers",
+    "index"
+  ],
+  "test_router_fallback": [
+    "Exception",
+    "ClassifiedTask",
+    "route",
+    "AsyncMock"
+  ],
+  "test_router_all_providers_fail": [
+    "Exception",
+    "ClassifiedTask",
+    "route",
+    "AsyncMock"
+  ],
+  "test_router_ordered_providers_with_model_discovery": [
+    "ClassifiedTask",
+    "_ordered_providers"
+  ],
+  "test_provider_health_limits": [
+    "ProviderHealth",
+    "is_exhausted",
+    "is_near_limit"
+  ],
+  "test_cb_persistence": [
+    "load",
+    "time",
+    "len",
+    "append",
+    "HybridRouter",
+    "_load_circuit_state",
+    "makedirs",
+    "remove",
+    "exists",
+    "_save_circuit_state",
+    "ProviderHealth",
+    "open"
+  ],
+  "test_cache_persistence": [
+    "load",
+    "len",
+    "get",
+    "HybridRouter",
+    "_load_circuit_state",
+    "makedirs",
+    "remove",
+    "exists",
+    "_save_circuit_state",
+    "set",
+    "open"
+  ],
+  "mock_call_provider": [
+    "Exception"
+  ],
+  "test_full_request_router_to_provider": [
+    "NinaConfig",
+    "route",
+    "object",
+    "ClassifiedTask",
+    "HybridRouter",
+    "get",
+    "patch",
+    "initialize",
+    "MagicMock",
+    "assert_called"
+  ],
+  "memory_system": [
+    "MemorySystem",
+    "MockCollection"
+  ],
+  "test_kb_primitives": [
+    "len",
+    "kb_add_entry",
+    "kb_search",
+    "startswith"
+  ],
+  "add": [
+    "add_job",
+    "extend",
+    "_wrap_job"
+  ],
+  "count": [
+    "len"
+  ],
+  "test_think_returns_think_result": [
+    "isinstance",
+    "think"
+  ],
+  "test_think_unknown_intent": [
+    "think"
+  ],
+  "test_plan_returns_plan_result": [
+    "ThinkResult",
+    "isinstance",
+    "plan"
+  ],
+  "test_plan_unknown_uses_shell": [
+    "ThinkResult",
+    "plan"
+  ],
+  "test_act_success": [
+    "act",
+    "PlanResult"
+  ],
+  "test_act_records_to_hub": [
+    "dict",
+    "assert_called_once",
+    "assert_called_once_with",
+    "PlanResult",
+    "act",
+    "MagicMock"
+  ],
+  "test_agent_loop_run_end_to_end": [
+    "ThinkResult",
+    "isinstance",
+    "patch",
+    "AgentLoop",
+    "PlanResult",
+    "run",
+    "MagicMock",
+    "ActResult"
+  ],
+  "verifier": [
+    "set_level",
+    "StepVerifier"
+  ],
+  "test_verification_result_dataclass": [
+    "VerificationResult"
+  ],
+  "test_verify_non_empty_failed": [
+    "verify_non_empty",
+    "parametrize"
+  ],
+  "test_verify_non_empty_passed": [
+    "verify_non_empty",
+    "parametrize"
+  ],
+  "test_is_valid_output_failed": [
+    "is_valid_output"
+  ],
+  "test_is_valid_output_passed": [
+    "is_valid_output"
+  ],
+  "test_verify_numeric_range_valid": [
+    "verify_numeric_range"
+  ],
+  "test_verify_numeric_range_below_min": [
+    "verify_numeric_range"
+  ],
+  "test_verify_numeric_range_above_max": [
+    "verify_numeric_range"
+  ],
+  "test_verify_numeric_range_not_numeric": [
+    "verify_numeric_range"
+  ],
+  "test_verify_numeric_range_no_lower_bound": [
+    "verify_numeric_range"
+  ],
+  "test_verify_numeric_range_no_upper_bound": [
+    "verify_numeric_range"
+  ],
+  "test_verify_schema_valid": [
+    "verify_schema"
+  ],
+  "test_verify_schema_missing_key": [
+    "verify_schema"
+  ],
+  "test_verify_schema_not_a_dict": [
+    "verify_schema"
+  ],
+  "test_verify_success_criteria_passed": [
+    "patch",
+    "verify_success_criteria",
+    "AsyncMock"
+  ],
+  "test_verify_success_criteria_malformed_json": [
+    "patch",
+    "verify_success_criteria",
+    "AsyncMock"
+  ],
+  "test_verify_success_criteria_exception": [
+    "Exception",
+    "patch",
+    "verify_success_criteria",
+    "AsyncMock"
+  ],
+  "test_verify_all_passed": [
+    "verify_all",
+    "len",
+    "patch",
+    "AsyncMock",
+    "all"
+  ],
+  "test_verify_all_fail_fast": [
+    "len",
+    "verify_all"
+  ],
+  "test_append_log_creates_file": [
+    "str",
+    "setattr",
+    "append_to_log",
+    "read_text",
+    "exists",
+    "write_text"
+  ],
+  "test_append_log_appends_not_overwrites": [
+    "str",
+    "setattr",
+    "append_to_log",
+    "read_text",
+    "count",
+    "write_text"
+  ],
+  "test_append_lock_creates_lockfile": [
+    "str",
+    "setattr",
+    "update_lock_file",
+    "read_text",
+    "exists",
+    "write_text"
+  ],
+  "test_append_lock_idempotent": [
+    "str",
+    "setattr",
+    "update_lock_file",
+    "read_text",
+    "write_text"
+  ],
+  "test_rate_limiter_allows_under_limit": [
+    "is_allowed",
+    "RateLimiter",
+    "range"
+  ],
+  "test_rate_limiter_blocks_over_limit": [
+    "is_allowed",
+    "RateLimiter",
+    "range"
+  ],
+  "test_rate_limiter_resets_after_period": [
+    "is_allowed",
+    "patch",
+    "RateLimiter",
+    "range"
+  ],
+  "test_command_registry_register_and_get": [
+    "register",
+    "len",
+    "get_all",
+    "CommandRegistry"
+  ],
+  "test_command_registry_is_registered": [
+    "register",
+    "CommandRegistry",
+    "is_registered"
+  ],
+  "test_is_internal_blocked": [
+    "_is_internal"
+  ],
+  "test_is_internal_allowed": [
+    "_is_internal"
+  ],
+  "test_fetch_blocked_url": [
+    "fetch"
+  ],
+  "test_fetch_success": [
+    "patch",
+    "assert_called_once",
+    "assert_called_once_with",
+    "AsyncMock",
+    "fetch"
+  ],
+  "test_fetch_error": [
+    "patch",
+    "fetch",
+    "AsyncMock",
+    "startswith",
+    "Exception"
+  ],
+  "_wrap_job": [
+    "iscoroutinefunction",
+    "func",
+    "time",
+    "isinstance",
+    "now",
+    "isoformat",
+    "info",
+    "dumps",
+    "iscoroutine"
+  ],
+  "_model_discovery_job": [
+    "sleep",
+    "discover_all"
+  ],
+  "_cache_purge_job": [
+    "purge_expired"
+  ],
+  "_setup_signal_handlers": [
+    "add_signal_handler",
+    "get_running_loop",
+    "warning"
+  ],
+  "_handle_shutdown_signal": [
+    "shutdown",
+    "cancel",
+    "all_tasks",
+    "info"
+  ],
+  "next_job_time": [
+    "str",
+    "get_job"
+  ],
+  "job_count": [
+    "len",
+    "get_jobs"
+  ],
+  "run_job": [
+    "str",
+    "CronResult",
+    "now",
+    "import_module",
+    "isoformat",
+    "ValueError",
+    "run",
+    "perf_counter",
+    "hasattr"
+  ],
+  "log_result": [
+    "dirname",
+    "makedirs",
+    "write",
+    "dumps",
+    "open",
+    "asdict"
+  ],
+  "run_all_enabled": [
+    "log_result",
+    "sum",
+    "emit_log",
+    "get_hub",
+    "append",
+    "len",
+    "get_enabled",
+    "run_job"
+  ],
+  "run_evolution_cycle": [
+    "generate_efficiency_report",
+    "print",
+    "uuid4",
+    "check_bottlenecks",
+    "run",
+    "act"
+  ],
+  "_auto_register": [
+    "CronJob",
+    "dirname",
+    "title",
+    "replace",
+    "isinstance",
+    "print",
+    "glob",
+    "join",
+    "import_module",
+    "basename",
+    "abspath",
+    "register",
+    "hasattr"
+  ],
+  "__new__": [
+    "__new__",
+    "super"
+  ],
+  "get_enabled": [
+    "values"
+  ],
+  "run_memory_backup": [
+    "backup",
+    "warning",
+    "info"
+  ],
+  "run_py_backup": [
+    "mkdir",
+    "Path",
+    "ZipFile",
+    "any",
+    "strftime",
+    "write",
+    "info",
+    "warning",
+    "rglob"
+  ]
+}

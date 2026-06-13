@@ -1,6 +1,7 @@
 """NINA v12 — AgentLoop (Stage 5)
 THINK -> PLAN -> ACT -> OBSERVE -> ADAPT. Variable step budget + global timeout + thermal preflight.
 """
+from typing import Any
 import asyncio, logging, re
 from core.router import HybridRouter, ClassifiedTask, STEP_BUDGETS, DEFAULT_MAX_STEPS
 from tools import system
@@ -10,7 +11,7 @@ _registry = CapabilityRegistry()
 logger = logging.getLogger("nina.agent")
 
 class AgentLoop:
-    def __init__(self, config, router: HybridRouter, memory, tools: dict):
+    def __init__(self, config: Any, router: HybridRouter, memory: Any, tools: dict) -> None:
         self.config = config
         self.router = router
         self.memory = memory
@@ -152,7 +153,7 @@ class AgentLoop:
                     tasks = []
                     tool_names = []
                     
-                    async def run_tool_with_fix(tool_obj, name, user_input, msgs, goal, task, force_local):
+                    async def run_tool_with_fix(tool_obj: Any, name: Any, user_input: Any, msgs: Any, goal: Any, task: Any, force_local: Any) -> Any:
                         obs = await tool_obj.run(user_input)
                         if name == "shell" and ".py" in user_input:
                             for attempt in range(2):
@@ -189,13 +190,13 @@ class AgentLoop:
                         tool_names.append(tool_name)
 
                         if not _registry.is_healthy(tool_name):
-                            async def fail_tool(name=tool_name): return f"Tool {name} unavailable (unhealthy)."
+                            async def fail_tool(name: Any=tool_name) -> Any: return f"Tool {name} unavailable (unhealthy)."
                             logger.warning(f"agent_skipped_unhealthy tool={tool_name}")
                             tasks.append(fail_tool())
                         elif tool:
                             tasks.append(run_tool_with_fix(tool, tool_name, tool_input, msgs, goal, task, force_local))
                         else:
-                            async def unknown_tool(name=tool_name): return f"Unknown tool: {name}"
+                            async def unknown_tool(name: Any=tool_name) -> Any: return f"Unknown tool: {name}"
                             tasks.append(unknown_tool())
 
                     if len(tasks) > 0:

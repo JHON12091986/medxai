@@ -31,3 +31,6 @@ nina_master_backup*.md
 node_modules/
 .env
 upgrades/
+
+!data/session_checkpoint.json
+!data/workspace/

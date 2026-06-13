@@ -384,7 +384,7 @@ _Dependency: AG-B-01 and AG-B-02 must be DONE first_
 | AG-M-03 | Multi-module | 🛠️ NF-EXT: Surgical Code Intelligence — Add `nf code symbol`, `find-symbol`, and `sigs` for zero-token code research. | `DONE` | — |
 | AG-M-04 | `AGENTS.md` | 📝 DOC-COMP: Instruction Compression — Refactor `AGENTS.md` into high-density directives; move guides to `docs/agent-memory/`. | `DONE` | — |
 | AG-M-05 | `ninaflash.py` | 📊 NF-BACKLOG: Incremental State Monitoring — Add `backlog summary` and `task active` to avoid reading full backlog tables. | `DONE` | — |
-| AG-M-06 | `.geminiignore` | 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiignore` for automated context pruning. | `PAUSED` | — |
+| AG-M-06 | `.geminiignore` | 🛡️ SEC-IGNORE: Global Context Filtering — Implement project-wide `.geminiignore` for automated context pruning. | `DONE` | — |
 | AG-M-07 | `ninaflash.py` | 🧹 NF-CLEAN: Automated Hygiene — Add `nf check code --fix` and `nf doc check --fix` for local error resolution. | `DONE` | — |
 | AG-M-08 | `ninaflash.py` | 💓 NF-STATUS: High-Density Pulse — Implement `nf status --pulse` and `nf log next-id` for 10-line project heartbeats. | `DONE` | — |
 | AG-M-09 | `ninaflash.py` | 📦 NF-ARCHIVE: Historical Offloading — Implement `nf backlog archive` to move `DONE` tasks to historical storage. | `DONE` | — |
@@ -400,15 +400,15 @@ _Focus: Zero-token research and semantic mapping_
 | ID | File | Task | Status | Depends On |
 |----|------|------|--------|------------|
 | AG-N-01 | `ninaflash.py` | Global Symbol Indexer — Generate JSON map of all classes/functions. | `DONE` | — |
-| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `PAUSED` | AG-N-01 |
-| AG-N-03 | `core/` | Type Hint Enforcement — Automated script to add missing type hints. | `PAUSED` | — |
-| AG-N-04 | `ninaflash.py` | Dead Code Detector — Identify and flag unused functions/imports. | `PAUSED` | — |
-| AG-N-05 | `ninaflash.py` | Symbol-Based Context Injector — Read only the call stack of a function. | `PAUSED` | AG-N-02 |
+| AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `DONE` | AG-N-01 |
+| AG-N-03 | `core/` | Type Hint Enforcement — Automated script to add missing type hints. | `READY` | — |
+| AG-N-04 | `ninaflash.py` | Dead Code Detector — Identify and flag unused functions/imports. | `DONE` | — |
+| AG-N-05 | `ninaflash.py` | Symbol-Based Context Injector — Read only the call stack of a function. | `READY` | AG-N-02 |
 | AG-N-06 | `ninaflash.py` | Docstring Quality Audit — Score docstrings on clarity and completeness. | `DONE` | — |
-| AG-N-07 | `core/` | Automated Refactoring: Method Extraction — Split large functions via AST. | `PAUSED` | — |
-| AG-N-08 | `ninaflash.py` | Dependency Cycle Detector — Identify circular imports locally. | `PAUSED` | — |
-| AG-N-09 | `ninaflash.py` | Code Complexity Watchdog — Calculate cyclomatic complexity. | `PAUSED` | — |
-| AG-N-10 | `ninaflash.py` | Symbol Migration Tool — Automate renaming and moving symbols. | `PAUSED` | — |
+| AG-N-07 | `core/` | Automated Refactoring: Method Extraction — Split large functions via AST. | `READY` | — |
+| AG-N-08 | `ninaflash.py` | Dependency Cycle Detector — Identify circular imports locally. | `READY` | — |
+| AG-N-09 | `ninaflash.py` | Code Complexity Watchdog — Calculate cyclomatic complexity. | `READY` | — |
+| AG-N-10 | `ninaflash.py` | Symbol Migration Tool — Automate renaming and moving symbols. | `READY` | — |
 
 ---
 
