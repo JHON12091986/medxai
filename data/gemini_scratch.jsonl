@@ -245,3 +245,7 @@
 {"t": "2026-06-13T06:36:00Z", "step": 3, "action": "shell", "file": "", "detail": "Deleted obsolete docs/space/nina_master_backup_2026-06-10.md, agy_prompts/pipeline_autopilot.md, and the 5 consolidated agent-memory files", "status": "ok"}
 {"t": "2026-06-13T06:37:00Z", "step": 4, "action": "shell", "file": "", "detail": "Updated repository index and ran validate_index.py", "status": "ok"}
 {"t": "2026-06-13T06:38:00Z", "step": -1, "action": "done", "file": "", "detail": "Consolidated agent memory and pipeline autopilot docs to keep Jules reference and reduce file count", "status": "ok"}
+{"t": "2026-06-13T06:39:00Z", "step": 5, "action": "write", "file": "ARCHITECTURE.md", "detail": "Updated ARCHITECTURE.md to replace obsolete references to mega_orchestrator, goal_intake, and jules_watcher", "status": "ok"}
+{"t": "2026-06-13T06:40:00Z", "step": 6, "action": "write", "file": "AGENTS.md", "detail": "Updated AGENTS.md to remove obsolete script references to jules_watcher and mega_orchestrator", "status": "ok"}
+{"t": "2026-06-13T06:41:00Z", "step": 7, "action": "shell", "file": "", "detail": "Updated index and validated files after AGENTS.md and ARCHITECTURE.md edits", "status": "ok"}
+{"t": "2026-06-13T06:42:00Z", "step": -1, "action": "done", "file": "", "detail": "Updated ARCHITECTURE.md and AGENTS.md references to point to unified tools/jules.py", "status": "ok"}

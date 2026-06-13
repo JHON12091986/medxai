@@ -2813,3 +2813,12 @@
 **Files changed:** data/session_memory.jsonl,nina_update_log.md
 
 **Verification:** git push OK, nina.service active
+
+## Auto-doc patch — 2026-06-13
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
+
+## Auto-doc patch — 2026-06-13
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
+
+## Auto-doc patch — 2026-06-13
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
