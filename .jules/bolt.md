@@ -109,3 +109,7 @@
 ## 2026-06-13 - [Pipeline Autopilot Cycle]
 **Learning:** Cleaned 265 duplicate sessions.
 **Action:** Continue autopilot cycle.
+
+## 2026-06-14 - [Avoid dictionary dump in message mask hot path]
+**Learning:** Re-evaluating the configuration to fetch a dump of its keys and properties in hot paths, such as `_mask_secrets` which is called heavily, creates massive amounts of unnecessary GC collections and delays performance significantly.
+**Action:** Pre-compute the list of evaluated secret values when initializing configuration dependent singletons.
