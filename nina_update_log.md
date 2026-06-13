@@ -2884,5 +2884,52 @@
 
 **Verification:** git push OK, nina.service active
 
-## Auto-doc patch — 2026-06-13
-- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 19
+---
+
+## Entry 266 — 2026-06-13 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** nina_update_log.md
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 267 — 2026-06-13 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** data/gemini_scratch.jsonl,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 268 — 2026-06-13 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** .jules/bolt.md,AGENTS.md,data/gemini_scratch.jsonl,data/session_memory.jsonl,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 269 — 2026-06-13 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** .jules/bolt.md,data/gemini_scratch.jsonl,data/router_cache.json,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 270 — 2026-06-13 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** .jules/bolt.md,data/gemini_scratch.jsonl,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md
+
+**Verification:** git push OK, nina.service active

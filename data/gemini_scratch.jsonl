@@ -373,3 +373,171 @@
 {"t": "2026-06-13T14:23:19Z", "step": 66, "action": "shell", "file": "", "detail": "committing routing history update to git", "status": "ok"}
 {"t": "2026-06-13T14:23:27Z", "step": 67, "action": "shell", "file": "", "detail": "pushing docs commit to origin main", "status": "ok"}
 {"t": "2026-06-13T14:23:40Z", "step": 68, "action": "shell", "file": "", "detail": "running final nina_sync.sh", "status": "ok"}
+{"t": "2026-06-13T23:06:01.616911+06:00", "step": 49, "action": "shell", "file": "", "detail": "Validation passed. Attempting to merge PR #186", "status": "ok"}
+{"t": "2026-06-13T23:06:02.263731+06:00", "step": 50, "action": "error", "file": "", "detail": "Merge failed for PR #186: X Pull request aibony/nina#186 is not mergeable: the merge commit cannot be cleanly created.\nTo have the pull request merged after all the requirements have been met, add the `--auto` flag.", "status": "fail"}
+{"t": "2026-06-13T23:06:02.263867+06:00", "step": 80, "action": "shell", "file": "", "detail": "Scanning remote branches to identify orphaned branches", "status": "ok"}
+{"t": "2026-06-13T23:06:02.266429+06:00", "step": 81, "action": "think", "file": "", "detail": "Found 22 total remote branches", "status": "ok"}
+{"t": "2026-06-13T23:06:02.266574+06:00", "step": 93, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'ag-n-batch-fixes-5671585729728991810'", "status": "ok"}
+{"t": "2026-06-13T23:06:02.269901+06:00", "step": 94, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'ag-n-batch-fixes-5671585729728991810'", "status": "ok"}
+{"t": "2026-06-13T23:06:04.590140+06:00", "step": 96, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'feature/mega-task-batch-18157954911455491484'", "status": "ok"}
+{"t": "2026-06-13T23:06:04.593867+06:00", "step": 97, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'feature/mega-task-batch-18157954911455491484'", "status": "ok"}
+{"t": "2026-06-13T23:06:07.018580+06:00", "step": 99, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'feature/mega-task-batch-ninaflash-10709850589967297728'", "status": "ok"}
+{"t": "2026-06-13T23:06:07.022478+06:00", "step": 100, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'feature/mega-task-batch-ninaflash-10709850589967297728'", "status": "ok"}
+{"t": "2026-06-13T23:06:09.868684+06:00", "step": 102, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'fix/mega-task-batch-completion-3197599525068550577'", "status": "ok"}
+{"t": "2026-06-13T23:06:09.872261+06:00", "step": 103, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'fix/mega-task-batch-completion-3197599525068550577'", "status": "ok"}
+{"t": "2026-06-13T23:06:12.125490+06:00", "step": 105, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'jules-11561396062625288886-e6aa42fd'", "status": "ok"}
+{"t": "2026-06-13T23:06:12.128757+06:00", "step": 106, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'jules-11561396062625288886-e6aa42fd'", "status": "ok"}
+{"t": "2026-06-13T23:06:14.579837+06:00", "step": 111, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'jules-17661619357096956655-93a2e84f'", "status": "ok"}
+{"t": "2026-06-13T23:06:14.583386+06:00", "step": 112, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'jules-17661619357096956655-93a2e84f'", "status": "ok"}
+{"t": "2026-06-13T23:06:17.328278+06:00", "step": 114, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'jules-2641468348031067154-3aad7623'", "status": "ok"}
+{"t": "2026-06-13T23:06:17.333186+06:00", "step": 115, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'jules-2641468348031067154-3aad7623'", "status": "ok"}
+{"t": "2026-06-13T23:06:19.415187+06:00", "step": 123, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'jules-7766676870073617722-fd0cee4d'", "status": "ok"}
+{"t": "2026-06-13T23:06:19.420698+06:00", "step": 124, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'jules-7766676870073617722-fd0cee4d'", "status": "ok"}
+{"t": "2026-06-13T23:06:21.991872+06:00", "step": 129, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'jules-mega-task-batch-5503898034187545688'", "status": "ok"}
+{"t": "2026-06-13T23:06:21.996357+06:00", "step": 130, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'jules-mega-task-batch-5503898034187545688'", "status": "ok"}
+{"t": "2026-06-13T23:06:24.229277+06:00", "step": 141, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'mega-batch-16619866393479396047'", "status": "ok"}
+{"t": "2026-06-13T23:06:24.233854+06:00", "step": 142, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'mega-batch-16619866393479396047'", "status": "ok"}
+{"t": "2026-06-13T23:06:26.473251+06:00", "step": 144, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'mega-batch-tools-4852184874704947743'", "status": "ok"}
+{"t": "2026-06-13T23:06:26.477278+06:00", "step": 145, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'mega-batch-tools-4852184874704947743'", "status": "ok"}
+{"t": "2026-06-13T23:06:28.872716+06:00", "step": 147, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'mega-task-batch-10443199178093806053'", "status": "ok"}
+{"t": "2026-06-13T23:06:28.876797+06:00", "step": 148, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'mega-task-batch-10443199178093806053'", "status": "ok"}
+{"t": "2026-06-13T23:06:31.566724+06:00", "step": 150, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'mega-task-batch-17057861078656937120'", "status": "ok"}
+{"t": "2026-06-13T23:06:31.570794+06:00", "step": 151, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'mega-task-batch-17057861078656937120'", "status": "ok"}
+{"t": "2026-06-13T23:06:33.751364+06:00", "step": 153, "action": "think", "file": "", "detail": "Analyzing orphaned branch 'ninaflash-batch-tools-9062976148541205517'", "status": "ok"}
+{"t": "2026-06-13T23:06:33.755386+06:00", "step": 154, "action": "shell", "file": "", "detail": "Unmerged commits found. Creating PR to recover branch 'ninaflash-batch-tools-9062976148541205517'", "status": "ok"}
+{"t": "2026-06-13T23:06:35.899542+06:00", "step": 180, "action": "think", "file": "", "detail": "Checking for juleslock.txt", "status": "ok"}
+{"t": "2026-06-13T23:06:35.899721+06:00", "step": 181, "action": "think", "file": "", "detail": "No juleslock.txt found", "status": "ok"}
+{"t": "2026-06-13T23:06:35.900132+06:00", "step": 190, "action": "write", "file": "", "detail": "Writing audit summary to log file", "status": "ok"}
+{"t": "2026-06-13T23:06:35.900380+06:00", "step": 199, "action": "shell", "file": "", "detail": "Restoring stashed workspace changes", "status": "ok"}
+{"t": "2026-06-13T23:06:58.425469+06:00", "step": 5, "action": "write", "file": "/home/aibony/.gemini/antigravity-cli/brain/4cc4337b-1e10-439a-8bc1-0ae6365f2ee0/scratch/audit.py", "detail": "Updated audit script to use git show to avoid local workspace conflicts", "status": "ok"}
+{"t": "2026-06-13T23:07:02.272072+06:00", "step": 6, "action": "shell", "file": "", "detail": "Fetching latest updates from origin", "status": "ok"}
+{"t": "2026-06-13T23:07:05.700590+06:00", "step": 7, "action": "shell", "file": "", "detail": "Retrieving list of open PRs via GitHub CLI", "status": "ok"}
+{"t": "2026-06-13T23:07:06.931165+06:00", "step": 8, "action": "think", "file": "", "detail": "Found 22 open PRs to audit", "status": "ok"}
+{"t": "2026-06-13T23:07:06.931395+06:00", "step": 10, "action": "think", "file": "", "detail": "Auditing PR #215: 'chore: recover orphaned branch ninaflash-batch-tools-9062976148541205517' on branch ninaflash-batch-tools-9062976148541205517", "status": "ok"}
+{"t": "2026-06-13T23:07:06.943166+06:00", "step": 12, "action": "think", "file": "", "detail": "PR #215 has 4 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:07.471562+06:00", "step": 13, "action": "error", "file": "core/verifier.py", "detail": "Validation failed for core/verifier.py", "status": "fail"}
+{"t": "2026-06-13T23:07:07.471760+06:00", "step": 14, "action": "shell", "file": "", "detail": "Adding block comment to PR #215 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:08.772670+06:00", "step": 15, "action": "think", "file": "", "detail": "Skipped PR #215 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:08.772851+06:00", "step": 15, "action": "think", "file": "", "detail": "Auditing PR #214: 'chore: recover orphaned branch mega-task-batch-17057861078656937120' on branch mega-task-batch-17057861078656937120", "status": "ok"}
+{"t": "2026-06-13T23:07:08.777801+06:00", "step": 17, "action": "think", "file": "", "detail": "PR #214 has 0 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:08.777945+06:00", "step": 19, "action": "shell", "file": "", "detail": "Validation passed. Attempting to merge PR #214", "status": "ok"}
+{"t": "2026-06-13T23:07:12.765958+06:00", "step": 20, "action": "shell", "file": "", "detail": "Successfully merged PR #214", "status": "ok"}
+{"t": "2026-06-13T23:07:12.766143+06:00", "step": 20, "action": "think", "file": "", "detail": "Auditing PR #213: 'chore: recover orphaned branch mega-task-batch-10443199178093806053' on branch mega-task-batch-10443199178093806053", "status": "ok"}
+{"t": "2026-06-13T23:07:12.771460+06:00", "step": 22, "action": "think", "file": "", "detail": "PR #213 has 5 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:13.456498+06:00", "step": 23, "action": "error", "file": "tests/test_telegram_interface.py", "detail": "Validation failed for tests/test_telegram_interface.py", "status": "fail"}
+{"t": "2026-06-13T23:07:13.456676+06:00", "step": 24, "action": "shell", "file": "", "detail": "Adding block comment to PR #213 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:14.716148+06:00", "step": 25, "action": "think", "file": "", "detail": "Skipped PR #213 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:14.716333+06:00", "step": 25, "action": "think", "file": "", "detail": "Auditing PR #212: 'chore: recover orphaned branch mega-batch-tools-4852184874704947743' on branch mega-batch-tools-4852184874704947743", "status": "ok"}
+{"t": "2026-06-13T23:07:14.723270+06:00", "step": 27, "action": "think", "file": "", "detail": "PR #212 has 4 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:15.038360+06:00", "step": 28, "action": "error", "file": "tests/test_telegram_interface.py", "detail": "Validation failed for tests/test_telegram_interface.py", "status": "fail"}
+{"t": "2026-06-13T23:07:15.038485+06:00", "step": 29, "action": "shell", "file": "", "detail": "Adding block comment to PR #212 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:16.339451+06:00", "step": 30, "action": "think", "file": "", "detail": "Skipped PR #212 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:16.339681+06:00", "step": 30, "action": "think", "file": "", "detail": "Auditing PR #211: 'chore: recover orphaned branch mega-batch-16619866393479396047' on branch mega-batch-16619866393479396047", "status": "ok"}
+{"t": "2026-06-13T23:07:16.346742+06:00", "step": 32, "action": "think", "file": "", "detail": "PR #211 has 5 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:16.830816+06:00", "step": 33, "action": "error", "file": "tests/test_telegram_interface.py", "detail": "Validation failed for tests/test_telegram_interface.py", "status": "fail"}
+{"t": "2026-06-13T23:07:16.830938+06:00", "step": 34, "action": "shell", "file": "", "detail": "Adding block comment to PR #211 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:18.143838+06:00", "step": 35, "action": "think", "file": "", "detail": "Skipped PR #211 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:18.144025+06:00", "step": 35, "action": "think", "file": "", "detail": "Auditing PR #210: 'chore: recover orphaned branch jules-mega-task-batch-5503898034187545688' on branch jules-mega-task-batch-5503898034187545688", "status": "ok"}
+{"t": "2026-06-13T23:07:18.150714+06:00", "step": 37, "action": "think", "file": "", "detail": "PR #210 has 5 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:18.845208+06:00", "step": 38, "action": "error", "file": "core/verifier.py", "detail": "Validation failed for core/verifier.py", "status": "fail"}
+{"t": "2026-06-13T23:07:18.845328+06:00", "step": 39, "action": "shell", "file": "", "detail": "Adding block comment to PR #210 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:20.111208+06:00", "step": 40, "action": "think", "file": "", "detail": "Skipped PR #210 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:20.111400+06:00", "step": 40, "action": "think", "file": "", "detail": "Auditing PR #209: 'chore: recover orphaned branch jules-7766676870073617722-fd0cee4d' on branch jules-7766676870073617722-fd0cee4d", "status": "ok"}
+{"t": "2026-06-13T23:07:20.116181+06:00", "step": 42, "action": "think", "file": "", "detail": "PR #209 has 4 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:20.946260+06:00", "step": 43, "action": "error", "file": "tools/ninaflash.py", "detail": "Validation failed for tools/ninaflash.py", "status": "fail"}
+{"t": "2026-06-13T23:07:20.946389+06:00", "step": 44, "action": "shell", "file": "", "detail": "Adding block comment to PR #209 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:22.699124+06:00", "step": 45, "action": "think", "file": "", "detail": "Skipped PR #209 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:22.699317+06:00", "step": 45, "action": "think", "file": "", "detail": "Auditing PR #208: 'chore: recover orphaned branch jules-2641468348031067154-3aad7623' on branch jules-2641468348031067154-3aad7623", "status": "ok"}
+{"t": "2026-06-13T23:07:22.709425+06:00", "step": 47, "action": "think", "file": "", "detail": "PR #208 has 8 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:23.415494+06:00", "step": 48, "action": "error", "file": "core/verifier.py", "detail": "Validation failed for core/verifier.py", "status": "fail"}
+{"t": "2026-06-13T23:07:23.415670+06:00", "step": 49, "action": "shell", "file": "", "detail": "Adding block comment to PR #208 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:25.054538+06:00", "step": 50, "action": "think", "file": "", "detail": "Skipped PR #208 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:25.054734+06:00", "step": 50, "action": "think", "file": "", "detail": "Auditing PR #207: 'chore: recover orphaned branch jules-17661619357096956655-93a2e84f' on branch jules-17661619357096956655-93a2e84f", "status": "ok"}
+{"t": "2026-06-13T23:07:25.061589+06:00", "step": 52, "action": "think", "file": "", "detail": "PR #207 has 4 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:25.618477+06:00", "step": 53, "action": "error", "file": "core/verifier.py", "detail": "Validation failed for core/verifier.py", "status": "fail"}
+{"t": "2026-06-13T23:07:25.618591+06:00", "step": 54, "action": "shell", "file": "", "detail": "Adding block comment to PR #207 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:27.102031+06:00", "step": 55, "action": "think", "file": "", "detail": "Skipped PR #207 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:27.102219+06:00", "step": 55, "action": "think", "file": "", "detail": "Auditing PR #206: 'chore: recover orphaned branch jules-11561396062625288886-e6aa42fd' on branch jules-11561396062625288886-e6aa42fd", "status": "ok"}
+{"t": "2026-06-13T23:07:27.110408+06:00", "step": 57, "action": "think", "file": "", "detail": "PR #206 has 5 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:27.435841+06:00", "step": 58, "action": "error", "file": "tests/test_telegram_interface.py", "detail": "Validation failed for tests/test_telegram_interface.py", "status": "fail"}
+{"t": "2026-06-13T23:07:27.435992+06:00", "step": 59, "action": "shell", "file": "", "detail": "Adding block comment to PR #206 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:28.843673+06:00", "step": 60, "action": "think", "file": "", "detail": "Skipped PR #206 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:28.843821+06:00", "step": 60, "action": "think", "file": "", "detail": "Auditing PR #205: 'chore: recover orphaned branch fix/mega-task-batch-completion-3197599525068550577' on branch fix/mega-task-batch-completion-3197599525068550577", "status": "ok"}
+{"t": "2026-06-13T23:07:28.850772+06:00", "step": 62, "action": "think", "file": "", "detail": "PR #205 has 15 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:29.047407+06:00", "step": 63, "action": "error", "file": "core/agent.py", "detail": "Validation failed for core/agent.py", "status": "fail"}
+{"t": "2026-06-13T23:07:29.047517+06:00", "step": 64, "action": "shell", "file": "", "detail": "Adding block comment to PR #205 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:30.790923+06:00", "step": 65, "action": "think", "file": "", "detail": "Skipped PR #205 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:30.791080+06:00", "step": 65, "action": "think", "file": "", "detail": "Auditing PR #204: 'chore: recover orphaned branch feature/mega-task-batch-ninaflash-10709850589967297728' on branch feature/mega-task-batch-ninaflash-10709850589967297728", "status": "ok"}
+{"t": "2026-06-13T23:07:30.799402+06:00", "step": 67, "action": "think", "file": "", "detail": "PR #204 has 1 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:31.113501+06:00", "step": 68, "action": "error", "file": "tools/ninaflash.py", "detail": "Validation failed for tools/ninaflash.py", "status": "fail"}
+{"t": "2026-06-13T23:07:31.113643+06:00", "step": 69, "action": "shell", "file": "", "detail": "Adding block comment to PR #204 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:32.419026+06:00", "step": 70, "action": "think", "file": "", "detail": "Skipped PR #204 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:32.419204+06:00", "step": 70, "action": "think", "file": "", "detail": "Auditing PR #203: 'chore: recover orphaned branch feature/mega-task-batch-18157954911455491484' on branch feature/mega-task-batch-18157954911455491484", "status": "ok"}
+{"t": "2026-06-13T23:07:32.424284+06:00", "step": 72, "action": "think", "file": "", "detail": "PR #203 has 5 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:32.598186+06:00", "step": 73, "action": "error", "file": "core/verifier.py", "detail": "Validation failed for core/verifier.py", "status": "fail"}
+{"t": "2026-06-13T23:07:32.598298+06:00", "step": 74, "action": "shell", "file": "", "detail": "Adding block comment to PR #203 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:33.691726+06:00", "step": 75, "action": "think", "file": "", "detail": "Skipped PR #203 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:33.691878+06:00", "step": 75, "action": "think", "file": "", "detail": "Auditing PR #202: 'chore: recover orphaned branch ag-n-batch-fixes-5671585729728991810' on branch ag-n-batch-fixes-5671585729728991810", "status": "ok"}
+{"t": "2026-06-13T23:07:33.696827+06:00", "step": 77, "action": "think", "file": "", "detail": "PR #202 has 7 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:34.219462+06:00", "step": 78, "action": "error", "file": "core/verifier.py", "detail": "Validation failed for core/verifier.py", "status": "fail"}
+{"t": "2026-06-13T23:07:34.219624+06:00", "step": 79, "action": "shell", "file": "", "detail": "Adding block comment to PR #202 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:36.778724+06:00", "step": 80, "action": "think", "file": "", "detail": "Skipped PR #202 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:36.778929+06:00", "step": 80, "action": "think", "file": "", "detail": "Auditing PR #200: 'fix: NinaGate Optimization and NinaFlash CLI Enhancements' on branch jules-5616187049732327630-8b158fba", "status": "ok"}
+{"t": "2026-06-13T23:07:36.783384+06:00", "step": 82, "action": "think", "file": "", "detail": "PR #200 has 4 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:37.299070+06:00", "step": 84, "action": "shell", "file": "", "detail": "Validation passed. Attempting to merge PR #200", "status": "ok"}
+{"t": "2026-06-13T23:07:37.970111+06:00", "step": 85, "action": "error", "file": "", "detail": "Merge failed for PR #200: X Pull request aibony/nina#200 is not mergeable: the merge commit cannot be cleanly created.\nTo have the pull request merged after all the requirements have been met, add the `--auto` flag.", "status": "fail"}
+{"t": "2026-06-13T23:07:37.970260+06:00", "step": 85, "action": "think", "file": "", "detail": "Auditing PR #197: 'Fix NinaFlash complexity checks and migrate tool' on branch jules-ninaflash-fixes-5202938617306595108", "status": "ok"}
+{"t": "2026-06-13T23:07:37.973282+06:00", "step": 87, "action": "think", "file": "", "detail": "PR #197 has 2 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:38.478237+06:00", "step": 89, "action": "shell", "file": "", "detail": "Validation passed. Attempting to merge PR #197", "status": "ok"}
+{"t": "2026-06-13T23:07:39.138286+06:00", "step": 90, "action": "error", "file": "", "detail": "Merge failed for PR #197: X Pull request aibony/nina#197 is not mergeable: the merge commit cannot be cleanly created.\nTo have the pull request merged after all the requirements have been met, add the `--auto` flag.", "status": "fail"}
+{"t": "2026-06-13T23:07:39.138436+06:00", "step": 90, "action": "think", "file": "", "detail": "Auditing PR #194: 'AG-N-05,08,09,10: Implement symbol, complexity, and migration tasks' on branch AG-N-batch-8719091712059769134", "status": "ok"}
+{"t": "2026-06-13T23:07:39.143102+06:00", "step": 92, "action": "think", "file": "", "detail": "PR #194 has 1 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:39.516127+06:00", "step": 94, "action": "shell", "file": "", "detail": "Validation passed. Attempting to merge PR #194", "status": "ok"}
+{"t": "2026-06-13T23:07:40.211796+06:00", "step": 95, "action": "error", "file": "", "detail": "Merge failed for PR #194: X Pull request aibony/nina#194 is not mergeable: the merge commit cannot be cleanly created.\nTo have the pull request merged after all the requirements have been met, add the `--auto` flag.", "status": "fail"}
+{"t": "2026-06-13T23:07:40.212000+06:00", "step": 95, "action": "think", "file": "", "detail": "Auditing PR #191: 'feat(tools): execute batch AG-N-05, AG-N-08, AG-N-09, AG-N-10' on branch jules-ag-n-batch-tools-8525299823837794309", "status": "ok"}
+{"t": "2026-06-13T23:07:40.216013+06:00", "step": 97, "action": "think", "file": "", "detail": "PR #191 has 1 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:40.579737+06:00", "step": 99, "action": "shell", "file": "", "detail": "Validation passed. Attempting to merge PR #191", "status": "ok"}
+{"t": "2026-06-13T23:07:41.232401+06:00", "step": 100, "action": "error", "file": "", "detail": "Merge failed for PR #191: X Pull request aibony/nina#191 is not mergeable: the merge commit cannot be cleanly created.\nTo have the pull request merged after all the requirements have been met, add the `--auto` flag.", "status": "fail"}
+{"t": "2026-06-13T23:07:41.232548+06:00", "step": 100, "action": "think", "file": "", "detail": "Auditing PR #190: 'feat: Execute MEGA TASK BATCH for AST-based tools' on branch jules-11790383660313096699-6e792040", "status": "ok"}
+{"t": "2026-06-13T23:07:41.236475+06:00", "step": 102, "action": "think", "file": "", "detail": "PR #190 has 1 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:41.634961+06:00", "step": 103, "action": "error", "file": "tools/ninaflash.py", "detail": "Validation failed for tools/ninaflash.py", "status": "fail"}
+{"t": "2026-06-13T23:07:41.635075+06:00", "step": 104, "action": "shell", "file": "", "detail": "Adding block comment to PR #190 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:42.871015+06:00", "step": 105, "action": "think", "file": "", "detail": "Skipped PR #190 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:42.871242+06:00", "step": 105, "action": "think", "file": "", "detail": "Auditing PR #189: 'Implement batch of tasks (AG-N-05, AG-N-08, AG-N-09, AG-N-10)' on branch jules-3113313881426069281-76c5de3a", "status": "ok"}
+{"t": "2026-06-13T23:07:42.875689+06:00", "step": 107, "action": "think", "file": "", "detail": "PR #189 has 1 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:43.223122+06:00", "step": 108, "action": "error", "file": "tools/ninaflash.py", "detail": "Validation failed for tools/ninaflash.py", "status": "fail"}
+{"t": "2026-06-13T23:07:43.223274+06:00", "step": 109, "action": "shell", "file": "", "detail": "Adding block comment to PR #189 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:44.639135+06:00", "step": 110, "action": "think", "file": "", "detail": "Skipped PR #189 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:44.639328+06:00", "step": 110, "action": "think", "file": "", "detail": "Auditing PR #187: 'MEGA TASK BATCH: AST Symbol tools & watchdogs' on branch jules-mega-task-batch-6835892478119959381", "status": "ok"}
+{"t": "2026-06-13T23:07:44.642978+06:00", "step": 112, "action": "think", "file": "", "detail": "PR #187 has 2 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:45.205068+06:00", "step": 113, "action": "error", "file": "tools/ninaflash.py", "detail": "Validation failed for tools/ninaflash.py", "status": "fail"}
+{"t": "2026-06-13T23:07:45.205238+06:00", "step": 114, "action": "shell", "file": "", "detail": "Adding block comment to PR #187 due to failures", "status": "ok"}
+{"t": "2026-06-13T23:07:46.482695+06:00", "step": 115, "action": "think", "file": "", "detail": "Skipped PR #187 and added comment", "status": "ok"}
+{"t": "2026-06-13T23:07:46.482858+06:00", "step": 115, "action": "think", "file": "", "detail": "Auditing PR #186: 'feat: Enhance code analysis and symbol manipulation tools in ninaflash' on branch jules-ninaflash-tools-batch-4738249357469438381", "status": "ok"}
+{"t": "2026-06-13T23:07:46.486932+06:00", "step": 117, "action": "think", "file": "", "detail": "PR #186 has 1 modified Python files to validate", "status": "ok"}
+{"t": "2026-06-13T23:07:46.827844+06:00", "step": 119, "action": "shell", "file": "", "detail": "Validation passed. Attempting to merge PR #186", "status": "ok"}
+{"t": "2026-06-13T23:07:47.480076+06:00", "step": 120, "action": "error", "file": "", "detail": "Merge failed for PR #186: X Pull request aibony/nina#186 is not mergeable: the merge commit cannot be cleanly created.\nTo have the pull request merged after all the requirements have been met, add the `--auto` flag.", "status": "fail"}
+{"t": "2026-06-13T23:07:47.480244+06:00", "step": 800, "action": "shell", "file": "", "detail": "Scanning remote branches to identify orphaned branches", "status": "ok"}
+{"t": "2026-06-13T23:07:47.483067+06:00", "step": 801, "action": "think", "file": "", "detail": "Found 22 total remote branches", "status": "ok"}
+{"t": "2026-06-13T23:07:47.483193+06:00", "step": 1800, "action": "think", "file": "", "detail": "Checking for juleslock.txt", "status": "ok"}
+{"t": "2026-06-13T23:07:47.483262+06:00", "step": 1801, "action": "think", "file": "", "detail": "No juleslock.txt found", "status": "ok"}
+{"t": "2026-06-13T23:07:47.483325+06:00", "step": 1900, "action": "write", "file": "", "detail": "Writing audit summary to log file", "status": "ok"}
+{"t": "2026-06-13T17:08:42.427054+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 39/39 local (100.0%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
+{"t": "2026-06-13T17:10:19.988990+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 39/39 local (100.0%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
+{"t": "2026-06-13T23:12:00.801640+06:00", "step": -1, "action": "done", "file": "", "detail": "Completed PR and branch audit, successfully merged PR #214, added block comments to failing PRs, and finalized sync", "status": "ok"}
+{"t": "2026-06-13T23:18:58.524294+06:00", "step": 0, "action": "start", "file": "", "detail": "Close 11 conflicting open PRs and clean repo", "status": "ok"}
+{"t": "2026-06-13T23:19:11.480291+06:00", "step": 1, "action": "shell", "file": "", "detail": "Closed PR 186 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:19:19.330455+06:00", "step": 2, "action": "shell", "file": "", "detail": "Closed PR 187 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:19:26.781056+06:00", "step": 3, "action": "shell", "file": "", "detail": "Closed PR 189 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:19:36.942709+06:00", "step": 4, "action": "shell", "file": "", "detail": "Closed PR 190 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:20:34.297220+06:00", "step": 5, "action": "shell", "file": "", "detail": "Closed PR 191 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:20:42.493866+06:00", "step": 6, "action": "shell", "file": "", "detail": "Closed PR 194 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:20:50.983545+06:00", "step": 7, "action": "shell", "file": "", "detail": "Closed PR 197 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:20:58.750927+06:00", "step": 8, "action": "shell", "file": "", "detail": "Closed PR 200 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:21:06.621689+06:00", "step": 9, "action": "shell", "file": "", "detail": "Closed PR 203 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:21:30.659358+06:00", "step": 10, "action": "shell", "file": "", "detail": "Closed PR 204 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:21:39.687895+06:00", "step": 11, "action": "shell", "file": "", "detail": "Closed PR 212 and deleted branch", "status": "ok"}
+{"t": "2026-06-13T23:21:44.853057+06:00", "step": 12, "action": "shell", "file": "", "detail": "Verified zero open PRs remain in aibony/nina", "status": "ok"}
+{"t": "2026-06-13T23:21:50.372128+06:00", "step": 13, "action": "write", "file": "/home/aibony/nina/logs/pr_audit_log.txt", "detail": "Appended to logs/pr_audit_log.txt", "status": "ok"}
+{"t": "2026-06-13T17:21:56.459822+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 39/39 local (100.0%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
+{"t": "2026-06-13T23:22:04.685586+06:00", "step": 14, "action": "shell", "file": "", "detail": "Launched nina_sync.sh script", "status": "ok"}
