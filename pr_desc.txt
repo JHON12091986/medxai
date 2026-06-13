@@ -1,7 +1,7 @@
-🛡️ Sentinel: [CRITICAL] Fix command injection vulnerability by hardcoding shell=False
+🛡️ Sentinel: [HIGH] Fix missing shell execution and deletion guards in UpgradePipeline
 
-🚨 Severity: CRITICAL
-💡 Vulnerability: `subprocess.run` was called with `shell=use_shell` where `use_shell` could be `True`, allowing potential command injection in the base execution primitives within `tools/agynina.py` and `guardian_engine.py`.
-🎯 Impact: Untrusted input or maliciously crafted strings passed to these execution utilities could be evaluated by the system shell, leading to arbitrary command execution.
-🔧 Fix: Removed the `use_shell` parameter and hardcoded `shell=False` in `run_cmd` for both files, strictly enforcing argument tokenization via `shlex.split`. Additionally, refactored a brittle `&&` shell chaining execution in `tools/agynina.py` to use discrete `run_cmd` calls instead, preserving functionality while allowing `shell=False`.
-✅ Verification: Ran `bandit` to ensure no `shell=True` warnings remained and passed the full `pytest` suite locally.
+🚨 Severity: HIGH
+💡 Vulnerability: `tools/upgradepipeline.py` `DANGEROUS_PATTERNS` regex rules were limited and missing coverage for some risky system functions. `os.system`, `subprocess.call(..., shell=True)` and `shutil.rmtree` were not strictly blocked.
+🎯 Impact: Without strict blocking in the pipeline sandbox check, these functions might execute malicious code (shell injection) or destroy critical parts of the filesystem without error handling.
+🔧 Fix: Expanded `DANGEROUS_PATTERNS` regex check in `tools/upgradepipeline.py` to uniformly block `os.system`, `subprocess.call` with `shell=True` arguments, and `shutil.rmtree` outright. Added comprehensive testing for these patterns in `tests/test_tools_smoke.py`.
+✅ Verification: Ran `python3 -m py_compile tools/upgradepipeline.py` and `pytest tests/test_tools_smoke.py` successfully locally to ensure all tests passed.
