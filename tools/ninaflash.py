@@ -1848,6 +1848,7 @@ def cmd_git_stash_quick(args):
 
 def cmd_monitor_tools(sessions_dir, limit):
     """Parse Gemini CLI sessions: tool call frequency + token cost per tool."""
+    import json
 
     # Token cost estimates per tool invocation (Gemini Flash blended rate)
     TOOL_TOKEN_COST = {
@@ -1952,6 +1953,7 @@ def cmd_monitor_tools(sessions_dir, limit):
 def cmd_monitor(args):
     """Parse real Gemini CLI session data + NinaGate logs for savings report."""
     from pathlib import Path
+    import json
     full_mode = getattr(args, 'full', False)
     sessions_dir = Path.home() / ".gemini" / "tmp" / "nina" / "chats"
     ninagate_log = REPO_ROOT / "logs" / "ninagate.log"
@@ -2298,6 +2300,76 @@ def cmd_code_symbol(args):
         print(f"❌ Symbol '{args.name}' not found in {path}")
     except Exception as e:
         print(f"❌ Error parsing {path}: {e}")
+
+
+def cmd_code_migrate(args):
+    """[060] Automate renaming and moving symbols."""
+    import re
+    import ast
+    old_name = args.old_name
+    new_name = args.new_name
+    target_dir = _path_resolve(args.dir)
+
+    if not target_dir.exists():
+        print(f"❌ Directory not found: {target_dir}")
+        return
+
+    files_to_check = []
+    if target_dir.is_file():
+        files_to_check = [target_dir]
+    else:
+        for py_file in target_dir.rglob("*.py"):
+            if any(skip in py_file.parts for skip in _SKIP_DIRS):
+                continue
+            files_to_check.append(py_file)
+
+    migrated_count = 0
+    for py_file in files_to_check:
+        try:
+            source = py_file.read_text(encoding="utf-8")
+            tree = ast.parse(source)
+            found = False
+            for node in ast.walk(tree):
+                if isinstance(node, ast.Name) and node.id == old_name:
+                    found = True
+                    break
+                elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)) and node.name == old_name:
+                    found = True
+                    break
+                elif isinstance(node, ast.Attribute) and node.attr == old_name:
+                    found = True
+                    break
+                elif isinstance(node, ast.Import):
+                    for alias in node.names:
+                        if alias.name == old_name or alias.asname == old_name:
+                            found = True
+                            break
+                elif isinstance(node, ast.ImportFrom):
+                    if node.module == old_name:
+                        found = True
+                    for alias in node.names:
+                        if alias.name == old_name or alias.asname == old_name:
+                            found = True
+                            break
+            if not found:
+                continue
+
+            new_source = re.sub(rf'\b{old_name}\b', new_name, source)
+            if new_source != source:
+                py_file.write_text(new_source, encoding="utf-8")
+                try:
+                    rel_path = py_file.relative_to(REPO_ROOT)
+                except ValueError:
+                    rel_path = py_file
+                print(f"✅ Migrated '{old_name}' to '{new_name}' in {rel_path}")
+                migrated_count += 1
+        except Exception as e:
+            print(f"❌ Error migrating in {py_file}: {e}")
+
+    if migrated_count == 0:
+        print(f"⚠️ Symbol '{old_name}' not found or no changes made.")
+    else:
+        print(f"🚀 Successfully migrated symbol in {migrated_count} files.")
 
 def cmd_find_symbol(args):
     """[038] Recursively search the repository for a specified class or function definition."""
@@ -2666,7 +2738,7 @@ def main():
                               help='Clear gemini_scratch.jsonl before watching')
 
     # nf gemini-context
-    p_gemini_context = subparsers.add_parser("gemini-context", help="Estimate context tokens for Gemini CLI")
+    _ = subparsers.add_parser("gemini-context", help="Estimate context tokens for Gemini CLI")
 
     # nf gemini-prompt
     p_gemini_prompt = subparsers.add_parser("gemini-prompt", help="Generate Gemini CLI prompt file")
@@ -2674,7 +2746,7 @@ def main():
     p_gemini_prompt.add_argument("--context-file")
 
     # nf gemini-status
-    p_gemini_status = subparsers.add_parser("gemini-status", help="Show Gemini CLI daily status")
+    _ = subparsers.add_parser("gemini-status", help="Show Gemini CLI daily status")
 
     # nf gemini-run
     p_gemini_run = subparsers.add_parser("gemini-run", help="Run Gemini CLI with dynamic context and model selection")
@@ -2758,6 +2830,11 @@ def main():
     p_sym = p_cs.add_parser("symbol")
     p_sym.add_argument("file")
     p_sym.add_argument("name")
+
+    p_mig = p_cs.add_parser("migrate")
+    p_mig.add_argument("old_name")
+    p_mig.add_argument("new_name")
+    p_mig.add_argument("--dir", default=".")
     p_sigs = p_cs.add_parser("sigs")
     p_sigs.add_argument("dir")
     p_doc = p_cs.add_parser("doc")
@@ -2784,7 +2861,8 @@ def main():
     
     subparsers.add_parser("bench", help="Run a standardized reasoning task twice (Cloud vs Hybrid)")
 
-    subparsers.add_parser("query", help="List all cmd_ handlers")
+    p_query = subparsers.add_parser("query", help="List all cmd_ handlers")
+    _ = p_query
     p_query_cap = subparsers.add_parser("query-capability", help="Query task capability")
     p_query_cap.add_argument("task", help="Description of the task to query")
 
@@ -2916,6 +2994,7 @@ def main():
             elif args.sub == "call-stack": cmd_code_call_stack(args)
             elif args.sub == "cycles": cmd_code_cycles(args)
             elif args.sub == "symbol": cmd_code_symbol(args)
+            elif args.sub == "migrate": cmd_code_migrate(args)
             elif args.sub == "sigs": cmd_code_sigs(args)
             elif args.sub == "doc": cmd_code_doc(args)
             elif args.sub == "audit-doc": cmd_code_audit_doc(args)

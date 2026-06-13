@@ -15,7 +15,7 @@ def test_cmd_code_symbol():
     res = run_nf("code", "symbol", "tools/ninaflash.py", "cmd_code_outline")
     assert res.returncode == 0
     assert "def cmd_code_outline(args):" in res.stdout
-    assert "tree = ast.parse(path.read_text())" in res.stdout
+    assert "tree = ast.parse(path.read_text(" in res.stdout
 
 
 def test_cmd_find_symbol():
@@ -36,7 +36,6 @@ def test_cmd_code_doc():
     assert res.returncode == 0
     assert "tools/ninaflash.py:" in res.stdout
     assert "Extract signatures" in res.stdout
-
 
 def test_cmd_code_call_graph(tmp_path):
     import json
@@ -86,3 +85,15 @@ def func_d():
     assert "def func_b():" in output
     assert "def func_c():" in output
     assert "def func_d():" in output
+
+def test_cmd_code_migrate(tmp_path):
+    test_file = tmp_path / "dummy_migrate.py"
+    test_file.write_text("def old_sym():\n    pass\nold_sym()", encoding="utf-8")
+    res = run_nf("code", "migrate", "old_sym", "new_sym", "--dir", str(test_file))
+    assert res.returncode == 0
+    assert "✅ Migrated" in res.stdout
+    assert "🚀 Successfully migrated symbol in 1 files" in res.stdout
+    content = test_file.read_text(encoding="utf-8")
+    assert "def new_sym():" in content
+    assert "new_sym()" in content
+    assert "old_sym" not in content
