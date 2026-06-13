@@ -515,3 +515,9 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: Complex argparse conflict resolution and logic-heavy extraction (AST) -> Gemini Pro / Flash.
 - ROUTING_WIN: Modularization of large tools (ninaflash) improves CLI stability and startup efficiency.
 - CONTEXT_HINT: Explicit dependency management between kernel submodules prevents circular import loops.
+
+### [2026-06-14] Session Update — Antigravity (Gemini 3.5 Flash)
+- OFFLOAD_OPPORTUNITY: Appending step logs and simple shell operations -> NinaFlash.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Manual git command sequence (add, commit, push) combined with indexing validation provides precise task completion.
+- CONTEXT_HINT: Ensure `update_index.py` is run to register new stubs in governance files before pushing.
