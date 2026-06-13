@@ -18,7 +18,6 @@ try:
     import dotenv
 except ImportError:
     dotenv = None
-
 import shutil
 import ast
 
@@ -353,7 +352,32 @@ def _is_ignored(path_str: str, patterns: List[str]) -> bool:
             return True
     return False
 
+def _is_ignored_path(path: Path) -> bool:
+    patterns = _load_geminiignore()
+    try:
+        rel_path = path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+    except ValueError:
+        return False
+    return _is_ignored(rel_path, patterns)
 
+def cmd_check_ignore(args):
+    """[037] Diagnostic command to list files hidden by .geminiignore."""
+    print("── ninaflash check ignore ───────────────────")
+    ignore_file = REPO_ROOT / ".geminiignore"
+    if not ignore_file.exists():
+        print("No .geminiignore file found.")
+        return
+
+    count = 0
+    for p in REPO_ROOT.rglob('*'):
+        if p.is_file() and _is_ignored_path(p):
+            try:
+                rel = p.relative_to(REPO_ROOT).as_posix()
+                print(rel)
+                count += 1
+            except Exception:
+                pass
+    print(f"\nTotal ignored files: {count}")
 
 def _find_py_files() -> List[Path]:
     """[008] Find all .py files excluding standard ignore dirs and .geminiignore with depth cap."""
@@ -2816,7 +2840,6 @@ def main():
 
     p_cks.add_parser("ignore")
 
-
     p_doc = subparsers.add_parser("doc"); p_docs = p_doc.add_subparsers(dest="sub")
     p_doc_check = p_docs.add_parser("check")
     p_doc_check.add_argument("file", nargs="?", default="docs/space/nina_update_log.md")
@@ -2824,7 +2847,6 @@ def main():
     p_doc_check.add_argument("--agents", action="store_true", default=False)
     p_doc_check.add_argument("--stale", action="store_true", default=False)
     p_docs.add_parser("consolidate")
-
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
     p_call_stack = p_cs.add_parser("call-stack"); p_call_stack.add_argument("file"); p_call_stack.add_argument("name")
     p_sym = p_cs.add_parser("symbol")
@@ -3005,6 +3027,7 @@ def main():
         elif args.command == "query-capability": cmd_query_capability(args)
         elif args.command == "pr":
             if args.sub == "reconcile": cmd_pr_reconcile(args)
+            elif args.sub == "merge-surgical": cmd_pr_merge_surgical(args)
         elif args.command == "task":
             if args.sub == "active": cmd_task_active(args)
         elif args.command == "log":
@@ -3036,7 +3059,6 @@ def main():
         _dur = (_time.monotonic() - _t0) * 1000
         write_nf_log(_cmd, _sub, _dur, tokens_saved=0, outcome=f"ERROR: {_e}")
         raise
-
 
 if __name__ == "__main__":
     main()

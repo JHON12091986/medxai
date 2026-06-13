@@ -38,6 +38,8 @@ def _is_ignored(path_str: str, patterns: list[str]) -> bool:
 
 
 
+
+
 def _safe(path: str) -> Path:
     p = (WORKSPACE / path).resolve()
     if not str(p).startswith(str(WORKSPACE)):
@@ -50,13 +52,10 @@ def _disk_guard(config):
     if pct >= config.disk_guard_pct:
         raise OSError(f"Disk {pct:.0f}% full — write blocked.")
 
-
-
 async def read(path: str, lines: str = None, symbol: str = None) -> str:
     patterns = _load_geminiignore()
     if _is_ignored(path, patterns):
         return f"Access Denied: '{path}' is blocked by SEC-IGNORE (.geminiignore)."
-
     p = _safe(path)
     if not p.exists():
         return f"File not found: {path}"

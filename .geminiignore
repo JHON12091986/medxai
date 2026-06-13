@@ -11,6 +11,8 @@ venv/
 .venv/
 env/
 *.log
+logs/
+data/plans/
 data/session_ledger.json
 data/session_ledger.tmp
 data/gemini_preamble.md
