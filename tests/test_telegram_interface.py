@@ -74,4 +74,4 @@ async def test_handle_command_backlog_empty_ready(mock_update, mock_nina):
         with patch("interfaces.telegram_interface.Path.read_text", return_value=mock_backlog_content):
             await interface._handle_command(mock_update, "backlog", "")
 
-    interface._reply.assert_called_once_with(mock_update, "No READY items found in backlog.", parse_mode=interface.PARSE_MODE_DEFAULT)
+    interface._reply.assert_called_once_with(mock_update, "No READY items found.", parse_mode=interface.PARSE_MODE_DEFAULT)
