@@ -13,13 +13,13 @@ from dataclasses import dataclass, field
 from typing import Optional, cast
 import httpx
 import psutil
+from core.logger import get_logger
 from core.config import NinaConfig, RATELIMITS
 from tools import jules
 from tools.model_discovery import ModelDiscoveryService
 
 _ = jules
 
-from core.logger import get_logger
 
 logger = get_logger("nina.router")
 
@@ -47,20 +47,76 @@ PROVIDERS_TIER1 = {
     },
 }
 PROVIDERS_TIER2 = {
-    "CEREBRAS": {"base_url": "https://api.cerebras.ai/v1", "model": "llama-3.3-70b", "key_field": "cerebras_api_key"},
-    "GROQ": {"base_url": "https://api.groq.com/openai/v1", "model": "llama-3.3-70b-versatile", "key_field": "groq_api_key"},
-    "MISTRAL": {"base_url": "https://api.mistral.ai/v1", "model": "mistral-large-latest", "key_field": "mistral_api_key"},
-    "DEEPSEEK": {"base_url": "https://api.deepseek.com/v1", "model": "deepseek-chat", "key_field": "deepseek_api_key"},
-    "GEMINI": {"base_url": "https://generativelanguage.googleapis.com", "model": "gemini-3-flash-preview", "key_field": "gemini_api_key"},
-    "TOGETHER": {"base_url": "https://api.together.xyz/v1", "model": "llama-3.1-405b", "key_field": "together_api_key"},
-    "COHERE": {"base_url": "https://api.cohere.ai/v2", "model": "command-r-plus", "key_field": "cohere_api_key"},
-    "FIREWORKS": {"base_url": "https://api.fireworks.ai/inference/v1", "model": "llama-v3p1-405b", "key_field": "fireworks_api_key"},
-    "XAI": {"base_url": "https://api.x.ai/v1", "model": "grok-beta", "key_field": "xai_api_key"},
-    "PERPLEXITY": {"base_url": "https://api.perplexity.ai", "model": "sonar-pro", "key_field": "perplexity_api_key"},
-    "SAMBANOVA": {"base_url": "https://api.sambanova.ai/v1", "model": "Meta-Llama-3.1-405B", "key_field": "sambanova_api_key"},
-    "HYPERBOLIC": {"base_url": "https://api.hyperbolic.xyz/v1", "model": "llama-3.1-405b", "key_field": "hyperbolic_api_key"},
-    "NOVITA": {"base_url": "https://api.novita.ai/v3/openai", "model": "llama-3.1-70b", "key_field": "novita_api_key"},
-    "OPENAI": {"base_url": "https://api.openai.com/v1", "model": "gpt-4o-mini", "key_field": "openai_api_key"},
+    "CEREBRAS": {
+        "base_url": "https://api.cerebras.ai/v1",
+        "model": "llama-3.3-70b",
+        "key_field": "cerebras_api_key",
+    },
+    "GROQ": {
+        "base_url": "https://api.groq.com/openai/v1",
+        "model": "llama-3.3-70b-versatile",
+        "key_field": "groq_api_key",
+    },
+    "MISTRAL": {
+        "base_url": "https://api.mistral.ai/v1",
+        "model": "mistral-large-latest",
+        "key_field": "mistral_api_key",
+    },
+    "DEEPSEEK": {
+        "base_url": "https://api.deepseek.com/v1",
+        "model": "deepseek-chat",
+        "key_field": "deepseek_api_key",
+    },
+    "GEMINI": {
+        "base_url": "https://generativelanguage.googleapis.com",
+        "model": "gemini-3-flash-preview",
+        "key_field": "gemini_api_key",
+    },
+    "TOGETHER": {
+        "base_url": "https://api.together.xyz/v1",
+        "model": "llama-3.1-405b",
+        "key_field": "together_api_key",
+    },
+    "COHERE": {
+        "base_url": "https://api.cohere.ai/v2",
+        "model": "command-r-plus",
+        "key_field": "cohere_api_key",
+    },
+    "FIREWORKS": {
+        "base_url": "https://api.fireworks.ai/inference/v1",
+        "model": "llama-v3p1-405b",
+        "key_field": "fireworks_api_key",
+    },
+    "XAI": {
+        "base_url": "https://api.x.ai/v1",
+        "model": "grok-beta",
+        "key_field": "xai_api_key",
+    },
+    "PERPLEXITY": {
+        "base_url": "https://api.perplexity.ai",
+        "model": "sonar-pro",
+        "key_field": "perplexity_api_key",
+    },
+    "SAMBANOVA": {
+        "base_url": "https://api.sambanova.ai/v1",
+        "model": "Meta-Llama-3.1-405B",
+        "key_field": "sambanova_api_key",
+    },
+    "HYPERBOLIC": {
+        "base_url": "https://api.hyperbolic.xyz/v1",
+        "model": "llama-3.1-405b",
+        "key_field": "hyperbolic_api_key",
+    },
+    "NOVITA": {
+        "base_url": "https://api.novita.ai/v3/openai",
+        "model": "llama-3.1-70b",
+        "key_field": "novita_api_key",
+    },
+    "OPENAI": {
+        "base_url": "https://api.openai.com/v1",
+        "model": "gpt-4o-mini",
+        "key_field": "openai_api_key",
+    },
     "ONEBRAIN": {"base_url": None, "model": "default", "key_field": "onebrain_api_key"},
 }
 PROVIDERS_TIER3 = {
@@ -588,7 +644,8 @@ class HybridRouter:
             if not h.is_available(True):
                 continue
             (degraded if h.is_degraded() else avail).append(pid)
-        sk = lambda p: self.health[p].composite_score(p)
+        def sk(p):
+            return self.health[p].composite_score(p)
         ordered = sorted(avail, key=sk, reverse=True) + sorted(
             degraded, key=sk, reverse=True
         )
@@ -737,7 +794,10 @@ class HybridRouter:
                 with open(quota_file, "r") as qf:
                     q_data = json.load(qf)
                     if q_data.get("quota_exhausted", False):
-                        logger.warning("QUOTA_GATE_ACTIVE -> Forcing Local Fallback", extra={"req_id": req_id})
+                        logger.warning(
+                            "QUOTA_GATE_ACTIVE -> Forcing Local Fallback",
+                            extra={"req_id": req_id},
+                        )
                         force_local = True
             except Exception:
                 pass
@@ -786,7 +846,9 @@ class HybridRouter:
         if not force_local and task.task_type in ("coding", "research", "multilingual"):
             local_pid = next((p for p in provider_order if p.startswith("LOCAL")), None)
             if local_pid:
-                prefetch_task = asyncio.create_task(self.call_provider(local_pid, messages, task))
+                prefetch_task = asyncio.create_task(
+                    self.call_provider(local_pid, messages, task)
+                )
 
         for pid in provider_order:
             h = self.health[pid]
@@ -800,10 +862,12 @@ class HybridRouter:
                 # If this is the local provider we are already pre-fetching, wait for it
                 if prefetch_task and pid.startswith("LOCAL"):
                     text, in_t, out_t, lat = await prefetch_task
-                    prefetch_task = None # Consumed
+                    prefetch_task = None  # Consumed
                 else:
-                    text, in_t, out_t, lat = await self.call_provider(pid, messages, task)
-                
+                    text, in_t, out_t, lat = await self.call_provider(
+                        pid, messages, task
+                    )
+
                 h.record_success(lat, in_t + out_t)
                 self.cost.record(
                     pid, task.task_type, in_t, out_t, 0.0, lat, lat, req_id=req_id
