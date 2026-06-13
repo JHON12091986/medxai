@@ -2941,9 +2941,6 @@ def main():
 
     p_cks.add_parser("ignore")
 
-    p_cplx = p_cks.add_parser("complexity")
-    p_cplx.add_argument("file")
-
     p_doc = subparsers.add_parser("doc"); p_docs = p_doc.add_subparsers(dest="sub")
     p_doc_check = p_docs.add_parser("check")
     p_doc_check.add_argument("file", nargs="?", default="docs/space/nina_update_log.md")

@@ -473,3 +473,9 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ROUTING_WIN: Direct python checks (such as socket connection tests and regex log parsing) are highly robust when embedded inside bash sync runs.
 - CONTEXT_HINT: Appending structured markdown tables for open errors and single-line snapshots of quota and guardian status maintains a high-density, low-context feed.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Jules Session Unblocking
+- OFFLOAD_OPPORTUNITY: Querying active sessions status -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: Submitting async feedback response calls to Jules REST API -> Cloud API required.
+- ROUTING_WIN: Sequentially resolving and sending unblock feedback using the `tools/jules.py` module endpoints avoids third-party CLI command friction.
+- CONTEXT_HINT: Check the `state` field of session responses directly to cleanly capture only `AWAITING_USER_FEEDBACK` items.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.

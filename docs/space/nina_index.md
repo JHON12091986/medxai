@@ -59,11 +59,15 @@ This index tracks all governed artifacts in the NINA repository.
 | `nina_update_log.md` | system_of_record | active | keep | Canonical live activity log (Entry 001-167). Newest entries at top. | ✅ YES |
 | `ninagate_load_test.log` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `ninagate_load_test.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `ninajulesgithub.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `ninajulesgithub.service` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `plan.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pr_desc.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pytest.ini` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `requirements.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `system_templates.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test.lock` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `test_cycles.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_httpx_hook.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_ninagate_logic.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `test_router.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
