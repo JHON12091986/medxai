@@ -37,3 +37,5 @@ upgrades/backups/
 !data/session_checkpoint.json
 !data/workspace/
 !data/memory_stash.json
+!data/quota_state.json
+
