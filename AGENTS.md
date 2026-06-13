@@ -437,3 +437,11 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ROUTING_WIN: Automatic `git merge` strategy for non-conflicting branches.
 - CONTEXT_HINT: Close duplicate PR branches first to prevent cluttering local working directory.
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Documentation Consolidation
+- OFFLOAD_OPPORTUNITY: Deleting obsolete files and staging operations -> NinaFlash.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Consolidating multiple markdown documents into single-file references (`docs/jules_agent_memory.md` and `docs/jules_pipeline.md`) significantly reduces repository clutter and context token usage.
+- CONTEXT_HINT: Keep 'jules' in consolidated filenames to preserve ease of reference and discovery.
+- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+
