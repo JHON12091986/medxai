@@ -403,12 +403,12 @@ _Focus: Zero-token research and semantic mapping_
 | AG-N-02 | `ninaflash.py` | Local Call Graph Generator — Trace function calls locally without LLM. | `MERGED` | AG-N-01 |
 | AG-N-03 | `core/` | Type Hint Enforcement — Automated script to add missing type hints. | `MERGED` | — |
 | AG-N-04 | `ninaflash.py` | Dead Code Detector — Identify and flag unused functions/imports. | `MERGED` | — |
-| AG-N-05 | `ninaflash.py` | Symbol-Based Context Injector — Read only the call stack of a function. | `IN_REVIEW` | AG-N-02 |
+| AG-N-05 | `ninaflash.py` | Symbol-Based Context Injector — Read only the call stack of a function. | `MERGED` | AG-N-02 |
 | AG-N-06 | `ninaflash.py` | Docstring Quality Audit — Score docstrings on clarity and completeness. | `DUPLICATE` | — |
-| AG-N-07 | `core/` | Automated Refactoring: Method Extraction — Split large functions via AST. | `IN_REVIEW` | — |
-| AG-N-08 | `ninaflash.py` | Dependency Cycle Detector — Identify circular imports locally. | `IN_REVIEW` | — |
-| AG-N-09 | `ninaflash.py` | Code Complexity Watchdog — Calculate cyclomatic complexity. | `IN_REVIEW` | — |
-| AG-N-10 | `ninaflash.py` | Symbol Migration Tool — Automate renaming and moving symbols. | `AWAITING_RESPONSE` | — |
+| AG-N-07 | `core/` | Automated Refactoring: Method Extraction — Split large functions via AST. | `DUPLICATE` | — |
+| AG-N-08 | `ninaflash.py` | Dependency Cycle Detector — Identify circular imports locally. | `MERGED` | — |
+| AG-N-09 | `ninaflash.py` | Code Complexity Watchdog — Calculate cyclomatic complexity. | `MERGED` | — |
+| AG-N-10 | `ninaflash.py` | Symbol Migration Tool — Automate renaming and moving symbols. | `MERGED` | — |
 
 ---
 
