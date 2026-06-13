@@ -7,6 +7,7 @@ import logging
 from crons.backup_jobs import run_memory_backup, run_py_backup
 from tools.market import run_market_monitor
 from tools.mega_orchestrator import run_orchestrator_cycle
+from tools.pipeline_autopilot import run_pipeline_autopilot
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
@@ -119,6 +120,7 @@ class TaskScheduler:
         add(functools.partial(_model_discovery_job, n), IntervalTrigger(hours=24), id="model_discovery")
         add(n.pipeline._expire_pending,            IntervalTrigger(minutes=15), id="expire_pending")
         add(functools.partial(run_orchestrator_cycle, n), IntervalTrigger(minutes=3), id="mega_orchestrator")
+        add(run_pipeline_autopilot,                IntervalTrigger(minutes=5),  id="pipeline_autopilot")
         self._sched.start()
         logger.info(f"Scheduler started — {len(self._sched.get_jobs())} jobs", extra={"cron_module": "cron", "job_id": "manager"})
         self._setup_signal_handlers()

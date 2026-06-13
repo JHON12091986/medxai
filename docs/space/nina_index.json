@@ -13835,6 +13835,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_docbase_backup_20260613_115944.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_docbase_backup_20260613_115944.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_logbase_backup_20260611_163137.md",
       "category": "backup",
       "role": "archive",
@@ -15169,6 +15192,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_logbase_backup_20260613_115943.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_logbase_backup_20260613_115943.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_codebase_backup_20260611_234951.md",
       "category": "backup",
       "role": "archive",
@@ -15893,6 +15939,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_logbase_backup_20260609_232238.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_codebase_backup_20260613_115944.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_codebase_backup_20260613_115944.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -17193,6 +17262,29 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_codebase_backup_20260613_115754.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_codebase_backup_20260613_115754.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_logbase_backup_20260612_012750.md",
       "category": "backup",
       "role": "archive",
@@ -17503,6 +17595,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_docbase_backup_20260612_215350.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_docbase_backup_20260613_115753.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_docbase_backup_20260613_115753.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -17848,6 +17963,29 @@
       "owner": "system",
       "duplicate_cluster_id": null,
       "series_id": "nina_logbase_backup_20260612_233155.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "backup",
+        "archive",
+        "archived"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_logbase_backup_20260613_115753.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "archived",
+      "retention_policy": "keep_latest_n: 10",
+      "origin": "script:backup",
+      "owner": "system",
+      "duplicate_cluster_id": null,
+      "series_id": "nina_logbase_backup_20260613_115753.md",
       "series_type": "backup",
       "requires_tests": false,
       "doc_required": false,
@@ -44824,6 +44962,29 @@
       ]
     },
     {
+      "path": "agy_prompts/pipeline_autopilot.md",
+      "category": "doc",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "tags": [
+        "doc",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
       "path": "ninagate/ninagate.service",
       "category": "other",
       "role": "source_of_truth",
@@ -46529,6 +46690,29 @@
     },
     {
       "path": "tools/alert_beep.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "canonical": true,
+      "lifecycle": "active",
+      "retention_policy": "keep",
+      "origin": "manual",
+      "owner": "engineering",
+      "duplicate_cluster_id": null,
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": true,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Capability kernel and domain-specific action modules (ninaflash nucleus).",
+      "tags": [
+        "code",
+        "source_of_truth",
+        "active"
+      ]
+    },
+    {
+      "path": "tools/pipeline_autopilot.py",
       "category": "code",
       "role": "source_of_truth",
       "governed": true,
