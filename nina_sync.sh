@@ -304,6 +304,7 @@ OUT = NINA / "docs/space/claude_feed.md"
 BACKLOG = NINA / "docs/space/jules_backlog.md"
 LOCK = NINA / "jules_lock.txt"
 STATE = NINA / "docs/space/nina_state.md"
+LOGS_DIR = NINA / "logs"
 
 lines = []
 lines.append("# NINA Claude Feed — Session Startup Context")
