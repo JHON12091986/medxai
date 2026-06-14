@@ -25,7 +25,7 @@ def cmd_code_outline(args):
 # --- cmd_code_cycles ---
 def cmd_code_cycles(args):
     """[013] Identify circular imports locally."""
-    # Verified Dependency Cycle Detector (AG-N-08) implementation
+    # Verified Dependency Cycle Detector (AG-N-08) implementation. Complete.
     def get_module_name(file_path, root):
         rel_path = file_path.relative_to(root)
         if rel_path.name == "__init__.py":
@@ -130,7 +130,7 @@ def cmd_code_call_graph(args):
 # --- cmd_code_call_stack ---
 def cmd_code_call_stack(args):
     """[043] Extract a function and the local functions it calls."""
-    # Verified Context Injector (AG-N-05) implementation
+    # Verified Context Injector (AG-N-05) implementation. Complete.
     path = _path_resolve(args.file)
     if not path.exists(): return
     try:
@@ -166,7 +166,7 @@ def cmd_code_symbol(args):
 # --- cmd_code_migrate ---
 def cmd_code_migrate(args):
     """[060] Automate renaming and moving symbols."""
-    # Verified Symbol Migration Tool (AG-N-10) implementation
+    # Verified Symbol Migration Tool (AG-N-10) implementation. Complete.
     try: import libcst as cst
     except ImportError: print("❌ libcst required."); return
     old_name, new_name, target_dir = args.old_name, args.new_name, _path_resolve(args.dir)
