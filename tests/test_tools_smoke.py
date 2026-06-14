@@ -72,6 +72,6 @@ async def test_upgradepipeline_dangerous_patterns():
     from tools.upgradepipeline import DANGEROUS_PATTERNS
     assert len(DANGEROUS_PATTERNS) > 0
     patterns = [p[0] for p in DANGEROUS_PATTERNS]
-    assert any(r"os\.system" in p for p in patterns)
-    assert any(r"subprocess\.call\([^)]*shell\s*=\s*True" in p for p in patterns)
-    assert any(r"shutil\.rmtree" in p for p in patterns)
+    assert any(r"os\.system" in p.pattern for p in patterns)
+    assert any(r"subprocess\.call\([^)]*shell\s*=\s*True" in p.pattern for p in patterns)
+    assert any(r"shutil\.rmtree" in p.pattern for p in patterns)

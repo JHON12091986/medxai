@@ -20,7 +20,7 @@ PROTECTED = [
     "interfaces/telegram_interface.py",".env","nina.service"
 ]
 
-DANGEROUS_PATTERNS = [
+DANGEROUS_PATTERNS_RAW = [
     (r"os\.system",              "Shell injection — use subprocess with shell=False"),
     (r"subprocess\.[^\n]+shell\s*=\s*True", "subprocess shell=True — remove shell=True"),
     (r"subprocess\.call\([^)]*shell\s*=\s*True", "subprocess.call shell=True — remove shell=True"),
@@ -40,6 +40,8 @@ DANGEROUS_PATTERNS = [
                                   "write to protected core file — forbidden"),
 ]
 
+DANGEROUS_PATTERNS = [(re.compile(p), r) for p, r in DANGEROUS_PATTERNS_RAW]
+
 class UpgradePipeline:
     def __init__(self, config, router):
         self.config = config
@@ -54,7 +56,7 @@ class UpgradePipeline:
     def _scan(self, code: str) -> list[str]:
         hits = []
         for pattern, reason in DANGEROUS_PATTERNS:
-            if re.search(pattern, code):
+            if pattern.search(code):
                 hits.append(f"Upgrade rejected: {reason}. Fix and resubmit.")
         return hits
 
