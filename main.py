@@ -5,7 +5,7 @@ import fcntl
 import time
 import signal
 import logging
-from core.nina import NinaOS
+from core.nina import Nina
 
 logger = logging.getLogger("main")
 
@@ -42,7 +42,7 @@ def acquire_lock():
         sys.exit(1)
 
 async def main():
-    nina = NinaOS()
+    nina = Nina()
     await nina.start()
     await asyncio.Event().wait()   # keep alive forever
 
