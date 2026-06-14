@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-15 02:14 +06
-- Git HEAD: fffca1b37a181415c8a553f98aa17fc6e538c829
-- Last commit: docs: post-session sync 2026-06-15 02:14
+- Generated: 2026-06-15 02:33 +06
+- Git HEAD: 52400470a1696e5daa149184e46b8b4759e8dee3
+- Last commit: docs: post-session sync 2026-06-15 02:31
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sun 2026-06-14 23:03:21 +06; 3h 11min ago
+     Active: active (running) since Sun 2026-06-14 23:03:21 +06; 3h 29min ago
  Invocation: 0d0759c6d7024fb6806fa67a2f74a5e7
    Main PID: 69143 (python)
       Tasks: 21 (limit: 15177)
-     Memory: 110.9M (peak: 126.2M, swap: 20M, swap peak: 20M)
-        CPU: 8.292s
+     Memory: 113.5M (peak: 128.1M, swap: 20.8M, swap peak: 20.8M)
+        CPU: 8.885s
      CGroup: /system.slice/nina.service
              └─69143 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 15 02:14:27 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 02:14:35 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
-Jun 15 02:14:35 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: 2026-06-15 02:14:35.367 | WARNING  | core.router:_idle_monitor:553 - quality_probe_fail provider=%s
-Jun 15 02:14:38 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 02:14:48 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:32:20 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:32:30 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:32:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:32:51 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:33:01 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
+5240047 docs: post-session sync 2026-06-15 02:31
+88163c2 docs(register): document fixes for type hints, vulture pathing, and thermal mocks
 fffca1b docs: post-session sync 2026-06-15 02:14
 b587bf2 docs(index): update codebase and symbol mapping indices
 6e40c79 fix(core): resolve type hint recursion loop, vulture/monkeytype pathing, and test isolation
-18f22bb fix(ninaflash): Enhance argument parsing for file grep and code index
-b0189e3 feat(rule0-audit): Implement RULE0_AUDIT and integrate into session-end protocol
 ```
 
 ## 6. Open Blockers
@@ -81,6 +81,7 @@ b0189e3 feat(rule0-audit): Implement RULE0_AUDIT and integrate into session-end 
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
+#255 ⚡ Bolt: Optimize hallucination markers check [optimize-hallucination-check-3483378949820397460]
 #254 ⚡ Bolt: Pre-compile regex patterns in UpgradePipeline [jules-7812791168657500729-d9097e8b]
 
 ## 9. Error Register (OPEN only)
@@ -105,4 +106,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 5269 bytes_
+_Feed size: 5398 bytes_
