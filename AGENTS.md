@@ -559,3 +559,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: None.
 - ROUTING_WIN: Re-aligning test assertions to match complex agent optimization protocol flows.
 - CONTEXT_HINT: Always check pytest traceback to see actual call count changes caused by self-optimization protocols.
+
+### [2026-06-15] Session Update — Gemini CLI
+- OFFLOAD_OPPORTUNITY: Querying local git status and directory listing -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: Resolving massive duplicate/stuck session loops -> Cloud/Gemini Pro recommended to coordinate cleanup logic.
+- ROUTING_WIN: Automated session deletion and local registry synchronization to resolve stuck API resources.
+- CONTEXT_HINT: Autopilot retry loop logic needs safety throttle checks to prevent massive session duplication in state transitions.
+\n
