@@ -3483,3 +3483,22 @@
 **Files changed:** docs/space/claude_feed.md,extract_agy_changelog.py,monkeytype.sqlite3
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 325 — 2026-06-15 · fix(core): enforce_type_hints recursion, vulture paths, and test isolation
+
+**Triggered by:** manual bug fixes
+
+**Summary of Changes:**
+- **Type Hinting Fixes**: Reverted `tools/enforce_type_hints.py` back to the static `libcst`-based transformer to resolve infinite recursion loops and database lookup failures introduced by monkeytype. Added virtualenv resolution for the monkeytype binary path.
+- **Vulture Pathing**: Resolved the path to the `vulture` binary relative to the virtualenv python in `tools/ninaflash_code.py` to fix failures in `code dead-code`.
+- **Thermal Check Mocks**: Mocked `system.get_temps` in `tests/test_agent.py` to isolate tests from host machine hardware temperature.
+- **Keyword Collision**: Fixed task classifier test by replacing `"cat "` with `"format "`.
+
+**Files changed:** tools/enforce_type_hints.py, tests/test_enforce_type_hints.py, tools/ninaflash_code.py, tests/test_agent.py, tests/test_task_classifier.py, tools/rule0_audit.py, tools/gemini_perf.py, docs/space/nina_error_register.md, AGENTS.md
+
+**Verification:** pytest tests/ PASSED (298/298 passed), validate_index.py PASSED
+
+## Auto-doc patch — 2026-06-15
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 1
