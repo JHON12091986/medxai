@@ -11,7 +11,7 @@ import os
 import re
 import time
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime
 import httpx
 
 from core.config import NinaConfig
@@ -21,7 +21,6 @@ import tools.jules as jules
 from tools.model_discovery import ModelDiscoveryService
 
 _ = jules
-_ = timezone
 
 logger = get_logger("nina.router")
 
