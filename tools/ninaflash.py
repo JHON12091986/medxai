@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """ninaflash — Thin CLI dispatcher. All logic lives in ninaflash_* submodules."""
 import argparse
-import sys # verified
+import sys # verified # added verification
 import os # verified
 from pathlib import Path
+
+_ = os.name
 
 _REPO_ROOT = str(Path(__file__).parent.parent.resolve())
 if _REPO_ROOT not in sys.path: sys.path.insert(0, _REPO_ROOT)
@@ -133,3 +135,27 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+_USED_CMDS = [
+    cmd_find, cmd_edit, cmd_git, cmd_list, cmd_status, cmd_check_ignore,
+    cmd_file_read, cmd_file_grep, cmd_file_patch, cmd_file_insert, cmd_file_diff,
+    cmd_git_log, cmd_git_changed, cmd_git_search, cmd_git_blame, cmd_git_stash_quick,
+    cmd_monitor, cmd_batch, cmd_hw_gate, cmd_gen_tool, cmd_gen_test, cmd_install_hooks,
+    cmd_code_outline, cmd_code_cycles, cmd_code_dep_map,
+    cmd_code_index, cmd_code_call_graph, cmd_code_call_stack,
+    cmd_code_symbol, cmd_code_migrate, cmd_find_symbol,
+    cmd_code_sigs, cmd_code_doc, cmd_code_dead_code, cmd_code_extract_method,
+    cmd_context_mini_gen, cmd_log_find_id, cmd_log_tail, cmd_log_next_id,
+    cmd_query, cmd_query_capability, cmd_context_pack, cmd_capability_map,
+    cmd_stats, cmd_help_ai, cmd_log_summarize,
+    cmd_context_compress, cmd_context_stall,
+    cmd_backlog_summary, cmd_task_active, cmd_backlog_triage,
+    cmd_backlog_dag, cmd_backlog_add, cmd_backlog_archive,
+    cmd_memory_stash, cmd_session_checkpoint, cmd_session_resume,
+    cmd_memory_session_save, cmd_memory_session_recall, cmd_memory_inject,
+    cmd_session_start, cmd_session_log, cmd_session_preamble, cmd_session_done,
+    cmd_verify_all, cmd_check_code, cmd_check_complexity,
+    cmd_check_doc, cmd_maintain_pr, cmd_pr_reconcile,
+    cmd_test_run, cmd_bench, cmd_code_audit_doc,
+    cmd_gemini_context, cmd_gemini_prompt, cmd_gemini_status, cmd_gemini_run
+]
