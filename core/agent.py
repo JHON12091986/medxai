@@ -31,8 +31,16 @@ class AgentLoop:
                 "detail": detail,
                 "status": status
             }
-            with open(self._scratchpad_path, "a") as f:
+            with open(self._scratchpad_path, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
+
+            # Bounded log rotation to prevent HUD I/O stalls on large files
+            if self._scratchpad_path.exists() and self._scratchpad_path.stat().st_size > 50000:
+                with open(self._scratchpad_path, "r", encoding="utf-8", errors="ignore") as rf:
+                    lines = rf.readlines()
+                if len(lines) > 200:
+                    with open(self._scratchpad_path, "w", encoding="utf-8") as wf:
+                        wf.writelines(lines[-100:])
         except: pass
 
     def _should_self_check(self, task: ClassifiedTask) -> bool:

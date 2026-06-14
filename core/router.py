@@ -262,8 +262,19 @@ def write_log(entry: dict, log_path: str = "logs/router.log") -> None:
     """Writes a structured JSON log entry to the specified path."""
     entry["ts"] = datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f%z")
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
-    with open(log_path, "a") as f:
+    with open(log_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(entry) + "\n")
+
+    # Bounded log rotation to prevent I/O bottlenecks and HUD slow-down
+    try:
+        path = Path(log_path)
+        if path.exists() and path.stat().st_size > 100000:
+            with open(log_path, "r", encoding="utf-8", errors="ignore") as rf:
+                lines = rf.readlines()
+            if len(lines) > 200:
+                with open(log_path, "w", encoding="utf-8") as wf:
+                    wf.writelines(lines[-100:])
+    except: pass
 
 
 class HybridRouter:

@@ -10,13 +10,27 @@ import json
 import os
 import sys
 from pathlib import Path
-from collections import deque
 
 def tail_file(filepath, n_lines=10):
     if not os.path.exists(filepath):
         return []
-    with open(filepath, 'r') as f:
-        return deque(f, maxlen=n_lines)
+    try:
+        with open(filepath, 'rb') as f:
+            f.seek(0, os.SEEK_END)
+            size = f.tell()
+            # Read last 8192 bytes or up to file size (sane chunk for 10-15 lines)
+            offset = min(size, 8192)
+            if offset > 0:
+                f.seek(size - offset, os.SEEK_SET)
+                data = f.read(offset)
+                lines = data.decode('utf-8', errors='replace').splitlines()
+                # If we read only part of the file, the first line might be incomplete
+                if offset < size and len(lines) > 1:
+                    return lines[1:][-n_lines:]
+                return lines[-n_lines:]
+    except Exception:
+        pass
+    return []
 
 def parse_scratchpad(line):
     try:
@@ -84,7 +98,7 @@ def main():
         except KeyboardInterrupt:
             print("\nHUD Terminated.")
             sys.exit(0)
-        except Exception as e:
+        except Exception:
             time.sleep(1)
 
 if __name__ == "__main__":
