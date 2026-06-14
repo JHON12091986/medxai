@@ -3,21 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-14 22:58 +06
-- Git HEAD: f11470146bb1ba653097f30231043f3360045123
-- Last commit: docs: post-session sync 2026-06-14 22:57
-- Service: activating
-unknown
+- Generated: 2026-06-14 23:04 +06
+- Git HEAD: 313ed65afbc2fff660ae00d6b70d0bc02fb5a0a9
+- Last commit: docs: post-session sync 2026-06-14 23:03
+- Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: activating (auto-restart) (Result: exit-code) since Sun 2026-06-14 22:58:39 +06; 1s ago
- Invocation: 68d38f1ab6814037a1ef7b0088eba723
-    Process: 66548 ExecStart=/home/aibony/nina/.venv/bin/python main.py (code=exited, status=1/FAILURE)
-   Main PID: 66548 (code=exited, status=1/FAILURE)
-   Mem peak: 80.4M
-        CPU: 2.347s
-unavailable
+     Active: active (running) since Sun 2026-06-14 23:03:21 +06; 1min 15s ago
+ Invocation: 0d0759c6d7024fb6806fa67a2f74a5e7
+   Main PID: 69143 (python)
+      Tasks: 19 (limit: 15177)
+     Memory: 91.6M (peak: 107.5M)
+        CPU: 2.445s
+     CGroup: /system.slice/nina.service
+             └─69143 /home/aibony/nina/.venv/bin/python main.py
+
+Jun 14 23:04:16 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 14 23:04:26 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 14 23:04:26 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
+Jun 14 23:04:26 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: 2026-06-14 23:04:26.809 | WARNING  | core.router:_idle_monitor:553 - quality_probe_fail provider=%s
+Jun 14 23:04:36 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -43,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
+313ed65 docs: post-session sync 2026-06-14 23:03
+150e9cb fix(router,crons): add HybridRouter.reset_daily(), fix manager cron call
+529a857 fix(main): import Nina not NinaOS — kills restart loop
 f114701 docs: post-session sync 2026-06-14 22:57
 9d5ae83 guard: protect Nina class name from agent rename
-2e4195a fix(core): rename NinaOS back to Nina — revert Gemini regression
-e5027e2 docs: post-session sync 2026-06-14 22:47
-07ef083 docs: post-session sync 2026-06-14 22:44
 ```
 
 ## 6. Open Blockers
@@ -99,4 +105,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 4101 bytes_
+_Feed size: 5078 bytes_
