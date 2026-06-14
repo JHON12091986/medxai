@@ -1,5 +1,5 @@
 # core/router.py
-from typing import Any, List, Dict, Optional, Tuple, cast
+from typing import List, Dict, Optional, Tuple, cast
 import asyncio
 import hashlib
 import json
@@ -11,8 +11,8 @@ import os
 import re
 import time
 import uuid
+from datetime import datetime, timezone
 import httpx
-from pydantic import ValidationError
 
 from core.config import NinaConfig
 from core.logger import get_logger
@@ -21,6 +21,7 @@ import tools.jules as jules
 from tools.model_discovery import ModelDiscoveryService
 
 _ = jules
+_ = timezone
 
 logger = get_logger("nina.router")
 

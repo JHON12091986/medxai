@@ -1,7 +1,7 @@
 """NINA v12 — AgentLoop (Stage 5)
 THINK -> PLAN -> ACT -> OBSERVE -> ADAPT. Variable step budget + global timeout + thermal preflight.
 """
-from typing import Any, List, Dict, Optional, Tuple
+from typing import Any
 import asyncio, logging, re, json
 from datetime import datetime, timezone
 from pathlib import Path
