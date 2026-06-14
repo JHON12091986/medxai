@@ -165,13 +165,14 @@ class TestAgentLoop:
             "Reviewed Final Answer"
         ]
         
-        with patch('core.agent.ReasoningKernel.get_system_frame', return_value="system_frame"):
-            with patch.object(agent_loop, '_should_self_check', return_value=True):
-                with patch.object(agent_loop, '_log_to_hud') as mock_log_to_hud:
-                    result = await agent_loop._inner(goal, task, session_history)
-                    assert result == "Reviewed Final Answer"
-                    assert mock_router.route.call_count == 4 # One for planning blueprint, two in loop (with opt), one in _self_check
-                    mock_log_to_hud.assert_called()
+        with patch('tools.system.get_temps', return_value={"cpu": 40, "gpu": 40}):
+            with patch('core.agent.ReasoningKernel.get_system_frame', return_value="system_frame"):
+                with patch.object(agent_loop, '_should_self_check', return_value=True):
+                    with patch.object(agent_loop, '_log_to_hud') as mock_log_to_hud:
+                        result = await agent_loop._inner(goal, task, session_history)
+                        assert result == "Reviewed Final Answer"
+                        assert mock_router.route.call_count == 4 # One for planning blueprint, two in loop (with opt), one in _self_check
+                        mock_log_to_hud.assert_called()
 
     @pytest.mark.asyncio
     async def test_inner_tool_execution(self, agent_loop, mock_router, mock_memory):
@@ -183,17 +184,18 @@ class TestAgentLoop:
         mock_tool_instance.run.return_value = "Tool output: hello"
         agent_loop.tools["shell"] = mock_tool_instance
 
-        with patch('core.agent.ReasoningKernel.get_system_frame', return_value="system_frame"):
-            with patch.object(agent_loop, '_log_to_hud') as mock_log_to_hud:
-                # Mock router's calls for tool + feedback loop + optimization
-                mock_router.route.side_effect = [
-                    "TOOL:shell INPUT:echo hello",
-                    "FINAL: Tool executed",
-                    "FINAL: Tool executed"
-                ]
-                
-                result = await agent_loop._inner(goal, task, session_history)
-                assert result == "Tool executed"
-                mock_tool_instance.run.assert_called_once_with("echo hello")
-                mock_log_to_hud.assert_called()
+        with patch('tools.system.get_temps', return_value={"cpu": 40, "gpu": 40}):
+            with patch('core.agent.ReasoningKernel.get_system_frame', return_value="system_frame"):
+                with patch.object(agent_loop, '_log_to_hud') as mock_log_to_hud:
+                    # Mock router's calls for tool + feedback loop + optimization
+                    mock_router.route.side_effect = [
+                        "TOOL:shell INPUT:echo hello",
+                        "FINAL: Tool executed",
+                        "FINAL: Tool executed"
+                    ]
+                    
+                    result = await agent_loop._inner(goal, task, session_history)
+                    assert result == "Tool executed"
+                    mock_tool_instance.run.assert_called_once_with("echo hello")
+                    mock_log_to_hud.assert_called()
 

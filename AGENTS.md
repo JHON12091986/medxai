@@ -443,11 +443,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
 
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+### [2026-06-15] Session Update — Antigravity
+- OFFLOAD_OPPORTUNITY: Static type hint enforcement and vulture analysis → 100% local next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Reverting to AST-based libcst enforcement resolved performance, pathing, and recursion regression.
+- CONTEXT_HINT: Subprocess testing must use `sys.executable` to keep virtual environment packages active.
+- RULE0_VIOLATION: None. All tool calls strictly compliant with nf commands.
 
 ### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash)
 - OFFLOAD_OPPORTUNITY: Mechanical import fixes and pytest validations.

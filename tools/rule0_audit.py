@@ -1,5 +1,6 @@
 import json
 import os
+import json
 from datetime import datetime
 
 def run_rule0_audit(scratchpad_path="/home/aibony/nina/data/gemini_scratch.jsonl", agents_md_path="/home/aibony/nina/AGENTS.md"):
@@ -15,8 +16,7 @@ def run_rule0_audit(scratchpad_path="/home/aibony/nina/data/gemini_scratch.jsonl
         
         if banned_table_start != -1 and banned_table_end != -1:
             table_content = content[banned_table_start:banned_table_end]
-            for line in table_content.split('
-'):
+            for line in table_content.split('\n'):
                 if line.startswith('| ') and 'nf' in line:
                     parts = [p.strip() for p in line.split('|')]
                     if len(parts) >= 3:
