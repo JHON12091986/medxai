@@ -117,3 +117,11 @@ def test_cmd_code_migrate(tmp_path):
     assert "def new_sym():" in content
     assert "new_sym()" in content
     assert "old_sym" not in content
+
+def test_cmd_code_dead_code(tmp_path):
+    test_file = tmp_path / "dummy_dead_code.py"
+    test_file.write_text("import os\ndef unused():\n    pass\n", encoding="utf-8")
+    res = run_nf("code", "dead-code", str(test_file))
+    assert res.returncode == 0
+    assert "unused" in res.stdout
+    assert "os" in res.stdout
