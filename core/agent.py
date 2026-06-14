@@ -10,12 +10,34 @@ _registry = CapabilityRegistry()
 
 logger = logging.getLogger("nina.agent")
 
+import json as _json
+from datetime import datetime as _dt, timezone as _tz
+from core.reasoning import ReasoningKernel
+
 class AgentLoop:
     def __init__(self, config: Any, router: HybridRouter, memory: Any, tools: dict) -> None:
         self.config = config
         self.router = router
         self.memory = memory
         self.tools  = tools
+        self._scratchpad_path = Path("data/gemini_scratch.jsonl")
+
+    def _log_to_hud(self, step: int, action: str, detail: str, file: str = "", status: str = "ok"):
+        try:
+            entry = {
+                "t": _dt.now(tz=_tz.utc).isoformat(),
+                "step": step,
+                "action": action,
+                "file": file,
+                "detail": detail,
+                "status": status
+            }
+            with open(self._scratchpad_path, "a") as f:
+                f.write(_json.dumps(entry) + "\n")
+        except: pass
+
+    async def _inner(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
+        # ... (rest of method initialization)
 
     def _should_self_check(self, task: ClassifiedTask) -> bool:
         return (getattr(task, "task_type", "") or "").lower() in {
@@ -115,19 +137,19 @@ class AgentLoop:
         scratchpad = []
 
         for step in range(1, max_steps + 1):
-            # [Telemetry]: Update HUD in real-time
-            try:
-                import json as _json
-                from datetime import datetime as _dt, timezone as _tz
-                with open('data/gemini_scratch.jsonl', 'a') as _sf:
-                    _sf.write(_json.dumps({"t": _dt.now(tz=_tz.utc).isoformat(), "step": step, "action": "think", "file": "", "detail": f"Reasoning through step {step}/{max_steps}", "status": "ok"}) + '\n')
-            except: pass
+            self._log_to_hud(step, "think", f"Reasoning through step {step}/{max_steps}")
 
             # Append only incremental scratchpad — no repeated context
             step_prompt = f"[Step {step}/{max_steps}] Scratchpad:\n{chr(10).join(scratchpad[-3:])}"
             msgs.append({"role": "user", "content": step_prompt})
             response = await self.router.route(goal, msgs, task, force_local=force_local)
             msgs.append({"role": "assistant", "content": response})
+            
+            # [Claude-Reasoning]: Extract and log thinking to HUD
+            thinking = ReasoningKernel.extract_thinking(response)
+            if thinking:
+                self._log_to_hud(step, "think", thinking[:100] + "...")
+
             logger.info(f"agent_step step={step} task={task.task_type} response={response[:80]!r}",
                         extra={"log":"agent.log"})
 

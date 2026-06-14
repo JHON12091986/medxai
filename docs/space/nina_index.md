@@ -339,6 +339,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `tools/providerhunter.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/prune_duplicates.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/query_index.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `tools/repo_janitor.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/retry.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/rule0_audit.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/scratchpad_helper.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |

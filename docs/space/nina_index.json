@@ -1,6 +1,6 @@
 {
   "version": "14.3",
-  "generated_at": "2026-06-14T21:51:06.567861",
+  "generated_at": "2026-06-14T21:53:29.190103",
   "repo": "NINA",
   "files": [
     {
@@ -924,7 +924,7 @@
         "strict_typing"
       ],
       "summary": "Governed artifact.",
-      "hash": "5fd499d43ab03e999e16b1e132acdcbc",
+      "hash": "d854292dffc02ed6350f51340cd40192",
       "tags": [
         "code",
         "active",
@@ -1650,7 +1650,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "b0cccc51298ad53a571504eec4743c03",
+      "hash": "c1af009d2c0bba35891e2de5cb3f83f0",
       "tags": [
         "other",
         "active",
@@ -1776,7 +1776,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "678d20e446c4280db787d8e68b954b05",
+      "hash": "5d927a13e2f499cdd66e419380444e30",
       "tags": [
         "other",
         "active",
@@ -1923,7 +1923,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "b32016b92746d5f303795b24402950e5",
+      "hash": "4e7e7491b18261e361fda2a64bab613a",
       "tags": [
         "other",
         "active",
@@ -3099,7 +3099,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "ae42fd951e3b5f4e6f33fc08d2e546d9",
+      "hash": "b2442fcf5826c2b84d4ddeeca19d744c",
       "tags": [
         "config",
         "active",
@@ -3120,7 +3120,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "bc5f1fbc884c166911a4df46ccab7471",
+      "hash": "37147e3d68520b2477ca272edea92798",
       "tags": [
         "doc",
         "active",
@@ -3162,7 +3162,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "a325d4f8079e14be71964523b4c2337d",
+      "hash": "ba39ce8715c32a613460875b7212f88f",
       "tags": [
         "doc",
         "active",
@@ -3710,7 +3710,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "dc2aa624d0f780c53fc1525b4fb884cb",
+      "hash": "e301e0825cb4b0c8cdb77cd8aba433e9",
       "tags": [
         "log",
         "active",
@@ -3731,7 +3731,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "0fbc80b4bf745b597809e36d47833451",
+      "hash": "a093bf5acb873ac11c4232c3013f7d68",
       "tags": [
         "log",
         "active",
@@ -4193,7 +4193,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "79fb021b905bc0d3d9cd9f87bb6f5a66",
+      "hash": "daf9813de0c46369cecbab4b0fc955d5",
       "tags": [
         "log",
         "active",
@@ -6968,6 +6968,27 @@
       "guardrails": [],
       "summary": "Governed artifact.",
       "hash": "a41ed61d91363fa40b32cde9ad8698ce",
+      "tags": [
+        "code",
+        "active",
+        "source_of_truth"
+      ]
+    },
+    {
+      "path": "tools/repo_janitor.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "lifecycle": "active",
+      "origin": "manual",
+      "retention_policy": "keep",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "6459f3f43a44e750160db4281e637901",
       "tags": [
         "code",
         "active",

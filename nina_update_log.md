@@ -3264,5 +3264,12 @@
 
 **Verification:** git push OK, nina.service active
 
-## Auto-doc patch — 2026-06-14
-- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 1
+---
+
+## Entry 303 — 2026-06-14 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** core/agent.py,data/gemini_scratch.jsonl,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md,tools/repo_janitor.py
+
+**Verification:** git push OK, nina.service activating
