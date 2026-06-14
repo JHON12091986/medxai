@@ -68,3 +68,4 @@
 {"t":"2026-06-14T23:04:00+06:00","step":-1,"action":"done","file":"","detail":"Fixed NinaOS import, reset_daily_counters, and missing reset_daily method. NINA healthy.","status":"ok"}
 {"t": "2026-06-14T17:03:49.121337+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 27/27 local (100.0%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
 {"t": "2026-06-14T18:19:05.569008+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 19/19 local (100.0%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
+{"t": "2026-06-14T18:21:59.735154+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 19/19 local (100.0%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
