@@ -15,6 +15,7 @@ TASK_TYPES = (
     "vision",
     "quick",
     "general",
+    "lpu_deterministic",
 )
 
 @dataclass
@@ -30,6 +31,17 @@ async def classify_task(text: str, messages: List[Dict[str, Any]]) -> Classified
     # Convert text to lowercase for case-insensitive matching
     text_lower = text.lower()
     total_history_chars = sum(len(m.get("content", "")) for m in messages)
+
+    # NINA-GROQ: LPU Deterministic Hotpath
+    # Purely mechanical, non-creative CLI commands are dispatched instantly
+    LPU_HOTPATH = [
+        "ls ", "ls -", "find ", "grep ", "head ", "tail ", "cat ", "wc ",
+        "python3 -m py_compile", "python3 -m pyflakes",
+        "git status", "git diff", "git log", "git rev-parse",
+        "nf monitor", "nf index query", "nf memory",
+    ]
+    if any(text_lower.strip().startswith(kw) for kw in LPU_HOTPATH):
+        return ClassifiedTask("lpu_deterministic", 50, False, False)
 
     SIMPLE_KEYWORDS = [
         "cat ", "head ", "tail ", "wc ", "ls ", "find ", "grep",

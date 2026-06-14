@@ -105,17 +105,8 @@ class AgentLoop:
         api_base = getattr(self.config, "onebrain_api_base", "") or ""
         parsed_url = urlparse(api_base)
 
-        if parsed_url.port == 8080 or "8080" in api_base:
-            system_frame = f"Goal: {goal}\nMemory: {context}"
-        else:
-            system_frame = (
-                f"Goal: {goal}\n"
-                f"Memory: {context}\n"
-                "THINK -> PLAN -> ACT each step.\n"
-                "TOOL:web INPUT:query | TOOL:browser INPUT:url | TOOL:shell INPUT:cmd | TOOL:system INPUT:status\n"
-                "FINAL:answer when done.\n"
-                "RULE: live data/prices/news — MUST use TOOL:web first."
-            )
+        from core.reasoning import ReasoningKernel
+        system_frame = ReasoningKernel.get_system_frame(goal, context)
         # F-03d: inject Bangla override as a system-role message so providers treat it
         # as a system instruction, not user content (fixes F-03c goal-prepend approach)
         bangla_sys = ([{"role": "system", "content": self._BANGLA_OVERRIDE.strip()}]
@@ -124,6 +115,14 @@ class AgentLoop:
         scratchpad = []
 
         for step in range(1, max_steps + 1):
+            # [Telemetry]: Update HUD in real-time
+            try:
+                import json as _json
+                from datetime import datetime as _dt, timezone as _tz
+                with open('data/gemini_scratch.jsonl', 'a') as _sf:
+                    _sf.write(_json.dumps({"t": _dt.now(tz=_tz.utc).isoformat(), "step": step, "action": "think", "file": "", "detail": f"Reasoning through step {step}/{max_steps}", "status": "ok"}) + '\n')
+            except: pass
+
             # Append only incremental scratchpad — no repeated context
             step_prompt = f"[Step {step}/{max_steps}] Scratchpad:\n{chr(10).join(scratchpad[-3:])}"
             msgs.append({"role": "user", "content": step_prompt})
@@ -137,6 +136,15 @@ class AgentLoop:
                 return await self._self_check(goal, draft, task, force_local=force_local)
 
             if "TOOL:" in response:
+                # [Claude-Reasoning]: Force feedback loop after tool execution
+                feedback_prompt = (
+                    "Progress Check:\n1. What did we just learn from the tool output?\n"
+                    "2. Does this change our original plan?\n"
+                    "3. What is the next logical step to reach the goal?\n"
+                    "Analyze before calling the next tool or giving FINAL:answer."
+                )
+                msgs.append({"role": "user", "content": feedback_prompt})
+                # Proceed to tool execution as normal...
                 try:
                     import re as _re
                     import asyncio as _asyncio

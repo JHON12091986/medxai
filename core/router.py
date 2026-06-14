@@ -68,6 +68,7 @@ CACHE_TTL = {
     "general": 7200,
     "math": 21600,
     "multilingual": 7200,
+    "lpu_deterministic": 86400, # High cache persistence for mechanical tasks
 }
 
 STEP_BUDGETS = {
@@ -79,6 +80,7 @@ STEP_BUDGETS = {
     "document": 8,
     "research": 10,
     "sensitive": 5,
+    "lpu_deterministic": 1, # LPUs don't loop
 }
 DEFAULT_MAX_STEPS = 5
 
@@ -378,9 +380,76 @@ class HybridRouter:
         self.cost.record(pid, task.task_type, it, ot, req_id=req_id)
         return content, it, ot, lat
 
+    async def _validate_response(self, content: str, task: ClassifiedTask) -> Tuple[bool, str]:
+        """
+        OODA Loop (Observe/Orient): Validate the AI response for quality.
+        Returns (is_valid, error_reason).
+        """
+        # 1. Heuristic: Empty or too short for a complex task
+        if task.task_type == "research" and len(content) < 100:
+            return False, "Response too short for a research task."
+        
+        # 2. Heuristic: Hallucination markers
+        hallucination_markers = ["I am a large language model", "As an AI", "I cannot fulfill this request"]
+        if any(m.lower() in content.lower() for m in hallucination_markers):
+            return False, "AI refusal or boilerplate detected."
+
+        # 3. Model-based validation (for Coding/Complex tasks)
+        if task.task_type in ["coding", "research"]:
+            try:
+                # Use LOCALFAST (low latency) as a "Logic Gate" validator
+                messages = [
+                    {"role": "system", "content": "You are a logic gate. Review the following AI response for a coding/research task. Is it technically sound, idiomatic, and complete? Respond only with 'VALID' or a one-sentence error reason."},
+                    {"role": "user", "content": f"TASK: {task.task_type}\nRESPONSE: {content[:2000]}"}
+                ]
+                # Avoid infinite recursion by using _call_provider directly for the validator
+                val_content, _, _, _ = await self._call_provider("LOCALFAST", messages, ClassifiedTask("quick", 100, False, False))
+                if "valid" in val_content.lower():
+                    return True, ""
+                else:
+                    return False, f"Logic Gate Refusal: {val_content}"
+            except:
+                # If validator fails, default to trusting the response to avoid deadlock
+                pass
+
+        return True, ""
+
     async def route(
         self, goal: str, messages: list, task: ClassifiedTask, force_local: bool = False
     ) -> str:
+        # NINA-GROQ: Deterministic LPU Fast-Track
+        if task.task_type == "lpu_deterministic":
+            try:
+                # Bypass all routing overhead, go straight to localized execution
+                content, i, o, lat = await self._call_provider("LOCALFAST", messages, task)
+                return content
+            except Exception as e:
+                logger.warning(f"LPU Fast-track failed: {e}. Falling back to standard route.")
+
+        # CRITICAL Task Override: Force Gemini 3.5 Flash
+        if task.task_type == "critical":
+            logger.info("CRITICAL Task detected: Forcing GEMINI_FLASH_PROD routing.")
+            # Ensure GEMINI_FLASH_PROD is defined in ninagate/providers.json as Tier 2 or 3
+            # Forcing a specific provider and bypassing normal tier selection
+            pid = "GEMINI_FLASH_PROD" # This provider must exist and be configured for Gemini 3.5 Flash
+            if pid in ALL_PROVIDERS and self.health[pid].cb.can_attempt():
+                try:
+                    content, i, o, lat = await self._call_provider(pid, messages, task)
+                    is_valid, error = await self._validate_response(content, task)
+                    if is_valid:
+                        self.health[pid].record_success(lat, i + o)
+                        return content
+                    else:
+                        logger.bind(provider=pid, error=error).warning("critical_task_validation_failed")
+                        self.health[pid].record_failure()
+                        # Fallback to standard routing logic if critical task fails validation
+                except Exception as e:
+                    logger.bind(provider=pid, error=str(e)).warning("critical_task_provider_failed")
+                    self.health[pid].record_failure()
+            else:
+                logger.warning("GEMINI_FLASH_PROD not available or circuit open for CRITICAL task, falling back.")
+
+        # Cache check
         cached = self.cache.get(goal, messages)
         if cached:
             return cached
@@ -389,42 +458,55 @@ class HybridRouter:
         if force_local:
             tiers = [LOCAL_PROVIDERS]
 
-        for tier in tiers:
-            available = []
-            for pid in tier:
-                if pid in LOCAL_PROVIDERS:
-                    meta = LOCAL_PROVIDERS[pid]
-                else:
-                    meta = ALL_PROVIDERS.get(pid, tier.get(pid, {}))
-                
-                # Filter by health, daily quota, and context window capability
-                if (
-                    self.health[pid].cb.can_attempt()
-                    and self.health[pid].requests_today < 1000
-                    and meta.get("context_window", 8192) >= task.estimated_tokens
-                ):
-                    available.append(pid)
+        for attempt in range(2): # OODA: Act -> Observe loop
+            for tier in tiers:
+                available = []
+                for pid in tier:
+                    if pid in LOCAL_PROVIDERS:
+                        meta = LOCAL_PROVIDERS[pid]
+                    else:
+                        meta = ALL_PROVIDERS.get(pid, tier.get(pid, {}))
+                    
+                    if (
+                        self.health[pid].cb.can_attempt()
+                        and self.health[pid].requests_today < 1000
+                        and meta.get("context_window", 8192) >= task.estimated_tokens
+                    ):
+                        available.append(pid)
 
-            if not available:
-                continue
-
-            available.sort(key=lambda pid: self.health[pid].health_score, reverse=True)
-
-            for pid in available:
-                try:
-                    content, i, o, lat = await self._call_provider(pid, messages, task)
-                    self.health[pid].record_success(lat, i + o)
-                    ttl = CACHE_TTL.get(task.task_type, 3600)
-                    if ttl > 0:
-                        self.cache.set(goal, content, ttl, messages)
-                    return content
-                except Exception as e:
-                    self.health[pid].record_failure()
-                    asyncio.create_task(self._check_health_and_notify(pid))
-                    logger.bind(provider=pid, error=str(e)).warning("provider_retry")
+                if not available:
                     continue
 
-        return "⚠️ All providers are currently unavailable. Try again in a moment."
+                available.sort(key=lambda pid: self.health[pid].health_score, reverse=True)
+
+                for pid in available:
+                    try:
+                        content, i, o, lat = await self._call_provider(pid, messages, task)
+                        
+                        # OODA: Observe & Decide (Validate)
+                        is_valid, error = await self._validate_response(content, task)
+                        if is_valid:
+                            self.health[pid].record_success(lat, i + o)
+                            ttl = CACHE_TTL.get(task.task_type, 3600)
+                            if ttl > 0:
+                                self.cache.set(goal, content, ttl, messages)
+                            return content
+                        else:
+                            # OODA: Adapt (Penalize and retry)
+                            logger.bind(provider=pid, error=error).warning("response_validation_failed")
+                            self.health[pid].record_failure()
+                            # Prepend the validation error to help the next model refine the response
+                            messages.append({"role": "assistant", "content": content})
+                            messages.append({"role": "user", "content": f"The previous response failed validation: {error}. Please refine and provide a correct, high-quality answer."})
+                            continue
+
+                    except Exception as e:
+                        self.health[pid].record_failure()
+                        asyncio.create_task(self._check_health_and_notify(pid))
+                        logger.bind(provider=pid, error=str(e)).warning("provider_retry")
+                        continue
+
+        return "⚠️ All providers are currently unavailable or failing validation. Try again in a moment."
 
     async def parallel_route(
         self, prompts: List[str], task: ClassifiedTask
