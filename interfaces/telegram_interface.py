@@ -125,6 +125,10 @@ class TelegramInterface:
                 v = cfg_dict.get(k)
                 if v and isinstance(v, str):
                     self._secret_values.append(v)
+        # Gap analysis: engine + pending approval state
+        from core.gap_analysis import GapAnalysisEngine
+        self._gap_engine = GapAnalysisEngine(self.nina.router)
+        self._pending_gap: Optional[tuple] = None  # (GapReport, original_goal, task)
 
     async def start(self):
         self._app = Application.builder().token(self.config.telegram_bot_token).build()
@@ -427,12 +431,66 @@ class TelegramInterface:
                 result = await search(text)
                 await self._reply(update, result[:4000])
                 return
+
+            # ── Gap analysis feedback loop ──────────────────────────────────────
+            # If user is responding to a pending gap analysis, handle it first
+            if self._pending_gap is not None:
+                consumed = await self._handle_gap_response(update, text)
+                if consumed:
+                    return
+
             task = await classify_task(text, self._local_fast)
+
+            # Intercept feature/upgrade requests for gap analysis
+            if self._gap_engine.is_feature_request(text):
+                report = await self._gap_engine.analyze(text, task)
+                if report.auto_proceed:
+                    # High confidence — note analysis and proceed immediately
+                    await self._reply(update, report.to_auto_proceed_note())
+                else:
+                    # Hold execution — ask user to confirm
+                    self._pending_gap = (report, text, task)
+                    await self._reply(update, report.to_telegram())
+                    return
+            # ── End gap analysis ────────────────────────────────────────────────
+
             await self._stream_reply(update, text, task, use_agent=True)
             return
 
         cmd, arg = intent_map.get(intent, ("task", text))
         await self._handle_command(update, cmd, arg)
+
+    # ---- Gap analysis feedback handler --------------------------------------
+
+    async def _handle_gap_response(self, update, text: str) -> bool:
+        """
+        Handle user's reply to a pending gap analysis report.
+        Returns True if the message was consumed (yes/no/modify), False otherwise.
+        """
+        t = text.lower().strip()
+        report, original_goal, task = self._pending_gap
+
+        # User approves → proceed
+        if t in {"yes", "y", "proceed", "ok", "go", "sure", "do it", "go ahead", "continue", "confirm"}:
+            self._pending_gap = None
+            await self._reply(update, "⚙️ Proceeding with implementation...")
+            await self._stream_reply(update, original_goal, task, use_agent=True)
+            return True
+
+        # User cancels → discard
+        if t in {"no", "n", "cancel", "abort", "stop", "reject", "skip", "nope", "nah"}:
+            self._pending_gap = None
+            await self._reply(update, "❌ Cancelled. Feature request discarded — nothing was changed.")
+            return True
+
+        # User sent a modified/refined request → re-run gap analysis on new text
+        if len(text) > 10 and text != original_goal:
+            self._pending_gap = None
+            await self._reply(update, "🔄 Re-running gap analysis on your updated request...")
+            await self._handle_nlp(update, text)
+            return True
+
+        return False
 
     # ---- Streaming reply -----------------------------------------------------
 
