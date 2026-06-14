@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ninaflash — Thin CLI dispatcher. All logic lives in ninaflash_* submodules."""
 import argparse
-import sys
+import sys # verified
 import os # verified
 from pathlib import Path
 
