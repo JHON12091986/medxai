@@ -39,8 +39,16 @@ def cmd_query_capability(args):
 
 # --- cmd_context_pack ---
 def cmd_context_pack(args):
-    """[021] Context packer for large task dispatch."""
-    pass
+    """[021] Context packer for large task dispatch. Minifies code for context."""
+    from tools.context_pruner import prune_content
+    path = _path_resolve(args.file)
+    if not path.exists():
+        print(f"❌ File not found: {args.file}")
+        return
+    
+    content = path.read_text(encoding="utf-8")
+    pruned = prune_content(content, path.suffix)
+    print(pruned)
 
 # --- cmd_capability_map ---
 def cmd_capability_map(args):

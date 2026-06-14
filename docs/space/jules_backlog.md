@@ -314,5 +314,3 @@ Goal: Before allowing push, read juleslock.txt and check if any file in the curr
 3. P1: Governance index reconciler (false positive cleanup)
 4. P2: Provider registry unification (structural debt)
 5. P2: System template injection into Jules dispatch (quality)
-| B-001 | [NINA TEST GENERATION MISSION]
-Create new test files in test | `READY` | `IN_PROGRESS` | — | Auto-ingested via goal_to_backlog |

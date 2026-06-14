@@ -275,8 +275,23 @@ async def resolve_prs_parallel():
             logger.warning(f"PR #{num} merge failed: {m_res.stderr.strip()}")
 
 async def run_dispatch(prompt: str, title: Optional[str] = None):
-    """Core dispatch primitive."""
+    """Core dispatch primitive with NINA identity injection."""
     if not title: title = prompt.strip()[:100]
+    
+    # Inject NINA identity from system_templates.json
+    try:
+        template_path = REPO_ROOT / "ninagate" / "system_templates.json"
+        if template_path.exists():
+            templates = json.loads(template_path.read_text())
+            system_content = templates.get("agent", "")
+            if system_content:
+                # Prepend identity and limit total prompt length to avoid OOM or API limits
+                prompt = f"[NINA IDENTITY]\n{system_content}\n\n[TASK]\n{prompt}"
+                if len(prompt) > 8000:
+                    prompt = prompt[:8000] + "... (truncated)"
+    except Exception as e:
+        logger.warning(f"Failed to inject system template: {e}")
+
     body = {
         "prompt": prompt,
         "sourceContext": {"source": "sources/github/aibony/nina", "githubRepoContext": {"startingBranch": "main"}},
@@ -440,9 +455,21 @@ def session_end(title: str = "Session Complete", learning: str = "No major learn
 
     if not dry_run:
         try:
-            subprocess.run(["bash", "./nina_sync.sh"], cwd=str(REPO_ROOT), check=True)
+            subprocess.run(["bash", "./nina_sync.sh"], cwd=str(REPO_ROOT), check=True, capture_output=True, text=True)
         except subprocess.CalledProcessError as e:
-            logger.error(f"nina_sync.sh failed: {e}")
+            logger.error(f"nina_sync.sh failed: {e.stderr}")
+            err_msg = f"⚠️ *NINA sync failed* after Jules session_end.\n\n*Error:*\n```{e.stderr[:300]}```"
+            # Attempt to send telegram notification
+            try:
+                # Use requests directly for simpler sync execution
+                import requests
+                from core.config import load_config
+                cfg = load_config()
+                if cfg.telegram_token and cfg.authorized_user_id:
+                    url = f"https://api.telegram.org/bot{cfg.telegram_token}/sendMessage"
+                    requests.post(url, json={"chat_id": cfg.authorized_user_id, "text": err_msg, "parse_mode": "Markdown"}, timeout=5)
+            except Exception as te:
+                logger.warning(f"Failed to send Telegram alert: {te}")
     else:
         logger.info("session_end dry-run: insights appended, sync skipped")
 

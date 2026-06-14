@@ -263,11 +263,19 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 2. NO FORENSICS — Never read /var/log, dmesg, /var/crash unless explicitly asked.
 3. FAIL FAST — Never retry a failed API call more than 2 times. Surface error immediately.
 4. NO SPONTANEOUS REPORTS — Never run efficiency summaries or token reports unless explicitly asked.
-5. MODE SELECTION — declare at every session start:
-   Interactive sessions (user present): unset GOOGLE_GEMINI_BASE_URL
-   Background/batch tasks (Jules, agy, cron): export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
-   Never run interactive Gemini CLI sessions through NinaGate proxy.
-6. TIME BUDGET — enforce hard limits per task scope:
+
+5. OMNIPOTENCE PROTOCOL (Mandatory):
+   - ALL sessions (interactive or background) MUST use the NinaGate proxy:
+     export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
+   - This prevents "Unknown API Errors" by ensuring NINA can failover to local models.
+   - For files > 100 lines, use `nf context pack --file <f>` instead of `read_file` to save 20-40% tokens.
+
+6. SUNSET & MIGRATION (Jun 18 deadline):
+   - Antigravity CLI (`agy`) is the canonical successor to Gemini CLI.
+   - NINA is being decoupled from the `gemini` binary. All core intelligence now resides in `tools/ninaflash.py` and `core/router.py`.
+   - To resume development after Jun 18, use `agy` within the `~/nina` workspace.
+
+7. TIME BUDGET — enforce hard limits per task scope:
    Single-file edit: 3 min max
    Multi-file edit up to 5 files: 8 min max
    Multi-file edit 6+ files: 15 min max

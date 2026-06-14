@@ -96,6 +96,9 @@ def main():
     p_ctx = subparsers.add_parser("context"); p_ctxs = p_ctx.add_subparsers(dest="sub")
     p_ccp = p_ctxs.add_parser("compress"); p_ccp.add_argument("--task"); p_ccp.add_argument("--cp", type=int, default=0)
     p_ctxs.add_parser("stall")
+    p_cpk = p_ctxs.add_parser("pack"); p_cpk.add_argument("--file", required=True)
+
+
 
     # Guard & Triage
     p_check = subparsers.add_parser("check"); p_cks = p_check.add_subparsers(dest="sub")
