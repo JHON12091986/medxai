@@ -124,7 +124,9 @@ def cmd_bench(args):
 def cmd_code_audit_doc(args):
     """[044] Score docstrings on clarity and completeness."""
     path = _path_resolve(args.file)
-    if not path.exists(): return
+    if not path.exists():
+        print(f"❌ File not found: {args.file}")
+        return
     try:
         source = path.read_text(encoding="utf-8")
         tree = ast.parse(source)
@@ -141,7 +143,16 @@ def cmd_code_audit_doc(args):
                 score += 1
                 if len(doc.strip()) > 10: score += 1
                 if "args:" in doc.lower() or "returns:" in doc.lower(): score += 1
+            
+            label = "Function" if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) else "Class"
+            print(f"{label} {node.name}: {score}/3")
             max_score += 3
             total_score += score
     overall = (total_score / max_score * 100) if max_score > 0 else 100
-    print(f"Docstring Audit: {path.name} Score: {overall:.1f}%")
+    print(f"Overall Score: {overall:.1f}% ({total_score}/{max_score})")
+    if overall < 50:
+        print("Verdict: ❌ FAIL (Score below 50%)")
+    elif overall < 80:
+        print("Verdict: ⚠️ WARN (Score below 80%)")
+    else:
+        print("Verdict: ✅ PASS")

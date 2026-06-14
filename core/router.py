@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 from dataclasses import dataclass, field
+from collections import deque
 
 import os
 import re
@@ -146,14 +147,11 @@ class ProviderHealth:
 
     @property
     def health_score(self) -> float:
-        # Simple score based on success rate and latency
         total = self.success_count + self.failure_count
         if total == 0:
             return 1.0
         success_rate = self.success_count / total
-        # Penalty for high latency (above 2s)
         lat_penalty = min(0.5, self.avg_latency_ms / 5000.0)
-        # Penalty for recent failures (circuit breaker state)
         degraded_penalty = 0.5 if self.cb.state != "CLOSED" else 0.0
         return max(0.0, success_rate - lat_penalty - degraded_penalty)
 
@@ -163,7 +161,6 @@ class ProviderHealth:
         self.requests_today += 1
         self.tokens_today += max(0, int(total_tokens))
         self.last_request_ts = time.time()
-        # O(1) latency sum tracking
         if len(self.latencies) == self.latencies.maxlen:
             self._latency_sum -= self.latencies[0]
         self._latency_sum += float(latency_ms)
@@ -240,7 +237,6 @@ class CostTracker:
         error: str | None = None,
         req_id: str | None = None,
     ) -> None:
-        # Mock cost calculation
         cost = (input_tokens + output_tokens) * 0.0000002
         self.daily_cost_usd += cost
         write_log(
@@ -277,13 +273,12 @@ class HybridRouter:
             self.health[pid] = ProviderHealth()
         self.cache = ResponseCache()
         self.cost = CostTracker()
-        self.discovery = ModelDiscoveryService()
+        self.discovery = ModelDiscoveryService(config=self.config)
         self.http: httpx.AsyncClient | None = None
         self._idle_task: asyncio.Task | None = None
 
     async def initialize(self) -> None:
         self.http = httpx.AsyncClient(timeout=60.0)
-        # Re-load from index logic if necessary, for now use providers.json result
         self.cache.load("data/router_cache.json")
         self._load_circuit_state()
         self._idle_task = asyncio.create_task(self._idle_monitor())
@@ -346,97 +341,54 @@ class HybridRouter:
         self, pid: str, messages: list, task: ClassifiedTask
     ) -> Tuple[str, int, int, float]:
         start = time.time()
-        h = self.health[pid]
         req_id = str(uuid.uuid4())
 
         if pid in LOCAL_PROVIDERS:
-            # NinaFlash / Ollama
-            try:
-                r = await self.http.post(
-                    f"{self.config.ollama_host}/api/chat",
-                    json={
-                        "model": LOCAL_PROVIDERS[pid]["model"],
-                        "messages": messages,
-                        "stream": False,
-                    },
-                    timeout=60,
-                )
-                r.raise_for_status()
-                d = cast(dict, r.json())
-                content = d["message"]["content"]
-                lat = (time.time() - start) * 1000
-                h.record_success(lat, 0)
-                return content, 0, 0, lat
-            except Exception as e:
-                h.record_failure()
-                asyncio.create_task(self._check_health_and_notify(pid))
-                raise e
+            r = await self.http.post(
+                f"{self.config.ollama_host}/api/chat",
+                json={
+                    "model": LOCAL_PROVIDERS[pid]["model"],
+                    "messages": messages,
+                    "stream": False,
+                },
+                timeout=60,
+            )
+            r.raise_for_status()
+            d = cast(dict, r.json())
+            content = d["message"]["content"]
+            lat = (time.time() - start) * 1000
+            return content, 0, 0, lat
 
         meta = cast(dict, ALL_PROVIDERS[pid]).copy()
         api_key = self.config.get_secret(meta["key_field"]) if meta["key_field"] else None
 
-        try:
-            headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
-            r = await self.http.post(
-                f"{meta['base_url']}/chat/completions",
-                headers=headers,
-                json={"model": meta["model"], "messages": messages, "stream": False},
-            )
-            r.raise_for_status()
-            res = r.json()
-            content = res["choices"][0]["message"]["content"]
-            it = res["usage"]["prompt_tokens"]
-            ot = res["usage"]["completion_tokens"]
-            lat = (time.time() - start) * 1000
-            h.record_success(lat, it + ot)
-            self.cost.record(pid, task.task_type, it, ot, req_id=req_id)
-            return content, it, ot, lat
-
-        except httpx.HTTPStatusError as e:
-            if e.response.status_code in (429, 500, 502, 503, 504):
-                cooldown_s = 60.0
-                if e.response.status_code == 429:
-                    try:
-                        cooldown_s = float(e.response.headers.get("retry-after", 60))
-                    except Exception:
-                        cooldown_s = 60.0
-                h.record_failure(cooldown_s=cooldown_s)
-                asyncio.create_task(self._check_health_and_notify(pid))
-                self.cost.record(
-                    pid,
-                    task.task_type,
-                    0,
-                    0,
-                    error=f"http_{e.response.status_code}",
-                    req_id=req_id,
-                )
-            raise e
-        except Exception as e:
-            h.record_failure()
-            asyncio.create_task(self._check_health_and_notify(pid))
-            self.cost.record(pid, task.task_type, 0, 0, error="exception", req_id=req_id)
-            raise e
+        headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
+        r = await self.http.post(
+            f"{meta['base_url']}/chat/completions",
+            headers=headers,
+            json={"model": meta["model"], "messages": messages, "stream": False},
+        )
+        r.raise_for_status()
+        res = r.json()
+        content = res["choices"][0]["message"]["content"]
+        it = res["usage"]["prompt_tokens"]
+        ot = res["usage"]["completion_tokens"]
+        lat = (time.time() - start) * 1000
+        self.cost.record(pid, task.task_type, it, ot, req_id=req_id)
+        return content, it, ot, lat
 
     async def route(
         self, goal: str, messages: list, task: ClassifiedTask, force_local: bool = False
     ) -> str:
-        # Cache check
         cached = self.cache.get(goal, messages)
         if cached:
             return cached
 
-        # Logic for Bangla requests
-        has_bangla = _BANGLA_RE.search(goal) or any(
-            _BANGLA_RE.search(m.get("content", "")) for m in messages
-        )
-
-        # Provider selection
         tiers = [PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3]
         if force_local:
             tiers = [LOCAL_PROVIDERS]
 
         for tier in tiers:
-            # Sort by health score
             available = [
                 pid
                 for pid in tier
@@ -451,12 +403,14 @@ class HybridRouter:
             for pid in available:
                 try:
                     content, i, o, lat = await self._call_provider(pid, messages, task)
-                    # Cache successful result
+                    self.health[pid].record_success(lat, i + o)
                     ttl = CACHE_TTL.get(task.task_type, 3600)
                     if ttl > 0:
                         self.cache.set(goal, content, ttl, messages)
                     return content
                 except Exception as e:
+                    self.health[pid].record_failure()
+                    asyncio.create_task(self._check_health_and_notify(pid))
                     logger.bind(provider=pid, error=str(e)).warning("provider_retry")
                     continue
 
@@ -465,22 +419,18 @@ class HybridRouter:
     async def parallel_route(
         self, prompts: List[str], task: ClassifiedTask
     ) -> List[Optional[str]]:
-        """Run multiple prompts in parallel across available providers."""
-        # Highly simplified for implementation
         results = []
         for p in prompts:
             results.append(await self.route(p, [{"role": "user", "content": p}], task))
         return results
 
     async def _idle_monitor(self) -> None:
-        """Background loop to probe provider health and purge cache."""
         while True:
             try:
                 await asyncio.sleep(60)
                 self.cache.purge_expired()
                 self._save_circuit_state()
 
-                # Quality probe: pick a degraded provider and try a small task
                 degraded = [
                     pid
                     for pid, h in self.health.items()
@@ -489,15 +439,17 @@ class HybridRouter:
                 if degraded:
                     pid = degraded[0]
                     try:
-                        # Probe task
                         messages = [
                             {"role": "user", "content": "Explain async/await in 5 words."}
                         ]
                         _, _, _, lat = await self._call_provider(
                             pid, messages, ClassifiedTask("quick", 10, False, False)
                         )
+                        self.health[pid].record_success(lat, 10)
                         logger.info("quality_probe_success provider=%s", pid)
                     except Exception:
+                        self.health[pid].record_failure()
+                        asyncio.create_task(self._check_health_and_notify(pid))
                         logger.warning("quality_probe_fail provider=%s", pid)
 
             except asyncio.CancelledError:
@@ -506,7 +458,6 @@ class HybridRouter:
                 logger.error("idle_monitor_error: %s", e)
 
     def get_models_status(self) -> str:
-        """Returns a terminal-formatted table of provider health."""
         lines = [
             f"{'Provider':<15} | {'Status':<10} | {'Score':<6} | {'Lat':<6} | {'Reqs':<6}"
         ]
