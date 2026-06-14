@@ -167,3 +167,5 @@
 {"t": "2026-06-14T19:17:01.270070+00:00", "step": -1, "action": "done", "file": "", "detail": "Explanation of turn execution and background task pause provided to user", "status": "ok"}
 {"t": "2026-06-14T19:17:38.379703+00:00", "step": -1, "action": "done", "file": "", "detail": "Explanation of platform constraints and WaitMsBeforeAsync parameters provided to user", "status": "ok"}
 {"t": "2026-06-14T19:23:32.415404+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 19/19 local (100.0%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
+{"t": "2026-06-14T19:36:53.875341+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 19/19 local (100.0%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
+{"t": "2026-06-15T02:13:50.182548", "step": -1, "action": "done", "file": "", "detail": "Fix type hints, vulture CLI pathing, and mock system temp in tests", "status": "ok"}

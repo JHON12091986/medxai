@@ -315,6 +315,8 @@ At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST
 - Which NinaFlash outputs needed cloud escalation and why? → label: ESCALATION_TRIGGER
 - Which routing decisions were optimal? → label: ROUTING_WIN
 - New file patterns affecting chunking strategy? → label: CONTEXT_HINT
+- Were there any RULE0 violations in this session? → label: RULE0_VIOLATION
+- Run `python3 tools/rule0_audit.py` to check for RULE0 violations.
 
 ### 6B. Append to AGENTS.md — "## NinaGate Routing History" section
 ```
@@ -327,6 +329,7 @@ At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST
 
 ### 6C. Run Sync (mandatory, no exceptions)
 nf memory session-save --summary "<one line of what was done>"
+python3 tools/rule0_audit.py # Run RULE0 audit
 cd ~/nina && ./nina_sync.sh
 Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 → Perplexity ARCHITECT OVERWATCH picks up learnings in next thread.
@@ -440,11 +443,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
 
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+### [2026-06-15] Session Update — Antigravity
+- OFFLOAD_OPPORTUNITY: Static type hint enforcement and vulture analysis → 100% local next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Reverting to AST-based libcst enforcement resolved performance, pathing, and recursion regression.
+- CONTEXT_HINT: Subprocess testing must use `sys.executable` to keep virtual environment packages active.
+- RULE0_VIOLATION: None. All tool calls strictly compliant with nf commands.
 
 ### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash)
 - OFFLOAD_OPPORTUNITY: Mechanical import fixes and pytest validations.
