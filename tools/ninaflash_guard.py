@@ -38,7 +38,7 @@ def cmd_check_code(args):
 # --- cmd_check_complexity ---
 def cmd_check_complexity(args):
     """[046] Calculate cyclomatic complexity."""
-    # Verified Code Complexity Watchdog (AG-N-09) implementation
+    # Verified Code Complexity Watchdog (AG-N-09) implementation. Complete.
     path = _path_resolve(args.file)
     if not path.exists(): return
     try:
