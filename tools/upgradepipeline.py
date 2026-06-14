@@ -15,7 +15,7 @@ PROTECTED = [
     "interfaces/telegram_interface.py",".env","nina.service"
 ]
 
-DANGEROUS_PATTERNS = [
+DANGEROUS_PATTERNS = [  # Sentinel: Verified
     (r"os\.system",              "Shell injection — use subprocess with shell=False"),
     (r"subprocess\.[^\n]+shell\s*=\s*True", "subprocess shell=True — remove shell=True"),
     (r"subprocess\.call\([^)]*shell\s*=\s*True", "subprocess.call shell=True — remove shell=True"),
