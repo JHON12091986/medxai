@@ -37,7 +37,8 @@ def load_providers_from_json() -> tuple[dict, dict, dict]:
                 entry = {
                     "base_url": p.get("base_url"),
                     "model": p.get("model"),
-                    "key_field": p.get("api_key_env").lower() if p.get("api_key_env") else None
+                    "key_field": p.get("api_key_env").lower() if p.get("api_key_env") else None,
+                    "context_window": p.get("context_window", 8192)
                 }
                 tier = p.get("tier", 2)
                 name = p["name"].upper()
@@ -54,8 +55,8 @@ PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3 = load_providers_from_json()
 ALL_PROVIDERS = PROVIDERS_TIER1 | PROVIDERS_TIER2 | PROVIDERS_TIER3
 
 LOCAL_PROVIDERS = {
-    "LOCALFAST": {"model": "qwen2.5:1.5b"},
-    "LOCALHEAVY": {"model": "qwen2.5:7b"},
+    "LOCALFAST": {"model": "qwen2.5:1.5b", "context_window": 8192},
+    "LOCALHEAVY": {"model": "qwen2.5:7b", "context_window": 32768},
 }
 
 CACHE_TTL = {
@@ -389,12 +390,21 @@ class HybridRouter:
             tiers = [LOCAL_PROVIDERS]
 
         for tier in tiers:
-            available = [
-                pid
-                for pid in tier
-                if self.health[pid].cb.can_attempt()
-                and self.health[pid].requests_today < 1000
-            ]
+            available = []
+            for pid in tier:
+                if pid in LOCAL_PROVIDERS:
+                    meta = LOCAL_PROVIDERS[pid]
+                else:
+                    meta = ALL_PROVIDERS.get(pid, tier.get(pid, {}))
+                
+                # Filter by health, daily quota, and context window capability
+                if (
+                    self.health[pid].cb.can_attempt()
+                    and self.health[pid].requests_today < 1000
+                    and meta.get("context_window", 8192) >= task.estimated_tokens
+                ):
+                    available.append(pid)
+
             if not available:
                 continue
 
