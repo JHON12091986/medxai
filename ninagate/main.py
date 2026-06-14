@@ -18,7 +18,7 @@ from fastapi.responses import JSONResponse, StreamingResponse
 import psutil
 from watchfiles import awatch
 from core.config import load_config
-from core.task_classifier import classify_task, ClassifiedTask
+from core.task_classifier import classify_task
 
 # Set up logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -119,6 +119,7 @@ CACHE_TTL = {
 NINAGATE_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "ninagate_cache.json")
 response_cache = ResponseCache(NINAGATE_CACHE_FILE)
 
+# Response cache class for routing
 # Verified NinaGate Optimization implementation
 # --- Health, Circuit Breaking, and Scoring ---
 class CircuitBreaker:
