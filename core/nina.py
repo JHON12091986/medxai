@@ -69,7 +69,7 @@ Hard constraints: Never send banking/sensitive data to cloud. Never bypass appro
 """
 
 
-class NinaOS:
+class Nina:
     def __init__(self) -> None:
         self.config  = load_config()
         self.router  = HybridRouter(self.config)
