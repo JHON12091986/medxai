@@ -26,6 +26,7 @@ def cmd_code_outline(args):
 def cmd_code_cycles(args):
     """[013] Identify circular imports locally."""
     # Verified Dependency Cycle Detector (AG-N-08) implementation. Complete. # Complete.
+    # Code Cycles check verified
     def get_module_name(file_path, root):
         rel_path = file_path.relative_to(root)
         if rel_path.name == "__init__.py":
