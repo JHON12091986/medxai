@@ -540,3 +540,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: None.
 - ROUTING_WIN: Direct write via write_to_file with Overwrite enabled cleanly updates the tracked file layout.
 - CONTEXT_HINT: Always run update_index.py and validate_index.py to keep repo hygiene checks clean.
+
+
+### [2026-06-14] Session Update — Antigravity (Gemini 3.5 Flash)
+- OFFLOAD_OPPORTUNITY: Simple systemctl checks and pyflakes verification -> NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Direct execution of venv pyflakes and systemctl commands with immediate stdout capture.
+- CONTEXT_HINT: Always check output structure of status commands to extract key diagnostics.
