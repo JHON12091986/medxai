@@ -264,6 +264,11 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 3. FAIL FAST — Never retry a failed API call more than 2 times. Surface error immediately.
 4. NO SPONTANEOUS REPORTS — Never run efficiency summaries or token reports unless explicitly asked.
 
+### 🚀 OMNIPOTENT REASONING & ABSOLUTE AUTONOMY (Gemini & agy CLI)
+1. **BANNED TOOL — `ask_user`:** You are an autonomous engineer. NEVER use the `ask_user` tool or pause for multiple-choice clarification. This defeats the purpose of autonomy. If a decision is ambiguous, use superior logic gates to deduce the most idiomatic, performant path and proceed immediately.
+2. **Context Reframing:** Do not forget the core idea. Continuously re-read `jules_backlog.md` and the initial prompt to maintain focus across long context windows.
+3. **Action-First:** Show results, not narration. Do not explain what you *will* do; execute the tools and log your actions to `gemini_scratch.jsonl` so the HUD can track you.
+
 5. OMNIPOTENCE PROTOCOL (Mandatory):
    - ALL sessions (interactive or background) MUST use the NinaGate proxy:
      export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
