@@ -3123,3 +3123,6 @@
 **Files changed:** docs/space/jules_backlog.md,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md
 
 **Verification:** git push OK, nina.service active
+
+## Auto-doc patch — 2026-06-14
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 1

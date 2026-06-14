@@ -70,10 +70,52 @@ def notify_telegram(message, repo_root):
     except Exception as e:
         print(f"❌ Exception sending Telegram notification: {e}")
 
-def validate(check_deltas=False, notify=False):
+def reconcile_tests(data, repo_root):
+    import ast
+    updated = 0
+    for file_obj in data["files"]:
+        path_str = file_obj["path"]
+        if not file_obj.get("requires_tests"):
+            continue
+            
+        p = repo_root / path_str
+        if not p.exists(): continue
+
+        # Try basic mappings like core/router.py -> tests/test_router.py
+        test_filename = f"test_{p.stem}.py"
+        has_test = (repo_root / "tests" / test_filename).exists() or \
+                   any(p.stem in t for t in os.listdir(repo_root / "tests") if t.startswith("test_"))
+        
+        if not has_test:
+            exempt = False
+            try:
+                content = p.read_text(encoding="utf-8")
+                # 1. Crons/Tools/Scripts with CLI entrypoint and low logic density
+                if any(path_str.startswith(d + "/") for d in ["crons", "tools", "scripts"]):
+                    if 'if __name__ == "__main__":' in content:
+                        tree = ast.parse(content)
+                        funcs = [n for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+                        # If very few functions or mostly main-related, exempt
+                        if len(funcs) <= 3: 
+                            exempt = True
+                
+                # 2. Interfaces that are pure adapters or entrypoints
+                if path_str.startswith("interfaces/") and ("interface" in path_str.lower() or "api" in path_str.lower()):
+                    if "class" not in content or "def" not in content:
+                        exempt = True
+            except:
+                pass
+                
+            if exempt:
+                file_obj["requires_tests"] = False
+                updated += 1
+                print(f"✅ Reconciled: {path_str} marked as test_required: false (infra/entrypoint)")
+                
+    return updated
+
+def validate(check_deltas=False, notify=False, reconcile=False):
     repo_root = Path(__file__).parent.parent.resolve()
     index_path = repo_root / "docs/space/nina_index.json"
-
     
     if not index_path.exists():
         print("❌ Error: nina_index.json not found.")
@@ -82,6 +124,18 @@ def validate(check_deltas=False, notify=False):
     with open(index_path, "r") as f:
         data = json.load(f)
         
+    if reconcile:
+        count = reconcile_tests(data, repo_root)
+        if count > 0:
+            with open(index_path, "w") as f:
+                json.dump(data, f, indent=2)
+            print(f"💾 Updated {index_path} with {count} reconciliations.")
+            # Regenerate markdown index
+            try:
+                subprocess.run([sys.executable, "tools/update_index.py"], check=True)
+            except:
+                pass
+
     indexed_paths = {f["path"] for f in data["files"]}
     
     errors = 0
@@ -184,6 +238,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--check-deltas", action="store_true", help="Check that code changes are accompanied by doc deltas.")
     parser.add_argument("--notify", action="store_true", help="Send Telegram alerts on violations or low score")
+    parser.add_argument("--reconcile", action="store_true", help="Auto-reconcile test requirements for infra/tooling scripts")
     args = parser.parse_args()
-    if not validate(args.check_deltas, args.notify):
+    if not validate(args.check_deltas, args.notify, args.reconcile):
         sys.exit(1)

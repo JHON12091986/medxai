@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-14 03:40 +06
-- Git HEAD: 043fb601c4c5725b161525922ad5429905eda96e
-- Last commit: docs: post-session sync 2026-06-14 03:39
+- Generated: 2026-06-14 16:35 +06
+- Git HEAD: b3ec2013cbdc37f71c631e4b3d85fd0df76132e6
+- Last commit: docs: post-session sync 2026-06-14 16:35
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sun 2026-06-14 03:25:24 +06; 15min ago
- Invocation: eb8b3e0b63c54fcb95e3763876fb7997
-   Main PID: 1113097 (python)
+     Active: active (running) since Sun 2026-06-14 13:44:38 +06; 2h 51min ago
+ Invocation: 7359f55e453c4987a420ed1a6de7d1b8
+   Main PID: 9228 (python)
       Tasks: 20 (limit: 15177)
-     Memory: 116.1M (peak: 131.8M)
-        CPU: 3.554s
+     Memory: 181.8M (peak: 201.2M)
+        CPU: 9.629s
      CGroup: /system.slice/nina.service
-             └─1113097 /home/aibony/nina/.venv/bin/python main.py
+             └─9228 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 14 03:40:26 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[1113097]: INFO:nina.scheduler:{"event": "job_run", "job": "expire_pending", "duration": 4.673004150390625e-05, "success": true}
-Jun 14 03:40:26 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[1113097]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:15:00], next run at: 2026-06-14 03:55:26 +06)" executed successfully
-Jun 14 03:40:27 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[1113097]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 14 03:40:38 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[1113097]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 14 03:40:48 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[1113097]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 14 16:35:11 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 14 16:35:21 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 14 16:35:32 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 14 16:35:42 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 14 16:35:52 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -44,59 +44,20 @@ Jun 14 03:40:48 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[1113097]: INFO:h
 
 
 ## 4. READY Items (eligible for new Jules specs)
-_Found 3 READY items_
-
-### AG-T — Token & Context Engineering
-_Focus: Absolute minimum context overhead_
-
-| ID | File | Task | Status | Depends On |
-|----|------|------|--------|------------|
-| AG-T-01 | `core/agent.py` | Dynamic Prompting — Adjust prompt length by task diff. | `PAUSED` | — |
-| AG-T-02 | `ninaflash.py` | Context Window Estimator — Predict token usage before call. | `PAUSED` | — |
-| AG-T-03 | `core/agent
-
-### From: jules_spec_backlog_inc.md
-📊 MEGA-TASK: NF-BACKLOG Incremental State (AG-M-05)
-Assignee: Jules (Async Cloud Coder)
-Objective: Reduce token consumption by providing high-density summaries of project state instead of reading large markdown tables.
-
-🏗️ Domain 1: Backlog Summarization
-- nf backlog summary: Provide a 5-line summary of the backlog: count of READY, IN_PROGRESS, BLOCKED, and DONE
-
-### From: jules_spec_status_pulse.md
-💓 MEGA-TASK: NF-STATUS High-Density Pulse (AG-M-08)
-Assignee: Jules (Async Cloud Coder)
-Objective: Minimize context bloat by providing a ultra-short project pulse.
-
-🏗️ Domain 1: The Pulse Command
-- nf status --pulse: Returns exactly 10 lines containing:
-  1. Git SHA + Branch
-  2. Venv Status
-  3. Last Sync Timestamp
-  4. Active Lock Status (jules_lock.txt summa
+_Found 0 READY items_
 
 
 ## 5. Last 5 Completions
 ```
-043fb60 docs: post-session sync 2026-06-14 03:39
-0b825d6 chore(docs): add missing jules_task_tracker mirror stub
-3d7464b chore(index): remove stale plan.md reference, add new files
-858d8db chore: merge remote, keep local pipeline fixes
-40fe5f9 fix(pipeline): unify classifier, standardize gemini model, externalize config, harden jules session_end
+b3ec201 docs: post-session sync 2026-06-14 16:35
+34d6f1d fix(pipeline): OMNIPOTENT RESET - reclaim main, restore modular tools, fix drift
+c3b24cb Merge pull request #228 from aibony/submit_test_generation-16170725394451655483
+b960534 Add unit tests for core logger, config, and hotreload components
+6472d12 Merge pull request #227 from aibony/jules-4292459979572900447-52d5711c
 ```
 
 ## 6. Open Blockers
-- → counts READY items by tier, checks BLOCKED promotions
-- | `BLOCKED` | Has unresolved dependency — do not pick up |
-- | AG-F-02 | `tools/agents/market_agent.py` | MarketAgent — watches DSE/CSE prices on schedule, emits ALERT event when watchlist threshold crossed | `NEEDS_SPEC` | AG-F-01 |
-- | AG-F-03 | `tools/agents/expense_agent.py` | ExpenseAgent — monitors Telegram messages for expense patterns, auto-logs to finance tool | `NEEDS_SPEC` | AG-F-01 |
-- | AG-J-06 | `tests/test_market_agent.py` | Unit tests for MarketAgent: mock price feed, threshold crossing, alert emission | `NEEDS_SPEC` | AG-F-02 |
-- | AG-O-02 | `tests/` | Mutation Test Suite — Implement basic mutation testing for core modules. | `PAUSED` | — |
-- | AG-O-06 | `tests/` | Flaky Test Detector — Identify intermittent test failures. | `PAUSED` | — |
-- | AG-S-01 | `interfaces/telegram_interface.py`| Telegram Batching — Consolidate short messages. | `PAUSED` | — |
-- | AG-S-02 | `ninaflash.py` | CLI Progress Bars — Rich bars for long nf commands. | `PAUSED` | — |
-- AG-F-01 → AG-F-02            ← BaseAgent + MarketAgent (first real autonomous agent)
-- | F-02 | memory: deterministic personal_context | E-sync | — | 2026-06-09 |
+- "BLOCKED: {filename} is locked in juleslock.txt (Jules session in flight).
 
 ## 7. File Ownership Cheatsheet
 | File | Purpose | Risk |
@@ -120,11 +81,7 @@ Objective: Minimize context bloat by providing a ultra-short project pulse.
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-#225 ⚡ Bolt: Optimize NinaGate routing and fix NinaFlash cyclomatic complexity checks [jules-fix-complexity-and-dict-merge-9103649078267608355]
-#223 Fix NinaFlash CLI Subcommands and Optimization Enhancements [jules-ninaflash-cli-enhancements-1734603542270608079]
-#221 fix: NinaGate Optimization and NinaFlash CLI Enhancements [jules-ninagate-optimization-fix-3056906136222954838]
-#217 Optimize dict merges and verify NinaGate CLI enhancements [jules-8619463017978910673-1c6272e0]
-#216 ⚡ Bolt: Fix NinaGate Optimization and NinaFlash CLI Enhancements [fix-ninaflash-cli-10024110925401967682]
+- No open PRs
 
 ## 9. Error Register (OPEN only)
 | ID | Description | Status |
@@ -148,4 +105,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 8113 bytes_
+_Feed size: 5204 bytes_
