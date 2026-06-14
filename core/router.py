@@ -42,9 +42,12 @@ def load_providers_from_json() -> tuple[dict, dict, dict]:
                 }
                 tier = p.get("tier", 2)
                 name = p["name"].upper()
-                if tier == 1: t1[name] = entry
-                elif tier == 2: t2[name] = entry
-                elif tier == 3: t3[name] = entry
+                if tier == 1:
+                    t1[name] = entry
+                elif tier == 2:
+                    t2[name] = entry
+                elif tier == 3:
+                    t3[name] = entry
         except Exception as e:
             logger.error(f"Failed to load providers from json: {e}")
     return t1, t2, t3
@@ -426,7 +429,7 @@ class HybridRouter:
                     return True, ""
                 else:
                     return False, f"Logic Gate Refusal: {val_content}"
-            except:
+            except Exception:
                 # If validator fails, default to trusting the response to avoid deadlock
                 pass
 
