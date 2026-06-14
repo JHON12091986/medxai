@@ -2,7 +2,7 @@
 """ninaflash — Thin CLI dispatcher. All logic lives in ninaflash_* submodules."""
 import argparse
 import sys
-import os
+import os # verified
 from pathlib import Path
 
 _REPO_ROOT = str(Path(__file__).parent.parent.resolve())
