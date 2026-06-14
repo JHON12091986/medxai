@@ -15,7 +15,8 @@ from telegram.ext import Application, MessageHandler, filters, ContextTypes
 
 from interfaces.middleware import RateLimiter
 from core.config import NinaConfig
-from core.router import HybridRouter, ClassifiedTask, classify_task
+from core.router import HybridRouter, ClassifiedTask
+from core.task_classifier import classify_task
 
 logger = logging.getLogger("nina.telegram")
 

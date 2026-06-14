@@ -24,7 +24,8 @@ from tools.ninaflash_code import (
 from tools.ninaflash_context import (
     cmd_context_mini_gen, cmd_log_find_id, cmd_log_tail, cmd_log_next_id,
     cmd_query, cmd_query_capability, cmd_context_pack, cmd_capability_map,
-    cmd_stats, cmd_help_ai, cmd_log_summarize
+    cmd_stats, cmd_help_ai, cmd_log_summarize,
+    cmd_context_compress, cmd_context_stall
 )
 from tools.ninaflash_backlog import (
     cmd_backlog_summary, cmd_task_active, cmd_backlog_triage,
@@ -38,7 +39,7 @@ from tools.ninaflash_memory import (
 from tools.ninaflash_guard import (
     cmd_verify_all, cmd_check_code, cmd_check_complexity,
     cmd_check_doc, cmd_maintain_pr, cmd_pr_reconcile,
-    cmd_test, cmd_bench, cmd_code_audit_doc,
+    cmd_test_run, cmd_bench, cmd_code_audit_doc,
     cmd_gemini_context, cmd_gemini_prompt, cmd_gemini_status, cmd_gemini_run
 )
 
@@ -91,11 +92,19 @@ def main():
     p_ms.add_parser("stash").add_argument("text"); p_ms.add_parser("inject")
     p_ms.add_parser("session-save").add_argument("--summary"); p_ms.add_parser("session-recall").add_argument("--n", type=int)
     
+    # Context
+    p_ctx = subparsers.add_parser("context"); p_ctxs = p_ctx.add_subparsers(dest="sub")
+    p_ccp = p_ctxs.add_parser("compress"); p_ccp.add_argument("--task"); p_ccp.add_argument("--cp", type=int, default=0)
+    p_ctxs.add_parser("stall")
+
     # Guard & Triage
     p_check = subparsers.add_parser("check"); p_cks = p_check.add_subparsers(dest="sub")
     p_cc = p_cks.add_parser("code"); p_cc.add_argument("file"); p_cc.add_argument("--strict", action="store_true"); p_cx = p_cks.add_parser("complexity"); p_cx.add_argument("file")
     p_cd = p_cks.add_parser("doc"); p_cd.add_argument("file"); p_cd.add_argument("--agents", action="store_true")
     
+    p_test = subparsers.add_parser("test"); p_ts = p_test.add_subparsers(dest="sub")
+    p_tr = p_ts.add_parser("run"); p_tr.add_argument("--file"); p_tr.add_argument("--suite", choices=["sync", "full", "fast"]); p_tr.add_argument("--json", action="store_true"); p_tr.add_argument("--strict", action="store_true")
+
     p_maintain = subparsers.add_parser("maintain"); p_mts = p_maintain.add_subparsers(dest="sub")
     p_mpr = p_mts.add_parser("pr"); p_mpr.add_argument("pr_id"); p_mpr.add_argument("--task", dest="task_id")
     p_mpr.add_argument("--title"); p_mpr.add_argument("--summary")
@@ -106,9 +115,9 @@ def main():
     t0 = _time.monotonic()
     try:
         cmd, sub = args.command, getattr(args, 'sub', None)
-        # Normalize hyphens to underscores for function lookup
+        cmd_norm = cmd.replace("-", "_")
         sub_norm = sub.replace("-", "_") if sub else None
-        func = globals().get(f"cmd_{cmd.replace('-', '_')}_{sub_norm}") if sub_norm else globals().get(f"cmd_{cmd.replace('-', '_')}")
+        func = globals().get(f"cmd_{cmd_norm}_{sub_norm}") if sub_norm else globals().get(f"cmd_{cmd_norm}")
         if func: func(args)
         else: print(f"Unknown command: {cmd} {sub}")
         

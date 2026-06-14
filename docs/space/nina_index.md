@@ -39,6 +39,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `guardian_engine.py` | source_of_truth | active | keep | Forensic AST scanner and baseline drift analyzer (73KB). | ✅ YES |
 | `healthcheck.py` | source_of_truth | active | keep | Pre-deployment health and dependency verification suite. | ✅ YES |
 | `idleloop.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `jules_backlog_full.tmp` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `main.py` | source_of_truth | active | keep | Primary entry point for the NINA systemd service. | ✅ YES |
 | `modify_agent_final.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `modify_nina_final.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -209,7 +210,7 @@ The following clusters contain identical content. Consolidate to the canonical s
 - **Cluster `dup-0144`**: Canonical is `upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3`. Members: `upgrades/backups/memory20260611023000/chromadb/chroma.sqlite3`, `upgrades/backups/memory20260613023000/chromadb/chroma.sqlite3`
 - **Cluster `dup-0145`**: Canonical is `bin/nf`. Members: `bin/nf`, `bin/ninaflash`
 - **Cluster `dup-0146`**: Canonical is `data/gpuconfig.json`. Members: `data/gpuconfig.json`, `data/modeldiscovery.json`
-- **Cluster `dup-0147`**: Canonical is `data/tasks.json`. Members: `data/tasks.json`, `data/ninagate_cache.json`
+- **Cluster `dup-0147`**: Canonical is `data/tasks.json`. Members: `data/tasks.json`, `data/memory/scratchpad.json`
 
 ## 5. Governance Rules & Index-First Workflow
 1. **Check the Index:** `python3 tools/query_index.py --path <file>`
