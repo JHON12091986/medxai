@@ -3323,3 +3323,13 @@
 **Files changed:** core/agent.py,core/router.py,data/gemini_scratch.jsonl,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md
 
 **Verification:** git push OK, nina.service activating
+
+---
+
+## Entry 309 — 2026-06-14 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,data/gemini_scratch.jsonl,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md
+
+**Verification:** git push OK, nina.service activating
