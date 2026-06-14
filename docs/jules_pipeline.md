@@ -6,6 +6,9 @@ The Jules pipeline is NINA's high-capacity autonomous engineering subsystem. It 
 ## 2. Core Architecture
 The system is designed for **Quota Efficiency**, **Parallelism**, and **Persistence**.
 
+### 2.0.1 Task Tracker Bootstrap
+A dedicated Jules dispatch queue (`jules_queue.md`) is used to enforce single-file development isolation. This tracker is updated via direct writes, and `update_index.py` and `validate_index.py` are run to maintain repository hygiene.
+
 ### 2.1 Process Flow
 1.  **Intake**: Natural language goals are parsed by `tools/jules.py` (goal subcommand) and appended to `docs/space/jules_backlog.md` as `READY` tasks.
 2.  **Orchestration**: Direct imports in `crons/manager.py` run the orchestration cycle in `tools/jules.py` every 3 minutes.
@@ -17,6 +20,7 @@ The system is designed for **Quota Efficiency**, **Parallelism**, and **Persiste
 6.  **Interaction**: User/Agent provides feedback via:
     *   **Telegram**: `/jules feedback <sid> <message>`
     *   **CLI**: `bin/nina jules feedback <sid> <message>`
+    - **Session Unblocking:** Sequentially resolves and sends unblock feedback using the `tools/jules.py` module endpoints, focusing on `AWAITING_USER_FEEDBACK` items.
 7.  **Resolution**: Once Jules opens a PR, the Orchestrator verifies the PR and merges it concurrently using `asyncio.gather`.
 
 ## 3. File Inventory

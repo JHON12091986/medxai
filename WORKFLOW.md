@@ -57,7 +57,7 @@ Larger, user-facing feature arcs (e.g., Proactive Reminder Engine, Email Triage)
 ## The Full Parallel Loop (Jules + ninaflash Pipeline)
 
 1. Perplexity diagnoses issue and writes precise spec.
-2. Jules receives spec → builds in cloud async. 
+2. Jules receives spec → builds in cloud async.
    - **MANDATORY:** Jules MUST update `nina_update_log.md` (root) in the same PR.
 3. ninaflash (local executor) handles urgent local fixes in parallel on its own worktree.
 4. Jules opens PR when feature is complete.
@@ -91,11 +91,18 @@ After every task:
 6. Remove finished worktrees.
 7. Update task tracker and backlog (see below).
 
+## Git Management (agy Enhancements)
+- **PR Cleanup and Repo Hygiene:** Automated sequential PR closure and branch deletion via `gh pr close --delete-branch` ensures repository and branch hygiene. Always check current branch first and checkout `main` prior to running sync script to prevent pushing branch tips behind remote counterparts.
+- **Stash Guard for Rebase:** `git stash` checks before rebase operations in `_try_rebase` cleanly handle working tree changes made during concurrent triage phases. Look for git command return values and restore stashes on all exit paths to preserve uncommitted data.
+
 ## Post-Task Mandatory Updates
 After every successful PR merge, ninaflash must update tracking using **Python only** (never bash echo):
 1. Update `docs/space/jules_task_tracker.md` (change IN_PROGRESS to DONE, add PR number/date).
 2. Update `docs/space/jules_backlog.md` (set status to DONE, add PR number/date).
 3. Run `./nina_sync.sh` again to sync these tracker changes.
+
+## Telemetry and Reporting (agy Enhancements)
+- **Claude Feed Expansion:** Direct Python checks (such as socket connection tests and regex log parsing) are highly robust when embedded inside bash sync runs. Appending structured markdown tables for open errors and single-line snapshots of quota and guardian status maintains a high-density, low-context feed.
 
 ## Worktree Branching Strategy
 True parallel work is allowed only through separate git branches and separate git worktrees.

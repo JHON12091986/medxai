@@ -15,6 +15,12 @@ When Jules pauses a task to ask a clarifying question, the unified engine in `to
 NinaGate acts as a reverse proxy intercepting all OpenAI-compatible API calls.
 - **Decision Tree:** If a task is "SIMPLE" (formatting, regex, docstrings), NinaGate reroutes it to `NinaFlash` running `qwen2.5-coder` locally via Ollama.
 - **Fallbacks:** If a cloud provider rate limits (429) or fails, the router seamlessly cascades to available local or secondary cloud models.
+- **Response Caching:** Implements a caching layer (in `ninagate/main.py`) to store and serve previous LLM responses, significantly reducing redundant calls and latency. Cache keys are based on sorted payload representation for robustness.
+
+## 3.1. Standalone `ninajulesgithub` Service
+The orchestrator scheduler for Jules has been migrated to a standalone systemd service. This enhances resilience and decouples it from the main NINA process.
+- **Deployment:** Managed via systemd service files (`ninajulesgithub.service`).
+- **Functionality:** Handles asynchronous task dispatch and feedback loops for Jules.
 
 ## 4. Guardian AST Engine
 Before any code is committed or merged, `guardian_engine.py` builds an Abstract Syntax Tree (AST) of the new code to search for critical violations:
