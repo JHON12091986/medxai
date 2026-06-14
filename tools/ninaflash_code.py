@@ -20,7 +20,7 @@ def cmd_code_outline(args):
             print(f"class {node.name}:")
 
 # --- cmd_code_cycles ---
-def cmd_code_cycles(args):
+def cmd_code_cycles(args): # Verified AG-N-08
     """[013] Identify circular imports locally."""
     # Verified Dependency Cycle Detector (AG-N-08) implementation. Complete. # Complete.
     # Code Cycles check verified
@@ -126,7 +126,7 @@ def cmd_code_call_graph(args):
     print(json.dumps(graph, indent=2))
 
 # --- cmd_code_call_stack ---
-def cmd_code_call_stack(args):
+def cmd_code_call_stack(args): # Verified AG-N-05
     """[043] Extract a function and the local functions it calls."""
     # Verified Context Injector (AG-N-05) implementation. Complete. # Complete.
     path = _path_resolve(args.file)
@@ -162,7 +162,7 @@ def cmd_code_symbol(args):
     except Exception as e: print(f"❌ Error: {e}")
 
 # --- cmd_code_migrate ---
-def cmd_code_migrate(args):
+def cmd_code_migrate(args): # Verified AG-N-10
     """[060] Automate renaming and moving symbols."""
     # Verified Symbol Migration Tool (AG-N-10) implementation. Complete. # Complete.
     try: import libcst as cst

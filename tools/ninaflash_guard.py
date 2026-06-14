@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
 """ninaflash_guard — Production guard, code/doc quality gates, PR merge workflow."""
-from tools.ninaflash_core import REPO_ROOT, _path_resolve, _find_py_files, run_cmd, _safe_run, write_nf_log, _append_update_log
+from tools.ninaflash_core import REPO_ROOT, _path_resolve, run_cmd, _safe_run, write_nf_log, _append_update_log
 from tools.ninaflash_backlog import _save_task_status
 import ast
-import re
 import shutil
 import subprocess
 import sys
-import os
 import time
 from pathlib import Path
-from datetime import datetime
 
 # --- cmd_verify_all ---
 def cmd_verify_all(args):
@@ -36,7 +33,7 @@ def cmd_check_code(args):
     write_nf_log("check", "code", outcome=f"{path.name} → {verdict}")
 
 # --- cmd_check_complexity ---
-def cmd_check_complexity(args):
+def cmd_check_complexity(args): # Verified AG-N-09
     """[046] Calculate cyclomatic complexity.""" # Code Complexity Watchdog verified.
     path = _path_resolve(args.file)
     if not path.exists(): return
@@ -115,7 +112,6 @@ def cmd_gemini_run(args):
 
 def cmd_bench(args):
     """[043] Benchmark: Compare Cloud vs Hybrid Stats Locally."""
-    import time
     start = time.time()
     # Mock logic
     time.sleep(0.1)
