@@ -1,3 +1,4 @@
+# Using unittest.mock for all I/O as per NINA mission
 import pytest
 import os
 from unittest.mock import patch
