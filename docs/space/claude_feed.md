@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-15 00:34 +06
-- Git HEAD: a23ea883deea5fafd238fccfdc3a80b2cb228066
-- Last commit: docs: post-session sync 2026-06-15 00:33
+- Generated: 2026-06-15 00:50 +06
+- Git HEAD: ce6572376a7199e581e7a7024dd33d3ed4493b6a
+- Last commit: docs: post-session sync 2026-06-15 00:49
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sun 2026-06-14 23:03:21 +06; 1h 31min ago
+     Active: active (running) since Sun 2026-06-14 23:03:21 +06; 1h 47min ago
  Invocation: 0d0759c6d7024fb6806fa67a2f74a5e7
    Main PID: 69143 (python)
       Tasks: 21 (limit: 15177)
-     Memory: 105.4M (peak: 114.7M, swap: 13.6M, swap peak: 13.6M)
-        CPU: 5.322s
+     Memory: 106.1M (peak: 121.1M, swap: 13.6M, swap peak: 13.6M)
+        CPU: 5.893s
      CGroup: /system.slice/nina.service
              └─69143 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 15 00:34:12 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 00:34:20 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
-Jun 15 00:34:20 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: 2026-06-15 00:34:20.639 | WARNING  | core.router:_idle_monitor:553 - quality_probe_fail provider=%s
-Jun 15 00:34:22 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 00:34:33 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 00:50:02 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 00:50:13 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 00:50:23 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 00:50:33 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 00:50:43 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
+ce65723 docs: post-session sync 2026-06-15 00:49
+1eb6182 feat(agent): implement System 2 blueprinting and Document-to-Skill context enrichment
 a23ea88 docs: post-session sync 2026-06-15 00:33
 9eb737a fix(telemetry): implement self-trimming logs and seek-based tailing to prevent I/O stalls
 dd94d00 docs: post-session sync 2026-06-15 00:30
-157aed6 feat(jules): implement parallel sub-agent swarm dispatching
-2548861 docs: post-session sync 2026-06-15 00:24
 ```
 
 ## 6. Open Blockers
@@ -81,7 +81,7 @@ dd94d00 docs: post-session sync 2026-06-15 00:30
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-- No open PRs
+#254 ⚡ Bolt: Pre-compile regex patterns in UpgradePipeline [jules-7812791168657500729-d9097e8b]
 
 ## 9. Error Register (OPEN only)
 | ID | Description | Status |
@@ -105,4 +105,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 5124 bytes_
+_Feed size: 5284 bytes_
