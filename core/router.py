@@ -332,6 +332,13 @@ class HybridRouter:
         if self.http:
             await self.http.aclose()
 
+    def reset_daily(self) -> None:
+        """Reset daily cost and request counters across all providers."""
+        self.cost.reset_daily()
+        for h in self.health.values():
+            h.requests_today = 0
+            h.tokens_today = 0
+
     async def _check_health_and_notify(self, pid: str) -> None:
         h = self.health.get(pid)
         if h and h.consecutive_failures == 3:
