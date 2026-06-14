@@ -5,20 +5,18 @@ Supports Multi-File Mega Batching, Parallel PR Resolution, and Persistent State.
 """
 
 import os
-import re
 import json
 import asyncio
 import logging
 import requests
 import subprocess
-import shlex
 import argparse
 import dotenv
 
 dotenv.load_dotenv()
 from pathlib import Path
 from datetime import datetime
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Optional
 from core.config import load_config
 
 # --- Configuration & Constants ---
@@ -339,19 +337,22 @@ async def orchestrate_cycle():
         from tools.ninaflash import get_backlog_tasks, _save_task_status
         ready = [t for t in get_backlog_tasks() if t.get("status") == "READY"]
         if ready:
-            batch = ready[:5]
-            tids = [t['id'] for t in batch]
-            mega_prompt = "MEGA TASK BATCH\nExecute sequentially, no confirmation.\n"
-            for t in batch:
-                mega_prompt += f"\n--- {t['id']} ---\n{t['title']}\nFiles: {t['files']}\n"
-
-            try:
-                sid = await run_dispatch(mega_prompt, f"Mega Batch ({', '.join(tids)})")
-                register_session(sid, batch, f"Mega Batch ({', '.join(tids)})")
-                for t in batch: _save_task_status(t["id"], "IN_PROGRESS")
-                logger.info(f"Dispatched batch {tids} -> SID: {sid}")
-            except Exception as e:
-                logger.error(f"Batch dispatch failed: {e}")
+            to_dispatch = ready[:slots]
+            for t in to_dispatch:
+                task_prompt = (
+                    f"TASK ID: {t['id']}\n"
+                    f"Title: {t['title']}\n"
+                    f"Files: {t['files']}\n\n"
+                    "Instructions: Execute this task completely and cleanly without confirmation. "
+                    "Make sure all changes pass pyflakes and pytest rules before completion."
+                )
+                try:
+                    sid = await run_dispatch(task_prompt, f"Swarm Task {t['id']}")
+                    register_session(sid, [t], f"Swarm Task {t['id']}")
+                    _save_task_status(t["id"], "IN_PROGRESS")
+                    logger.info(f"Dispatched parallel swarm session for task {t['id']} -> SID: {sid}")
+                except Exception as e:
+                    logger.error(f"Parallel swarm dispatch failed for task {t['id']}: {e}")
 
 async def run_orchestrator_cycle(nina_os=None):
     """Compatibility handler for crons/manager.py."""
