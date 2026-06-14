@@ -1,6 +1,6 @@
 {
   "version": "14.3",
-  "generated_at": "2026-06-14T21:46:12.153214",
+  "generated_at": "2026-06-14T21:50:56.003009",
   "repo": "NINA",
   "files": [
     {
@@ -1162,6 +1162,29 @@
       ]
     },
     {
+      "path": "core/reasoning.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "lifecycle": "active",
+      "origin": "manual",
+      "retention_policy": "keep",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": true,
+      "doc_required": true,
+      "guardrails": [
+        "strict_typing"
+      ],
+      "summary": "Governed artifact.",
+      "hash": "01f3a18cfb285a08f8237341c65dbf52",
+      "tags": [
+        "code",
+        "active",
+        "source_of_truth"
+      ]
+    },
+    {
       "path": "core/router.py",
       "category": "code",
       "role": "source_of_truth",
@@ -1753,7 +1776,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "06708df0190d5fd8a64a8b5728a00f69",
+      "hash": "aed1427f28661ddcca3aaa20434a79a7",
       "tags": [
         "other",
         "active",
@@ -1900,7 +1923,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "349e10d21c41cb85ecf3bd6f56e6823d",
+      "hash": "481f0dd7ae83e18513be0b4e400a9535",
       "tags": [
         "other",
         "active",
@@ -3076,7 +3099,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "1c08ac6590743ac20f70cb2bbcee4e12",
+      "hash": "1170a6bac7c00b325183d547d29996ea",
       "tags": [
         "config",
         "active",
@@ -3097,7 +3120,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "434a0cd341799725263062ea9b01f2da",
+      "hash": "19b8523807d366785354fa368711d0a3",
       "tags": [
         "doc",
         "active",
@@ -3687,7 +3710,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "184329dc6537961c057cfa13224db5f1",
+      "hash": "dc2aa624d0f780c53fc1525b4fb884cb",
       "tags": [
         "log",
         "active",
@@ -3708,7 +3731,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "63762479859eff2ebdd71bc79c020843",
+      "hash": "c0b33602e99e305de952f35a7329af9e",
       "tags": [
         "log",
         "active",
@@ -4170,7 +4193,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "89bfe706ba14ee8a2c3dd05c0da5e018",
+      "hash": "3cb5e8303045d4a309e8650aca3a26bf",
       "tags": [
         "log",
         "active",
@@ -4845,69 +4868,6 @@
       "guardrails": [],
       "summary": "Governed artifact.",
       "hash": "d401e67aeb9f7b3446d6e92071fba0cd",
-      "tags": [
-        "other",
-        "active",
-        "source_of_truth"
-      ]
-    },
-    {
-      "path": "pr231.patch",
-      "category": "other",
-      "role": "source_of_truth",
-      "governed": true,
-      "lifecycle": "active",
-      "origin": "manual",
-      "retention_policy": "keep",
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "hash": "fd1b0df08eba9149752bd93b8cb5c9af",
-      "tags": [
-        "other",
-        "active",
-        "source_of_truth"
-      ]
-    },
-    {
-      "path": "pr237.diff",
-      "category": "other",
-      "role": "source_of_truth",
-      "governed": true,
-      "lifecycle": "active",
-      "origin": "manual",
-      "retention_policy": "keep",
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "hash": "38cc9fa3295be25edbc7eab71d963a85",
-      "tags": [
-        "other",
-        "active",
-        "source_of_truth"
-      ]
-    },
-    {
-      "path": "pr241.diff",
-      "category": "other",
-      "role": "source_of_truth",
-      "governed": true,
-      "lifecycle": "active",
-      "origin": "manual",
-      "retention_policy": "keep",
-      "series_id": null,
-      "series_type": null,
-      "requires_tests": false,
-      "doc_required": false,
-      "guardrails": [],
-      "summary": "Governed artifact.",
-      "hash": "dc344e5d4cb2ac0a95d226b1307692f4",
       "tags": [
         "other",
         "active",
@@ -5957,7 +5917,7 @@
       "doc_required": true,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "727d62dc2f0e753d2ce5b71fa2804b76",
+      "hash": "0e727e90160afb3615c0764a52d6292c",
       "tags": [
         "code",
         "active",
@@ -6231,6 +6191,27 @@
       "guardrails": [],
       "summary": "Governed artifact.",
       "hash": "9316d939cdae52d1767d56d27c4c08c4",
+      "tags": [
+        "code",
+        "active",
+        "source_of_truth"
+      ]
+    },
+    {
+      "path": "tools/dependency_mapper.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "lifecycle": "active",
+      "origin": "manual",
+      "retention_policy": "keep",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "fdea4fc5836c58285dab415df7e29344",
       "tags": [
         "code",
         "active",
@@ -7036,6 +7017,27 @@
       ]
     },
     {
+      "path": "tools/scratchpad_helper.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "lifecycle": "active",
+      "origin": "manual",
+      "retention_policy": "keep",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "13d12f66c0f47dbf9a24e44868f72c8d",
+      "tags": [
+        "code",
+        "active",
+        "source_of_truth"
+      ]
+    },
+    {
       "path": "tools/search.py",
       "category": "code",
       "role": "source_of_truth",
@@ -7196,7 +7198,7 @@
       "doc_required": true,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "5e738d10eae6b42fc805a3fb06ea7957",
+      "hash": "b4efafb9bf32b612819c40cb44b63796",
       "tags": [
         "code",
         "active",

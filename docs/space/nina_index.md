@@ -63,6 +63,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `core/memory_manager.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `core/nina.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `core/observability.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `core/reasoning.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `core/router.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `core/task_classifier.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `core/task_store.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -238,9 +239,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `ninagate_load_test.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `ninajulesgithub.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `ninajulesgithub.service` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `pr231.patch` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `pr237.diff` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `pr241.diff` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pr_desc.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `pytest.ini` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `requirements.txt` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -304,6 +302,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `tools/compact_exporter.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/context_pruner.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/create_pr.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `tools/dependency_mapper.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/doc_autogen.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/enforce_type_hints.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/evolve.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -342,6 +341,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `tools/query_index.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/retry.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/rule0_audit.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `tools/scratchpad_helper.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/search.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/session_ledger.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `tools/session_preamble.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
