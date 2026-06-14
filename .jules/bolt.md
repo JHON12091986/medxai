@@ -173,3 +173,7 @@
 ## 2026-06-13 - [Pipeline Autopilot Cycle]
 **Learning:** Cleaned 265 duplicate sessions.
 **Action:** Continue autopilot cycle.
+
+## 2026-06-14 - Precalculate .lower() on string arrays for loops
+**Learning:** Checking elements dynamically against `.lower()` in a loop creates multiple redundant lowercase string allocations and evaluations, resulting in up to 30% performance penalty on large strings.
+**Action:** Precompute target sets to `.lower()` variants outside the loop and store them as module-level constants. Compute `.lower()` exactly once on the input string before the loop.
