@@ -180,7 +180,7 @@ def main():
     print(f"  Total  : {result['total_requests']} routed requests")
     print(f"  Local  : {result['local_requests']} ({result['local_pct']:.1f}%) → ollama/NinaFlash")
     print(f"  Cloud  : {result['cloud_requests']} ({100 - result['local_pct']:.1f}%) → cloud LLM")
-    print(f"  Target : ≥66% local")
+    print("  Target : ≥66% local")
     print()
 
     if result["target_met"]:

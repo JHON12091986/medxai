@@ -106,7 +106,10 @@ def cmd_code_dep_map(args):
 def cmd_code_index(args):
     """[037] Global Symbol Indexer: Generate JSON map of all classes/functions."""
     index = {}
+    dir_filter = getattr(args, "dir", ".")
     for py_file in _find_py_files():
+        if dir_filter != "." and not py_file.is_relative_to(_path_resolve(dir_filter)):
+            continue
         try:
             rel_path = str(py_file.relative_to(REPO_ROOT))
         except ValueError:

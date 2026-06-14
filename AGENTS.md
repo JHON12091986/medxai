@@ -311,6 +311,8 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST:
 
 ### 6A. Capture Learnings
+- Which simple shell commands violated RULE 0? → label: RULE0_VIOLATION
+Run tools/rule0_audit.py to identify missed nf opportunities.
 - Which cloud calls could have been NinaFlash? → label: OFFLOAD_OPPORTUNITY
 - Which NinaFlash outputs needed cloud escalation and why? → label: ESCALATION_TRIGGER
 - Which routing decisions were optimal? → label: ROUTING_WIN
@@ -327,6 +329,7 @@ At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST
 
 ### 6C. Run Sync (mandatory, no exceptions)
 nf memory session-save --summary "<one line of what was done>"
+python3 tools/rule0_audit.py
 cd ~/nina && ./nina_sync.sh
 Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 → Perplexity ARCHITECT OVERWATCH picks up learnings in next thread.
