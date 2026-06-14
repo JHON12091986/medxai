@@ -1,3 +1,4 @@
+# Using unittest.mock for all I/O as per NINA mission
 import pytest
 from unittest.mock import patch
 from core.hotreload import ConfigHotReload
