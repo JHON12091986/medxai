@@ -1,0 +1,47 @@
+diff --git a/tests/test_tools_smoke.py b/tests/test_tools_smoke.py
+index a860b60..b1b44bf 100644
+--- a/tests/test_tools_smoke.py
++++ b/tests/test_tools_smoke.py
+@@ -71,3 +71,8 @@ async def test_gputuner_smoke(tmp_path):
+ async def test_upgradepipeline_dangerous_patterns():
+     from tools.upgradepipeline import DANGEROUS_PATTERNS
+     assert len(DANGEROUS_PATTERNS) > 0
++    patterns = [p[0] for p in DANGEROUS_PATTERNS]
++    assert r"os\.system" in patterns
++    assert r"subprocess\.[^\n]+shell\s*=\s*True" in patterns
++    assert r"subprocess\.call\([^)]*shell\s*=\s*True" in patterns
++    assert r"shutil\.rmtree" in patterns
+diff --git a/tools/upgradepipeline.py b/tools/upgradepipeline.py
+index 523f8d3..7664c69 100644
+--- a/tools/upgradepipeline.py
++++ b/tools/upgradepipeline.py
+@@ -2,7 +2,12 @@
+ NINA v12 — UpgradePipeline (Stage 6)
+ Pattern scan → sandbox test → diff → approve/reject → deploy + backup.
+ """
+-import ast, json, logging, re, shutil, time
++import ast
++import json
++import logging
++import re
++import shutil
++import time
+ from pathlib import Path
+ 
+ logger     = logging.getLogger("nina.upgrade")
+@@ -231,9 +236,12 @@ async def _handle_shadow(self, arg: str) -> str:
+             self._shadow_tester = ABShadowTester(self)
+         parts = arg.split(None, 1)
+         sub = parts[0].lower() if parts else ""
+-        if sub == "approve": return await self._shadow_tester.approve()
+-        if sub == "reject":  return self._shadow_tester.reject()
+-        if sub == "status":  return self._shadow_tester.status()
++        if sub == "approve":
++            return await self._shadow_tester.approve()
++        if sub == "reject":
++            return self._shadow_tester.reject()
++        if sub == "status":
++            return self._shadow_tester.status()
+         if sub == "start" and len(parts) > 1:
+             import httpx
+             fname, url = parts[1].split(None, 1)

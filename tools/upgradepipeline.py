@@ -2,7 +2,12 @@
 NINA v12 — UpgradePipeline (Stage 6)
 Pattern scan → sandbox test → diff → approve/reject → deploy + backup.
 """
-import ast, json, logging, re, shutil, time # verified # added sentinel block
+import ast
+import json
+import logging
+import re
+import shutil
+import time
 from pathlib import Path
 
 logger     = logging.getLogger("nina.upgrade")
@@ -15,10 +20,12 @@ PROTECTED = [
     "interfaces/telegram_interface.py",".env","nina.service"
 ]
 
-DANGEROUS_PATTERNS = [  # Sentinel: Verified
+DANGEROUS_PATTERNS = [
     (r"os\.system",              "Shell injection — use subprocess with shell=False"),
     (r"subprocess\.[^\n]+shell\s*=\s*True", "subprocess shell=True — remove shell=True"),
     (r"subprocess\.call\([^)]*shell\s*=\s*True", "subprocess.call shell=True — remove shell=True"),
+    (r"subprocess\.check_output\([^)]*shell\s*=\s*True", "subprocess.check_output shell=True — remove shell=True"),
+    (r"subprocess\.Popen\([^)]*shell\s*=\s*True", "subprocess.Popen shell=True — remove shell=True"),
     (r"shutil\.rmtree",          "shutil.rmtree — forbidden"),
     (r"\beval\b",                 "eval on non-literal — forbidden"),
     (r"\bexec\b",                 "exec on non-literal — forbidden"),
@@ -231,9 +238,12 @@ class UpgradePipeline:
             self._shadow_tester = ABShadowTester(self)
         parts = arg.split(None, 1)
         sub = parts[0].lower() if parts else ""
-        if sub == "approve": return await self._shadow_tester.approve()
-        if sub == "reject":  return self._shadow_tester.reject()
-        if sub == "status":  return self._shadow_tester.status()
+        if sub == "approve":
+            return await self._shadow_tester.approve()
+        if sub == "reject":
+            return self._shadow_tester.reject()
+        if sub == "status":
+            return self._shadow_tester.status()
         if sub == "start" and len(parts) > 1:
             import httpx
             fname, url = parts[1].split(None, 1)
