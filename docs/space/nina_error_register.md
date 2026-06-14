@@ -50,6 +50,10 @@ note: Update row status after every fix. Append new rows, never delete old ones.
 | config.missing_env.telegramchatid | 🔵 OPEN/PENDING | core.config | TELEGRAMCHATID missing from .env (non-blocking) | OPEN | unassigned | — | .env |
 | feature.ews_blocked | 🔵 OPEN/PENDING | tools.officemail | EWS email feature blocked (open issue O-02) | OPEN | unassigned | — | tools/officemail.py |
 | feature.playwright_blocked | 🔵 OPEN/PENDING | tools.browser | Playwright browser tool blocked (open issue O-01) | OPEN | unassigned | — | tools/browser.py |
+| tool.typehint.recursion | 🔴 BLOCKER | tools.enforce_type_hints | TypeHintEnforcer monkeytype recursion loop causing timeouts | ✅ FIXED | unassigned | R-79 | tools/enforce_type_hints.py, tests/test_enforce_type_hints.py |
+| tool.vulture.path | 🟠 WARN | tools.ninaflash_code | Vulture/Monkeytype binary FileNotFoundError in test suites | ✅ FIXED | unassigned | R-79 | tools/ninaflash_code.py, tools/enforce_type_hints.py |
+| test.agent.thermal | 🟠 WARN | tests.test_agent | Live hardware CPU temperature causing agent test failures | ✅ FIXED | unassigned | R-79 | tests/test_agent.py |
+| test.classifier.keyword | 🟡 DEBT | tests.test_task_classifier | "cat " keyword collision in task classifier test expectation | ✅ FIXED | unassigned | R-79 | tests/test_task_classifier.py |
 | E-062 | 🔵 INFO | - | B-020 promoted READY — B-005 dependency confirmed DONE (PR #25) | CLOSED | unassigned | 2026-06-08 | - |
 
 Archived FIXED entries → exports/nina_error_register_archive.md
