@@ -2,7 +2,7 @@
 NINA v12 — UpgradePipeline (Stage 6)
 Pattern scan → sandbox test → diff → approve/reject → deploy + backup.
 """
-import ast, json, logging, re, shutil, time
+import ast, json, logging, re, shutil, time # verified
 from pathlib import Path
 
 logger     = logging.getLogger("nina.upgrade")
