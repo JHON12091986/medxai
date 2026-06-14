@@ -1,6 +1,12 @@
 # NINA v12 MemorySystem Stage 5
 from typing import Any
-import asyncio, json, logging, shutil, time, uuid
+import asyncio
+import json
+import logging
+import shutil
+import time
+import uuid
+import os
 from pathlib import Path
 import chromadb
 from chromadb.utils import embedding_functions
@@ -86,13 +92,16 @@ class MemorySystem:
         # ── F-02: personal_context — fixed top section, always injected ─────
         def get_val(key: Any, default: Any="unknown") -> Any:
             fact = self.facts.get(key)
-            if fact is None: return default
+            if fact is None:
+                return default
             val = fact.get("value", default) if isinstance(fact, dict) else fact
             return val if val != "" else default
 
         def format_list(val: Any) -> Any:
-            if isinstance(val, list): return ", ".join(val)
-            if isinstance(val, str): return val
+            if isinstance(val, list):
+                return ", ".join(val)
+            if isinstance(val, str):
+                return val
             return str(val)
 
         pc_block = (
@@ -208,7 +217,21 @@ class MemorySystem:
 
     async def wipe_and_reinitialize(self) -> None:
         async with self._facts_lock:
-            shutil.rmtree(CHROMA_DIR, ignore_errors=True)
+            for root, dirs, files in os.walk(CHROMA_DIR, topdown=False):
+                for name in files:
+                    try:
+                        os.remove(os.path.join(root, name))
+                    except OSError:
+                        pass
+                for name in dirs:
+                    try:
+                        os.rmdir(os.path.join(root, name))
+                    except OSError:
+                        pass
+            try:
+                os.rmdir(CHROMA_DIR)
+            except OSError:
+                pass
             FACTS_FILE.write_text("{}")
             self.facts = {}
             await self.initialize()
