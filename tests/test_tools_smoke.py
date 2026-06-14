@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 import pytest
-from unittest.mock import patch, AsyncMock, MagicMock
+from unittest.mock import patch, MagicMock
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 @pytest.mark.smoke
@@ -71,3 +71,13 @@ async def test_gputuner_smoke(tmp_path):
 async def test_upgradepipeline_dangerous_patterns():
     from tools.upgradepipeline import DANGEROUS_PATTERNS
     assert len(DANGEROUS_PATTERNS) > 0
+
+@pytest.mark.smoke
+@pytest.mark.asyncio
+async def test_upgradepipeline_dangerous_patterns_regex():
+    from tools.upgradepipeline import DANGEROUS_PATTERNS
+    patterns = [p[0] for p in DANGEROUS_PATTERNS]
+    assert r"os\.system" in patterns
+    assert r"subprocess\.[^\n]+shell\s*=\s*True" in patterns
+    assert r"subprocess\.call\([^)]*shell\s*=\s*True" in patterns
+    assert r"shutil\.rmtree" in patterns
