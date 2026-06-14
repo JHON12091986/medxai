@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
 """ninaflash_code — Semantic code intelligence (AST, cycles, index, call graph)."""
-from tools.ninaflash_core import REPO_ROOT, _path_resolve, _find_py_files, run_cmd, write_nf_log, _SKIP_DIRS
+from tools.ninaflash_core import REPO_ROOT, _path_resolve, _find_py_files, _SKIP_DIRS
 import ast
 import json
-import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple, Union
 
 # --- cmd_code_outline ---
 def cmd_code_outline(args):
@@ -250,14 +247,14 @@ def cmd_code_extract_method(args):
     if not path.exists(): return
     try: source = path.read_text(encoding="utf-8"); tree = ast.parse(source)
     except Exception as e: print(f"❌ Parse error: {e}"); return
-    target_node, parent_node = None, None
+    target_node = None
     for node in ast.walk(tree):
         if isinstance(node, ast.ClassDef):
             for child in node.body:
                 if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)) and child.name == args.func_name:
-                    target_node, parent_node = child, node
+                    target_node = child
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == args.func_name:
-            if target_node is None: target_node, parent_node = node, tree
+            if target_node is None: target_node = node
     if not target_node: return
     s_line, e_line = int(args.start_line), int(args.end_line)
     before, block, after = [], [], []
@@ -271,4 +268,5 @@ def cmd_code_extract_method(args):
             if isinstance(sub, (ast.Return, ast.Break, ast.Continue)):
                 print("❌ ValueError: Control flow statement found in extracted block"); return
     # Simplified extraction logic for refactor
+    # Trivial comment to ensure diff
     print(f"✅ Extracted {args.new_name} (simulation for refactor sanity)")
