@@ -3273,3 +3273,13 @@
 **Files changed:** core/agent.py,data/gemini_scratch.jsonl,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md,tools/repo_janitor.py
 
 **Verification:** git push OK, nina.service activating
+
+---
+
+## Entry 304 — 2026-06-14 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** data/gemini_scratch.jsonl,docs/space/nina_repo_hygiene_dashboard.md,tools/repo_janitor.py
+
+**Verification:** git push OK, nina.service activating
