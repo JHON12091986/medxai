@@ -569,4 +569,11 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: Resolving massive duplicate/stuck session loops -> Cloud/Gemini Pro recommended to coordinate cleanup logic.
 - ROUTING_WIN: Automated session deletion and local registry synchronization to resolve stuck API resources.
 - CONTEXT_HINT: Autopilot retry loop logic needs safety throttle checks to prevent massive session duplication in state transitions.
+
+### [2026-06-15] Session Update — Antigravity (Gemini 2.5 Flash) - NinaGate and CLI Shim Resolution
+- OFFLOAD_OPPORTUNITY: Simple systemctl checks, script validation, and pyflakes runs -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Dynamic `sys.path` injection in `ninagate/main.py` solves `ModuleNotFoundError` cleanly without systemd service file writes, and implementing python-based prompt handling in `bin/gemini` prevents JSON payload quoting errors.
+- CONTEXT_HINT: The CLI shim's hardcoded check for `'gemini_cli'` instead of `'quotas'` led to false-positive quota exhaustion, forcing all traffic through a quoting-broken curl fallback.
+
 \n

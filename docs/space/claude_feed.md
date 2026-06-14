@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-15 02:38 +06
-- Git HEAD: 716c2a378d220d268264e567bb990825b47c3429
-- Last commit: docs: post-session sync 2026-06-15 02:37
+- Generated: 2026-06-15 02:44 +06
+- Git HEAD: df207d859da2aab929d5b1b90b25f72cb32797ae
+- Last commit: docs: post-session sync 2026-06-15 02:44
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sun 2026-06-14 23:03:21 +06; 3h 35min ago
- Invocation: 0d0759c6d7024fb6806fa67a2f74a5e7
-   Main PID: 69143 (python)
-      Tasks: 21 (limit: 15177)
-     Memory: 113.1M (peak: 128.9M, swap: 20.9M, swap peak: 20.9M)
-        CPU: 9.042s
+     Active: active (running) since Mon 2026-06-15 02:43:25 +06; 1min 26s ago
+ Invocation: 5ee4d5e6e5944e5db5647d63ab94fbdc
+   Main PID: 164146 (python)
+      Tasks: 19 (limit: 15177)
+     Memory: 92.1M (peak: 107.3M)
+        CPU: 2.520s
      CGroup: /system.slice/nina.service
-             └─69143 /home/aibony/nina/.venv/bin/python main.py
+             └─164146 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 15 02:38:24 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:05:00], next run at: 2026-06-15 02:43:23 +06)" executed successfully
-Jun 15 02:38:27 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 02:38:32 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
-Jun 15 02:38:32 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: 2026-06-15 02:38:32.422 | WARNING  | core.router:_idle_monitor:553 - quality_probe_fail provider=%s
-Jun 15 02:38:37 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:44:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
+Jun 15 02:44:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: 2026-06-15 02:44:29.501 | WARNING  | core.router:_idle_monitor:567 - quality_probe_fail provider=%s
+Jun 15 02:44:30 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:44:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:44:50 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
+df207d8 docs: post-session sync 2026-06-15 02:44
+a7fb399 merge(feature): merge rule0 audit and pr-255 fixes
+337fe28 merge(origin): pull remote main
+3be732c Merge pull request #254 from aibony/jules-7812791168657500729-d9097e8b
 716c2a3 docs: post-session sync 2026-06-15 02:37
-f9cc32b docs(index): update index after merging PRs 254 and 255
-dc24ac4 merge(bolt): merge optimize-hallucination-check-3483378949820397460 resolving bolt.md conflict
-1c69ea3 merge(jules): merge pre-compile regex branch
-21c478c docs: post-session sync 2026-06-15 02:34
 ```
 
 ## 6. Open Blockers
@@ -81,8 +81,7 @@ dc24ac4 merge(bolt): merge optimize-hallucination-check-3483378949820397460 reso
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-#255 ⚡ Bolt: Optimize hallucination markers check [optimize-hallucination-check-3483378949820397460]
-#254 ⚡ Bolt: Pre-compile regex patterns in UpgradePipeline [jules-7812791168657500729-d9097e8b]
+- No open PRs
 
 ## 9. Error Register (OPEN only)
 | ID | Description | Status |
@@ -99,11 +98,11 @@ dc24ac4 merge(bolt): merge optimize-hallucination-check-3483378949820397460 reso
 | feature.ews_blocked | EWS email feature blocked (open issue O-02) | OPEN |
 
 ## 10. Quota Snapshot
-gemini_api: 0/1000 | ollama: unlimited | ninagate_up: no
+gemini_api: 0/1000 | ollama: unlimited | ninagate_up: yes
 
 ## 11. Guardian Last Run
 Guardian log not found
 
 
 ---
-_Feed size: 5335 bytes_
+_Feed size: 5063 bytes_
