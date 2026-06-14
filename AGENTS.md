@@ -55,7 +55,7 @@ Only if ALL above = NO → use cloud tool
    → USE nf file patch <file> --find "X" --replace "Y"
 4. Is this grep_search?
    → USE nf file grep <pattern> --dir <dir> --ext .py,.md,.sh
-5. Is this list_directory or glob on a code directory?
+5. Is this list_directory or glob?
    → USE nf code index
 
 ### BANNED TOOL DISPATCH TABLE:
@@ -78,7 +78,7 @@ Only if ALL above = NO → use cloud tool
 | replace (single string)              | nf file patch --find "X" --replace "Y"       |
 | replace (insert after anchor)        | nf file insert --after "ANCHOR" --text "…"   |
 | grep_search (any pattern)            | nf file grep <pattern> --dir <dir>           |
-| list_directory / glob (code dirs)    | nf code index                                |
+| list_directory / glob                | nf code index                                |
 
 ### ALLOWED — These native calls are always legitimate:
 
