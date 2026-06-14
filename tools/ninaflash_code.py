@@ -268,6 +268,6 @@ def cmd_code_extract_method(args):
     for stmt in block:
         for sub in ast.walk(stmt):
             if isinstance(sub, (ast.Return, ast.Break, ast.Continue)):
-                print("❌ Control flow in block."); return
+                print("❌ ValueError: Control flow statement found in extracted block"); return
     # Simplified extraction logic for refactor
     print(f"✅ Extracted {args.new_name} (simulation for refactor sanity)")
