@@ -6,8 +6,8 @@ Wants=network.target
 [Service]
 Type=simple
 User=aibony
-WorkingDirectory=/home/aibony/nina/ninagate
-ExecStart=/home/aibony/nina/venv/bin/python main.py
+WorkingDirectory=/home/aibony/nina
+ExecStart=/home/aibony/nina/venv/bin/python ninagate/main.py
 Restart=always
 RestartSec=3
 StandardOutput=journal

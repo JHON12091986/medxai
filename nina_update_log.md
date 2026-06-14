@@ -3503,3 +3503,13 @@
 **Files changed:** docs/space/claude_feed.md,extract_agy_changelog.py,monkeytype.sqlite3
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 327 — 2026-06-15 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** bin/gemini,data/gemini_scratch.jsonl,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,ninagate/main.py,ninagate/ninagate.service,extract_agy_changelog.py,monkeytype.sqlite3
+
+**Verification:** git push OK, nina.service active
