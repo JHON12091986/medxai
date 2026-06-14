@@ -13,6 +13,7 @@ CLAUDE_THINKING_SCAFFOLD = """
 5. DEVIL'S ADVOCATE: Why might my proposed solution be wrong?
 6. ERROR PATHS: What are the edge cases? How should they be handled?
 7. FINAL PLAN: Step-by-step execution path.
+8. POST-TASK OPTIMIZATION: How can I optimize the implementation I just completed? (Required after every FINAL:answer)
 </thinking>
 """
 

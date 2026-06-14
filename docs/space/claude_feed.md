@@ -3,27 +3,24 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-14 19:49 +06
-- Git HEAD: a755b05d7b964d3119ce4d2ad25c56ce40282f71
-- Last commit: docs: post-session sync 2026-06-14 19:49
-- Service: active
+- Generated: 2026-06-14 21:54 +06
+- Git HEAD: 5bc567299af204cf5e32a5bc6ceacac1c4e3ea34
+- Last commit: docs: post-session sync 2026-06-14 21:53
+- Service: activating
+unknown
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sun 2026-06-14 13:44:38 +06; 6h ago
- Invocation: 7359f55e453c4987a420ed1a6de7d1b8
-   Main PID: 9228 (python)
-      Tasks: 27 (limit: 15177)
-     Memory: 43M (peak: 211.5M, swap: 97.7M, swap peak: 110.3M)
-        CPU: 17.177s
-     CGroup: /system.slice/nina.service
-             └─9228 /home/aibony/nina/.venv/bin/python main.py
+     Active: activating (auto-restart) (Result: exit-code) since Sun 2026-06-14 21:54:53 +06; 3s ago
+ Invocation: a046394265814286a26ac2f05272c745
+    Process: 24801 ExecStart=/home/aibony/nina/.venv/bin/python main.py (code=exited, status=1/FAILURE)
+   Main PID: 24801 (code=exited, status=1/FAILURE)
+   Mem peak: 62.3M
+        CPU: 2.119s
 
-Jun 14 19:49:41 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/sendMessage "HTTP/1.1 200 OK"
-Jun 14 19:49:41 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:nina.scheduler:{"event": "job_run", "job": "thermal_health", "duration": 0.8350746631622314, "success": true}
-Jun 14 19:49:41 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:05:00], next run at: 2026-06-14 19:54:40 +06)" executed successfully
-Jun 14 19:49:43 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 14 19:49:53 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[9228]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 14 21:54:53 aibony-VivoBook-ASUSLaptop-X530FN-S530FN systemd[1]: nina.service: Failed with result 'exit-code'.
+Jun 14 21:54:53 aibony-VivoBook-ASUSLaptop-X530FN-S530FN systemd[1]: nina.service: Consumed 2.119s CPU time over 6.313s wall clock time, 62.3M memory peak.
+unavailable
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +46,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
-a755b05 docs: post-session sync 2026-06-14 19:49
-f590b00 docs: post-session sync 2026-06-14 18:28
-2ae4483 docs(core): update README and ARCHITECTURE with God Mode and HUD info
-cbf2f30 docs: post-session sync 2026-06-14 18:19
-5117dc2 feat(core): unlock GOD MODE hierarchical parallel tasking engine
+5bc5672 docs: post-session sync 2026-06-14 21:53
+f1f29ee docs: post-session sync 2026-06-14 21:53
+b9bd548 chore: remove temporary diff files from tracking
+8979541 chore: restore and index reasoning kernel and helpers
+0a03e18 Merge pull request #241 from aibony/jules-2243935196189932782-bf76f54a
 ```
 
 ## 6. Open Blockers
@@ -81,15 +78,7 @@ cbf2f30 docs: post-session sync 2026-06-14 18:19
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-#248 ⚡ Bolt: Finalize NinaGate Optimization and NinaFlash CLI Enhancements [jules-4758619237701072192-d8a688c0]
-#245 ⚡ Bolt: Fix lint errors in main.py and ninaflash.py [jules-2008740204915134794-0ee963e3]
-#243 ⚡ Bolt: Finalize NinaGate Optimization and NinaFlash CLI Enhancements [jules-8199441097547095896-f97f2224]
-#241 🛡️ Sentinel: [HIGH] Fix missing shell execution and deletion guards in UpgradePipeline [jules-2243935196189932782-bf76f54a]
-#240 ⚡ Bolt: Fix UpgradePipeline and tests linting issues [fix-upgradepipeline-linting-1081200291741840263]
-#239 ⚡ Bolt: Implement full AST-based method extraction tool [jules-1312221396807326878-73fd3dca]
-#237 🛡️ Sentinel: [HIGH] Fix missing shell execution and deletion guards in UpgradePipeline [jules-11394914239544387675-d68d3e79]
-#232 ⚡ Bolt: Finalize NinaGate Optimization and NinaFlash CLI Enhancements [jules-6930618871339662221-b63cf260]
-#231 feat(jules): inject NINA system template into dispatch prompt [jules-1425893842676546739-f8ed25d4]
+- No open PRs
 
 ## 9. Error Register (OPEN only)
 | ID | Description | Status |
@@ -106,11 +95,11 @@ cbf2f30 docs: post-session sync 2026-06-14 18:19
 | feature.ews_blocked | EWS email feature blocked (open issue O-02) | OPEN |
 
 ## 10. Quota Snapshot
-gemini_api: 0/1000 | ollama: unlimited | ninagate_up: yes
+gemini_api: 0/1000 | ollama: unlimited | ninagate_up: no
 
 ## 11. Guardian Last Run
 Guardian log not found
 
 
 ---
-_Feed size: 6138 bytes_
+_Feed size: 4392 bytes_

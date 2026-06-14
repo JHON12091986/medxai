@@ -1,18 +1,17 @@
 """NINA v12 — AgentLoop (Stage 5)
 THINK -> PLAN -> ACT -> OBSERVE -> ADAPT. Variable step budget + global timeout + thermal preflight.
 """
-from typing import Any
-import asyncio, logging, re
+from typing import Any, List, Dict, Optional, Tuple
+import asyncio, logging, re, json
+from datetime import datetime, timezone
+from pathlib import Path
 from core.router import HybridRouter, ClassifiedTask, STEP_BUDGETS, DEFAULT_MAX_STEPS
 from tools import system
 from core.capabilities import CapabilityRegistry
-_registry = CapabilityRegistry()
-
-logger = logging.getLogger("nina.agent")
-
-import json as _json
-from datetime import datetime as _dt, timezone as _tz
 from core.reasoning import ReasoningKernel
+
+_registry = CapabilityRegistry()
+logger = logging.getLogger("nina.agent")
 
 class AgentLoop:
     def __init__(self, config: Any, router: HybridRouter, memory: Any, tools: dict) -> None:
@@ -25,7 +24,7 @@ class AgentLoop:
     def _log_to_hud(self, step: int, action: str, detail: str, file: str = "", status: str = "ok"):
         try:
             entry = {
-                "t": _dt.now(tz=_tz.utc).isoformat(),
+                "t": datetime.now(tz=timezone.utc).isoformat(),
                 "step": step,
                 "action": action,
                 "file": file,
@@ -33,11 +32,8 @@ class AgentLoop:
                 "status": status
             }
             with open(self._scratchpad_path, "a") as f:
-                f.write(_json.dumps(entry) + "\n")
+                f.write(json.dumps(entry) + "\n")
         except: pass
-
-    async def _inner(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
-        # ... (rest of method initialization)
 
     def _should_self_check(self, task: ClassifiedTask) -> bool:
         return (getattr(task, "task_type", "") or "").lower() in {
@@ -67,7 +63,6 @@ class AgentLoop:
             logger.warning(f"selfcheck_failed: {e}", extra={"log": "agent.log"})
             return draft
 
-
     async def run(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
         try:
             return await asyncio.wait_for(
@@ -93,9 +88,7 @@ class AgentLoop:
     )
 
     async def _inner(self, goal: str, task: ClassifiedTask, session_history: list) -> str:
-        # AG-LOOP: structured phase logging
-        import logging as _log
-        _log.getLogger("nina.agent").debug(f"agent input received: {goal!r}")
+        logger.debug(f"agent input received: {goal!r}")
         session_history = list(session_history)
 
         ram = await system.get_ram_used_gb()
@@ -121,16 +114,8 @@ class AgentLoop:
 
         max_steps  = STEP_BUDGETS.get(task.task_type, DEFAULT_MAX_STEPS)
         context    = await self.memory.build_context(goal)
-        # System frame injected once — never repeated in step loop
-        # F-03x: Strip redundant instructions if routing through NinaGate (AG-M-10)
-        from urllib.parse import urlparse
-        api_base = getattr(self.config, "onebrain_api_base", "") or ""
-        parsed_url = urlparse(api_base)
-
-        from core.reasoning import ReasoningKernel
+        
         system_frame = ReasoningKernel.get_system_frame(goal, context)
-        # F-03d: inject Bangla override as a system-role message so providers treat it
-        # as a system instruction, not user content (fixes F-03c goal-prepend approach)
         bangla_sys = ([{"role": "system", "content": self._BANGLA_OVERRIDE.strip()}]
                       if self._is_bangla(goal) else [])
         msgs = bangla_sys + [{"role": "user", "content": system_frame}] + session_history.copy()
@@ -144,7 +129,7 @@ class AgentLoop:
             msgs.append({"role": "user", "content": step_prompt})
             response = await self.router.route(goal, msgs, task, force_local=force_local)
             msgs.append({"role": "assistant", "content": response})
-            
+
             # [Claude-Reasoning]: Extract and log thinking to HUD
             thinking = ReasoningKernel.extract_thinking(response)
             if thinking:
@@ -154,6 +139,17 @@ class AgentLoop:
                         extra={"log":"agent.log"})
 
             if "FINAL:" in response:
+                # [Optimization Protocol]: Before concluding, ask for self-optimization
+                if not any("[OPTIMIZATION]" in m.get("content", "") for m in msgs):
+                    opt_prompt = (
+                        "[OPTIMIZATION] Goal achieved. Now, ask yourself: 'How can you optimize your last operation?'\n"
+                        "Consider performance, code clean-up, or automation. "
+                        "If optimization is possible, perform it now. Otherwise, repeat FINAL:answer."
+                    )
+                    msgs.append({"role": "user", "content": opt_prompt})
+                    self._log_to_hud(step, "think", "Triggering mandatory self-optimization...")
+                    continue
+
                 draft = response.split("FINAL:", 1)[1].strip()
                 return await self._self_check(goal, draft, task, force_local=force_local)
 
@@ -166,7 +162,7 @@ class AgentLoop:
                     "Analyze before calling the next tool or giving FINAL:answer."
                 )
                 msgs.append({"role": "user", "content": feedback_prompt})
-                # Proceed to tool execution as normal...
+                
                 try:
                     import re as _re
                     import asyncio as _asyncio
@@ -177,8 +173,8 @@ class AgentLoop:
 
                     matches = list(_re.finditer(r'TOOL:\s*([^\s:]+)(?:\s+INPUT:\s*([^\n]*)|[ \t]+([^\n]*))?', clean_resp))
                     if not matches:
-                        raise ValueError("Failed to parse TOOL from response")
-
+                        scratchpad.append("[tool_error] Failed to parse TOOL from response")
+                        continue
 
                     tasks = []
                     tool_names = []
@@ -201,8 +197,7 @@ class AgentLoop:
                                     break
                                 fix_prompt = f"The surgical edit resulted in syntax errors:\n{chr(10).join(errors)}\nPlease output a TOOL:shell command with sed or python to fix this exact error. FINAL: when done."
                                 fix_resp = await self.router.route(goal, msgs + [{"role": "user", "content": fix_prompt}], task, force_local=force_local)
-                                import re
-                                match_fix = re.search(r'TOOL:\s*([^\s:]+)(?:\s+INPUT:\s*([^\n]*)|[ \t]+([^\n]*))?', re.sub(r'[*_`]', '', re.sub(r'^\[Step \d+/\d+\]\s*', '', fix_resp, flags=re.MULTILINE)))
+                                match_fix = _re.search(r'TOOL:\s*([^\s:]+)(?:\s+INPUT:\s*([^\n]*)|[ \t]+([^\n]*))?', _re.sub(r'[*_`]', '', _re.sub(r'^\[Step \d+/\d+\]\s*', '', fix_resp, flags=_re.MULTILINE)))
                                 if match_fix:
                                     f_tool_name = match_fix.group(1).strip(":- ").lower()
                                     f_tool_input = (match_fix.group(2) or match_fix.group(3) or '').strip().strip('\'"')
@@ -220,17 +215,15 @@ class AgentLoop:
                         tool_names.append(tool_name)
 
                         if not _registry.is_healthy(tool_name):
-                            async def fail_tool(name: Any=tool_name) -> Any: return f"Tool {name} unavailable (unhealthy)."
-                            logger.warning(f"agent_skipped_unhealthy tool={tool_name}")
+                            async def fail_tool(name: str=tool_name) -> Any: return f"Tool {name} unavailable (unhealthy)."
                             tasks.append(fail_tool())
                         elif tool:
                             tasks.append(run_tool_with_fix(tool, tool_name, tool_input, msgs, goal, task, force_local))
                         else:
-                            async def unknown_tool(name: Any=tool_name) -> Any: return f"Unknown tool: {name}"
+                            async def unknown_tool(name: str=tool_name) -> Any: return f"Unknown tool: {name}"
                             tasks.append(unknown_tool())
 
-                    if len(tasks) > 0:
-                        logger.info(f"agent_step step={step} Executing {len(tasks)} parallel tools: {tool_names}", extra={"log":"agent.log"})
+                    if tasks:
                         results = await _asyncio.gather(*tasks, return_exceptions=True)
                         for tname, res in zip(tool_names, results):
                             if isinstance(res, Exception):
