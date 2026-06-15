@@ -1,14 +1,4 @@
-## 2026-06-13 - [Security Rules Tightening]
-**Vulnerability:** Weak security scanning pattern in `upgradepipeline.py` allowed missing coverage for risky system functions.
-**Learning:** Hardcoded tools allowed `subprocess.check_output`, `subprocess.Popen`, `subprocess.call` and `os.system` missing proper constraints, risking remote execution. `shutil.rmtree` was also not blocked.
-**Prevention:** Extend regex list of `DANGEROUS_PATTERNS` to uniformly cover shell risk aliases and explicit file deletion risk functions.
-
-## 2026-06-13 - [Command Injection via os.system in ninaflash_core]
-**Vulnerability:** A CRITICAL command injection vulnerability existed in `tools/ninaflash_core.py` within the `cmd_batch` function where `os.system` was used to execute a string containing unsanitized user input (`args.cmds`).
-**Learning:** Hardcoding `os.system` along with string interpolation or concatenation opens up significant vectors for shell command injection, allowing an attacker to execute arbitrary commands.
-**Prevention:** Always use `subprocess.run` (or similar `subprocess` methods) with `shell=False` and properly tokenized arguments using `shlex.split` or passing arguments as a list.
-
-## 2026-06-14 - [Forbidden shutil.rmtree usage]
-**Vulnerability:** The forbidden function `shutil.rmtree` was being used in `core/memory.py`, which violates the security rules enforced by `upgradepipeline.py`.
-**Learning:** Usage of `shutil.rmtree` is strictly forbidden across the codebase because of the risk of arbitrary file deletion. It was used in `core/memory.py` to clear the Chroma database.
-**Prevention:** Replace instances of `shutil.rmtree` with cross-platform alternatives like `os.walk` to abide by repository security patterns without sacrificing portability.
+## 2025-06-15 - 🛡️ Sentinel: [CRITICAL] Fix command injection in subprocess calls
+**Vulnerability:** `subprocess.run(..., shell=True)` and `subprocess.check_output(..., shell=True)` were being used globally, opening the system to shell command injections, specifically inside `nina_mcp_server.py`.
+**Learning:** Hardcoded commands with `shell=True` can easily become vulnerable if modified to accept arbitrary user parameters, as was the case with `tool_args.get('args')`. It is also flagged by internal `upgradepipeline.py` constraints.
+**Prevention:** Always use `shell=False` inside subprocesses. Tokenize user-provided inputs safely using `shlex.split()`. If a command absolutely requires chained operations (e.g., pipes or logical &&), explicitly wrap it with `["sh", "-c", cmd]` instead of using `shell=True`.

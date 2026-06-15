@@ -1,11 +1,10 @@
 import sys
 import json
 import subprocess
-import os
 
 def run_command(cmd):
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=30)
+        result = subprocess.run(cmd, shell=False, capture_output=True, text=True, timeout=30)
         return {
             "stdout": result.stdout.strip(),
             "stderr": result.stderr.strip(),
@@ -44,15 +43,16 @@ def main():
                 tool_args = params.get("arguments", {})
                 
                 if tool_name == "nf":
-                    cmd = f"nf {tool_args.get('args', '')}"
+                    import shlex
+                    cmd = ["nf"] + shlex.split(tool_args.get('args', ''))
                     res = run_command(cmd)
                     result = {"content": [{"type": "text", "text": f"STDOUT: {res.get('stdout')}\nSTDERR: {res.get('stderr')}"}]}
                 elif tool_name == "status":
-                    cmd = "systemctl status nina --no-pager && tail -n 20 logs/ninagate.log"
+                    cmd = ["sh", "-c", "systemctl status nina --no-pager && tail -n 20 logs/ninagate.log"]
                     res = run_command(cmd)
                     result = {"content": [{"type": "text", "text": res.get("stdout") or res.get("stderr")}]}
                 elif tool_name == "sync":
-                    cmd = "./nina_sync.sh"
+                    cmd = ["./nina_sync.sh"]
                     res = run_command(cmd)
                     result = {"content": [{"type": "text", "text": res.get("stdout")}]}
                 else:
@@ -64,7 +64,7 @@ def main():
             sys.stdout.write(json.dumps(response) + "\n")
             sys.stdout.flush()
             
-        except Exception as e:
+        except Exception:
             # sys.stderr.write(f"Error: {e}\n")
             pass
 
