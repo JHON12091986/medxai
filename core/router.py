@@ -370,7 +370,9 @@ class HybridRouter:
     async def _call_provider(
         self, pid: str, messages: list, task: ClassifiedTask
     ) -> Tuple[str, int, int, float]:
-        await self.rpm_scheduler.acquire(pid)
+        wait_ms = await self.rpm_scheduler.acquire(pid)
+        if wait_ms > 500:
+            logger.warning(f"rpm_throttle provider={pid} waited={wait_ms:.0f}ms")
         start = time.time()
         req_id = str(uuid.uuid4())
 
@@ -482,39 +484,40 @@ class HybridRouter:
         if cached:
             return cached
 
+        # ── Tier-aware routing (Module 10) ────────────────────────────────────
         if force_local:
-            tiers = [LOCAL_PROVIDERS]
+            # Explicit local override — skip classifier tier
+            sorted_groups = [[p for p in LOCAL_PROVIDERS if self.health[p].cb.can_attempt()]]
         elif self.quota_router.should_force_local():
-            tiers = [LOCAL_PROVIDERS, PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3]
+            # Cloud quotas tight → promote local to front
+            local_group = [p for p in LOCAL_PROVIDERS if self.health[p].cb.can_attempt()]
+            cloud_groups = self.quota_router.get_sorted_providers(
+                recommended_tier=task.recommended_tier,
+                complexity=task.complexity,
+                estimated_tokens=task.estimated_tokens,
+                all_providers=ALL_PROVIDERS,
+            )
+            sorted_groups = [local_group] + cloud_groups
         else:
-            tiers = [PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3, LOCAL_PROVIDERS]
+            # Normal path — classifier drives tier selection
+            sorted_groups = self.quota_router.get_sorted_providers(
+                recommended_tier=getattr(task, "recommended_tier", "FAST"),
+                complexity=getattr(task, "complexity", "MEDIUM"),
+                estimated_tokens=task.estimated_tokens,
+                all_providers=ALL_PROVIDERS,
+            )
+            # Always append local as final fallback group
+            local_group = [p for p in LOCAL_PROVIDERS if self.health[p].cb.can_attempt()]
+            if local_group:
+                sorted_groups.append(local_group)
 
-        for attempt in range(2): # OODA: Act -> Observe loop
-            for tier in tiers:
-                available = []
-                for pid in tier:
-                    if pid in LOCAL_PROVIDERS:
-                        meta = LOCAL_PROVIDERS[pid]
-                    else:
-                        meta = ALL_PROVIDERS.get(pid, tier.get(pid, {}))
-                    
-                    if (
-                        self.health[pid].cb.can_attempt()
-                        and not self.quota_router.is_exhausted(pid)
-                        and meta.get("context_window", 8192) >= task.estimated_tokens
-                    ):
-                        available.append(pid)
-
-                if not available:
+        for attempt in range(2):   # OODA: Act -> Observe loop
+            for group in sorted_groups:
+                if not group:
                     continue
-
-                available.sort(key=lambda pid: self.quota_router.adjust_health_score(pid, self.health[pid].health_score), reverse=True)
-
-                for pid in available:
+                for pid in group:
                     try:
                         content, i, o, lat = await self._call_provider(pid, messages, task)
-                        
-                        # OODA: Observe & Decide (Validate)
                         is_valid, error = await self._validate_response(content, task)
                         if is_valid:
                             self.health[pid].record_success(lat, i + o)
@@ -523,19 +526,17 @@ class HybridRouter:
                                 self.cache.set(goal, content, ttl, messages)
                             return content
                         else:
-                            # OODA: Adapt (Penalize and retry)
                             logger.bind(provider=pid, error=error).warning("response_validation_failed")
                             self.health[pid].record_failure()
-                            # Prepend the validation error to help the next model refine the response
                             messages.append({"role": "assistant", "content": content})
-                            messages.append({"role": "user", "content": f"The previous response failed validation: {error}. Please refine and provide a correct, high-quality answer."})
+                            messages.append({"role": "user", "content": f"The previous response failed validation: {error}. Please refine and provide a correct answer."})
                             continue
-
                     except Exception as e:
                         self.health[pid].record_failure()
                         asyncio.create_task(self._check_health_and_notify(pid))
                         logger.bind(provider=pid, error=str(e)).warning("provider_retry")
                         continue
+        # ─────────────────────────────────────────────────────────────────────
 
         return "⚠️ All providers are currently unavailable or failing validation. Try again in a moment."
 

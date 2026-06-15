@@ -724,3 +724,10 @@ When agy quota exhausts, work stops unless we have alternate paths.
 - ROUTING_WIN: Integrated keywords update in `core/task_classifier.py` for more precise routing.
 - CONTEXT_HINT: Keep keyword classifications structured by complexity to maintain clean code path routing.
 - RULE0_VIOLATION: None. All file status checks and git commands done via compliant ninaflash modules.
+
+### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - Tier-aware Routing Upgrade (Modules 6, 7 & 10)
+- OFFLOAD_OPPORTUNITY: None.
+- ESCALATION_TRIGGER: Complex multi-module routing state logic and rate-limit structures -> Cloud LLM recommended.
+- ROUTING_WIN: Replaced `core/quota_router.py` and `core/rpm_scheduler.py` with v2 models and patched `core/router.py` to enable classifier-driven pre-sorted tier routing groups with real-time RPM burst headroom and TTFT wait logging.
+- CONTEXT_HINT: Keeping token budget definitions, context windows, and rate limits centralized in routing maps ensures clear routing flow execution.
+- RULE0_VIOLATION: None. All file operations compliant.
