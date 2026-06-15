@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-16 02:14 +06
-- Git HEAD: 7fdb7ff18804a42347ceccb0f2a2c8bbf67d9eb6
-- Last commit: docs: post-session sync 2026-06-16 02:13
+- Generated: 2026-06-16 02:45 +06
+- Git HEAD: fba25a23d92f910e2ab1ba58a6225c8ccfb3f017
+- Last commit: docs: post-session sync 2026-06-16 02:44
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Tue 2026-06-16 00:25:02 +06; 1h 49min ago
- Invocation: 2e426f0482f64b578becda78bd2fd60a
-   Main PID: 155288 (python)
-      Tasks: 17 (limit: 15177)
-     Memory: 107.2M (peak: 168.7M, swap: 10.6M, swap peak: 75.7M)
-        CPU: 6.445s
+     Active: active (running) since Thu 2026-04-16 00:33:07 +06; 2 months 0 days ago
+ Invocation: 1c4f2a665da64dc0903804e58f7f5e38
+   Main PID: 3350 (python)
+      Tasks: 19 (limit: 18333)
+     Memory: 197.4M (peak: 212.6M)
+        CPU: 10.352s
      CGroup: /system.slice/nina.service
-             └─155288 /home/aibony/nina/.venv/bin/python main.py
+             └─3350 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 16 02:14:09 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[155288]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 16 02:14:20 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[155288]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 16 02:14:30 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[155288]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 16 02:14:37 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[155288]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
-Jun 16 02:14:37 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[155288]: 2026-06-16 02:14:37.513 | WARNING  | core.router:_idle_monitor:577 - quality_probe_fail provider=%s
+Jun 16 02:45:13 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:05:00], next run at: 2026-06-16 02:50:13 +06)" executed successfully
+Jun 16 02:45:13 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 16 02:45:23 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 16 02:45:34 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 16 02:45:44 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
-7fdb7ff docs: post-session sync 2026-06-16 02:13
-5fdcd54 docs: post-session sync 2026-06-16 02:11
-5a725fa docs: post-session sync 2026-06-16 02:10
-d1bee98 docs: post-session sync 2026-06-16 01:58
-78c90d6 feat(swarm): upgrade observability.py with Rich live TUI telemetry panel [swarm-v1 4/4]
+fba25a2 docs: post-session sync 2026-06-16 02:44
+736188e perf(merge): merge PR #260 bolt router optimizations
+650edd7 feat(merge): merge PR #259 sentinel security fixes
+f4e1883 ⚡ Bolt: Refactor hallucination check to use compiled regex
+01a7e4a 🛡️ Sentinel: [CRITICAL] Fix command injection in subprocess calls
 ```
 
 ## 6. Open Blockers
@@ -105,4 +105,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 5111 bytes_
+_Feed size: 5167 bytes_
