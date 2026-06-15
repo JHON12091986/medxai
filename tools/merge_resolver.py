@@ -12,12 +12,8 @@ Usage:
 """
 
 import argparse
-import json
-import os
 import re
 import subprocess
-import sys
-import tempfile
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
@@ -155,13 +151,11 @@ def parse_conflict_blocks(filepath: str) -> list[ConflictBlock]:
     in_conflict = False
     in_jules_section = False
     current_block: ConflictBlock | None = None
-    start_line = 0
 
     for i, line in enumerate(lines):
         if CONFLICT_START.match(line):
             in_conflict = True
             in_jules_section = False
-            start_line = i + 1
             current_block = ConflictBlock(file=filepath, start_line=i + 1, end_line=0)
         elif in_conflict and CONFLICT_SEP.match(line):
             in_jules_section = True
@@ -186,7 +180,7 @@ def parse_conflict_blocks(filepath: str) -> list[ConflictBlock]:
 # Patterns that indicate a definite downgrade if present in Jules but absent in main
 DOWNGRADE_PATTERNS = [
     re.compile(r"self\.config\.get_secret\("),          # known bug pattern
-    re.compile(r'== "ollama"(?!\.lower\(\))'),           # old casing bug
+    re.compile(r'\b\w+\s*==\s*["\']ollama["\']'),           # old casing bug
     re.compile(r"# TODO:.*remove", re.IGNORECASE),
     re.compile(r"DEPRECATED", re.IGNORECASE),
 ]
