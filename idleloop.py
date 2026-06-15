@@ -63,6 +63,30 @@ class IdleProposalLoop:
     def _is_idle(self) -> bool:
         return (time.time() - self._last_user_ts) / 60 >= self.config.idle_threshold_min
 
+    def _is_quota_safe(self) -> bool:
+        """Return False if all cloud providers are rate-limited or unavailable.
+        Falls back to True (safe) if router state cannot be inspected, so
+        we never block proposals due to an instrumentation error.
+        """
+        try:
+            if not self.router:
+                return False
+            # HybridRouter V4 exposes provider health via get_available_providers()
+            available = self.router.get_available_providers()
+            if available is not None:
+                return len(available) > 0
+            # Fallback: check circuit-breaker state map if present
+            cb = getattr(self.router, "circuit_breakers", None)
+            if cb and isinstance(cb, dict):
+                open_count = sum(1 for s in cb.values() if getattr(s, "is_open", False))
+                total = len(cb)
+                if total > 0 and open_count >= total:
+                    return False
+            return True
+        except Exception as e:
+            logger.debug(f"quota_safe_check_failed (non-blocking) {e}")
+            return True
+
     async def _loop(self):
         while True:
             try:
@@ -73,6 +97,9 @@ class IdleProposalLoop:
                 ram_gb = psutil.virtual_memory().used / (1024 ** 3)
                 if ram_gb >= self.config.ram_guard_gb:
                     logger.warning(f"idle_loop_skipped RAM={ram_gb:.1f}GB")
+                    continue
+                if not self._is_quota_safe():
+                    logger.info("idle_loop_skipped all_providers_exhausted — waiting for quota reset")
                     continue
                 logger.info("idle_loop_tick generating proposal brief")
                 await self._generate_proposal()
