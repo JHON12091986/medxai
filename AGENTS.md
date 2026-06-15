@@ -717,3 +717,10 @@ When agy quota exhausts, work stops unless we have alternate paths.
 - ROUTING_WIN: Direct replacement of `.geminiignore` prevents cloud code context and token bloat from ingesting large artifacts.
 - CONTEXT_HINT: Avoid including unnecessary file types in prompt payload sizes by setting precise ignore matching rules.
 - RULE0_VIOLATION: None. All file status checks and git runs performed via compliant `ninaflash` CLI wrapper commands.
+
+### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - Task Classifier Updates
+- OFFLOAD_OPPORTUNITY: None.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Integrated keywords update in `core/task_classifier.py` for more precise routing.
+- CONTEXT_HINT: Keep keyword classifications structured by complexity to maintain clean code path routing.
+- RULE0_VIOLATION: None. All file status checks and git commands done via compliant ninaflash modules.

@@ -3783,3 +3783,13 @@
 **Files changed:** data/gemini_scratch.jsonl,data/session_memory.jsonl,docs/space/claude_feed.md,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md,ninagate/main.py
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 355 — 2026-06-16 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,core/task_classifier.py,data/gemini_scratch.jsonl,data/session_memory.jsonl,docs/space/claude_feed.md,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md
+
+**Verification:** git push OK, nina.service active
