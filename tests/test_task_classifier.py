@@ -4,7 +4,7 @@ from core.task_classifier import classify_task, ClassifiedTask
 @pytest.mark.asyncio
 async def test_classify_task_simple_keyword():
     """Test that SIMPLE_KEYWORDS return a quick/SIMPLE task."""
-    text = "cat some_file.py".ljust(301)
+    text = "format some_file.py".ljust(301)
     messages = [{"role": "user", "content": "msg1"}, {"role": "assistant", "content": "msg2"}, {"role": "user", "content": text}]
     result = await classify_task(text, messages)
     assert result.task_type == "quick"

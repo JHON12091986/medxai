@@ -24,3 +24,9 @@ Configure your BYOK tool (e.g. Cursor, Aider) with:
 ## Changing Provider Priority
 
 Edit `providers.json` to modify the provider cascade priority. NinaGate will hot-reload the configuration instantly without needing a restart.
+
+## Response Caching
+NinaGate implements a response caching layer to store and serve previous LLM responses. This significantly reduces redundant calls to upstream providers and lowers latency.
+- **Mechanism:** Cache keys are generated based on sorted payload representation, ensuring robustness across different request formats.
+- **Persistence:** Cached responses are persisted to `data/router_cache.json` and survive service restarts.
+- **Benefits:** Minimizes token usage and improves overall system responsiveness.

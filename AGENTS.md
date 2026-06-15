@@ -55,7 +55,7 @@ Only if ALL above = NO → use cloud tool
    → USE nf file patch <file> --find "X" --replace "Y"
 4. Is this grep_search?
    → USE nf file grep <pattern> --dir <dir> --ext .py,.md,.sh
-5. Is this list_directory or glob on a code directory?
+5. Is this list_directory or glob?
    → USE nf code index
 
 ### BANNED TOOL DISPATCH TABLE:
@@ -78,7 +78,7 @@ Only if ALL above = NO → use cloud tool
 | replace (single string)              | nf file patch --find "X" --replace "Y"       |
 | replace (insert after anchor)        | nf file insert --after "ANCHOR" --text "…"   |
 | grep_search (any pattern)            | nf file grep <pattern> --dir <dir>           |
-| list_directory / glob (code dirs)    | nf code index                                |
+| list_directory / glob                | nf code index                                |
 
 ### ALLOWED — These native calls are always legitimate:
 
@@ -317,6 +317,8 @@ Run tools/rule0_audit.py to identify missed nf opportunities.
 - Which NinaFlash outputs needed cloud escalation and why? → label: ESCALATION_TRIGGER
 - Which routing decisions were optimal? → label: ROUTING_WIN
 - New file patterns affecting chunking strategy? → label: CONTEXT_HINT
+- Were there any RULE0 violations in this session? → label: RULE0_VIOLATION
+- Run `python3 tools/rule0_audit.py` to check for RULE0 violations.
 
 ### 6B. Append to AGENTS.md — "## NinaGate Routing History" section
 ```
@@ -329,7 +331,7 @@ Run tools/rule0_audit.py to identify missed nf opportunities.
 
 ### 6C. Run Sync (mandatory, no exceptions)
 nf memory session-save --summary "<one line of what was done>"
-python3 tools/rule0_audit.py
+python3 tools/rule0_audit.py # Run RULE0 audit
 cd ~/nina && ./nina_sync.sh
 Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 → Perplexity ARCHITECT OVERWATCH picks up learnings in next thread.
@@ -443,11 +445,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 
 - HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
 
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+### [2026-06-15] Session Update — Antigravity
+- OFFLOAD_OPPORTUNITY: Static type hint enforcement and vulture analysis → 100% local next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Reverting to AST-based libcst enforcement resolved performance, pathing, and recursion regression.
+- CONTEXT_HINT: Subprocess testing must use `sys.executable` to keep virtual environment packages active.
+- RULE0_VIOLATION: None. All tool calls strictly compliant with nf commands.
 
 ### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash)
 - OFFLOAD_OPPORTUNITY: Mechanical import fixes and pytest validations.
@@ -562,3 +565,25 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: None.
 - ROUTING_WIN: Re-aligning test assertions to match complex agent optimization protocol flows.
 - CONTEXT_HINT: Always check pytest traceback to see actual call count changes caused by self-optimization protocols.
+
+### [2026-06-15] Session Update — Gemini CLI
+- OFFLOAD_OPPORTUNITY: Querying local git status and directory listing -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: Resolving massive duplicate/stuck session loops -> Cloud/Gemini Pro recommended to coordinate cleanup logic.
+- ROUTING_WIN: Automated session deletion and local registry synchronization to resolve stuck API resources.
+- CONTEXT_HINT: Autopilot retry loop logic needs safety throttle checks to prevent massive session duplication in state transitions.
+
+### [2026-06-15] Session Update — Antigravity (Gemini 2.5 Flash) - NinaGate and CLI Shim Resolution
+- OFFLOAD_OPPORTUNITY: Simple systemctl checks, script validation, and pyflakes runs -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Dynamic `sys.path` injection in `ninagate/main.py` solves `ModuleNotFoundError` cleanly without systemd service file writes, and implementing python-based prompt handling in `bin/gemini` prevents JSON payload quoting errors.
+- CONTEXT_HINT: The CLI shim's hardcoded check for `'gemini_cli'` instead of `'quotas'` led to false-positive quota exhaustion, forcing all traffic through a quoting-broken curl fallback.
+
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Ninagate Status Analysis
+- OFFLOAD_OPPORTUNITY: Querying local environment, config parameters, and system processes -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Automated status report tool `tools/ninagate_info.py` queries environment keys, active models list, and config spacing rules to produce high-density status markdown.
+- CONTEXT_HINT: Local Ollama model loader checks for `"ollama"` instead of `"OLLAMA"`, leading to local model discovery bypass in `/v1/models`.
+- RULE0_VIOLATION: None. All actions compliant.
+
+
+\n

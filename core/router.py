@@ -26,6 +26,7 @@ logger = get_logger("nina.router")
 
 # F-03f: Bangla Unicode block U+0980–U+09FF
 _BANGLA_RE = re.compile(r"[\u0980-\u09FF]")
+_HALLUCINATION_MARKERS_LOWER = ["i am a large language model", "as an ai", "i cannot fulfill this request"]
 
 def load_providers_from_json() -> tuple[dict, dict, dict]:
     path = Path(__file__).parent.parent / "ninagate" / "providers.json"
@@ -42,9 +43,12 @@ def load_providers_from_json() -> tuple[dict, dict, dict]:
                 }
                 tier = p.get("tier", 2)
                 name = p["name"].upper()
-                if tier == 1: t1[name] = entry
-                elif tier == 2: t2[name] = entry
-                elif tier == 3: t3[name] = entry
+                if tier == 1:
+                    t1[name] = entry
+                elif tier == 2:
+                    t2[name] = entry
+                elif tier == 3:
+                    t3[name] = entry
         except Exception as e:
             logger.error(f"Failed to load providers from json: {e}")
     return t1, t2, t3
@@ -408,8 +412,8 @@ class HybridRouter:
             return False, "Response too short for a research task."
         
         # 2. Heuristic: Hallucination markers
-        hallucination_markers = ["I am a large language model", "As an AI", "I cannot fulfill this request"]
-        if any(m.lower() in content.lower() for m in hallucination_markers):
+        content_lower = content.lower()
+        if any(m in content_lower for m in _HALLUCINATION_MARKERS_LOWER):
             return False, "AI refusal or boilerplate detected."
 
         # 3. Model-based validation (for Coding/Complex tasks)
@@ -426,7 +430,7 @@ class HybridRouter:
                     return True, ""
                 else:
                     return False, f"Logic Gate Refusal: {val_content}"
-            except:
+            except Exception:
                 # If validator fails, default to trusting the response to avoid deadlock
                 pass
 

@@ -56,6 +56,6 @@ def generate_dependency_graph(root_dir):
 if __name__ == "__main__":
     nina_root = Path(__file__).parent.parent.resolve()
     graph = generate_dependency_graph(nina_root)
-    output_path = nina_root / "data" / dependency_graph.json
-    output_path.write_text(json.dumps(graph, indent=2))
+    output_path = nina_root / "data" / "dependency_graph.json"
+    output_path.write_text(json.dumps(graph, indent=2), encoding="utf-8")
     print(f"Lightspeed dependency graph generated at {output_path}")

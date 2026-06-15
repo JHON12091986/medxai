@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-15 00:30 +06
-- Git HEAD: dd94d0037dbc92c3be52829e4f780edad712c6ef
-- Last commit: docs: post-session sync 2026-06-15 00:30
+- Generated: 2026-06-15 02:44 +06
+- Git HEAD: df207d859da2aab929d5b1b90b25f72cb32797ae
+- Last commit: docs: post-session sync 2026-06-15 02:44
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Sun 2026-06-14 23:03:21 +06; 1h 27min ago
- Invocation: 0d0759c6d7024fb6806fa67a2f74a5e7
-   Main PID: 69143 (python)
-      Tasks: 21 (limit: 15177)
-     Memory: 98.5M (peak: 113.8M, swap: 13.6M, swap peak: 13.6M)
-        CPU: 5.190s
+     Active: active (running) since Mon 2026-06-15 02:43:25 +06; 1min 26s ago
+ Invocation: 5ee4d5e6e5944e5db5647d63ab94fbdc
+   Main PID: 164146 (python)
+      Tasks: 19 (limit: 15177)
+     Memory: 92.1M (peak: 107.3M)
+        CPU: 2.520s
      CGroup: /system.slice/nina.service
-             └─69143 /home/aibony/nina/.venv/bin/python main.py
+             └─164146 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 15 00:30:10 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: 2026-06-15 00:30:10.262 | WARNING  | core.router:_idle_monitor:553 - quality_probe_fail provider=%s
-Jun 15 00:30:17 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 00:30:27 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 00:30:38 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 00:30:48 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[69143]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:44:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
+Jun 15 02:44:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: 2026-06-15 02:44:29.501 | WARNING  | core.router:_idle_monitor:567 - quality_probe_fail provider=%s
+Jun 15 02:44:30 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:44:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 02:44:50 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
-dd94d00 docs: post-session sync 2026-06-15 00:30
-157aed6 feat(jules): implement parallel sub-agent swarm dispatching
-2548861 docs: post-session sync 2026-06-15 00:24
-34bae9f docs(space): add kimi agent swarm reference
-9aaeaec docs: post-session sync 2026-06-15 00:21
+df207d8 docs: post-session sync 2026-06-15 02:44
+a7fb399 merge(feature): merge rule0 audit and pr-255 fixes
+337fe28 merge(origin): pull remote main
+3be732c Merge pull request #254 from aibony/jules-7812791168657500729-d9097e8b
+716c2a3 docs: post-session sync 2026-06-15 02:37
 ```
 
 ## 6. Open Blockers
@@ -98,11 +98,11 @@ dd94d00 docs: post-session sync 2026-06-15 00:30
 | feature.ews_blocked | EWS email feature blocked (open issue O-02) | OPEN |
 
 ## 10. Quota Snapshot
-gemini_api: 0/1000 | ollama: unlimited | ninagate_up: no
+gemini_api: 0/1000 | ollama: unlimited | ninagate_up: yes
 
 ## 11. Guardian Last Run
 Guardian log not found
 
 
 ---
-_Feed size: 5095 bytes_
+_Feed size: 5063 bytes_

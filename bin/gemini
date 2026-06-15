@@ -2,10 +2,10 @@
 # ~/bin/gemini — NINA Gemini CLI shim
 # Intercepts gemini calls, falls back to NinaGate when quota exhausted
 
-REAL_GEMINI="/home/aibony/.npm-global/bin/gemini" # adjust to actual binary path
+REAL_GEMINI="/home/aibony/.npm-global/bin/gemini"
 QUOTA_FILE="$HOME/nina/data/quota_state.json"
 NINAGATE_URL="http://localhost:8080/v1/chat/completions"
-FALLBACK_MODEL="gemini-2.5-flash"         # via OpenRouter in NinaGate
+FALLBACK_MODEL="gemini-2.5-flash"
 
 # Read quota from quota_state.json
 GEMINI_QUOTA=$(python3 -c "
@@ -13,16 +13,14 @@ import json, os, sys
 try:
     quota_file_path = os.path.expanduser('$QUOTA_FILE')
     if not os.path.exists(quota_file_path):
-        # Create a default quota file if it doesn't exist
-        with open(quota_file_path, 'w') as f:
-            json.dump({'gemini_cli': {'remaining': 1}}, f) # Default to 1 to allow initial use
-
-    with open(quota_file_path, 'r') as f:
-        d = json.load(f)
-    print(d.get('gemini_cli', {}).get('remaining', 0))
+        print(900)
+    else:
+        with open(quota_file_path, 'r') as f:
+            d = json.load(f)
+        used = d.get('quotas', {}).get('gemini', 0)
+        print(max(0, 900 - used))
 except Exception as e:
     print(0)
-    print(f'[nina-shim] Error reading quota file: {e}', file=sys.stderr)
 " 2>/dev/null)
 
 # Passthrough if quota alive and real binary exists
@@ -30,37 +28,38 @@ if [ "$GEMINI_QUOTA" -gt 0 ] && [ -x "$REAL_GEMINI" ]; then
     exec "$REAL_GEMINI" "$@"
 fi
 
-# Quota exhausted or binary gone — route through NinaGate
-PROMPT="$*"
-if [ -z "$PROMPT" ]; then
-    echo "[nina-shim] No prompt provided." >&2
-    exit 1
-fi
+# Quota exhausted or binary gone — route through NinaGate via python to prevent json/quoting issues
+python3 -c "
+import urllib.request, json, sys, os
 
-echo "[nina-shim] Gemini CLI quota exhausted or binary missing — routing via NinaGate ($FALLBACK_MODEL)" >&2
+prompt = ' '.join(sys.argv[1:])
+if not prompt:
+    print('[nina-shim] No prompt provided.', file=sys.stderr)
+    sys.exit(1)
 
-curl -s -X POST "$NINAGATE_URL" \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer nina-local" \
-  -d '{
-    "model": "'"$FALLBACK_MODEL"'",
-    "messages": [{
-      "role": "user",
-      "content": "'"$PROMPT"'"
-    }]
-  }' | python3 -c "
-import json, sys
+print(f'[nina-shim] Gemini CLI quota exhausted or binary missing — routing via NinaGate ($FALLBACK_MODEL)', file=sys.stderr)
+
+url = '$NINAGATE_URL'
+payload = {
+    'model': '$FALLBACK_MODEL',
+    'messages': [{'role': 'user', 'content': prompt}]
+}
+data = json.dumps(payload).encode('utf-8')
+req = urllib.request.Request(
+    url,
+    data=data,
+    headers={'Content-Type': 'application/json', 'Authorization': 'Bearer nina-local'}
+)
+
 try:
-    r = json.load(sys.stdin)
-    if 'choices' in r and len(r['choices']) > 0 and 'message' in r['choices'][0] and 'content' in r['choices'][0]['message']:
-        print(r['choices'][0]['message']['content'])
-    else:
-        print(f'[nina-shim] NinaGate response format unexpected: {r}', file=sys.stderr)
-        sys.exit(1)
-except json.JSONDecodeError:
-    print(f'[nina-shim] NinaGate response not valid JSON: {sys.stdin.read()}', file=sys.stderr)
-    sys.exit(1)
+    with urllib.request.urlopen(req) as response:
+        res = json.loads(response.read().decode('utf-8'))
+        if 'choices' in res and res['choices']:
+            print(res['choices'][0]['message']['content'])
+        else:
+            print(f'[nina-shim] NinaGate response format unexpected: {res}', file=sys.stderr)
+            sys.exit(1)
 except Exception as e:
-    print(f'[nina-shim] NinaGate response parse error: {e}', file=sys.stderr)
+    print(f'[nina-shim] NinaGate request failed: {e}', file=sys.stderr)
     sys.exit(1)
-"
+" "$@"

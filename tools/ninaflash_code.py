@@ -281,13 +281,26 @@ def cmd_code_doc(args):
         except Exception:
             pass
 
+def get_vulture_bin() -> str:
+    import sys
+    py_dir = Path(sys.executable).parent
+    v_bin = py_dir / "vulture"
+    if v_bin.exists():
+        return str(v_bin)
+    for venv_name in [".venv", "venv"]:
+        v_bin = Path.cwd() / venv_name / "bin" / "vulture"
+        if v_bin.exists():
+            return str(v_bin)
+    return "vulture"
+
 # --- cmd_code_dead_code ---
 def cmd_code_dead_code(args):
     """[065] Identify unused functions/imports using vulture."""
-    if not shutil.which("vulture"):
+    v_bin = get_vulture_bin()
+    if not shutil.which(v_bin):
         return
     print(f"── ninaflash dead-code: {args.target} ──")
-    res = subprocess.run(["vulture", args.target], capture_output=True, text=True)
+    res = subprocess.run([v_bin, args.target], capture_output=True, text=True)
     if res.stdout:
         print(res.stdout.strip())
     print("Verdict: " + ("✅ PASS" if res.returncode == 0 else "❌ FAIL"))

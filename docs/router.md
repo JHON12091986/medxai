@@ -48,9 +48,15 @@ If an impending rate limit is detected for the top-priority provider, the router
 
 To further minimize token usage and latency, HybridRouter V4 includes a persistent response caching layer.
 - **Deduplication:** Identical prompts (including recent message history) are hashed and checked against the cache before any provider call is made.
+- **Implementation:** The caching layer is primarily implemented in `ninagate/main.py`.
 - **Persistence:** Unlike standard in-memory caches, NINA's cache is persisted to `data/router_cache.json`. This ensures that cached responses survive service restarts and system reboots.
+- **Robustness:** Cache keys are based on sorted payload representation to ensure robustness across stream and non-stream requests.
 - **TTL Management:** Cache entries have specific Time-To-Live (TTL) values based on task type (e.g., `coding` tasks may be cached for 6 hours, while `quick` tasks are cached for 1 hour). Sensitive tasks are never cached.
 - **Automatic Purging:** The cache periodically purges expired entries during idle periods to maintain a lean storage footprint.
+
+## Routing Bug Fixes
+- **`datetime` NameError Resolution:** An undefined `datetime` NameError in `core/router.py:263` was identified as the root cause of erratic daemon behavior. This bug has been resolved, improving the stability and reliability of the routing loop.
+- **Migration Recommendation:** For core model loop behavior in Gemini CLI 3.0/3.1, it is recommended to migrate to Antigravity CLI (agy) or use Gemini 2.5/3.5 Flash.
 
 ## Performance Telemetry (v14.0)
 

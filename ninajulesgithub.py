@@ -68,6 +68,13 @@ def _try_rebase(branch: str) -> tuple[bool, str]:
 def audit_and_merge():
     """Main lifecycle: Audit open PRs, rebase, and merge if healthy."""
     try:
+        # Auto-unblock any awaiting sessions first
+        try:
+            import asyncio
+            asyncio.run(jules.auto_unblock_awaiting())
+        except Exception as e:
+            logger.error(f"Auto-unblock failed in pipeline: {e}")
+
         # 1. Fetch latest state
         _git("fetch", "origin", "main")
         

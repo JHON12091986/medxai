@@ -89,6 +89,57 @@ class AgentLoop:
     def _is_bangla(cls, text: str) -> bool:
         return bool(cls._BANGLA_RE.search(text))
 
+    def _search_index_by_terms(self, goal: str) -> list:
+        index_path = Path("docs/space/nina_index.json")
+        if not index_path.exists():
+            return []
+        try:
+            with open(index_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            
+            stopwords = {"the", "and", "for", "you", "that", "this", "with", "from", "your", "how", "what", "which", "are", "have", "please", "should", "need", "needed"}
+            words = [w.strip("?,.:;\"'()") for w in goal.lower().split()]
+            keywords = [w for w in words if len(w) > 3 and w not in stopwords]
+            
+            if not keywords:
+                return []
+            
+            matches = []
+            for file_obj in data.get("files", []):
+                path = file_obj.get("path", "")
+                summary = file_obj.get("summary", "").lower()
+                path_lower = path.lower()
+                
+                score = 0
+                for kw in keywords:
+                    if kw in path_lower:
+                        score += 3
+                    if kw in summary:
+                        score += 1
+                
+                if score > 0:
+                    matches.append((score, path))
+            
+            matches.sort(reverse=True, key=lambda x: x[0])
+            return [Path(p) for _, p in matches]
+        except Exception:
+            return []
+
+    def _compress_markdown(self, text: str, keywords: list) -> str:
+        lines = text.splitlines()
+        result = []
+        for line in lines:
+            stripped = line.strip()
+            if stripped.startswith("#"):
+                result.append(line)
+            elif any(kw in line.lower() for kw in keywords):
+                result.append(line)
+        
+        compressed = "\n".join(result)
+        if len(compressed) < 200:
+            return text[:1500]
+        return compressed
+
     _BANGLA_OVERRIDE = (
         "[LANGUAGE OVERRIDE: User wrote in Bangla. "
         "Your ENTIRE response must be in Bangla. "
@@ -121,9 +172,50 @@ class AgentLoop:
             logger.warning(f"thermal_warn CPU={cput} GPU={gput}", extra={"log":"nina.log"})
 
         max_steps  = STEP_BUDGETS.get(task.task_type, DEFAULT_MAX_STEPS)
-        context    = await self.memory.build_context(goal)
-        
+        # 1. Document-to-Skill / Context Enrichment (Metacognition)
+        enriched_context = ""
+        try:
+            related_docs = self._search_index_by_terms(goal)
+            stopwords = {"the", "and", "for", "you", "that", "this", "with", "from", "your", "how", "what", "which", "are", "have"}
+            goal_keywords = [w.strip("?,.:;\"'()") for w in goal.lower().split()]
+            goal_keywords = [w for w in goal_keywords if len(w) > 3 and w not in stopwords]
+            
+            for doc_path in related_docs[:2]:
+                if doc_path.name in ("agent.py", "router.py"):
+                    continue
+                if doc_path.exists() and doc_path.is_file():
+                    raw_content = doc_path.read_text(encoding="utf-8", errors="ignore")
+                    if doc_path.suffix == ".py":
+                        from tools.context_pruner import prune_content
+                        compressed = prune_content(raw_content, ".py")
+                    elif doc_path.suffix == ".md":
+                        compressed = self._compress_markdown(raw_content, goal_keywords)
+                    else:
+                        compressed = raw_content[:1000]
+                    enriched_context += f"\n--- Reference Manual: {doc_path.name} ---\n{compressed}\n"
+        except Exception as e:
+            logger.warning(f"context_enrichment_failed: {e}")
+
+        base_context = await self.memory.build_context(goal)
+        context = base_context + enriched_context
+
+        # 2. System 2 Thinking (Pre-Compute Planning Blueprint)
+        blueprint = ""
+        if self._should_self_check(task):
+            try:
+                self._log_to_hud(0, "think", "System 2: Pausing to compute planning blueprint...")
+                planning_prompt = (
+                    f"Goal: {goal}\n\nContext:\n{context}\n\n"
+                    "System 2 Reflection: Pause and compute a complex logical chain to achieve this goal. "
+                    "Draft a detailed step-by-step blueprint. Identify prerequisites, potential risks, and testing steps."
+                )
+                blueprint = await self.router.route(planning_prompt, [{"role": "user", "content": planning_prompt}], task, force_local=force_local)
+            except Exception as e:
+                logger.warning(f"system2_thinking_failed: {e}")
+
         system_frame = ReasoningKernel.get_system_frame(goal, context)
+        if blueprint:
+            system_frame += f"\n\n[SYSTEM 2 PLANNING BLUEPRINT]\n{blueprint}"
         bangla_sys = ([{"role": "system", "content": self._BANGLA_OVERRIDE.strip()}]
                       if self._is_bangla(goal) else [])
         msgs = bangla_sys + [{"role": "user", "content": system_frame}] + session_history.copy()
