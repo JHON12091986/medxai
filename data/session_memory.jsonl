@@ -27,3 +27,4 @@
 {"ts": "2026-06-15T14:47:58.724316", "summary": "integrate ninagate status reporting into nf gemini status command", "head": "6f573ea3d169f2e750b55bee44d893e3112ca2f7", "branch": "jules-feat-rule0-audit-6156341434024541627"}
 {"ts": "2026-06-15T15:03:43.799393", "summary": "Resolved open PR #257 on GitHub by pushing merged main, deleting branches, and running sync", "head": "b6f0c225c3ff0483f09eaf5b7785503b63ca5236", "branch": "main"}
 {"ts": "2026-06-15T16:02:07.870959", "summary": "Implement live provider status dashboard in ninagate and ninaui", "head": "ad16c8a3e54b7592e96012c9b570d7a71f252ab5", "branch": "main"}
+{"ts": "2026-06-15T16:21:22.372724", "summary": "Fixed case-sensitivity matching bugs in local proxy and HybridRouter, and added LOCAL_PROVIDERS fallback to router", "head": "d0e19c9356fd76658fce7ca01f75e52060d57074", "branch": "main"}

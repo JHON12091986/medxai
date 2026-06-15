@@ -321,6 +321,7 @@ async def stream_response(response: httpx.Response, h: ProviderHealth, start_tim
         await response.aclose()
 
 @app.get("/v1/models")
+@app.get("/genai/v1/models")
 async def list_models():
     return JSONResponse(status_code=200, content={"object": "list", "data": available_models_cache})
 
@@ -372,6 +373,7 @@ async def _classify_request_proxy(payload):
 async def forward_to_provider(payload, providers_to_try, is_stream):
     for score, provider, api_key, h in providers_to_try:
         provider_name = provider["name"]
+        provider_name_lower = provider_name.lower()
         base_url = provider.get("base_url")
         headers = {"Content-Type": "application/json"}
         if api_key: headers["Authorization"] = f"Bearer {api_key}"
@@ -379,14 +381,14 @@ async def forward_to_provider(payload, providers_to_try, is_stream):
         provider_payload = payload.copy()
         if provider.get("model"):
             provider_payload["model"] = provider["model"]
-        elif provider_name == "ollama" and "model" not in provider_payload:
+        elif provider_name_lower == "ollama" and "model" not in provider_payload:
             provider_payload["model"] = "qwen2.5-coder:7b"
 
         # Payload Sanitization
-        if provider_name == "gemini":
+        if provider_name_lower == "gemini":
             provider_payload.pop("stream_options", None)
             provider_payload.pop("cache_control", None)
-        elif provider_name == "groq":
+        elif provider_name_lower == "groq":
             provider_payload.pop("stream_options", None)
 
         url = f"{base_url}/chat/completions"
@@ -421,6 +423,7 @@ async def forward_to_provider(payload, providers_to_try, is_stream):
     return None, None, None, None
 
 @app.post("/v1/chat/completions")
+@app.post("/genai/v1/chat/completions")
 async def proxy_chat_completions(request: Request):
     config = load_config() # Load config
     try:
@@ -458,7 +461,7 @@ async def proxy_chat_completions(request: Request):
         h = health_tracker[p["name"]]
         if target_provider_name or h.cb.allow_request():
             entry = (h.score(), p, api_key, h)
-            if p.get("name") == "ollama": local_providers.append(entry)
+            if p.get("name").lower() == "ollama": local_providers.append(entry)
             else: cloud_providers.append(entry)
                 
     cloud_providers.sort(key=lambda x: x[0], reverse=True)

@@ -390,7 +390,7 @@ class HybridRouter:
             return content, 0, 0, lat
 
         meta = cast(dict, ALL_PROVIDERS[pid]).copy()
-        api_key = self.config.get_secret(meta["key_field"]) if meta["key_field"] else None
+        api_key = getattr(self.config, meta["key_field"], None) if meta["key_field"] else None
 
         headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
         r = await self.http.post(
@@ -486,7 +486,7 @@ class HybridRouter:
         elif self.quota_router.should_force_local():
             tiers = [LOCAL_PROVIDERS, PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3]
         else:
-            tiers = [PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3]
+            tiers = [PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3, LOCAL_PROVIDERS]
 
         for attempt in range(2): # OODA: Act -> Observe loop
             for tier in tiers:

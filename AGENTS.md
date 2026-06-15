@@ -613,5 +613,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Make sure to lowercase provider names when checking or incrementing daily quota states, since `providers.json` names are uppercase but `quota_state.json` utilizes lowercase.
 - RULE0_VIOLATION: None. All file reads, greps, and code inspections were performed using ninaflash commands or python inspectors.
 
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Local Fallback and Case-Sensitivity Resolution
+- OFFLOAD_OPPORTUNITY: Simple compilation checks, index updates, and test executions -> route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Fixing case-sensitivity name mismatch bugs in `ninagate/main.py` and adding `LOCAL_PROVIDERS` as the ultimate fallback in `core/router.py` ensures that when cloud limits/quotas exhaust, the system seamlessly falls back to local models (Ollama/Qwen) instead of failing.
+- CONTEXT_HINT: Always lower-case provider names when performing conditional checks in local proxy scripts to prevent casing mismatches with `providers.json`.
+- RULE0_VIOLATION: None. All file operations, status lookups, and test runs were done via compliant shell calls or python one-liners.
+
 
 \n
