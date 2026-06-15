@@ -627,5 +627,9 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Utilizing `which -a` and verifying file path identities avoids infinite recursion loops in wrapper scripts.
 - RULE0_VIOLATION: None.
 
-
-\n
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Simple Calculation
+- OFFLOAD_OPPORTUNITY: Simple math questions can be resolved locally without cloud escalations -> route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Direct answering of math requests.
+- CONTEXT_HINT: None.
+- RULE0_VIOLATION: None.
