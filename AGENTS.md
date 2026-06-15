@@ -696,3 +696,10 @@ When agy quota exhausts, work stops unless we have alternate paths.
 - `tools/nina_token_guard.py` — prompt classifier + cache + compressor
 - `tools/agy_quota_monitor.sh` — quota reader + data/agy_quota.json writer
 - `core/quota_dispatcher.py` — unified dispatch entry point for all LLM calls
+
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Three-Layer Token Conservation
+- OFFLOAD_OPPORTUNITY: Mechanical routing, token counting, and query caching -> 100% TokenGuard next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Replacing direct `self.router.route` calls with `self.dispatcher.dispatch(...).execute()` globally intercepts all tasks to apply the TokenGuard classifier and cache checking.
+- CONTEXT_HINT: Launch `./tools/agy_quota_monitor.sh --watch &` at session startup to automatically feed the state into `data/agy_quota.json`.
+- RULE0_VIOLATION: None. All file operations compliant.
