@@ -14,8 +14,11 @@ When Jules pauses a task to ask a clarifying question, the unified engine in `to
 ## 3. NinaGate & Smart Routing
 NinaGate acts as a reverse proxy intercepting all OpenAI-compatible API calls.
 - **Decision Tree:** If a task is "SIMPLE" (formatting, regex, docstrings), NinaGate reroutes it to `NinaFlash` running `qwen2.5-coder` locally via Ollama.
-- **Fallbacks:** If a cloud provider rate limits (429) or fails, the router seamlessly cascades to available local or secondary cloud models.
+- **Fallbacks & Failovers:** If a cloud provider rate limits (429) or fails, the router seamlessly cascades to secondary cloud or local models. If all cloud providers are exhausted or unavailable, it uses the local Ollama provider as the ultimate fallback tier.
 - **Response Caching:** Implements a caching layer (in `ninagate/main.py`) to store and serve previous LLM responses, significantly reducing redundant calls and latency. Cache keys are based on sorted payload representation for robustness.
+- **Quota-Aware Routing:** The `QuotaRouter` (`core/quota_router.py`) dynamically tracks provider usage against daily/weekly limits. If usage approaches or exceeds `quota_soft_limit` (e.g., 800 daily requests for Gemini) or hard caps, routing scores are demoted, and the router forces local fallback to protect cloud quotas.
+- **Rate-Limiter Scheduler:** The token-bucket `RPMScheduler` (`core/rpm_scheduler.py`) controls request-per-minute (RPM) rates for each provider with dynamic timestamp sliding windows to prevent rate-limit blockages.
+- **Case-Insensitive Provider Matching:** Provider checks are fully normalized to prevent casing mismatches between configuration templates and active runtime mappings.
 
 ## 3.1. Standalone `ninajulesgithub` Service
 The orchestrator scheduler for Jules has been migrated to a standalone systemd service. This enhances resilience and decouples it from the main NINA process.
