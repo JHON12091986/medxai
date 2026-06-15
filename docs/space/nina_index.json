@@ -1,6 +1,6 @@
 {
   "version": "14.3",
-  "generated_at": "2026-06-16T00:59:49.024491",
+  "generated_at": "2026-06-16T01:04:58.654218",
   "repo": "NINA",
   "files": [
     {
@@ -1041,6 +1041,30 @@
       ]
     },
     {
+      "path": "core/bench_runner.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "lifecycle": "active",
+      "origin": "manual",
+      "retention_policy": "keep",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [
+        "strict_typing"
+      ],
+      "summary": "Governed artifact.",
+      "hash": "7d3f6c1be238367ad02f7051d4c8fae7",
+      "tags": [
+        "code",
+        "active",
+        "source_of_truth"
+      ],
+      "test_exempt_reason": "known-infra-stem"
+    },
+    {
       "path": "core/capabilities.py",
       "category": "code",
       "role": "source_of_truth",
@@ -1810,7 +1834,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "daea33c7a26a841c34c8ee5680ff49d3",
+      "hash": "c2904c655c8d649aae8e99e254ab37da",
       "tags": [
         "config",
         "active",
@@ -1894,7 +1918,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "1ffa8d4f341833e69175d33d808cb296",
+      "hash": "fd82ff5e8cafd7ed5ce330258d1d02ed",
       "tags": [
         "other",
         "active",
@@ -2860,7 +2884,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "92616d0377db14fe47f2964f461eb9e7",
+      "hash": "7c01eb0e12920c770830547737cc1eb8",
       "tags": [
         "config",
         "active",
@@ -3154,7 +3178,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "f5427c83f663079ff0dfab80e4ec3c15",
+      "hash": "a6486043fc34129e5a869603fb3e8e40",
       "tags": [
         "doc",
         "active",
@@ -3385,7 +3409,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "25ed05704af2e8efef9cd80fa7692320",
+      "hash": "058012ee1b47f04e001c1b9d70e4ff96",
       "tags": [
         "doc",
         "active",
@@ -3406,7 +3430,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "db492ab9f91e9d44745b29831bffbe5f",
+      "hash": "59d16a1dd06008cd6e85d498bbdc7004",
       "tags": [
         "config",
         "active",
@@ -3427,7 +3451,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "666433d47dcef25ff64fa9fff56338b5",
+      "hash": "50158107ba44d80b89a00e054ca22fcb",
       "tags": [
         "doc",
         "active",
@@ -3469,7 +3493,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "ca510ffaf2ccba4a84ce4e9a91dfb996",
+      "hash": "b5ed6aed4ca8d24781d000e30905dc51",
       "tags": [
         "doc",
         "active",
@@ -4039,7 +4063,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "65162ecc194d020abe7f2f294f841ac4",
+      "hash": "4ae8f9770bd1fbf7e3d99b7d4208feb6",
       "tags": [
         "log",
         "active",
@@ -4060,7 +4084,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "b5e570a7d9c907fdc7bff5aefdbc5307",
+      "hash": "3aee57b2987f0928117faae98c6d4696",
       "tags": [
         "log",
         "active",
@@ -4270,7 +4294,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "7daad4d086aa7d0e745385d3c5bdc067",
+      "hash": "2dc251cde4d810cbfa9357a7fdad9603",
       "tags": [
         "log",
         "active",
@@ -4291,7 +4315,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "6ee148cd21636c115478173797a88715",
+      "hash": "de79f57b58a713406917a9b83de19527",
       "tags": [
         "log",
         "active",
@@ -5091,7 +5115,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "c27604c0335d0f1e0716281888d7e533",
+      "hash": "9ad32501a6c23af2279725749f235341",
       "tags": [
         "doc",
         "active",
@@ -7197,7 +7221,7 @@
       "doc_required": true,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "2b62865559fe6e3813d76f985adeba9e",
+      "hash": "b1fa119e097b3b2826df5c44bb5b9655",
       "tags": [
         "code",
         "active",
@@ -7224,6 +7248,28 @@
         "active",
         "source_of_truth"
       ]
+    },
+    {
+      "path": "tools/ninaflash_bench.py",
+      "category": "code",
+      "role": "source_of_truth",
+      "governed": true,
+      "lifecycle": "active",
+      "origin": "manual",
+      "retention_policy": "keep",
+      "series_id": null,
+      "series_type": null,
+      "requires_tests": false,
+      "doc_required": true,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "a671eadd01705b4928832c3dd3ef9811",
+      "tags": [
+        "code",
+        "active",
+        "source_of_truth"
+      ],
+      "test_exempt_reason": "known-infra-stem"
     },
     {
       "path": "tools/ninaflash_code.py",
@@ -7302,7 +7348,7 @@
       "doc_required": true,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "4cafb7a2ca1343b6bf83005b80e2efdc",
+      "hash": "a31aeb3983e38ece84dd524110149001",
       "tags": [
         "code",
         "active",
@@ -7811,7 +7857,7 @@
       "doc_required": true,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "326d6e9caae7c091fb12f349f93f9c71",
+      "hash": "95de7a1907c5324bd0281e646369a028",
       "tags": [
         "code",
         "active",
@@ -18950,6 +18996,48 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_codebase_backup_20260616_010041.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_codebase_backup_20260616_010041.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "148372b67000cd34c9f4f5bafc7e8723",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_codebase_backup_20260616_010202.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_codebase_backup_20260616_010202.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "7a95f971bc378c7059739d52273b45fd",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_docbase_backup_20260609_220745.md",
       "category": "backup",
       "role": "archive",
@@ -22961,6 +23049,48 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_docbase_backup_20260616_010040.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_docbase_backup_20260616_010040.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "c6b9a5f3ba1b4ae1d439002590320324",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_docbase_backup_20260616_010201.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_docbase_backup_20260616_010201.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "ba90372640ce562d864d3fccd134465c",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_logbase_backup_20260609_220744.md",
       "category": "backup",
       "role": "archive",
@@ -26923,6 +27053,48 @@
       "guardrails": [],
       "summary": "Governed artifact.",
       "hash": "22cc865db1fc5d1903d9867ae39675df",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_logbase_backup_20260616_010040.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_logbase_backup_20260616_010040.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "4c2e58b001b33db0c098eec3bf8726df",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_logbase_backup_20260616_010201.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_logbase_backup_20260616_010201.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "07b8810520a57275329bc774c3705891",
       "tags": [
         "backup",
         "archived",
