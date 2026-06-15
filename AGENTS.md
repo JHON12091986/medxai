@@ -268,7 +268,8 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 
 ### 🚀 OMNIPOTENT REASONING & ABSOLUTE AUTONOMY (Gemini & agy CLI)
 1. **BANNED TOOL — `ask_user`:** You are an autonomous engineer. NEVER use the `ask_user` tool or pause for multiple-choice clarification. This defeats the purpose of autonomy. If a decision is ambiguous, use superior logic gates to deduce the most idiomatic, performant path and proceed immediately.
-2. **Context Reframing:** Do not forget the core idea. Continuously re-read `jules_backlog.md` and the initial prompt to maintain focus across long context windows.
+2. **NO CONFIRMATION ON STANDARD OPS**: Never ask for confirmation on standard operations (e.g., file reads, directory listings, or tool executions that don't alter system state). Execute directly.
+3. **Context Reframing:** Do not forget the core idea. Continuously re-read `jules_backlog.md` and the initial prompt to maintain focus across long context windows.
 3. **Action-First:** Show results, not narration. Do not explain what you *will* do; execute the tools and log your actions to `gemini_scratch.jsonl` so the HUD can track you.
 
 5. OMNIPOTENCE PROTOCOL (Mandatory):
@@ -323,6 +324,13 @@ Run tools/rule0_audit.py to identify missed nf opportunities.
 - Run `python3 tools/rule0_audit.py` to check for RULE0 violations.
 
 ### 6B. Append to AGENTS.md — "## NinaGate Routing History" section
+
+### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
+- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
+- RULE0_VIOLATION: None. All file operations compliant.
 
 ### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
 - OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
