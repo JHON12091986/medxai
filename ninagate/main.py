@@ -263,7 +263,7 @@ async def fetch_models_background():
         models = [{"id": "auto", "object": "model", "owned_by": "ninagate"}]
         for p in providers:
             api_key = os.getenv(p.get("api_key_env", "")) if p.get("api_key_env") else None
-            if not api_key and p.get("name") != "ollama": continue
+            if p.get("api_key_env") is not None and not api_key: continue
             headers = {"Authorization": f"Bearer {api_key}"} if api_key else {}
             url = f"{p['base_url']}/models"
             try:
@@ -409,7 +409,7 @@ async def proxy_chat_completions(request: Request):
             if not quota_manager.is_available(p["name"]): continue
 
         api_key = os.getenv(p.get("api_key_env", "")) if p.get("api_key_env") else None
-        if not api_key and p.get("name") != "ollama": continue
+        if p.get("api_key_env") is not None and not api_key: continue
         h = health_tracker[p["name"]]
         if target_provider_name or h.cb.allow_request():
             entry = (h.score(), p, api_key, h)

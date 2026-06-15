@@ -19,7 +19,7 @@ def get_info():
 
     try:
         from core.config import RATELIMITS
-    except ImportError as e:
+    except ImportError:
         RATELIMITS = {}
 
     quota_path = 'data/quota_state.json'
@@ -33,7 +33,7 @@ def get_info():
         with urllib.request.urlopen('http://localhost:8080/v1/models', timeout=2) as response:
             data = json.loads(response.read().decode('utf-8'))
             ninagate_models = data.get('data', [])
-    except Exception as e:
+    except Exception:
         pass
 
     models_by_provider = {}
@@ -61,7 +61,7 @@ def get_info():
     next_reset_bd = next_reset + datetime.timedelta(hours=6)
     time_to_reset = next_reset - now_utc
     
-    print(f"- **Daily Request Cap**: 900 requests per provider (Gemini soft-limit config)")
+    print("- **Daily Request Cap**: 900 requests per provider (Gemini soft-limit config)")
     print(f"- **Gemini Request Usage**: {quotas.get('gemini', 0)} / 900 requests used")
     print(f"- **Quota Exhausted Status**: `{quota_exhausted}`")
     print(f"- **Last Reset Time**: {dt_reset_bd.strftime('%Y-%m-%d %I:%M:%S %p')} BD local time ({dt_reset.strftime('%H:%M:%S')} UTC)")
@@ -79,13 +79,11 @@ def get_info():
         if key_env:
             key_configured = os.getenv(key_env) is not None
         else:
-            key_configured = True if name == 'OLLAMA' else False
+            key_configured = True
         
         status = "Active"
         if key_env and not key_configured:
             status = "Disabled (Missing Key)"
-        elif not key_env and name != 'OLLAMA':
-            status = "Skipped (No Key config)"
             
         tier = p.get('tier', 2)
         ctx = p.get('context_window', 8192)
