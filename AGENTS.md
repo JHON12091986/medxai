@@ -592,5 +592,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: If a PR's merge commit is pushed to main directly, GitHub automatically marks the PR as merged.
 - RULE0_VIOLATION: None. All local file operations and checks done via nf equivalents.
 
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Keyless API Provider Integration
+- OFFLOAD_OPPORTUNITY: Routing requests to POLLINATIONS, CHUTES, and HFPUBLIC for non-critical, keyless fallback -> zero-quota cloud usage.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Correcting the keyless provider validation bug in `ninagate/main.py` and `tools/ninagate_info.py` immediately activated three dead fallback lanes (`POLLINATIONS`, `CHUTES`, `HFPUBLIC`) without requiring API keys.
+- CONTEXT_HINT: Do not bypass providers with `api_key_env` set to `null` if the environment key is not configured, as they are intentionally keyless.
+- RULE0_VIOLATION: None. All local operations done via nf commands.
+
 
 \n

@@ -3603,3 +3603,6 @@
 **Files changed:** data/gemini_scratch.jsonl,docs/space/nina_repo_hygiene_dashboard.md
 
 **Verification:** git push OK, nina.service active
+
+## Auto-doc patch — 2026-06-15
+- Model: gemini-2.5-flash, NinaGate: 8080, Providers: 1
