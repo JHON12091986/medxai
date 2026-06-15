@@ -36,7 +36,7 @@ ONESHOT_PATTERNS=(
     "pr_desc.txt"
 )
 
-if [ "$1" == "--purge-oneshots" ]; then
+if [ "$1" == "--purge-oneshots" ] && [ "$2" != "--execute" ]; then
     echo ""
     echo "=== One-shot script purge ==="
     FOUND=0
@@ -55,8 +55,8 @@ if [ "$1" == "--purge-oneshots" ]; then
     exit 0
 fi
 
-if [ "$1" == "--purge-oneshots" ] && [ "$2" == "--execute" ] || \
-   [ "$1" == "--execute" ] && [ "$2" == "--purge-oneshots" ]; then
+if [[ ("$1" == "--purge-oneshots" && "$2" == "--execute") || \
+      ("$1" == "--execute" && "$2" == "--purge-oneshots") ]]; then
     echo ""
     echo "=== One-shot script purge (EXECUTE) ==="
     for f in "${ONESHOT_PATTERNS[@]}"; do

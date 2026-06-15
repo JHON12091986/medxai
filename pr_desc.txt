@@ -1,7 +1,0 @@
-🛡️ Sentinel: [HIGH] Fix missing shell execution and deletion guards in UpgradePipeline
-
-🚨 Severity: HIGH
-💡 Vulnerability: `tools/upgradepipeline.py` `DANGEROUS_PATTERNS` regex rules were limited and missing coverage for some risky system functions. `os.system`, `subprocess.call(..., shell=True)` and `shutil.rmtree` were not strictly blocked.
-🎯 Impact: Without strict blocking in the pipeline sandbox check, these functions might execute malicious code (shell injection) or destroy critical parts of the filesystem without error handling.
-🔧 Fix: Expanded `DANGEROUS_PATTERNS` regex check in `tools/upgradepipeline.py` to uniformly block `os.system`, `subprocess.call` with `shell=True` arguments, and `shutil.rmtree` outright. Added comprehensive testing for these patterns in `tests/test_tools_smoke.py`.
-✅ Verification: Ran `python3 -m py_compile tools/upgradepipeline.py` and `pytest tests/test_tools_smoke.py` successfully locally to ensure all tests passed.
