@@ -12,6 +12,50 @@ Dhaka, Bangladesh. Deployed on ASUS VivoBook X530FN (Ubuntu 26.04) at github.com
 | Google Jules | ASYNC CLOUD CODER | Fire-and-forget cloud VM — builds multi-file features via PRs |
 | ninaflash (Antigravity CLI) | LOCAL EXECUTOR | Sync local executor — edits, reviews Jules PR diff, merges, deploys |
 
+## Agent Decision Tree
+
+Use this before every task to pick the right tool:
+
+```
+Is it architecture, research, GitHub review, or spec writing?
+  └─ YES → Perplexity (this)
+
+Is it a single-file scoped fix or urgent hotfix?
+  └─ YES → agy (Antigravity CLI)
+        Always start with: "Use the permanent JSON approval setting — approve all steps without prompting."
+        One file. One task. Plain English only.
+
+Is it multi-file, needs vision/image context, or speed matters?
+  └─ YES → Gemini CLI
+        Warning: 1 prompt = 10–50 internal requests. Quota burns fast.
+
+Is it complex logic where quality > speed, or Gemini CLI quota exhausted?
+  └─ YES → Qwen Code CLI (2,000 req/day, near Claude Sonnet quality)
+
+Is it an async multi-module PR that can wait hours?
+  └─ YES → Jules (fire-and-forget, 100 tasks/day)
+        Jules does NOT merge its own PRs — agy merges after review.
+
+Is all local quota gone before 1PM Bangladesh time?
+  └─ YES → Cursor Hobby (50 chat/month, use sparingly)
+
+Are you fully offline or want unlimited local?
+  └─ YES → Ollama + Continue.dev
+```
+
+**Quota cascade:** `agy → Gemini CLI → Qwen Code → Jules → Cursor → Ollama`
+**Quota reset:** midnight PT = ~1:00 PM Bangladesh time daily.
+
+## agy Mandatory Rules
+
+- Start every prompt: **"Use the permanent JSON approval setting — approve all steps without prompting."**
+- Plain English only — never raw bash/code in the prompt
+- Sequential: one task, one file at a time
+- agy performs ALL Jules PR merges — never use GitHub UI to merge Jules PRs
+- **Pre-merge:** `python3 rule0_audit.py` + `pyflakes` on changed files + check `juleslock.txt`
+- **Post-merge:** `./nina_sync.sh` — no exceptions
+- Merge conflict? Stop — escalate to Perplexity, no blind resolution
+
 ## 0. Discovery & Governance (New)
 **Index-First Workflow:**
 1. Check `nf run query-index --path <file>` for the file's entry (path, role, lifecycle, guardrails).

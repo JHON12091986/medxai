@@ -7,7 +7,7 @@ chromadb>=0.5
 duckduckgo-search>=6.0
 exchangelib
 playwright
-psutil
+psutil>=5.9
 ollama
 flask
 fastapi

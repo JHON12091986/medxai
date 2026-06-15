@@ -1,14 +1,24 @@
 ---
 title: NINA Context
 version: 14.2
-updated: 2026-06-12
-stage: "A✅ B✅ C✅ M(high-throughput)🚀"
+updated: 2026-06-16
+stage: "A✅ B✅ C✅ M🚀 IN_PROGRESS"
 ---
 
 # NINA Context — Attach to Every New Thread
 
 ## Overview
 A comprehensive state-of-the-union document for NINA, mapping her identity, environment, and development status. This is the canonical source for new agent threads to understand their context.
+
+## 2026-06-16 Update: Pre-Grant Housekeeping Sprint
+NINA is in a **documentation and hygiene freeze** ahead of the Anthropic OSS grant application on **June 20, 2026**. No new features are being added. Focus is on repo coherence, audit passes, and documentation quality. Development resumes post-June 20.
+
+Key changes since 2026-06-12:
+- `idleloop.py` — quota-awareness guard added (`_is_quota_safe()`)
+- `nina_cleanup.sh` — `--purge-oneshots` flag added
+- `agy_prompt.md` — expanded with full rules + task template
+- `bench_report.md` — upgraded to table format with provider cascade notes
+- `WORKFLOW.md` — agy decision tree section added
 
 ## 2026-06-12 Update: Lightning Sync Release (v14.2)
 NINA has entered the "Lightning Sync" phase. All agents now operate under **NINA-OPT-001**, prioritizing local CPU/GPU execution (NinaFlash/NinaGate) to reduce cloud token costs by 95%. This version integrates Parallel Tool execution (Wide-Path) and the Guardian Self-Fix loop for zero-defect autonomous deployments.
@@ -39,7 +49,7 @@ Local-first autonomous AI operator — not a chatbot. Runs 24/7 on owner's lapto
 
 - **Repo:** github.com/aibony/nina — Public, MIT, v14.2 released 2026-06-12
 - **Portfolio:** aibony.github.io
-- **Grant target:** Anthropic Claude $1,200 OSS grant
+- **Grant target:** Anthropic Claude OSS grant — applying June 20, 2026
 
 ## Environment
 
@@ -147,7 +157,7 @@ tools/
   upgradepipeline.py Gated patch — scan→sandbox→diff→approve→deploy
 
 ninagate/
-  main.py          API Proxy — rutas requests through priority cascade, port 8080
+  main.py          API Proxy — routes requests through priority cascade, port 8080
 
 interfaces/
   telegram_interface.py  Security gate, 20 commands, NLP, streaming, flood control
@@ -156,14 +166,14 @@ interfaces/
 crons/
   manager.py       APScheduler — 13 jobs (morning report, heartbeat, thermal, backups, etc.)
 
-guardianengine.py  Forensic engine — AST scan, baseline drift, service health
-healthcheck.py     Test suite — import isolation, structural regression
-idleloop.py        Idle upgrade proposal loop, 7-topic rotation, pings Telegram
+guardian_engine.py  Forensic engine — AST scan, baseline drift, service health
+healthcheck.py      Test suite — import isolation, structural regression
+idleloop.py         Idle proposal loop, 7-topic rotation, quota guard, pings Telegram
 
 main.py                   Entry point, asyncio event loop, SIGTERM/SIGINT shutdown
 data/memory/facts.json    Persistent key-value personal facts store
 AGENTS.md                 Agent operating law (canonical) — MANDATORY READ
-docs/space/jules_backlog.md  Task registry — 83 READY optimization tasks
+docs/space/jules_backlog.md  Task registry
 ```
 
 ## Phase 1 Status
@@ -172,32 +182,19 @@ docs/space/jules_backlog.md  Task registry — 83 READY optimization tasks
 
 ### Stage B — Make NINA Smarter COMPLETE (v13.0)
 
-- B-1 F-01 Self-check pass in core/agent.py — DONE
-- B-2 F-02 Personal context injection — DONE
-- B-3 F-03 System prompt rewrite — DONE
+### Stage C — New Capabilities COMPLETE
 
-### Stage C — New Capabilities (PARTIAL)
+### Stage M — Optimization Offensive 🚀 IN_PROGRESS
 
-- C-1 F-04 tools/finance.py — DONE
-- C-2 F-05 tools/market.py — DONE
-- C-3 F-06 Reminder engine — DONE
-- C-4 F-07 Email triage — DONE (officemail.py)
-- C-5 F-08 remember/recall — DONE
-
-### Stage M — Optimization Offensive (v2.0/v2.1) — READY🚀
-
-- M-1 🚀 MEGA-TASK: Throughput Maximizer (v2.0) — IN_PROGRESS (Jules)
-- M-2 📉 MEGA-TASK: Token-Surgical Architecture (v2.1) — IN_PROGRESS (Jules)
-- M-3 to M-12: Token-saving infrastructure — IN_PROGRESS (Jules)
+- M-1 🚀 MEGA-TASK: Throughput Maximizer (v2.0) — IN_PROGRESS
+- M-2 📉 MEGA-TASK: Token-Surgical Architecture (v2.1) — IN_PROGRESS
+- M-3 to M-12: Token-saving infrastructure — IN_PROGRESS
 - N to T: 71 Advanced optimization tasks — READY
 
-## Next Steps — Priority Order
+## Grant Freeze (until 2026-06-20)
 
-1. **Merge Optimization Batch 1:** Integrate Jules' PRs for M-01 to M-10.
-2. **Implement Local Fast-Path:** Move boilerplate generation to local Ollama models.
-3. **Surgical Context:** Implement `nf code symbol` to avoid full-file reads.
-4. **Instruction Compression:** Refactor `AGENTS.md` to reduce token overhead.
+No new features or architecture changes until after Anthropic OSS grant application is submitted on June 20, 2026. Only housekeeping, docs, and hygiene commits are permitted.
 
 ---
 
-*Last updated: 2026-06-11 — Version 13.0 integrated (Optimization Offensive launched)*
+*Last updated: 2026-06-16 — v14.2 housekeeping sprint, grant freeze active*
