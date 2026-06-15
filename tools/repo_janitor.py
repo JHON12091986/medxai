@@ -1,11 +1,15 @@
 import subprocess
 import json
-import os
-import sys
 
 def run_cmd(cmd):
     try:
-        return subprocess.check_output(cmd, shell=True, text=True).strip()
+        import shlex
+        if isinstance(cmd, str):
+            if "|" in cmd or "xargs" in cmd:
+               cmd = ["sh", "-c", cmd]
+            else:
+               cmd = shlex.split(cmd)
+        return subprocess.check_output(cmd, shell=False, text=True).strip()
     except subprocess.CalledProcessError:
         return ""
 

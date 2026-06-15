@@ -78,7 +78,13 @@ class ContextCompressor:
     def _get_git_info(self):
         def run(cmd):
             try:
-                return subprocess.check_output(cmd, shell=True, text=True, cwd=REPO_ROOT).strip()
+                import shlex
+                if isinstance(cmd, str):
+                    if "|" in cmd:
+                        cmd = ["sh", "-c", cmd]
+                    else:
+                        cmd = shlex.split(cmd)
+                return subprocess.check_output(cmd, shell=False, text=True, cwd=REPO_ROOT).strip()
             except:
                 return "Unknown"
         
