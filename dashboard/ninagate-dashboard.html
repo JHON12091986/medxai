@@ -3,392 +3,567 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NinaGate Provider Dashboard</title>
-<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+<title>NinaGate — Provider Dashboard</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cabinet-grotesk@700,800&display=swap" rel="stylesheet">
 <style>
-:root,[data-theme="dark"]{
-  --bg:#0d0d0e;--surface:#141416;--surface-2:#1a1a1d;--surface-3:#202024;
-  --border:rgba(255,255,255,0.07);--border-2:rgba(255,255,255,0.12);
-  --text:#e2e2e4;--text-muted:#8a8a90;--text-faint:#4a4a50;
-  --primary:#4f98a3;--primary-dim:rgba(79,152,163,0.15);
-  --green:#6daa45;--green-dim:rgba(109,170,69,0.15);
-  --yellow:#e8af34;--yellow-dim:rgba(232,175,52,0.18);
-  --red:#dd6974;--red-dim:rgba(221,105,116,0.15);
-  --orange:#fdab43;--orange-dim:rgba(253,171,67,0.15);
-  --purple:#a86fdf;--purple-dim:rgba(168,111,223,0.15);
-  --free:#4f98a3;--paid:#a86fdf;--local:#6daa45;
-  --radius:8px;--radius-lg:12px;--trans:180ms cubic-bezier(0.16,1,0.3,1);
+:root {
+  --font-display: 'Cabinet Grotesk', sans-serif;
+  --font-body: 'Satoshi', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+  --space-1:.25rem; --space-2:.5rem; --space-3:.75rem; --space-4:1rem;
+  --space-5:1.25rem; --space-6:1.5rem; --space-8:2rem; --space-10:2.5rem; --space-12:3rem;
+  --radius-sm:.375rem; --radius-md:.5rem; --radius-lg:.75rem; --radius-xl:1rem; --radius-full:9999px;
+  --transition-interactive: 180ms cubic-bezier(0.16,1,0.3,1);
 }
-[data-theme="light"]{
-  --bg:#f4f4f2;--surface:#fafafa;--surface-2:#fff;--surface-3:#f0f0ee;
-  --border:rgba(0,0,0,0.08);--border-2:rgba(0,0,0,0.14);
-  --text:#1a1a1e;--text-muted:#6a6a72;--text-faint:#b0b0b8;
-  --primary:#01696f;--primary-dim:rgba(1,105,111,0.1);
-  --green:#437a22;--green-dim:rgba(67,122,34,0.1);
-  --yellow:#d19900;--yellow-dim:rgba(209,153,0,0.12);
-  --red:#a13544;--red-dim:rgba(161,53,68,0.1);
-  --orange:#da7101;--orange-dim:rgba(218,113,1,0.1);
-  --purple:#7a39bb;--purple-dim:rgba(122,57,187,0.1);
-  --free:#01696f;--paid:#7a39bb;--local:#437a22;
+[data-theme="dark"] {
+  --color-bg:              #0d0f0e;
+  --color-surface:         #131714;
+  --color-surface-2:       #181c19;
+  --color-surface-off:     #1d2220;
+  --color-border:          #2a302d;
+  --color-divider:         #222825;
+  --color-text:            #d4d9d5;
+  --color-text-muted:      #7a8a7d;
+  --color-text-faint:      #404d42;
+  --color-primary:         #3ddc84;
+  --color-primary-dim:     #1a3d28;
+  --color-primary-hl:      #0f2218;
+  --color-warn:            #f9a825;
+  --color-warn-dim:        #3d2e00;
+  --color-error:           #ef5350;
+  --color-error-dim:       #3d1212;
+  --color-jules:           #7c4dff;
+  --color-agy:             #00acc1;
+  --color-free:            #26c6da;
+  --color-local:           #ab47bc;
+  --shadow-sm:  0 1px 3px oklch(0 0 0/.3);
+  --shadow-md:  0 4px 16px oklch(0 0 0/.4);
+  --shadow-lg:  0 12px 40px oklch(0 0 0/.5);
 }
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-font-smoothing:antialiased;font-size:14px}
-body{font-family:'Satoshi',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
-button{cursor:pointer;background:none;border:none;font:inherit;color:inherit}
-/* HEADER */
-.header{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100;backdrop-filter:blur(12px)}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:-0.02em}
-.logo svg{flex-shrink:0}
-.header-right{display:flex;align-items:center;gap:12px}
-.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase}
-.badge-version{background:var(--primary-dim);color:var(--primary)}
-.badge-stage{background:var(--orange-dim);color:var(--orange)}
-.theme-btn{width:32px;height:32px;border-radius:var(--radius);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text-muted);transition:all var(--trans)}
-.theme-btn:hover{color:var(--text);border-color:var(--border-2);background:var(--surface-2)}
-/* MAIN */
-.main{padding:20px 24px;max-width:1400px;margin:0 auto}
-/* SUMMARY STRIP */
-.summary-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
-.kpi-val{font-size:26px;font-weight:700;letter-spacing:-0.03em;line-height:1}
-.kpi-label{font-size:11px;color:var(--text-muted);margin-top:4px;text-transform:uppercase;letter-spacing:0.05em}
-.kpi-sub{font-size:11px;color:var(--text-faint);margin-top:2px}
-/* QUOTA BAR */
-.quota-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:20px}
-.section-title{font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px}
-.quota-row{display:grid;grid-template-columns:90px 1fr 70px 130px;gap:8px;align-items:center;margin-bottom:8px}
-.quota-name{font-size:12px;font-weight:600;color:var(--text)}
-.bar-track{height:5px;background:var(--surface-3);border-radius:100px;overflow:hidden}
-.bar-fill{height:100%;border-radius:100px;transition:width 0.6s ease}
-.bar-ok{background:var(--green)}
-.bar-warn{background:var(--yellow)}
-.bar-danger{background:var(--red)}
-.bar-neutral{background:var(--primary)}
-.quota-pct{font-size:11px;font-weight:700;text-align:right}
-.quota-reset{font-size:10px;color:var(--text-faint)}
-/* GRID */
-.providers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:20px}
-/* PROVIDER CARD */
-.pcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;transition:border-color var(--trans),box-shadow var(--trans);position:relative;overflow:hidden}
-.pcard:hover{border-color:var(--border-2);box-shadow:0 4px 20px rgba(0,0,0,0.25)}
-.pcard.disabled{opacity:0.5}
-.pcard-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
-.pcard-name{font-size:14px;font-weight:700;letter-spacing:-0.01em}
-.pcard-model{font-size:11px;color:var(--text-muted);margin-top:2px;font-family:monospace}
-.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
-.dot-active{background:var(--green);box-shadow:0 0 6px var(--green)}
-.dot-warn{background:var(--yellow);box-shadow:0 0 6px var(--yellow)}
-.dot-dead{background:var(--red)}
-.dot-disabled{background:var(--text-faint)}
-.pcard-meta{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
-.tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:100px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em}
-.tag-free{background:var(--primary-dim);color:var(--primary)}
-.tag-paid{background:var(--purple-dim);color:var(--purple)}
-.tag-local{background:var(--green-dim);color:var(--green)}
-.tag-t1{background:rgba(255,255,255,0.06);color:var(--text-muted)}
-.tag-t2{background:rgba(255,255,255,0.06);color:var(--text-muted)}
-.tag-t3{background:var(--orange-dim);color:var(--orange)}
-.tag-long{background:var(--yellow-dim);color:var(--yellow)}
-/* STAT ROWS */
-.stat-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--border)}
-.stat-row:last-child{border:none}
-.stat-key{font-size:11px;color:var(--text-muted)}
-.stat-val{font-size:11px;font-weight:600;font-family:monospace}
-.stat-val.good{color:var(--green)}
-.stat-val.warn{color:var(--yellow)}
-.stat-val.bad{color:var(--red)}
-.stat-val.dim{color:var(--text-faint)}
-/* CONTEXT PILL */
-.ctx-badge{background:var(--surface-3);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:10px;font-family:monospace;color:var(--text-muted)}
-.ctx-mega{background:var(--yellow-dim);border-color:var(--yellow);color:var(--yellow)}
-/* OLLAMA SPECIAL */
-.ollama-models{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
-.model-chip{background:var(--surface-3);border:1px solid var(--border);border-radius:4px;padding:2px 6px;font-size:10px;font-family:monospace;color:var(--text-muted)}
-/* AGY STATUS */
-.agy-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;margin-bottom:20px}
-.agy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
-.agy-card{background:var(--surface-3);border-radius:var(--radius);padding:10px 12px;border:1px solid var(--border)}
-.agy-model{font-size:12px;font-weight:700}
-.agy-quota{font-size:10px;color:var(--text-muted);margin-top:2px}
-.agy-bar{height:3px;background:var(--surface-2);border-radius:100px;margin-top:6px}
-.agy-bar-fill{height:100%;border-radius:100px;background:var(--primary)}
-/* RESET CLOCK */
-.reset-clock{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.reset-label{font-size:11px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-muted)}
-.reset-time{font-size:20px;font-weight:700;letter-spacing:-0.02em;font-variant-numeric:tabular-nums}
-.reset-note{font-size:11px;color:var(--text-faint)}
-/* FOOTER NOTE */
-.footnote{font-size:11px;color:var(--text-faint);border-top:1px solid var(--border);padding-top:14px;line-height:1.6}
-/* RESPONSIVE */
-@media(max-width:768px){
-  .summary-strip{grid-template-columns:repeat(2,1fr)}
-  .providers-grid{grid-template-columns:1fr}
-  .agy-grid{grid-template-columns:repeat(2,1fr)}
-  .quota-row{grid-template-columns:80px 1fr 50px}
-  .quota-reset{display:none}
-  .main{padding:12px}
-  .header{padding:10px 14px}
+[data-theme="light"] {
+  --color-bg:              #f2f5f3;
+  --color-surface:         #ffffff;
+  --color-surface-2:       #f7faf8;
+  --color-surface-off:     #eef1ee;
+  --color-border:          #d0d8d2;
+  --color-divider:         #e0e7e2;
+  --color-text:            #1a2b1d;
+  --color-text-muted:      #556b58;
+  --color-text-faint:      #9aab9d;
+  --color-primary:         #1b7a3e;
+  --color-primary-dim:     #d4eddb;
+  --color-primary-hl:      #e8f5ec;
+  --color-warn:            #e65100;
+  --color-warn-dim:        #fff3e0;
+  --color-error:           #c62828;
+  --color-error-dim:       #ffebee;
+  --color-jules:           #4527a0;
+  --color-agy:             #00697a;
+  --color-free:            #00838f;
+  --color-local:           #6a1b9a;
+  --shadow-sm: 0 1px 3px oklch(0.2 0.02 145/.08);
+  --shadow-md: 0 4px 16px oklch(0.2 0.02 145/.10);
+  --shadow-lg: 0 12px 40px oklch(0.2 0.02 145/.14);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;}
+body{font-family:var(--font-body);font-size:var(--text-base);color:var(--color-text);background:var(--color-bg);min-height:100dvh;}
+img,svg{display:block;}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ─── HEADER ─── */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:var(--space-3) var(--space-6);
+  background:var(--color-surface);border-bottom:1px solid var(--color-border);
+  box-shadow:var(--shadow-sm);gap:var(--space-4);position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:var(--space-3);font-family:var(--font-display);font-size:var(--text-lg);font-weight:800;color:var(--color-primary);letter-spacing:-.02em;}
+.logo-sub{font-family:var(--font-body);font-size:var(--text-xs);color:var(--color-text-muted);font-weight:400;letter-spacing:.06em;text-transform:uppercase;}
+.header-right{display:flex;align-items:center;gap:var(--space-3);}
+.pill-badge{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);color:var(--color-text-muted);background:var(--color-surface-off);padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);border:1px solid var(--color-border);}
+.dot-live{width:8px;height:8px;border-radius:50%;background:var(--color-primary);animation:pulse 2s infinite;}
+.icon-btn{background:var(--color-surface-off);border:1px solid var(--color-border);color:var(--color-text-muted);border-radius:var(--radius-md);padding:var(--space-2);width:36px;height:36px;display:flex;align-items:center;justify-content:center;transition:all var(--transition-interactive);}
+.icon-btn:hover{color:var(--color-primary);border-color:var(--color-primary);}
+.refresh-btn.spinning svg{animation:spin .8s linear infinite;}
+
+/* ─── LAYOUT ─── */
+.page{max-width:1400px;margin:0 auto;padding:var(--space-8) var(--space-6);}
+.top-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:var(--space-4);margin-bottom:var(--space-8);}
+.kpi-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-5);box-shadow:var(--shadow-sm);transition:box-shadow var(--transition-interactive);}
+.kpi-card:hover{box-shadow:var(--shadow-md);}
+.kpi-label{font-size:var(--text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted);font-weight:700;margin-bottom:var(--space-2);}
+.kpi-val{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;color:var(--color-primary);line-height:1;margin-bottom:var(--space-1);}
+.kpi-sub{font-size:var(--text-xs);color:var(--color-text-faint);}
+.kpi-val.warn{color:var(--color-warn);}
+.kpi-val.error{color:var(--color-error);}
+
+/* ─── SECTION HEADERS ─── */
+.section-header{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-4);}
+.section-title{font-family:var(--font-display);font-size:var(--text-lg);font-weight:800;color:var(--color-text);}
+.tier-pill{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:var(--radius-full);}
+.tier-free{background:color-mix(in oklch,var(--color-free) 18%,transparent);color:var(--color-free);border:1px solid color-mix(in oklch,var(--color-free) 30%,transparent);}
+.tier-t2{background:color-mix(in oklch,var(--color-agy) 18%,transparent);color:var(--color-agy);border:1px solid color-mix(in oklch,var(--color-agy) 30%,transparent);}
+.tier-t3{background:color-mix(in oklch,var(--color-jules) 18%,transparent);color:var(--color-jules);border:1px solid color-mix(in oklch,var(--color-jules) 30%,transparent);}
+.tier-local{background:color-mix(in oklch,var(--color-local) 18%,transparent);color:var(--color-local);border:1px solid color-mix(in oklch,var(--color-local) 30%,transparent);}
+
+/* ─── PROVIDER GRID ─── */
+.providers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--space-4);margin-bottom:var(--space-10);}
+
+.provider-card{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);padding:var(--space-5);
+  box-shadow:var(--shadow-sm);transition:all var(--transition-interactive);
+  animation:fadeUp .3s ease-out both;position:relative;overflow:hidden;
+}
+.provider-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);}
+.provider-card.is-active{border-color:color-mix(in oklch,var(--color-primary) 30%,var(--color-border));}
+.provider-card.is-warn{border-color:color-mix(in oklch,var(--color-warn) 30%,var(--color-border));}
+.provider-card.is-error{border-color:color-mix(in oklch,var(--color-error) 30%,var(--color-border));}
+.provider-card.is-inactive{opacity:.6;}
+
+/* top stripe per category */
+.provider-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:var(--radius-xl) var(--radius-xl) 0 0;}
+.provider-card.is-active::before{background:var(--color-primary);}
+.provider-card.is-warn::before{background:var(--color-warn);}
+.provider-card.is-error::before{background:var(--color-error);}
+.provider-card.is-inactive::before{background:var(--color-border);}
+.provider-card.is-free::before{background:var(--color-free);}
+.provider-card.is-local::before{background:var(--color-local);}
+
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:var(--space-3);}
+.card-name{font-family:var(--font-display);font-size:var(--text-base);font-weight:800;color:var(--color-text);letter-spacing:-.01em;}
+.card-default{font-size:var(--text-xs);color:var(--color-text-faint);margin-top:2px;font-family:var(--font-mono);}
+.status-chip{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:var(--radius-full);}
+.chip-active{background:var(--color-primary-dim);border:1px solid color-mix(in oklch,var(--color-primary) 35%,transparent);color:var(--color-primary);}
+.chip-warn{background:var(--color-warn-dim);border:1px solid color-mix(in oklch,var(--color-warn) 35%,transparent);color:var(--color-warn);}
+.chip-error{background:var(--color-error-dim);border:1px solid color-mix(in oklch,var(--color-error) 35%,transparent);color:var(--color-error);}
+.chip-inactive{background:color-mix(in oklch,var(--color-text-faint) 15%,transparent);border:1px solid var(--color-border);color:var(--color-text-faint);}
+.chip-free{background:color-mix(in oklch,var(--color-free) 15%,transparent);border:1px solid color-mix(in oklch,var(--color-free) 30%,transparent);color:var(--color-free);}
+.chip-local{background:color-mix(in oklch,var(--color-local) 15%,transparent);border:1px solid color-mix(in oklch,var(--color-local) 30%,transparent);color:var(--color-local);}
+
+/* metrics row */
+.metrics-row{display:flex;gap:var(--space-4);margin-bottom:var(--space-4);}
+.metric{display:flex;flex-direction:column;gap:2px;}
+.metric-val{font-family:var(--font-mono);font-size:var(--text-sm);font-weight:600;color:var(--color-text);}
+.metric-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-faint);}
+
+/* quota bar */
+.quota-section{margin-top:auto;}
+.quota-row{display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--color-text-muted);margin-bottom:var(--space-2);}
+.quota-num{font-family:var(--font-mono);font-weight:600;}
+.quota-track{height:5px;border-radius:3px;background:var(--color-border);overflow:hidden;margin-bottom:var(--space-2);}
+.quota-fill{height:100%;border-radius:3px;background:var(--color-primary);transition:width .6s cubic-bezier(.16,1,.3,1);}
+.quota-fill.warn{background:var(--color-warn);}
+.quota-fill.error{background:var(--color-error);}
+.reset-row{font-size:var(--text-xs);color:var(--color-text-faint);}
+.reset-time{color:var(--color-text-muted);font-family:var(--font-mono);}
+
+/* models sub-list */
+.models-toggle{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-xs);color:var(--color-text-muted);cursor:pointer;margin-top:var(--space-3);padding-top:var(--space-3);border-top:1px solid var(--color-divider);transition:color var(--transition-interactive);}
+.models-toggle:hover{color:var(--color-primary);}
+.models-toggle svg{flex-shrink:0;transition:transform var(--transition-interactive);}
+.models-toggle.open svg{transform:rotate(180deg);}
+.models-list{display:none;margin-top:var(--space-2);display:flex;flex-direction:column;gap:var(--space-1);}
+.models-list.hidden{display:none;}
+.model-tag{font-family:var(--font-mono);font-size:10px;color:var(--color-text-muted);background:var(--color-surface-off);border:1px solid var(--color-border);padding:2px 8px;border-radius:var(--radius-sm);display:inline-block;width:fit-content;}
+
+/* ─── QUOTA DETAIL TABLE ─── */
+.quota-table-wrap{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:var(--space-5);margin-bottom:var(--space-10);box-shadow:var(--shadow-sm);}
+.quota-table{width:100%;border-collapse:collapse;font-size:var(--text-xs);}
+.quota-table th{text-align:left;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--color-text-faint);padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border);}
+.quota-table td{padding:var(--space-3) var(--space-3);border-bottom:1px solid var(--color-divider);vertical-align:middle;}
+.quota-table tr:last-child td{border-bottom:none;}
+.quota-table tr:hover td{background:var(--color-surface-2);}
+.tbl-name{font-family:var(--font-display);font-weight:700;color:var(--color-text);font-size:var(--text-sm);}
+.tbl-model{font-family:var(--font-mono);color:var(--color-text-muted);}
+.tbl-bar-wrap{width:120px;}
+.tbl-bar-track{height:4px;border-radius:2px;background:var(--color-border);overflow:hidden;}
+.tbl-bar-fill{height:100%;border-radius:2px;background:var(--color-primary);transition:width .5s ease;}
+.tbl-bar-fill.warn{background:var(--color-warn);}
+.tbl-bar-fill.error{background:var(--color-error);}
+.tbl-pct{font-family:var(--font-mono);font-weight:600;font-size:10px;color:var(--color-text-muted);margin-top:2px;}
+.tbl-mono{font-family:var(--font-mono);color:var(--color-text-muted);}
+.tbl-pill{font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:var(--radius-full);}
+
+/* ─── TIMER COUNTDOWN ─── */
+.timers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--space-4);margin-bottom:var(--space-10);}
+.timer-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-4);box-shadow:var(--shadow-sm);}
+.timer-name{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-muted);margin-bottom:var(--space-2);}
+.timer-display{font-family:var(--font-display);font-size:var(--text-xl);font-weight:800;color:var(--color-primary);letter-spacing:-.02em;line-height:1;}
+.timer-display.warn{color:var(--color-warn);}
+.timer-display.error{color:var(--color-error);}
+.timer-label{font-size:10px;color:var(--color-text-faint);margin-top:var(--space-1);}
+.timer-usage-bar{margin-top:var(--space-3);height:3px;border-radius:2px;background:var(--color-border);overflow:hidden;}
+.timer-usage-fill{height:100%;border-radius:2px;background:var(--color-primary);transition:width .5s ease;}
+.timer-usage-fill.warn{background:var(--color-warn);}
+.timer-usage-fill.error{background:var(--color-error);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:700px){
+  .page{padding:var(--space-4) var(--space-3);}
+  .top-kpi{grid-template-columns:repeat(2,1fr);}
+  .providers-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
+
+<!-- HEADER -->
 <header class="header">
   <div class="logo">
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-label="NinaGate logo">
-      <rect width="28" height="28" rx="7" fill="rgba(79,152,163,0.15)"/>
-      <path d="M7 20V8l5 7 5-7v12" stroke="#4f98a3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="21" cy="10" r="2.5" fill="#6daa45"/>
+      <rect width="28" height="28" rx="7" fill="currentColor" opacity="0.12"/>
+      <circle cx="14" cy="14" r="5" stroke="currentColor" stroke-width="2"/>
+      <path d="M14 4v4M14 20v4M4 14h4M20 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
     </svg>
-    NinaGate · Provider Dashboard
+    <div>
+      <div>NinaGate</div>
+      <div class="logo-sub">Provider Dashboard</div>
+    </div>
   </div>
   <div class="header-right">
-    <span class="badge badge-version">v14.2</span>
-    <span class="badge badge-stage">Stage M 🚀</span>
-    <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">
+    <div class="pill-badge">
+      <div class="dot-live"></div>
+      <span id="proxy-status">localhost:8080</span>
+    </div>
+    <div class="pill-badge" id="last-updated">Updated just now</div>
+    <button class="icon-btn refresh-btn" id="refresh-btn" title="Refresh">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+        <path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+      </svg>
+    </button>
+    <button class="icon-btn" data-theme-toggle title="Toggle theme" aria-label="Toggle theme">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
     </button>
   </div>
 </header>
 
-<main class="main">
+<div class="page">
 
-<!-- RESET CLOCK -->
-<div class="reset-clock">
-  <div>
-    <div class="reset-label">⏱ Quota Reset Countdown</div>
-    <div class="reset-time" id="countdown">–– : –– : ––</div>
-  </div>
-  <div style="text-align:right">
-    <div style="font-size:12px;font-weight:600">Resets daily at <span style="color:var(--primary)">1:00 PM BD</span> (07:00 UTC)</div>
-    <div class="reset-note">Gemini soft-limit: 900 req/day · Quota file: data/quota_state.json</div>
-  </div>
-</div>
-
-<!-- SUMMARY STRIP -->
-<div class="summary-strip">
-  <div class="kpi">
-    <div class="kpi-val" style="color:var(--green)">17</div>
-    <div class="kpi-label">Active Providers</div>
-    <div class="kpi-sub">3 free-keyless · 13 keyed · 1 local</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-val" style="color:var(--primary)">21</div>
-    <div class="kpi-label">Total Providers</div>
-    <div class="kpi-sub">Tier 1 · Tier 2 · Tier 3</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-val" style="color:var(--yellow)">1M+</div>
-    <div class="kpi-label">Max Context (Gemini)</div>
-    <div class="kpi-sub">1,048,576 tokens</div>
-  </div>
-  <div class="kpi">
-    <div class="kpi-val" style="color:var(--orange)">609+</div>
-    <div class="kpi-label">Available Models</div>
-    <div class="kpi-sub">via OpenRouter (337) + Novita (138) + Mistral (69)</div>
-  </div>
-</div>
-
-<!-- AGY QUOTA STATUS (from terminal screenshot) -->
-<div class="agy-section">
-  <div class="section-title">🔧 agy (Antigravity CLI) — Current Quota Status</div>
-  <div style="font-size:11px;color:var(--text-muted);margin-bottom:8px">Live from terminal · Reset times shown in BD local time</div>
-  <div class="agy-grid">
-    <div class="agy-card">
-      <div class="agy-model">Gemini Flash</div>
-      <div class="agy-quota">51% used · Resets ~8:21 PM BD (in ~6h)</div>
-      <div class="agy-bar"><div class="agy-bar-fill" style="width:51%;background:var(--yellow)"></div></div>
+  <!-- KPI BAR -->
+  <div class="top-kpi" id="kpi-bar">
+    <div class="kpi-card">
+      <div class="kpi-label">Active Providers</div>
+      <div class="kpi-val" id="kpi-active">17</div>
+      <div class="kpi-sub">of 21 configured</div>
     </div>
-    <div class="agy-card">
-      <div class="agy-model">Gemini Flash Lite</div>
-      <div class="agy-quota">3% used · Resets ~8:20 PM BD (in ~6h)</div>
-      <div class="agy-bar"><div class="agy-bar-fill" style="width:3%;background:var(--green)"></div></div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Models</div>
+      <div class="kpi-val" id="kpi-models">637</div>
+      <div class="kpi-sub">across active providers</div>
     </div>
-    <div class="agy-card">
-      <div class="agy-model" style="color:var(--yellow)">Gemini Pro ⚠</div>
-      <div class="agy-quota">85% used · Resets ~5:56 PM BD (in ~3h40m)</div>
-      <div class="agy-bar"><div class="agy-bar-fill" style="width:85%;background:var(--red)"></div></div>
+    <div class="kpi-card">
+      <div class="kpi-label">Gemini Quota</div>
+      <div class="kpi-val warn" id="kpi-gemini">~51%</div>
+      <div class="kpi-sub">Flash · resets ~8:21 PM</div>
     </div>
-    <div class="agy-card">
-      <div class="agy-model">Gemini 3.1 Pro (Jules)</div>
-      <div class="agy-quota">3% used · Resets ~8:20 PM BD (in ~6h)</div>
-      <div class="agy-bar"><div class="agy-bar-fill" style="width:3%;background:var(--green)"></div></div>
+    <div class="kpi-card">
+      <div class="kpi-label">Pro Quota ⚠</div>
+      <div class="kpi-val error" id="kpi-pro">85%</div>
+      <div class="kpi-sub">Resets ~5:56 PM · 3h40m</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Free / Keyless</div>
+      <div class="kpi-val" style="color:var(--color-free)">3</div>
+      <div class="kpi-sub">Pollinations · Chutes · HFPublic</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Local (Ollama)</div>
+      <div class="kpi-val" style="color:var(--color-local)">6</div>
+      <div class="kpi-sub">qwen2.5 · llama3.2 · nomic</div>
     </div>
   </div>
-  <div style="margin-top:10px;font-size:11px;color:var(--red);font-weight:600">⚠ agy uses proprietary Cloud Code endpoints (daily-cloudcode-pa.googleapis.com) — NinaGate cannot proxy agy traffic. It falls back via its own OAuth keyring.</div>
-</div>
 
-<!-- GEMINI DAILY QUOTA -->
-<div class="quota-section">
-  <div class="section-title">📊 NinaGate Gemini Proxy — Daily Quota</div>
-  <div class="quota-row">
-    <div class="quota-name">GEMINI API</div>
-    <div class="bar-track"><div class="bar-fill bar-ok" id="gemini-bar" style="width:0%"></div></div>
-    <div class="quota-pct good" id="gemini-pct">0 / 900</div>
-    <div class="quota-reset">Resets 1:00 PM BD daily</div>
+  <!-- agy QUOTA TIMERS -->
+  <div class="section-header">
+    <div class="section-title">agy Quota Timers</div>
+    <span class="tier-pill tier-t2">Cloud Code · 5-hour rolling</span>
   </div>
-  <div style="font-size:11px;color:var(--text-faint);margin-top:6px">Soft limit: 900 req/day · Force-local triggers at 800 req · Data from: data/quota_state.json</div>
-</div>
+  <div class="timers-grid" id="agy-timers">
+    <!-- rendered by JS -->
+  </div>
 
-<!-- PROVIDER CARDS -->
-<div class="section-title" style="margin-bottom:12px">All 21 Providers — Capability Reference</div>
-<div class="providers-grid" id="providers-grid">
-</div>
+  <!-- TIER 1 — FREE / KEYLESS -->
+  <div class="section-header">
+    <div class="section-title">Tier 1 — Free &amp; Keyless</div>
+    <span class="tier-pill tier-free">No API key needed</span>
+  </div>
+  <div class="providers-grid" id="grid-t1"></div>
 
-<p class="footnote">
-  ⚡ Data sourced from <code>ninagate/providers.json</code> (SHA: 407f095) and <code>ninagate/main.py</code> (SHA: 0a8479a) · 
-  Context windows and RPM from gemini status terminal output (2026-06-15) · 
-  agy quota bars reflect live terminal screenshot · 
-  NinaGate proxy at <code>localhost:8080</code> · Dashboard: NINA v14.2 Lightning Sync · 
-  Built by Perplexity for github.com/aibony/nina
-</p>
-</main>
+  <!-- TIER 2 — CLOUD API -->
+  <div class="section-header">
+    <div class="section-title">Tier 2 — Cloud API</div>
+    <span class="tier-pill tier-t2">Keyed providers</span>
+  </div>
+  <div class="providers-grid" id="grid-t2"></div>
+
+  <!-- TIER 3 — AGGREGATOR -->
+  <div class="section-header">
+    <div class="section-title">Tier 3 — Aggregators</div>
+    <span class="tier-pill tier-t3">Multi-provider gateway</span>
+  </div>
+  <div class="providers-grid" id="grid-t3"></div>
+
+  <!-- LOCAL -->
+  <div class="section-header">
+    <div class="section-title">Local — Ollama</div>
+    <span class="tier-pill tier-local">On-device · unlimited</span>
+  </div>
+  <div class="providers-grid" id="grid-local"></div>
+
+  <!-- FULL COMPARISON TABLE -->
+  <div class="section-header">
+    <div class="section-title">Full Provider Comparison</div>
+  </div>
+  <div class="quota-table-wrap">
+    <table class="quota-table" id="full-table">
+      <thead>
+        <tr>
+          <th>Provider</th>
+          <th>Default Model</th>
+          <th>Context</th>
+          <th>RPM</th>
+          <th>Spacing</th>
+          <th>Models</th>
+          <th>Quota Used</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="full-tbody"></tbody>
+    </table>
+  </div>
+
+</div><!-- /page -->
 
 <script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
 const PROVIDERS = [
-  {name:"POLLINATIONS",model:"mistral",tier:1,ctx:8192,rpm:5,spacing:"12s",keyless:true,local:false,active:true,models:0,note:"Free · Keyless · Mistral"},
-  {name:"CHUTES",model:"deepseek-r1",tier:1,ctx:32768,rpm:3,spacing:"20s",keyless:true,local:false,active:true,models:0,note:"Free · Keyless · DeepSeek-R1"},
-  {name:"HFPUBLIC",model:"various",tier:1,ctx:8192,rpm:10,spacing:"6s",keyless:true,local:false,active:true,models:0,note:"Free · Keyless · HuggingFace"},
-  {name:"GROQ",model:"llama-3.3-70b-versatile",tier:2,ctx:8192,rpm:30,spacing:"2s",keyless:false,local:false,active:true,models:16,note:"Tier 2 · Ultra-fast Llama"},
-  {name:"CEREBRAS",model:"llama-3.3-70b",tier:2,ctx:8192,rpm:30,spacing:"2s",keyless:false,local:false,active:true,models:2,note:"Tier 2 · Fast reasoning"},
-  {name:"GEMINI",model:"gemini-2.5-flash",tier:2,ctx:1048576,rpm:15,spacing:"4s",keyless:false,local:false,active:true,models:56,note:"Tier 2 · 1M ctx · Primary cloud"},
-  {name:"DEEPSEEK",model:"deepseek-chat",tier:2,ctx:65536,rpm:60,spacing:"1s",keyless:false,local:false,active:true,models:2,note:"Tier 2 · 60 RPM · Deep reasoning"},
-  {name:"MISTRAL",model:"mistral-large-latest",tier:2,ctx:32768,rpm:1,spacing:"61s",keyless:false,local:false,active:true,models:69,note:"⚠ Tier 2 · 1 RPM BOTTLENECK"},
-  {name:"TOGETHER",model:"llama-3.1-405b",tier:2,ctx:32768,rpm:60,spacing:"1s",keyless:false,local:false,active:true,models:0,note:"Tier 2 · 60 RPM · 405B"},
-  {name:"COHERE",model:"command-r-plus",tier:2,ctx:128000,rpm:20,spacing:"3s",keyless:false,local:false,active:true,models:0,note:"Tier 2 · 128K ctx"},
-  {name:"FIREWORKS",model:"llama-v3p1-405b",tier:2,ctx:32768,rpm:30,spacing:"2s",keyless:false,local:false,active:true,models:6,note:"Tier 2 · Fast 405B"},
-  {name:"XAI",model:"grok-beta",tier:2,ctx:32768,rpm:60,spacing:"1s",keyless:false,local:false,active:true,models:0,note:"Tier 2 · 60 RPM · Grok"},
-  {name:"PERPLEXITY",model:"sonar-pro",tier:2,ctx:32768,rpm:50,spacing:"2s",keyless:false,local:false,active:true,models:0,note:"Tier 2 · Search-augmented"},
-  {name:"SAMBANOVA",model:"Meta-Llama-3.1-405B",tier:2,ctx:8192,rpm:30,spacing:"2s",keyless:false,local:false,active:true,models:6,note:"Tier 2 · 405B fast"},
-  {name:"HYPERBOLIC",model:"llama-3.1-405b",tier:2,ctx:32768,rpm:60,spacing:"1s",keyless:false,local:false,active:true,models:5,note:"Tier 2 · 60 RPM"},
-  {name:"NOVITA",model:"llama-3.1-70b",tier:2,ctx:8192,rpm:30,spacing:"2s",keyless:false,local:false,active:true,models:138,note:"Tier 2 · 138 models"},
-  {name:"OPENAI",model:"gpt-4o-mini",tier:2,ctx:128000,rpm:500,spacing:"0s",keyless:false,local:false,active:false,models:0,note:"⛔ Disabled — no key · Last resort"},
-  {name:"ONEBRAIN",model:"default",tier:2,ctx:8192,rpm:20,spacing:"3s",keyless:false,local:false,active:true,models:0,note:"Tier 2 · Key required"},
-  {name:"OPENROUTER",model:"auto",tier:3,ctx:128000,rpm:20,spacing:"3s",keyless:false,local:false,active:true,models:337,note:"Tier 3 · 337 models · Meta-router"},
-  {name:"OLLAMA",model:"qwen2.5:7b",tier:1,ctx:8192,rpm:null,spacing:"N/A",keyless:true,local:true,active:true,models:6,note:"LOCAL · Unlimited · Zero cost",
-   localModels:["qwen2.5-coder:1.5b","qwen2.5-coder:7b","qwen2.5:1.5b","qwen2.5:7b","nomic-embed-text:latest","llama3.2:3b"]},
+  // tier, name, defaultModel, ctx, rpm, spacing, keyType, statusText, models, quotaPct, resetIn, extraModels
+  { tier:'t1', name:'POLLINATIONS', defaultModel:'mistral',             ctx:'8K',    rpm:5,   spacing:'12s', keyType:'free',     status:'active',   models:0,   quotaPct:0,  resetIn:'—',       extraModels:[] },
+  { tier:'t1', name:'CHUTES',       defaultModel:'deepseek-r1',         ctx:'32K',   rpm:3,   spacing:'20s', keyType:'free',     status:'active',   models:0,   quotaPct:0,  resetIn:'—',       extraModels:[] },
+  { tier:'t1', name:'HFPUBLIC',     defaultModel:'various',             ctx:'8K',    rpm:10,  spacing:'6s',  keyType:'free',     status:'active',   models:0,   quotaPct:0,  resetIn:'—',       extraModels:[] },
+  { tier:'t2', name:'GROQ',         defaultModel:'llama-3.3-70b-versatile', ctx:'8K', rpm:30, spacing:'2s', keyType:'api',      status:'active',   models:16,  quotaPct:0,  resetIn:'Daily',   extraModels:['llama-3.1-8b-instant','llama-3.2-11b-vision','gemma2-9b-it','mixtral-8x7b'] },
+  { tier:'t2', name:'CEREBRAS',     defaultModel:'llama-3.3-70b',       ctx:'8K',    rpm:30,  spacing:'2s',  keyType:'api',      status:'active',   models:2,   quotaPct:0,  resetIn:'Daily',   extraModels:['llama3.1-8b'] },
+  { tier:'t2', name:'GEMINI',       defaultModel:'gemini-2.5-flash',    ctx:'1M',    rpm:15,  spacing:'4s',  keyType:'api',      status:'active',   models:56,  quotaPct:51, resetIn:'~6h 7m',  extraModels:['gemini-2.5-pro','gemini-2.0-flash','gemini-1.5-pro','gemini-1.5-flash'] },
+  { tier:'t2', name:'DEEPSEEK',     defaultModel:'deepseek-chat',       ctx:'64K',   rpm:60,  spacing:'1s',  keyType:'api',      status:'active',   models:2,   quotaPct:0,  resetIn:'Daily',   extraModels:['deepseek-reasoner'] },
+  { tier:'t2', name:'MISTRAL',      defaultModel:'mistral-large-latest', ctx:'32K',  rpm:1,   spacing:'61s', keyType:'api',      status:'warn',     models:69,  quotaPct:0,  resetIn:'Daily',   extraModels:['mistral-small-latest','open-mixtral-8x22b','codestral-latest','mistral-nemo'] },
+  { tier:'t2', name:'TOGETHER',     defaultModel:'llama-3.1-405b',      ctx:'32K',   rpm:60,  spacing:'1s',  keyType:'api',      status:'active',   models:0,   quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t2', name:'COHERE',       defaultModel:'command-r-plus',      ctx:'128K',  rpm:20,  spacing:'3s',  keyType:'api',      status:'active',   models:0,   quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t2', name:'FIREWORKS',    defaultModel:'llama-v3p1-405b',     ctx:'32K',   rpm:30,  spacing:'2s',  keyType:'api',      status:'active',   models:6,   quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t2', name:'XAI',          defaultModel:'grok-beta',           ctx:'32K',   rpm:60,  spacing:'1s',  keyType:'api',      status:'active',   models:0,   quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t2', name:'PERPLEXITY',   defaultModel:'sonar-pro',           ctx:'32K',   rpm:50,  spacing:'2s',  keyType:'api',      status:'active',   models:0,   quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t2', name:'SAMBANOVA',    defaultModel:'Meta-Llama-3.1-405B', ctx:'8K',    rpm:30,  spacing:'2s',  keyType:'api',      status:'active',   models:6,   quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t2', name:'HYPERBOLIC',   defaultModel:'llama-3.1-405b',      ctx:'32K',   rpm:60,  spacing:'1s',  keyType:'api',      status:'active',   models:5,   quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t2', name:'NOVITA',       defaultModel:'llama-3.1-70b',       ctx:'8K',    rpm:30,  spacing:'2s',  keyType:'api',      status:'active',   models:138, quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t2', name:'OPENAI',       defaultModel:'gpt-4o-mini',         ctx:'128K',  rpm:500, spacing:'0s',  keyType:'disabled', status:'inactive', models:0,   quotaPct:0,  resetIn:'—',       extraModels:[] },
+  { tier:'t2', name:'ONEBRAIN',     defaultModel:'default',             ctx:'8K',    rpm:20,  spacing:'3s',  keyType:'api',      status:'active',   models:0,   quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'t3', name:'OPENROUTER',   defaultModel:'auto',                ctx:'128K',  rpm:20,  spacing:'3s',  keyType:'api',      status:'active',   models:337, quotaPct:0,  resetIn:'Daily',   extraModels:[] },
+  { tier:'local', name:'OLLAMA',    defaultModel:'qwen2.5:7b',          ctx:'32K',   rpm:'∞', spacing:'—',   keyType:'local',    status:'active',   models:6,   quotaPct:0,  resetIn:'Never',   extraModels:['qwen2.5:1.5b','qwen2.5-coder:7b','qwen2.5-coder:1.5b','llama3.2:3b','nomic-embed-text:latest'] },
 ];
 
-function fmtCtx(n){
-  if(n>=1000000) return (n/1000000).toFixed(0)+"M";
-  if(n>=1000) return (n/1000).toFixed(0)+"K";
-  return n;
+const AGY_QUOTAS = [
+  { name:'Flash',       pct:51, resetIn:'~6h 5m',  resetTime:'8:21 PM' },
+  { name:'Flash Lite',  pct:3,  resetIn:'~6h 4m',  resetTime:'8:20 PM' },
+  { name:'Pro',         pct:85, resetIn:'~3h 40m', resetTime:'5:56 PM' },
+  { name:'Gemini 3.1',  pct:3,  resetIn:'~6h 4m',  resetTime:'8:20 PM' },
+];
+
+// ── RENDER HELPERS ────────────────────────────────────────────────────────────
+function statusChip(p) {
+  if (p.keyType === 'free')     return `<span class="status-chip chip-free">Keyless</span>`;
+  if (p.keyType === 'local')    return `<span class="status-chip chip-local">Local</span>`;
+  if (p.keyType === 'disabled') return `<span class="status-chip chip-inactive">Disabled</span>`;
+  if (p.status === 'warn')      return `<span class="status-chip chip-warn">Bottleneck</span>`;
+  if (p.status === 'active')    return `<span class="status-chip chip-active">Active</span>`;
+  return `<span class="status-chip chip-inactive">Inactive</span>`;
 }
 
-function ctxClass(n){
-  if(n>=500000) return "ctx-badge ctx-mega";
-  if(n>=64000) return "ctx-badge ctx-long";
-  return "ctx-badge";
+function quotaFillClass(pct) {
+  if (pct >= 85) return 'error';
+  if (pct >= 60) return 'warn';
+  return '';
 }
 
-function rpmClass(r){
-  if(!r) return "dim";
-  if(r>=60) return "good";
-  if(r>=20) return "";
-  return "warn bad";
-}
-
-function tierTag(t,keyless,local){
-  if(local) return '<span class="tag tag-local">LOCAL</span>';
-  if(keyless) return '<span class="tag tag-free">FREE</span>';
-  if(t===3) return '<span class="tag tag-t3">T3</span>';
-  if(t===1) return '<span class="tag tag-t1">T1</span>';
-  return '<span class="tag tag-paid">T2</span>';
-}
-
-function dotClass(p){
-  if(!p.active) return "status-dot dot-disabled";
-  if(p.name==="MISTRAL") return "status-dot dot-warn";
-  return "status-dot dot-active";
-}
-
-function rpmDisplay(r){
-  if(!r) return '<span class="stat-val dim">∞ unlimited</span>';
-  const cl = rpmClass(r);
-  return `<span class="stat-val ${cl}">${r} req/min</span>`;
-}
-
-const grid = document.getElementById("providers-grid");
-
-PROVIDERS.forEach(p=>{
-  const card = document.createElement("div");
-  card.className = "pcard" + (p.active?"":(" disabled"));
-
-  let ctxEl = `<span class="${ctxClass(p.ctx)}">${fmtCtx(p.ctx)}</span>`;
-  let modelsEl = p.models>0?`<span style="font-size:11px;color:var(--text-faint)">${p.models} models</span>`:"";
-
-  let ollamaModels = "";
-  if(p.localModels){
-    ollamaModels = `<div class="ollama-models">${p.localModels.map(m=>`<span class="model-chip">${m}</span>`).join("")}</div>`;
+function cardClass(p) {
+  let c = 'provider-card';
+  if (p.keyType === 'free')     c += ' is-active is-free';
+  else if (p.keyType === 'local')    c += ' is-active is-local';
+  else if (p.keyType === 'disabled') c += ' is-inactive';
+  else if (p.status === 'warn')      c += ' is-warn';
+  else if (p.status === 'active') {
+    if (p.quotaPct >= 85) c += ' is-error';
+    else c += ' is-active';
   }
-
-  const statusDot = `<div class="${dotClass(p)}"></div>`;
-
-  card.innerHTML = `
-    <div class="pcard-header">
-      <div>
-        <div class="pcard-name">${p.name}</div>
-        <div class="pcard-model">${p.model}</div>
-      </div>
-      ${statusDot}
-    </div>
-    <div class="pcard-meta">
-      ${tierTag(p.tier,p.keyless,p.local)}
-      ${ctxEl}
-      ${modelsEl}
-    </div>
-    <div class="stat-row">
-      <span class="stat-key">RPM Limit</span>
-      ${rpmDisplay(p.rpm)}
-    </div>
-    <div class="stat-row">
-      <span class="stat-key">Min Spacing</span>
-      <span class="stat-val ${p.spacing==='61s'?'bad':''}">${p.spacing}</span>
-    </div>
-    <div class="stat-row">
-      <span class="stat-key">API Key</span>
-      <span class="stat-val ${p.keyless||p.local?'good':p.active?'':'bad'}">${p.keyless?"Keyless (free)":p.local?"None (local)":p.active?"Configured":"Missing"}</span>
-    </div>
-    <div class="stat-row" style="border:none;padding-bottom:0">
-      <span class="stat-key">Note</span>
-      <span style="font-size:10px;color:var(--text-faint)">${p.note}</span>
-    </div>
-    ${ollamaModels}
-  `;
-  grid.appendChild(card);
-});
-
-// Countdown to next 1PM BD = 07:00 UTC
-function updateCountdown(){
-  const now = new Date();
-  const utcNow = now.getTime() + (now.getTimezoneOffset()*60000);
-  const bdNow = new Date(utcNow + (6*3600000));
-  let reset = new Date(bdNow);
-  reset.setHours(13,0,0,0);
-  if(bdNow >= reset) reset.setDate(reset.getDate()+1);
-  const diff = reset - bdNow;
-  const h = Math.floor(diff/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
-  document.getElementById("countdown").textContent =
-    String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+  return c;
 }
-setInterval(updateCountdown,1000);
-updateCountdown();
 
-// Theme toggle
+function providerCard(p, idx) {
+  const hasModels = p.extraModels && p.extraModels.length > 0;
+  const fillCls = quotaFillClass(p.quotaPct);
+  const rpmDisplay = p.rpm === '∞' ? '∞ RPM' : `${p.rpm} RPM`;
+  const id = `card-${p.name.toLowerCase()}`;
+
+  return `
+<div class="${cardClass(p)}" style="animation-delay:${idx*30}ms" id="${id}">
+  <div class="card-top">
+    <div>
+      <div class="card-name">${p.name}</div>
+      <div class="card-default">${p.defaultModel}</div>
+    </div>
+    ${statusChip(p)}
+  </div>
+  <div class="metrics-row">
+    <div class="metric">
+      <div class="metric-val">${p.ctx}</div>
+      <div class="metric-lbl">Context</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">${rpmDisplay}</div>
+      <div class="metric-lbl">Rate Limit</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">${p.spacing}</div>
+      <div class="metric-lbl">Min Gap</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">${p.models === 0 ? (p.keyType==='local'?'6':'—') : p.models}</div>
+      <div class="metric-lbl">Models</div>
+    </div>
+  </div>
+  <div class="quota-section">
+    <div class="quota-row">
+      <span>Quota used</span>
+      <span class="quota-num">${p.keyType==='disabled' ? 'N/A' : p.quotaPct+'%'}</span>
+    </div>
+    <div class="quota-track">
+      <div class="quota-fill ${fillCls}" style="width:${p.keyType==='disabled'?100:p.quotaPct}%"></div>
+    </div>
+    <div class="reset-row">Resets: <span class="reset-time">${p.resetIn}</span></div>
+  </div>
+  ${hasModels ? `
+  <div class="models-toggle" id="toggle-${p.name}" onclick="toggleModels('${p.name}')">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    <span>${p.extraModels.length} notable models</span>
+  </div>
+  <div class="models-list hidden" id="models-${p.name}">
+    ${p.extraModels.map(m=>`<span class="model-tag">${m}</span>`).join('')}
+  </div>` : ''}
+</div>`;
+}
+
+function toggleModels(name) {
+  const list = document.getElementById(`models-${name}`);
+  const toggle = document.getElementById(`toggle-${name}`);
+  if (!list) return;
+  list.classList.toggle('hidden');
+  toggle.classList.toggle('open');
+}
+window.toggleModels = toggleModels;
+
+// ── RENDER AGY TIMERS ─────────────────────────────────────────────────────────
+function renderTimers() {
+  const wrap = document.getElementById('agy-timers');
+  wrap.innerHTML = AGY_QUOTAS.map(q => {
+    const fc = quotaFillClass(q.pct);
+    return `
+<div class="timer-card">
+  <div class="timer-name">${q.name}</div>
+  <div class="timer-display ${fc}">${q.pct}%</div>
+  <div class="timer-label">Used · Resets at <strong>${q.resetTime}</strong> BD</div>
+  <div class="timer-usage-bar"><div class="timer-usage-fill ${fc}" style="width:${q.pct}%"></div></div>
+  <div style="font-size:10px;color:var(--color-text-faint);margin-top:var(--space-2);">${q.resetIn} remaining</div>
+</div>`;
+  }).join('');
+}
+
+// ── RENDER GRIDS ─────────────────────────────────────────────────────────────
+function renderGrids() {
+  const grids = {t1:'grid-t1', t2:'grid-t2', t3:'grid-t3', local:'grid-local'};
+  Object.keys(grids).forEach(tier => {
+    const el = document.getElementById(grids[tier]);
+    const subset = PROVIDERS.filter(p=>p.tier===tier);
+    el.innerHTML = subset.map((p,i)=>providerCard(p,i)).join('');
+  });
+}
+
+// ── RENDER FULL TABLE ─────────────────────────────────────────────────────────
+function renderTable() {
+  const tbody = document.getElementById('full-tbody');
+  tbody.innerHTML = PROVIDERS.map(p => {
+    const fillCls = quotaFillClass(p.quotaPct);
+    let chipHtml;
+    if (p.keyType==='free')     chipHtml=`<span class="tbl-pill chip-free">Keyless</span>`;
+    else if (p.keyType==='local')    chipHtml=`<span class="tbl-pill chip-local">Local</span>`;
+    else if (p.keyType==='disabled') chipHtml=`<span class="tbl-pill chip-inactive">Disabled</span>`;
+    else if (p.status==='warn')      chipHtml=`<span class="tbl-pill chip-warn">⚠ Slow</span>`;
+    else                             chipHtml=`<span class="tbl-pill chip-active">Active</span>`;
+
+    const rpmDisp = p.rpm === '∞' ? '∞' : p.rpm;
+    const quotaDisp = p.keyType==='disabled' ? '—' : p.quotaPct+'%';
+    const barWidth = p.keyType==='disabled' ? 100 : p.quotaPct;
+
+    return `<tr>
+      <td><span class="tbl-name">${p.name}</span></td>
+      <td><span class="tbl-model">${p.defaultModel}</span></td>
+      <td class="tbl-mono">${p.ctx}</td>
+      <td class="tbl-mono">${rpmDisp}</td>
+      <td class="tbl-mono">${p.spacing}</td>
+      <td class="tbl-mono">${p.models===0 ? (p.keyType==='local'?'6':'—') : p.models}</td>
+      <td>
+        <div class="tbl-bar-wrap">
+          <div class="tbl-bar-track"><div class="tbl-bar-fill ${fillCls}" style="width:${barWidth}%"></div></div>
+          <div class="tbl-pct">${quotaDisp}</div>
+        </div>
+      </td>
+      <td>${chipHtml}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+renderTimers();
+renderGrids();
+renderTable();
+
+// theme toggle
 (function(){
-  const btn = document.querySelector("[data-theme-toggle]");
-  const root = document.documentElement;
-  let mode = "dark";
-  root.setAttribute("data-theme","dark");
-  if(btn) btn.addEventListener("click",()=>{
-    mode = mode==="dark"?"light":"dark";
-    root.setAttribute("data-theme",mode);
-    btn.innerHTML = mode==="dark"
-      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  const t=document.querySelector('[data-theme-toggle]');
+  const r=document.documentElement;
+  // default dark
+  t&&t.addEventListener('click',()=>{
+    const cur=r.getAttribute('data-theme')||'dark';
+    const next=cur==='dark'?'light':'dark';
+    r.setAttribute('data-theme',next);
+    t.innerHTML=next==='dark'
+      ?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+      :'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
   });
 })();
+
+// refresh (simulated)
+document.getElementById('refresh-btn').addEventListener('click', function() {
+  this.classList.add('spinning');
+  const el = document.getElementById('last-updated');
+  const now = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  setTimeout(()=>{
+    this.classList.remove('spinning');
+    el.textContent = 'Updated '+now;
+  }, 900);
+});
+
+// live clock for last-updated
+setInterval(()=>{}, 30000);
 </script>
 </body>
 </html>

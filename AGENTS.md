@@ -731,3 +731,10 @@ When agy quota exhausts, work stops unless we have alternate paths.
 - ROUTING_WIN: Replaced `core/quota_router.py` and `core/rpm_scheduler.py` with v2 models and patched `core/router.py` to enable classifier-driven pre-sorted tier routing groups with real-time RPM burst headroom and TTFT wait logging.
 - CONTEXT_HINT: Keeping token budget definitions, context windows, and rate limits centralized in routing maps ensures clear routing flow execution.
 - RULE0_VIOLATION: None. All file operations compliant.
+
+### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - NinaGate Dashboard Integration
+- OFFLOAD_OPPORTUNITY: Simple UI edits and tab additions -> route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Added the external `NinaGate ↗` dashboard tab in `ninaui.html` to open the standalone `ninagate-dashboard.html` in a new window.
+- CONTEXT_HINT: Track any newly introduced HTML dashboard files in git before syncing to prevent index governance failures.
+- RULE0_VIOLATION: None. All file operations compliant.
