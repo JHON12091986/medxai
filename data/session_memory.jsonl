@@ -34,3 +34,4 @@
 {"ts": "2026-06-16T00:04:09.316432", "summary": "replace .geminiignore and track core/prompt_cache.py", "head": "7c8834367311ba31ea005a7929b1c850ed089e68", "branch": "main"}
 {"ts": "2026-06-16T00:09:59.055922", "summary": "implement connection pool and true streaming in ninagate/main.py", "head": "64dfbadafd7e10b45b47fb240245fb7161d88d4e", "branch": "main"}
 {"ts": "2026-06-16T00:13:30.176892", "summary": "update task classifier and sync documentation", "head": "96a77548aff19d1c759b38f8158bd2269262adbf", "branch": "main"}
+{"ts": "2026-06-16T00:20:06.280295", "summary": "wire recommended_tier pre-sorting and max_tokens_cap override into ninagate/main.py", "head": "ff8255e105eb75625da6e3168fbbbb17f7b7a30b", "branch": "main"}

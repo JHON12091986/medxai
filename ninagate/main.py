@@ -394,12 +394,6 @@ async def get_status():
         })
     return JSONResponse(status_code=200, content=status_data)
 
-async def _classify_request_proxy(payload):
-    """Internal helper to classify requests using the unified classifier."""
-    messages = payload.get("messages", [])
-    text = messages[-1].get("content", "") if messages else ""
-    classified = await classify_task(text=text, messages=messages)
-    return classified.task_type
 
 async def forward_to_provider(payload, providers_to_try, is_stream):
     for score, provider, api_key, h in providers_to_try:
@@ -478,6 +472,19 @@ async def proxy_chat_completions(request: Request):
                 last_msg["content"] = last_msg["content"].replace(match.group(0), "", 1).lstrip()
                 if target_model: payload["model"] = target_model
 
+    # ── RULE 0: Classify BEFORE sorting providers ─────────────────────────────
+    classified = await classify_task(
+        text=messages[-1].get("content", "") if messages else "",
+        messages=messages
+    )
+    task_type        = classified.task_type          # SIMPLE/MEDIUM/COMPLEX/MASSIVE
+    recommended_tier = classified.recommended_tier   # LOCAL/FAST/DEEP/LARGE
+
+    # Override max_tokens cap from classifier if not already set by caller
+    if "max_tokens" not in payload and classified.max_tokens_cap:
+        payload["max_tokens"] = classified.max_tokens_cap
+        logger.debug(f"token_cap applied task={task_type} max_tokens={classified.max_tokens_cap}")
+
     # Filter and sort providers
     cloud_providers = []
     local_providers = []
@@ -495,29 +502,19 @@ async def proxy_chat_completions(request: Request):
             if p.get("name").lower() == "ollama": local_providers.append(entry)
             else: cloud_providers.append(entry)
                 
-    cloud_providers.sort(key=lambda x: x[0], reverse=True)
-    
-    # ── RULE 0: Classify BEFORE dispatching to cloud ─────────────────────────
-    # We classify first so that SIMPLE/MEDIUM tasks never start a cloud HTTP
-    # request at all. Previously, the cloud_task was eagerly created and then
-    # cancelled — this still consumed quota and added latency.
-    task_type = await _classify_request_proxy(payload)
+    def get_tier_boost(provider_name):
+        name_upper = provider_name.upper()
+        if recommended_tier == "LOCAL" and name_upper == "OLLAMA":
+            return 2.0
+        if recommended_tier == "FAST" and name_upper in ("CEREBRAS", "GROQ"):
+            return 2.0
+        if recommended_tier == "DEEP" and name_upper in ("DEEPSEEK", "MISTRAL"):
+            return 2.0
+        if recommended_tier == "LARGE" and name_upper == "GEMINI":
+            return 2.0
+        return 0.0
 
-    # ── Token budget cap per task complexity ─────────────────────────────────
-    # Prevents SIMPLE tasks from burning 8192 tokens when 512 is enough.
-    # Only applies if caller didn't explicitly set max_tokens.
-    if "max_tokens" not in payload:
-        _token_caps = {
-            "SIMPLE":  512,
-            "MEDIUM":  2048,
-            "COMPLEX": 4096,
-            # CRITICAL/MASSIVE tasks get no cap — let the model decide
-        }
-        cap = _token_caps.get(task_type)
-        if cap:
-            payload["max_tokens"] = cap
-            logger.debug(f"token_cap applied task={task_type} max_tokens={cap}")
-    # ─────────────────────────────────────────────────────────────────────────
+    cloud_providers.sort(key=lambda x: x[0] + get_tier_boost(x[1]["name"]), reverse=True)
 
     # Quota guard: if we are within 100 requests of the daily cap, force all
     # traffic to local regardless of task classification.

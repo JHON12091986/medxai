@@ -58,3 +58,6 @@
 {"t": "2026-06-15T18:10:07.917489+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
 {"t": "2026-06-16T00:13:27.979291Z", "step": 0, "action": "start", "file": "core/task_classifier.py", "detail": "updating task classifier and syncing documentation", "status": "ok"}
 {"t": "2026-06-16T00:13:28.011511Z", "step": -1, "action": "done", "file": "core/task_classifier.py", "detail": "updated task classifier keywords, ran index tools, updated AGENTS.md, and ran nina sync", "status": "ok"}
+{"t": "2026-06-15T18:13:35.872239+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-16T00:20:08.915555Z", "step": 0, "action": "start", "file": "ninagate/main.py", "detail": "Wiring recommended_tier sorting and max_tokens_cap override", "status": "ok"}
+{"t": "2026-06-16T00:20:08.947382Z", "step": -1, "action": "done", "file": "ninagate/main.py", "detail": "wired recommended_tier sorting and max_tokens_cap override in main.py, verified classifier, ran sync", "status": "ok"}
