@@ -112,11 +112,9 @@ def cmd_gemini_run(args):
 # --- Benchmark and Audit ---
 
 def cmd_bench(args):
-    """[043] Benchmark: Compare Cloud vs Hybrid Stats Locally."""
-    start = time.time()
-    # Mock logic
-    time.sleep(0.1)
-    print(f"Benchmark: Local Fast (zero token) took {time.time()-start:.2f}s.")
+    """[043] Benchmark: Delegates to ninaflash_bench.cmd_bench_run (Module 10)."""
+    from tools.ninaflash_bench import cmd_bench_run
+    cmd_bench_run(args)
 
 def cmd_code_audit_doc(args):
     """[044] Score docstrings on clarity and completeness."""

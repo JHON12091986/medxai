@@ -44,6 +44,7 @@ from tools.ninaflash_guard import (
     cmd_test_run, cmd_bench, cmd_code_audit_doc,
     cmd_gemini_context, cmd_gemini_prompt, cmd_gemini_status, cmd_gemini_run
 )
+from tools.ninaflash_bench import cmd_bench_run
 
 def main():
     parser = argparse.ArgumentParser(description="ninaflash AI Agent Kernel v6.1")
@@ -100,8 +101,6 @@ def main():
     p_ctxs.add_parser("stall")
     p_cpk = p_ctxs.add_parser("pack"); p_cpk.add_argument("--file", required=True)
 
-
-
     # Guard & Triage
     p_check = subparsers.add_parser("check"); p_cks = p_check.add_subparsers(dest="sub")
     p_cc = p_cks.add_parser("code"); p_cc.add_argument("file"); p_cc.add_argument("--strict", action="store_true"); p_cx = p_cks.add_parser("complexity"); p_cx.add_argument("file")
@@ -120,6 +119,29 @@ def main():
     p_gems.add_parser("status")
     p_grun = p_gems.add_parser("run"); p_grun.add_argument("--task", required=True)
 
+    # Benchmark — nf bench
+    p_bench = subparsers.add_parser(
+        "bench",
+        help="Benchmark all active providers: TTFT, tok/s, vs-baseline, spacing advice",
+    )
+    p_bench.add_argument(
+        "--provider", default=None,
+        metavar="NAME[,NAME...]",
+        help="Comma-separated provider names to benchmark (default: all active)",
+    )
+    p_bench.add_argument(
+        "--prompts", type=int, default=10, metavar="N",
+        help="Number of prompts to run per provider (1-10, default: 10)",
+    )
+    p_bench.add_argument(
+        "--export", action="store_true",
+        help="Write full results to logs/bench_<timestamp>.json",
+    )
+    p_bench.add_argument(
+        "--quiet", action="store_true",
+        help="Machine-readable JSON output only (no ASCII table)",
+    )
+
     # Dispatch
     args = parser.parse_args()
     import time as _time
@@ -128,9 +150,14 @@ def main():
         cmd, sub = args.command, getattr(args, 'sub', None)
         cmd_norm = cmd.replace("-", "_")
         sub_norm = sub.replace("-", "_") if sub else None
-        func = globals().get(f"cmd_{cmd_norm}_{sub_norm}") if sub_norm else globals().get(f"cmd_{cmd_norm}")
-        if func: func(args)
-        else: print(f"Unknown command: {cmd} {sub}")
+
+        # bench is a top-level command with no sub — dispatch directly
+        if cmd_norm == "bench":
+            cmd_bench_run(args)
+        else:
+            func = globals().get(f"cmd_{cmd_norm}_{sub_norm}") if sub_norm else globals().get(f"cmd_{cmd_norm}")
+            if func: func(args)
+            else: print(f"Unknown command: {cmd} {sub}")
         
         dur = (_time.monotonic() - t0) * 1000
         write_nf_log(cmd, sub or "", dur, tokens_saved=NF_TOKEN_SAVINGS.get(cmd, 0))
@@ -163,5 +190,6 @@ _USED_CMDS = [
     cmd_verify_all, cmd_check_code, cmd_check_complexity,
     cmd_check_doc, cmd_maintain_pr, cmd_pr_reconcile,
     cmd_test_run, cmd_bench, cmd_code_audit_doc,
-    cmd_gemini_context, cmd_gemini_prompt, cmd_gemini_status, cmd_gemini_run
+    cmd_gemini_context, cmd_gemini_prompt, cmd_gemini_status, cmd_gemini_run,
+    cmd_bench_run,
 ]
