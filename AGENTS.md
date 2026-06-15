@@ -703,3 +703,10 @@ When agy quota exhausts, work stops unless we have alternate paths.
 - ROUTING_WIN: Replacing direct `self.router.route` calls with `self.dispatcher.dispatch(...).execute()` globally intercepts all tasks to apply the TokenGuard classifier and cache checking.
 - CONTEXT_HINT: Launch `./tools/agy_quota_monitor.sh --watch &` at session startup to automatically feed the state into `data/agy_quota.json`.
 - RULE0_VIOLATION: None. All file operations compliant.
+
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Documentation Sync
+- OFFLOAD_OPPORTUNITY: Simple index generation, status lookups, and repository hygiene runs -> route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Using `update_index.py` and `audit_repo_hygiene.py` to automatically regenerate project manifests.
+- CONTEXT_HINT: Always run `update_index.py` before validation to ensure new dependencies or file changes are captured.
+- RULE0_VIOLATION: None. All file status checks and listings were performed via compliant `ninaflash` commands.
