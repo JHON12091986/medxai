@@ -1,6 +1,14 @@
 {
   "model": { "name": "gemini-2.5-flash" },
-  "maxRetries": 2,
+  "maxRetries": 3,
   "preview": true,
-  "context": { "fileName": ["AGENTS.md", "docs/space/nina_index.md"] }
+  "context": {
+    "fileName": [
+      "GEMINI.md",
+      "AGENTS.md",
+      "agy_prompt.md",
+      "docs/space/nina_index.md",
+      "bench_report.md"
+    ]
+  }
 }

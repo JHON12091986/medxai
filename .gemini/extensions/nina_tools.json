@@ -1,0 +1,32 @@
+{
+  "name": "nina_tools",
+  "version": "1.0",
+  "description": "Named tool stubs for common NINA shell operations.",
+  "tools": [
+    {
+      "name": "guardian",
+      "description": "Run the NINA guardian engine — forensic AST scan, baseline drift detection, service health check.",
+      "command": "cd ~/nina && ./guardian"
+    },
+    {
+      "name": "nina_sync",
+      "description": "Run the mandatory post-merge sync. MUST be run after every merge.",
+      "command": "cd ~/nina && ./nina_sync.sh"
+    },
+    {
+      "name": "rule0_audit",
+      "description": "Run the RULE 0 compliance audit — checks for banned tool calls.",
+      "command": "cd ~/nina && python3 rule0_audit.py"
+    },
+    {
+      "name": "validate_index",
+      "description": "Run the index validator — hard gate before any commit.",
+      "command": "cd ~/nina && python3 tools/validate_index.py"
+    },
+    {
+      "name": "post_task_hook",
+      "description": "Run the mandatory post-task hook after every completed task.",
+      "command": "cd ~/nina && python3 tools/post_task_hook.py"
+    }
+  ]
+}
