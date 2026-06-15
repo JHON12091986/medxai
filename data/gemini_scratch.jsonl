@@ -282,3 +282,7 @@
 {"t": "2026-06-15T15:08:52.680650+06:00", "step": 9, "action": "shell", "file": "", "detail": "Staging and committing doc autogen code and patched documentation", "status": "ok"}
 {"t": "2026-06-15T15:09:01.416368+06:00", "step": 10, "action": "shell", "file": "", "detail": "Pushing committed doc updates to origin", "status": "ok"}
 {"t": "2026-06-15T15:09:12.147685+06:00", "step": -1, "action": "done", "file": "", "detail": "Updated doc_autogen.py to match current files/patterns, ran it to patch documentation files, committed and pushed changes.", "status": "ok"}
+{"t": "2026-06-15T09:09:17.843269+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/4 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-15T15:15:55.851151+06:00", "step": 11, "action": "shell", "file": "", "detail": "Staging and committing ninagate keyless provider fix", "status": "ok"}
+{"t": "2026-06-15T15:16:04.906715+06:00", "step": 12, "action": "shell", "file": "", "detail": "Pushing proxy fixes to origin", "status": "ok"}
+{"t": "2026-06-15T15:16:14.382664+06:00", "step": -1, "action": "done", "file": "", "detail": "Implemented and resolved provider key verification bugs allowing keyless lanes to activate, created the dashboard artifact, and pushed updates to main.", "status": "ok"}

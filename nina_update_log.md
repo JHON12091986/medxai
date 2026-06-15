@@ -3593,3 +3593,13 @@
 **Files changed:** data/gemini_scratch.jsonl,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 336 — 2026-06-15 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** data/gemini_scratch.jsonl,docs/space/nina_repo_hygiene_dashboard.md
+
+**Verification:** git push OK, nina.service active
