@@ -585,5 +585,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Local Ollama model loader checks for `"ollama"` instead of `"OLLAMA"`, leading to local model discovery bypass in `/v1/models`.
 - RULE0_VIOLATION: None. All actions compliant.
 
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - PR Merge Resolution
+- OFFLOAD_OPPORTUNITY: Running code validation (py_compile, pyflakes) and branch list checks -> route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Merging the branch locally, pushing `main` to `origin`, and deleting remote/local PR branches cleanly resolves the PR on GitHub without using the browser UI.
+- CONTEXT_HINT: If a PR's merge commit is pushed to main directly, GitHub automatically marks the PR as merged.
+- RULE0_VIOLATION: None. All local file operations and checks done via nf equivalents.
+
 
 \n
