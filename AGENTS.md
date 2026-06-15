@@ -620,5 +620,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Always lower-case provider names when performing conditional checks in local proxy scripts to prevent casing mismatches with `providers.json`.
 - RULE0_VIOLATION: None. All file operations, status lookups, and test runs were done via compliant shell calls or python one-liners.
 
+### [2026-06-15] Session Update — Gemini CLI - Universal Proxy Wrapper
+- OFFLOAD_OPPORTUNITY: Simple shell checks and text writes -> route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Replaced the specific `gemini` shim with a `nina-universal-wrapper.sh` designed to intercept any CLI execution (like `agy` or `gemini`). It securely populates API base URLs, locates the original binary dynamically using `PATH` fall-through, and executes it transparently.
+- CONTEXT_HINT: Utilizing `which -a` and verifying file path identities avoids infinite recursion loops in wrapper scripts.
+- RULE0_VIOLATION: None.
+
 
 \n

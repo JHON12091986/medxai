@@ -33,10 +33,12 @@ This index tracks all governed artifacts in the NINA repository.
 | `agent/context.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `agy_prompt.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `bench_report.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `bin/agy` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `bin/gemini` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `bin/install_governance.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `bin/nf` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `bin/nina` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `bin/nina-universal-wrapper.sh` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `bin/ninaflash` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `bin/ninagate` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `call_graph_test.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
