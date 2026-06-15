@@ -70,7 +70,7 @@ class TestClassifyTask:
 
     def test_lpu_hotpath(self):
         task = asyncio.run(classify_task("git status", []))
-        assert task.task_type == "lpu_deterministic"
+        assert task._semantic_type == "lpu_deterministic"
         assert task.recommended_tier == TIER_LOCAL
         assert task.max_tokens_cap == 256
 

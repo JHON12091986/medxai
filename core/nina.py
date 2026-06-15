@@ -139,6 +139,12 @@ class Nina:
 
         await self.memory.initialize()
         await self.router.initialize()
+
+        # Pre-reset daily quota Telegram alert system
+        from core.quota_alert import QuotaAlerter
+        self.quota_alerter = QuotaAlerter(self.router, self.config)
+        await self.quota_alerter.start()
+
         await self.pipeline.initialize()
 
         self.agent     = AgentLoop(self.config, self.router, self.memory, self.tools)

@@ -79,7 +79,7 @@ def reconcile_tests(data, repo_root):
     EXEMPT_STEMS = {
         "update_index", "validate_index", "query_index", "cleanup_by_index",
         "rule0_audit", "gemini_watch", "telegram_notify", "nina_sync",
-        "ninagate_info", "session_ledger", "provider_health",
+        "ninagate_info", "session_ledger", "provider_health", "quota_alert",
     }
     # Pure adapter interface patterns
     EXEMPT_INTERFACE_PATTERNS = ["interface", "api", "webhook", "bridge", "shim"]
