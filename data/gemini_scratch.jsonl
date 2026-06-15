@@ -78,3 +78,4 @@
 {"t": "2026-06-15T18:57:32.298785+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
 {"t": "2026-06-15T18:59:57.896837+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
 {"t": "2026-06-15T19:01:22.694768+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-15T19:05:10.925618+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
