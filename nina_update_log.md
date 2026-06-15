@@ -4023,3 +4023,23 @@
 **Files changed:** AGENTS.md,core/swarm_engine.py,core/task_planner.py,data/gemini_scratch.jsonl,docs/space/claude_feed.md,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md,ninagate/providers.json,tools/hardware_check.py
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 379 — 2026-06-16 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** data/gemini_scratch.jsonl,docs/space/nina_repo_hygiene_dashboard.md,tools/hardware_check.py
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 380 — 2026-06-16 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,data/gemini_scratch.jsonl,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md,tools/hardware_check.py
+
+**Verification:** git push OK, nina.service active
