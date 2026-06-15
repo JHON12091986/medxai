@@ -17,6 +17,9 @@ class AgentLoop:
     def __init__(self, config: Any, router: HybridRouter, memory: Any, tools: dict) -> None:
         self.config = config
         self.router = router
+        from core.quota_dispatcher import QuotaDispatcher
+        self.dispatcher = QuotaDispatcher(self.router)
+        self.router.dispatcher = self.dispatcher
         self.memory = memory
         self.tools  = tools
         self._scratchpad_path = Path("data/gemini_scratch.jsonl")
@@ -57,12 +60,8 @@ class AgentLoop:
             f"Original question: {goal}\n\nAnswer: {draft}"
         )
         try:
-            reviewed = await self.router.route(
-                review_prompt,
-                [{"role": "user", "content": review_prompt}],
-                task,
-                force_local=True,
-            )
+            plan = self.dispatcher.dispatch(review_prompt, force_tier="TRIVIAL")
+            reviewed = await plan.execute()
             reviewed = (reviewed or "").strip()
             if reviewed:
                 return reviewed
@@ -209,7 +208,8 @@ class AgentLoop:
                     "System 2 Reflection: Pause and compute a complex logical chain to achieve this goal. "
                     "Draft a detailed step-by-step blueprint. Identify prerequisites, potential risks, and testing steps."
                 )
-                blueprint = await self.router.route(planning_prompt, [{"role": "user", "content": planning_prompt}], task, force_local=force_local)
+                plan = self.dispatcher.dispatch(planning_prompt, force_tier="TRIVIAL" if force_local else None)
+                blueprint = await plan.execute()
             except Exception as e:
                 logger.warning(f"system2_thinking_failed: {e}")
 
@@ -227,7 +227,8 @@ class AgentLoop:
             # Append only incremental scratchpad — no repeated context
             step_prompt = f"[Step {step}/{max_steps}] Scratchpad:\n{chr(10).join(scratchpad[-3:])}"
             msgs.append({"role": "user", "content": step_prompt})
-            response = await self.router.route(goal, msgs, task, force_local=force_local)
+            plan = self.dispatcher.dispatch(goal, context=str(msgs), force_tier="TRIVIAL" if force_local else None)
+            response = await plan.execute()
             msgs.append({"role": "assistant", "content": response})
 
             # [Claude-Reasoning]: Extract and log thinking to HUD
@@ -296,7 +297,8 @@ class AgentLoop:
                                     if attempt > 0: obs += "\n\n[INFO] Surgical edit syntax verified automatically after self-fix."
                                     break
                                 fix_prompt = f"The surgical edit resulted in syntax errors:\n{chr(10).join(errors)}\nPlease output a TOOL:shell command with sed or python to fix this exact error. FINAL: when done."
-                                fix_resp = await self.router.route(goal, msgs + [{"role": "user", "content": fix_prompt}], task, force_local=force_local)
+                                plan = self.dispatcher.dispatch(goal, context=str(msgs + [{"role": "user", "content": fix_prompt}]), force_tier="TRIVIAL" if force_local else None)
+                                fix_resp = await plan.execute()
                                 match_fix = _re.search(r'TOOL:\s*([^\s:]+)(?:\s+INPUT:\s*([^\n]*)|[ \t]+([^\n]*))?', _re.sub(r'[*_`]', '', _re.sub(r'^\[Step \d+/\d+\]\s*', '', fix_resp, flags=_re.MULTILINE)))
                                 if match_fix:
                                     f_tool_name = match_fix.group(1).strip(":- ").lower()

@@ -38,6 +38,10 @@ class IdleProposalLoop:
     def __init__(self, config, router, telegram, pipeline=None):
         self.config        = config
         self.router        = router
+        from core.quota_dispatcher import QuotaDispatcher
+        self.dispatcher = QuotaDispatcher(self.router)
+        if self.router:
+            self.router.dispatcher = self.dispatcher
         self.telegram      = telegram
         # pipeline retained in signature for compat but never used
         self._last_user_ts: float = time.time()
@@ -102,7 +106,8 @@ class IdleProposalLoop:
             grounded_prompt = f"{prompt}\n\nIMPORTANT: NINA's actual Python files are:\n{file_list}\nOnly reference files from this list.\n\n{format_instructions}"
             task = ClassifiedTask("research", 400, False, False)
             msgs = [{"role": "user", "content": grounded_prompt}]
-            analysis = await self.router.route(grounded_prompt, msgs, task)
+            plan = self.dispatcher.dispatch(grounded_prompt, context=str(msgs))
+            analysis = await plan.execute()
 
             impact = "Unknown"
             clean_analysis = analysis.strip()

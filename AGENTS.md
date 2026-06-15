@@ -647,3 +647,52 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ROUTING_WIN: Direct python-based verification and copy operations handled the download source correctly.
 - CONTEXT_HINT: Always locate local audit tools relative to repository root (`tools/rule0_audit.py`).
 - RULE0_VIOLATION: None. All file operations compliant.
+
+
+---
+
+## Token Conservation Strategy (added 2026-06-15)
+
+### Problem
+`agy` (Antigravity CLI) uses Google Cloud Code internal APIs that cannot be proxied by NinaGate.
+When agy quota exhausts, work stops unless we have alternate paths.
+
+### Three-Layer Defense
+
+**Layer 1 — PREVENT** (reduce tokens reaching agy)
+- `tools/nina_token_guard.py` — classifies every prompt before any LLM call:
+  - TRIVIAL (< 400 tokens) → LOCALFAST (qwen2.5:1.5b, free, instant)
+  - MEDIUM (< 2000 tokens) → GROQ (30 RPM, free tier)
+  - COMPLEX (< 8000 tokens) → GEMINI via NinaGate (not agy quota)
+  - CRITICAL → agy (only when truly necessary)
+- Prompt compression: strips comments, boilerplate, excess whitespace before sending
+- Response cache: identical tasks return stored result (0 tokens used)
+
+**Layer 2 — PRESERVE** (make agy quota last longer)
+- `tools/agy_quota_monitor.sh` — polls agy quota, writes `data/agy_quota.json`
+  - Run at session start: `./tools/agy_quota_monitor.sh`
+  - Watch mode (background): `./tools/agy_quota_monitor.sh --watch &`
+- `core/quota_dispatcher.py` — reads quota state, auto-downgrades routing:
+  - If Pro > 90% → forces GEMINI (NinaGate) instead of agy
+  - If all agy models > 95% → marks exhausted, routes 100% to NinaGate/Ollama
+
+**Layer 3 — SURVIVE** (when agy quota = 0)
+- Gemini CLI → NinaGate proxy (WORKS — standard Gemini API at localhost:8080)
+  `export GOOGLE_GEMINI_BASE_URL=http://localhost:8080/genai`
+  `gemini "fix the bug in auth.py"`
+- Ollama local models: unlimited, no cost
+  `ollama run qwen2.5-coder:7b`
+- Jules: independent 100-task/day quota, async background tasks
+
+### Quick Reference
+| Quota State | Action |
+|---|---|
+| Pro < 50% | Normal agy use |
+| Pro > 80% | Switch to `agy` with Flash Lite (`--model gemini-2.0-flash-lite`) |
+| All > 90% | Use Gemini CLI via NinaGate proxy |
+| Exhausted | Ollama local + Jules async only |
+
+### Files Added
+- `tools/nina_token_guard.py` — prompt classifier + cache + compressor
+- `tools/agy_quota_monitor.sh` — quota reader + data/agy_quota.json writer
+- `core/quota_dispatcher.py` — unified dispatch entry point for all LLM calls

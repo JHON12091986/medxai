@@ -296,6 +296,7 @@ class HybridRouter:
         self.discovery = ModelDiscoveryService(config=self.config)
         self.quota_router = QuotaRouter(self.config, self.health)
         self.rpm_scheduler = RPMScheduler()
+        self.dispatcher = None
         self.http: httpx.AsyncClient | None = None
         self._idle_task: asyncio.Task | None = None
 

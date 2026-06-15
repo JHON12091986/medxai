@@ -22,6 +22,8 @@ async def startup_event():
     config = load_config()
     router = HybridRouter(config)
     await router.initialize()
+    from core.quota_dispatcher import QuotaDispatcher
+    router.dispatcher = QuotaDispatcher(router)
     logger.info({"event": "nina_proxy_start", "port": 8080, "router": "ready"})
 
 @app.post("/v1/chat/completions")
@@ -47,7 +49,8 @@ async def chat_completions(request: Request):
     task = ClassifiedTask(task_type="general", estimated_tokens=500, is_parallel_candidate=False, is_sensitive=False)
 
     try:
-        response_text = await router.route(prompt, messages, task)
+        plan = router.dispatcher.dispatch(prompt, context=str(messages))
+        response_text = await plan.execute()
     except Exception as e:
         return JSONResponse(
             status_code=500,
