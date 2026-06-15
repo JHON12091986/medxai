@@ -3,9 +3,9 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-16 03:02 +06
-- Git HEAD: 932f018e147b3ddf59a058c8610fa96d5bc006c3
-- Last commit: docs: post-session sync 2026-06-16 03:01
+- Generated: 2026-06-16 03:05 +06
+- Git HEAD: 7483814dcd577ad254d5c6209772f970f3fb48e5
+- Last commit: docs: post-session sync 2026-06-16 03:04
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
@@ -14,16 +14,16 @@
  Invocation: 1c4f2a665da64dc0903804e58f7f5e38
    Main PID: 3350 (python)
       Tasks: 17 (limit: 18333)
-     Memory: 198.7M (peak: 213.2M)
-        CPU: 11.946s
+     Memory: 198.2M (peak: 213.2M)
+        CPU: 11.992s
      CGroup: /system.slice/nina.service
              └─3350 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 16 03:02:19 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 16 03:02:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 16 03:02:34 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
-Jun 16 03:02:34 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: 2026-06-16 03:02:34.946 | WARNING  | core.router:_idle_monitor:581 - quality_probe_fail provider=%s
-Jun 16 03:02:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 16 03:04:42 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 16 03:04:53 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 16 03:05:00 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:apscheduler.executors.default:Running job "_wrap_job.<locals>.wrapper (trigger: cron[hour='3', minute='5'], next run at: 2026-06-17 03:05:00 +06)" (scheduled at 2026-06-16 03:05:00+06:00)
+Jun 16 03:05:00 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:nina.scheduler:{"event": "job_run", "job": "cache_purge", "duration": 2.6702880859375e-05, "success": true}
+Jun 16 03:05:00 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: cron[hour='3', minute='5'], next run at: 2026-06-17 03:05:00 +06)" executed successfully
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
+7483814 docs: post-session sync 2026-06-16 03:04
+1407857 docs: post-session sync 2026-06-16 03:03
+2d1a855 docs: pin psutil>=5.9, update nina_context.md to 2026-06-16, add agy decision tree to WORKFLOW.md
 932f018 docs: post-session sync 2026-06-16 03:01
 7d1f5d0 docs: post-session sync 2026-06-16 02:59
-ff25575 chore(cleanup): add --purge-oneshots flag to nina_cleanup.sh to remove stray root-level one-shot scripts
-f5c651f docs: post-session sync 2026-06-16 02:56
-fab8bb5 feat(idleloop): add quota-awareness guard to prevent proposals when all providers exhausted
 ```
 
 ## 6. Open Blockers
@@ -105,4 +105,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 5142 bytes_
+_Feed size: 5206 bytes_
