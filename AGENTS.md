@@ -333,6 +333,13 @@ Run tools/rule0_audit.py to identify missed nf opportunities.
 - RULE0_VIOLATION: None. All file operations compliant.
 
 ### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
+- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
+- RULE0_VIOLATION: None. All file operations compliant.
+
+### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
 - OFFLOAD_OPPORTUNITY: None.
 - ESCALATION_TRIGGER: Bash operator precedence and script permissions fix.
 - ROUTING_WIN: ninaflash.py for reading and patching file structures.
