@@ -17,6 +17,7 @@
 #   MASSIVE → Gemini only (1M ctx)     (no output cap)
 
 import logging
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -126,6 +127,35 @@ _RESEARCH_KEYWORDS = {"research", "compare", "search", "latest", "news", "find o
 _MATH_KEYWORDS     = {"calculate", "equation", "math", "solve", "integral", "derivative", "matrix", "probability"}
 _CREATIVE_KEYWORDS = {"write a", "draft", "story", "poem", "essay", "blog post", "creative"}
 
+# Pre-compile regexes for fast matching in hot-path classify_task
+_LPU_HOTPATH_REGEX = re.compile(
+    r"^\s*(" + "|".join(re.escape(kw) for kw in _LPU_HOTPATH) + ")", re.IGNORECASE
+)
+_SIMPLE_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _SIMPLE_KEYWORDS) + ")", re.IGNORECASE
+)
+_COMPLEX_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _COMPLEX_KEYWORDS) + ")", re.IGNORECASE
+)
+_MASSIVE_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _MASSIVE_KEYWORDS) + ")", re.IGNORECASE
+)
+_SENSITIVE_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _SENSITIVE_KEYWORDS) + ")", re.IGNORECASE
+)
+_CODING_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _CODING_KEYWORDS) + ")", re.IGNORECASE
+)
+_RESEARCH_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _RESEARCH_KEYWORDS) + ")", re.IGNORECASE
+)
+_MATH_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _MATH_KEYWORDS) + ")", re.IGNORECASE
+)
+_CREATIVE_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _CREATIVE_KEYWORDS) + ")", re.IGNORECASE
+)
+
 
 def _estimate_tokens(text: str, messages: list) -> int:
     """Fast token estimate without tiktoken — 1 token ≈ 4 chars."""
@@ -133,17 +163,17 @@ def _estimate_tokens(text: str, messages: list) -> int:
     return max(1, total_chars // CHARS_PER_TOKEN)
 
 
-def _semantic_type(text_lower: str) -> str:
+def _semantic_type(text: str) -> str:
     """Classify semantic task type independently of complexity."""
-    if any(k in text_lower for k in _SENSITIVE_KEYWORDS):
+    if _SENSITIVE_KEYWORDS_REGEX.search(text):
         return "sensitive"
-    if any(k in text_lower for k in _CODING_KEYWORDS):
+    if _CODING_KEYWORDS_REGEX.search(text):
         return "coding"
-    if any(k in text_lower for k in _MATH_KEYWORDS):
+    if _MATH_KEYWORDS_REGEX.search(text):
         return "math"
-    if any(k in text_lower for k in _RESEARCH_KEYWORDS):
+    if _RESEARCH_KEYWORDS_REGEX.search(text):
         return "research"
-    if any(k in text_lower for k in _CREATIVE_KEYWORDS):
+    if _CREATIVE_KEYWORDS_REGEX.search(text):
         return "creative"
     return "general"
 
@@ -165,13 +195,12 @@ async def classify_task(
     7. Medium token range or multi-turn → MEDIUM + FAST
     8. Default → MEDIUM + FAST
     """
-    text_lower   = text.lower().strip()
     est_tokens   = _estimate_tokens(text, messages)
-    sem_type     = _semantic_type(text_lower)
+    sem_type     = _semantic_type(text)
     n_turns      = len([m for m in messages if m.get("role") != "system"])
 
     # ── 1. Sensitive: always local, always SIMPLE output ─────────────────────
-    if any(k in text_lower for k in _SENSITIVE_KEYWORDS):
+    if _SENSITIVE_KEYWORDS_REGEX.search(text):
         return ClassifiedTask(
             task_type="sensitive",
             complexity=SIMPLE,
@@ -183,7 +212,7 @@ async def classify_task(
         )
 
     # ── 2. LPU hotpath: pure shell mechanic, fire at local instantly ──────────
-    if any(text_lower.startswith(kw) for kw in _LPU_HOTPATH):
+    if _LPU_HOTPATH_REGEX.search(text):
         return ClassifiedTask(
             task_type="lpu_deterministic",
             complexity=SIMPLE,
@@ -195,7 +224,7 @@ async def classify_task(
         )
 
     # ── 3. MASSIVE: token count or keyword → Gemini only ─────────────────────
-    if est_tokens >= MASSIVE_TOKEN_FLOOR or any(k in text_lower for k in _MASSIVE_KEYWORDS):
+    if est_tokens >= MASSIVE_TOKEN_FLOOR or _MASSIVE_KEYWORDS_REGEX.search(text):
         return ClassifiedTask(
             task_type=sem_type,
             complexity=MASSIVE,
@@ -207,7 +236,7 @@ async def classify_task(
         )
 
     # ── 4. COMPLEX: keyword match or large token budget ───────────────────────
-    if any(k in text_lower for k in _COMPLEX_KEYWORDS) or est_tokens >= COMPLEX_TOKEN_FLOOR:
+    if _COMPLEX_KEYWORDS_REGEX.search(text) or est_tokens >= COMPLEX_TOKEN_FLOOR:
         return ClassifiedTask(
             task_type=sem_type,
             complexity=COMPLEX,
@@ -219,7 +248,7 @@ async def classify_task(
         )
 
     # ── 5. SIMPLE keyword match ───────────────────────────────────────────────
-    if any(k in text_lower for k in _SIMPLE_KEYWORDS):
+    if _SIMPLE_KEYWORDS_REGEX.search(text):
         return ClassifiedTask(
             task_type=sem_type,
             complexity=SIMPLE,
