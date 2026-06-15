@@ -289,3 +289,8 @@
 {"t": "2026-06-15T09:16:21.833273+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/4 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
 {"t": "2026-06-15T15:19:06.297475+06:00", "step": 13, "action": "shell", "file": "", "detail": "Staging and committing AGENTS.md update for keyless providers", "status": "ok"}
 {"t": "2026-06-15T15:19:15.765098+06:00", "step": 14, "action": "shell", "file": "", "detail": "Pushing AGENTS.md update to origin", "status": "ok"}
+{"t": "2026-06-15T09:19:30.341882+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/4 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-15T09:51:58.552796+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (24h): 19/23 local (82.6%). CloudViolations=0 BannedTools=0. \u2705 TARGET MET (\u226566%)", "status": "ok"}
+{"t": "2026-06-15T15:52:50.566031+06:00", "step": 15, "action": "shell", "file": "", "detail": "Staging and committing quota-aware routing and RPM scheduler", "status": "ok"}
+{"t": "2026-06-15T15:52:59.645483+06:00", "step": 16, "action": "shell", "file": "", "detail": "Pushing quota-aware routing and RPM scheduler to origin", "status": "ok"}
+{"t": "2026-06-15T15:53:13.072106+06:00", "step": -1, "action": "done", "file": "", "detail": "Successfully implemented QuotaRouter and RPMScheduler, integrated them into HybridRouter, updated/validated indices, and pushed all commits.", "status": "ok"}
