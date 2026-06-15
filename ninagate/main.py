@@ -228,13 +228,15 @@ class QuotaManager:
 
     def increment(self, provider):
         self.check_reset()
-        if provider in self.quotas:
-            self.quotas[provider] += 1
-            asyncio.get_event_loop().run_in_executor(None, self.save)
+        provider_key = provider.lower()
+        if provider_key not in self.quotas:
+            self.quotas[provider_key] = 0
+        self.quotas[provider_key] += 1
+        asyncio.get_event_loop().run_in_executor(None, self.save)
 
     def is_available(self, provider, limit=900):
         self.check_reset()
-        return self.quotas.get(provider, 0) < limit
+        return self.quotas.get(provider.lower(), 0) < limit
 
 QUOTA_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "quota_state.json")
 quota_manager = QuotaManager(QUOTA_FILE)
@@ -291,6 +293,15 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+from fastapi.middleware.cors import CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 async def stream_response(response: httpx.Response, h: ProviderHealth, start_time: float, cache_info: dict = None):
     full_body = b""
     try:
@@ -316,6 +327,40 @@ async def list_models():
 @app.get("/health")
 async def health():
     return {"status": "ok", "timestamp": datetime.datetime.now().isoformat()}
+
+@app.get("/v1/status")
+async def get_status():
+    status_data = []
+    for p in providers:
+        name = p["name"]
+        h = health_tracker.get(name)
+        
+        # Check api key status
+        api_key_env = p.get("api_key_env")
+        if api_key_env:
+            has_key = os.getenv(api_key_env) is not None and os.getenv(api_key_env) != ""
+            key_status = "Active" if has_key else "Missing key"
+        else:
+            has_key = True
+            key_status = "Active" # local or keyless
+            
+        cb_state = h.cb.state if h else "CLOSED"
+        avg_lat = h.avg_latency() if h else 0.0
+        success_rate = h.success_rate() if h else 1.0
+        req_today = quota_manager.quotas.get(name.lower(), 0)
+        
+        status_data.append({
+            "name": name,
+            "tier": p.get("tier", 2),
+            "model": p.get("model", "unknown"),
+            "active": has_key,
+            "key_status": key_status,
+            "cb_state": cb_state,
+            "avg_latency_ms": round(avg_lat, 1),
+            "success_rate": round(success_rate * 100, 1),
+            "requests_today": req_today
+        })
+    return JSONResponse(status_code=200, content=status_data)
 
 async def _classify_request_proxy(payload):
     """Internal helper to classify requests using the unified classifier."""
@@ -405,7 +450,7 @@ async def proxy_chat_completions(request: Request):
     
     for p in providers:
         if target_provider_name and p.get("name") != target_provider_name: continue
-        if not target_provider_name and p.get("name") in quota_manager.quotas:
+        if not target_provider_name and p.get("name").lower() in quota_manager.quotas:
             if not quota_manager.is_available(p["name"]): continue
 
         api_key = os.getenv(p.get("api_key_env", "")) if p.get("api_key_env") else None

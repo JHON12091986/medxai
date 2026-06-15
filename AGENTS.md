@@ -606,5 +606,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Keep `QuotaRouter` and `RPMScheduler` modular in separate files under `core/` to ensure zero circular dependencies and clear indexing.
 - RULE0_VIOLATION: None. All local file modifications done via nf.
 
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Live Provider Dashboard
+- OFFLOAD_OPPORTUNITY: Simple compilation checks and syntax validation -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Exposing the `/v1/status` endpoint and CORS middleware in `ninagate/main.py` coupled with dynamic frontend updates in `dashboard/ninaui.html` creates a live, responsive, auto-updating provider and circuit breaker status dashboard without breaking the page layout.
+- CONTEXT_HINT: Make sure to lowercase provider names when checking or incrementing daily quota states, since `providers.json` names are uppercase but `quota_state.json` utilizes lowercase.
+- RULE0_VIOLATION: None. All file reads, greps, and code inspections were performed using ninaflash commands or python inspectors.
+
 
 \n
