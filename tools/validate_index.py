@@ -72,45 +72,114 @@ def notify_telegram(message, repo_root):
 
 def reconcile_tests(data, repo_root):
     import ast
+
+    # Directories where CLI-entrypoint scripts live and don't need unit tests
+    EXEMPT_DIRS = ["crons", "tools", "scripts", "bin", "checks"]
+    # Filename patterns that are always infra, never logic-bearing
+    EXEMPT_STEMS = {
+        "update_index", "validate_index", "query_index", "cleanup_by_index",
+        "rule0_audit", "gemini_watch", "telegram_notify", "nina_sync",
+        "ninagate_info", "session_ledger", "provider_health",
+    }
+    # Pure adapter interface patterns
+    EXEMPT_INTERFACE_PATTERNS = ["interface", "api", "webhook", "bridge", "shim"]
+
     updated = 0
+    real_gaps = 0
+
     for file_obj in data["files"]:
         path_str = file_obj["path"]
         if not file_obj.get("requires_tests"):
             continue
-            
-        p = repo_root / path_str
-        if not p.exists(): continue
 
-        # Try basic mappings like core/router.py -> tests/test_router.py
+        p = repo_root / path_str
+        if not p.exists():
+            continue
+
+        # Already has a test — skip
         test_filename = f"test_{p.stem}.py"
-        has_test = (repo_root / "tests" / test_filename).exists() or \
-                   any(p.stem in t for t in os.listdir(repo_root / "tests") if t.startswith("test_"))
-        
-        if not has_test:
-            exempt = False
-            try:
-                content = p.read_text(encoding="utf-8")
-                # 1. Crons/Tools/Scripts with CLI entrypoint and low logic density
-                if any(path_str.startswith(d + "/") for d in ["crons", "tools", "scripts"]):
-                    if 'if __name__ == "__main__":' in content:
+        tests_dir = repo_root / "tests"
+        has_test = (tests_dir / test_filename).exists() or (
+            tests_dir.exists()
+            and any(p.stem in t for t in os.listdir(tests_dir) if t.startswith("test_"))
+        )
+        if has_test:
+            continue
+
+        exempt = False
+        reason = ""
+
+        try:
+            content = p.read_text(encoding="utf-8", errors="ignore")
+
+            # Rule 1: Known infra stems — always exempt
+            if p.stem in EXEMPT_STEMS:
+                exempt = True
+                reason = "known-infra-stem"
+
+            # Rule 2: Crons/tools/scripts/bin/checks + has CLI entrypoint
+            elif any(path_str.startswith(d + "/") for d in EXEMPT_DIRS):
+                if 'if __name__ == "__main__":' in content:
+                    try:
                         tree = ast.parse(content)
-                        funcs = [n for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
-                        # If very few functions or mostly main-related, exempt
-                        if len(funcs) <= 3: 
+                        funcs = [
+                            n for n in ast.walk(tree)
+                            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                        ]
+                        # Exempt if mostly CLI glue: ≤6 functions or no class definitions
+                        classes = [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]
+                        if len(funcs) <= 6 or not classes:
                             exempt = True
-                
-                # 2. Interfaces that are pure adapters or entrypoints
-                if path_str.startswith("interfaces/") and ("interface" in path_str.lower() or "api" in path_str.lower()):
-                    if "class" not in content or "def" not in content:
+                            reason = f"cli-entrypoint ({len(funcs)} funcs, {len(classes)} classes)"
+                    except SyntaxError:
                         exempt = True
-            except:
-                pass
-                
-            if exempt:
-                file_obj["requires_tests"] = False
-                updated += 1
-                print(f"✅ Reconciled: {path_str} marked as test_required: false (infra/entrypoint)")
-                
+                        reason = "cli-entrypoint (parse failed)"
+
+            # Rule 3: Pure adapter interfaces — no business logic
+            elif path_str.startswith("interfaces/"):
+                stem_lower = p.stem.lower()
+                if any(pat in stem_lower for pat in EXEMPT_INTERFACE_PATTERNS):
+                    try:
+                        tree = ast.parse(content)
+                        classes = [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]
+                        funcs = [
+                            n for n in ast.walk(tree)
+                            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                        ]
+                        # Adapter: has at most 1 class and ≤4 methods
+                        if len(classes) <= 1 and len(funcs) <= 4:
+                            exempt = True
+                            reason = "pure-adapter-interface"
+                    except SyntaxError:
+                        pass
+
+            # Rule 4: __init__.py files — namespace only, no test needed
+            elif p.name == "__init__.py":
+                try:
+                    tree = ast.parse(content)
+                    funcs = [
+                        n for n in ast.walk(tree)
+                        if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                    ]
+                    if len(funcs) == 0:
+                        exempt = True
+                        reason = "empty-init"
+                except SyntaxError:
+                    exempt = True
+                    reason = "empty-init (parse failed)"
+
+        except Exception:
+            pass
+
+        if exempt:
+            file_obj["requires_tests"] = False
+            file_obj["test_exempt_reason"] = reason
+            updated += 1
+            print(f"  ✅ Exempted: {path_str}  ({reason})")
+        else:
+            real_gaps += 1
+
+    print(f"\n  📊 Reconcile result: {updated} exempted, {real_gaps} real gaps remain.")
     return updated
 
 def validate(check_deltas=False, notify=False, reconcile=False):

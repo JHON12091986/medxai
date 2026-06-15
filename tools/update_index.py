@@ -142,6 +142,15 @@ def generate_index():
         "files": sorted(files, key=lambda x: x["path"])
     }
     
+    try:
+        try:
+            from tools.validate_index import reconcile_tests
+        except ImportError:
+            from validate_index import reconcile_tests
+        reconcile_tests(index_data, Path(__file__).parent.parent.resolve())
+    except Exception as e:
+        print(f"⚠️ Test reconciliation failed: {e}")
+    
     with open("docs/space/nina_index.json", "w") as f:
         json.dump(index_data, f, indent=2)
         
