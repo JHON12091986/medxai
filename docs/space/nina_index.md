@@ -84,7 +84,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `crons/registry.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `crons/runner.py` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `dashboard/nina-guardian.html` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `dashboard/ninagate-dashboard old.html` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `dashboard/ninagate-dashboard.html` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `dashboard/ninaui.html` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `dashboard/puter_architect.html` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
