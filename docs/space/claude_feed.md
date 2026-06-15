@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-15 15:16 +06
-- Git HEAD: 36cbdb2f54c4fae74b0d9c9e43a6d26bfb066f8a
-- Last commit: docs: post-session sync 2026-06-15 15:16
+- Generated: 2026-06-15 15:20 +06
+- Git HEAD: ae7fae16832a8a12fe8d99d247cee9286c3c4c59
+- Last commit: docs: post-session sync 2026-06-15 15:19
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Mon 2026-06-15 14:16:11 +06; 1h 0min ago
+     Active: active (running) since Mon 2026-06-15 14:16:11 +06; 1h 3min ago
  Invocation: e80bf66619a74809af46d81aca1071ed
    Main PID: 2622 (python)
       Tasks: 18 (limit: 15177)
-     Memory: 175M (peak: 209.7M)
-        CPU: 6.561s
+     Memory: 175.3M (peak: 209.7M)
+        CPU: 6.626s
      CGroup: /system.slice/nina.service
              └─2622 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 15 15:16:16 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:nina.scheduler:{"event": "job_run", "job": "expire_pending", "duration": 2.3126602172851562e-05, "success": true}
-Jun 15 15:16:16 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:apscheduler.executors.default:Job "_wrap_job.<locals>.wrapper (trigger: interval[0:15:00], next run at: 2026-06-15 15:31:16 +06)" executed successfully
-Jun 15 15:16:25 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 15:16:35 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 15:16:45 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 15:19:26 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]:     raise exception
+Jun 15 15:19:26 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: telegram.error.Conflict: Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Jun 15 15:19:37 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 15:19:47 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 15:19:57 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
+ae7fae1 docs: post-session sync 2026-06-15 15:19
+c5a7ac5 docs(agents): document keyless provider activation
 36cbdb2 docs: post-session sync 2026-06-15 15:16
 166403b fix(proxy): allow keyless API providers in ninagate and status report
 f133cbe docs: post-session sync 2026-06-15 15:09
-7825549 docs: update and patch configuration settings in doc files
-f520ca1 docs: post-session sync 2026-06-15 15:04
 ```
 
 ## 6. Open Blockers
@@ -105,4 +105,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 5123 bytes_
+_Feed size: 4984 bytes_

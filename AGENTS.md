@@ -599,5 +599,12 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - CONTEXT_HINT: Do not bypass providers with `api_key_env` set to `null` if the environment key is not configured, as they are intentionally keyless.
 - RULE0_VIOLATION: None. All local operations done via nf commands.
 
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Quota-Aware Routing and RPM Scheduler
+- OFFLOAD_OPPORTUNITY: None.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Integrated `QuotaRouter` and `RPMScheduler` into the core `HybridRouter` (`core/router.py`) to prevent quota overrun (automatically demoting/skipping high-use providers and forcing local fallback when close to limit) and implement token-bucket rate limiting (replacing fixed sleeps with dynamic timestamp sliding windows).
+- CONTEXT_HINT: Keep `QuotaRouter` and `RPMScheduler` modular in separate files under `core/` to ensure zero circular dependencies and clear indexing.
+- RULE0_VIOLATION: None. All local file modifications done via nf.
+
 
 \n

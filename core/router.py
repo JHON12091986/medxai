@@ -19,6 +19,8 @@ from core.logger import get_logger
 from core.task_classifier import ClassifiedTask
 import tools.jules as jules
 from tools.model_discovery import ModelDiscoveryService
+from core.quota_router import QuotaRouter
+from core.rpm_scheduler import RPMScheduler
 
 _ = jules
 
@@ -292,6 +294,8 @@ class HybridRouter:
         self.cache = ResponseCache()
         self.cost = CostTracker()
         self.discovery = ModelDiscoveryService(config=self.config)
+        self.quota_router = QuotaRouter(self.config, self.health)
+        self.rpm_scheduler = RPMScheduler()
         self.http: httpx.AsyncClient | None = None
         self._idle_task: asyncio.Task | None = None
 
@@ -365,6 +369,7 @@ class HybridRouter:
     async def _call_provider(
         self, pid: str, messages: list, task: ClassifiedTask
     ) -> Tuple[str, int, int, float]:
+        await self.rpm_scheduler.acquire(pid)
         start = time.time()
         req_id = str(uuid.uuid4())
 
@@ -476,9 +481,12 @@ class HybridRouter:
         if cached:
             return cached
 
-        tiers = [PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3]
         if force_local:
             tiers = [LOCAL_PROVIDERS]
+        elif self.quota_router.should_force_local():
+            tiers = [LOCAL_PROVIDERS, PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3]
+        else:
+            tiers = [PROVIDERS_TIER1, PROVIDERS_TIER2, PROVIDERS_TIER3]
 
         for attempt in range(2): # OODA: Act -> Observe loop
             for tier in tiers:
@@ -491,7 +499,7 @@ class HybridRouter:
                     
                     if (
                         self.health[pid].cb.can_attempt()
-                        and self.health[pid].requests_today < 1000
+                        and not self.quota_router.is_exhausted(pid)
                         and meta.get("context_window", 8192) >= task.estimated_tokens
                     ):
                         available.append(pid)
@@ -499,7 +507,7 @@ class HybridRouter:
                 if not available:
                     continue
 
-                available.sort(key=lambda pid: self.health[pid].health_score, reverse=True)
+                available.sort(key=lambda pid: self.quota_router.adjust_health_score(pid, self.health[pid].health_score), reverse=True)
 
                 for pid in available:
                     try:
