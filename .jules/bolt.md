@@ -181,3 +181,7 @@
 ## 2026-06-14 - Precalculate .lower() on string arrays for loops
 **Learning:** Checking elements dynamically against `.lower()` in a loop creates multiple redundant lowercase string allocations and evaluations, resulting in up to 30% performance penalty on large strings.
 **Action:** Precompute target sets to `.lower()` variants outside the loop and store them as module-level constants. Compute `.lower()` exactly once on the input string before the loop.
+
+## 2024-06-15 - Precalculate regex pattern for text match
+**Learning:** Using `re.compile(pattern, re.IGNORECASE)` to search for multiple strings in a text is significantly faster than executing `.lower()` on the target string and using a generator expression `any(m in content_lower for m in list)` in a hot path.
+**Action:** Use pre-compiled regex patterns for substring matching in performance-critical paths instead of dynamic `.lower()` operations and generator checks.

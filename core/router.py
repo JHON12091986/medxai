@@ -29,7 +29,7 @@ logger = get_logger("nina.router")
 
 # F-03f: Bangla Unicode block U+0980–U+09FF
 _BANGLA_RE = re.compile(r"[\u0980-\u09FF]")
-_HALLUCINATION_MARKERS_LOWER = ["i am a large language model", "as an ai", "i cannot fulfill this request"]
+_HALLUCINATION_RE = re.compile(r"i am a large language model|as an ai|i cannot fulfill this request", re.IGNORECASE)
 
 def load_providers_from_json() -> tuple[dict, dict, dict]:
     path = Path(__file__).parent.parent / "ninagate" / "providers.json"
@@ -281,7 +281,8 @@ def write_log(entry: dict, log_path: str = "logs/router.log") -> None:
             if len(lines) > 200:
                 with open(log_path, "w", encoding="utf-8") as wf:
                     wf.writelines(lines[-100:])
-    except: pass
+    except Exception:
+        pass
 
 
 class HybridRouter:
@@ -422,8 +423,8 @@ class HybridRouter:
             return False, "Response too short for a research task."
         
         # 2. Heuristic: Hallucination markers
-        content_lower = content.lower()
-        if any(m in content_lower for m in _HALLUCINATION_MARKERS_LOWER):
+        # Optimized: pre-compiled regex avoids large string allocations
+        if _HALLUCINATION_RE.search(content):
             return False, "AI refusal or boilerplate detected."
 
         # 3. Model-based validation (for Coding/Complex tasks)
