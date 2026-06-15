@@ -11,7 +11,7 @@ Every request handled by NinaGate is logged to `logs/ninagate.log` with detailed
 
 ## Bypass / Session Modes
 
-To avoid proxy overhead entirely during interactive sessions with the Gemini CLI, use the environment-level toggle standard:
+To avoid proxy overhead entirely during interactive sessions with the Gemini CLI or Antigravity (agy), use the environment-level toggle standard (Note: the universal wrapper at bin/agy and bin/gemini automatically injects these when missing):
 
 ```bash
 # FAST MODE — direct cloud, no proxy (use during active Gemini CLI sessions)

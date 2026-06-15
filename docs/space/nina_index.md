@@ -153,7 +153,6 @@ This index tracks all governed artifacts in the NINA repository.
 | `docs/session_ledger.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `docs/space/claude_feed.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `docs/space/conversation_with_nina.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
-| `docs/space/gemini_shim_spec.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `docs/space/jules_backlog.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `docs/space/jules_pipeline_audit.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `docs/space/jules_queue.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
@@ -171,6 +170,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `docs/space/nina_state.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `docs/space/ninaflash_stub.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `docs/space/ninaflash_task_tracker.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
+| `docs/space/universal_proxy_wrapper_spec.md` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `efficiency_report.json` | source_of_truth | active | keep | Governed artifact. | ✅ YES |
 | `exports/nina_latest.md` | generated | generated | ephemeral | Governed artifact. | ✅ YES |
 | `exports/nina_problem_log_archive.md` | generated | generated | ephemeral | Governed artifact. | ✅ YES |
@@ -877,6 +877,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `upgrades/backups/nina_codebase_backup_20260615_155359.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_codebase_backup_20260615_160252.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_codebase_backup_20260615_162243.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
+| `upgrades/backups/nina_codebase_backup_20260615_220450.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_docbase_backup_20260609_220745.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_docbase_backup_20260609_222439.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_docbase_backup_20260609_222930.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
@@ -1047,6 +1048,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `upgrades/backups/nina_docbase_backup_20260615_155358.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_docbase_backup_20260615_160252.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_docbase_backup_20260615_162243.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
+| `upgrades/backups/nina_docbase_backup_20260615_220450.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_logbase_backup_20260609_220744.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_logbase_backup_20260609_222438.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_logbase_backup_20260609_223045.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
@@ -1215,6 +1217,7 @@ This index tracks all governed artifacts in the NINA repository.
 | `upgrades/backups/nina_logbase_backup_20260615_155358.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_logbase_backup_20260615_160251.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_logbase_backup_20260615_162243.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
+| `upgrades/backups/nina_logbase_backup_20260615_220449.md` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_update_log.bak.20260606_125916` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/nina_update_log.bak.20260606_201959` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |
 | `upgrades/backups/officemail_pre_indentfix_20260522202652.py` | archive | archived | keep_latest_n: 10 | Governed artifact. | ✅ YES |

@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-15 16:22 +06
-- Git HEAD: 89350b812335c23cabd221238afa6f2a1f21386b
-- Last commit: docs: post-session sync 2026-06-15 16:21
+- Generated: 2026-06-15 22:04 +06
+- Git HEAD: e564c130905dfe94fa5c25de241b43d88ffa05b4
+- Last commit: docs: post-session sync 2026-06-15 22:03
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Mon 2026-06-15 14:16:11 +06; 2h 5min ago
- Invocation: e80bf66619a74809af46d81aca1071ed
-   Main PID: 2622 (python)
-      Tasks: 18 (limit: 15177)
-     Memory: 127.3M (peak: 209.7M)
-        CPU: 8.500s
+     Active: active (running) since Thu 2026-04-16 00:33:10 +06; 2 months 0 days ago
+ Invocation: 8f47cb89cf8447d7ab2e7921b78a6ede
+   Main PID: 3221 (python)
+      Tasks: 19 (limit: 15177)
+     Memory: 163.3M (peak: 233.1M)
+        CPU: 11.938s
      CGroup: /system.slice/nina.service
-             └─2622 /home/aibony/nina/.venv/bin/python main.py
+             └─3221 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 15 16:21:34 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 16:21:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
-Jun 15 16:21:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: 2026-06-15 16:21:40.882 | WARNING  | core.router:_idle_monitor:567 - quality_probe_fail provider=%s
-Jun 15 16:21:45 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 16:21:55 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 22:04:00 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3221]: 2026-06-15 22:04:00.419 | WARNING  | core.router:_idle_monitor:575 - quality_probe_fail provider=%s
+Jun 15 22:04:04 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3221]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 22:04:14 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3221]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 22:04:24 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3221]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 22:04:34 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3221]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
+e564c13 docs: post-session sync 2026-06-15 22:03
+082dff2 docs: post-session sync 2026-06-15 16:26
 89350b8 docs: post-session sync 2026-06-15 16:21
 d0e19c9 docs: post-session sync 2026-06-15 16:02
 ad16c8a docs: post-session sync 2026-06-15 15:53
-9715444 feat(routing): integrate quota-aware router and token-bucket RPM scheduler
-ae7fae1 docs: post-session sync 2026-06-15 15:19
 ```
 
 ## 6. Open Blockers
@@ -105,4 +105,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 5052 bytes_
+_Feed size: 5045 bytes_
