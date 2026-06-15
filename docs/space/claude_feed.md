@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-15 02:44 +06
-- Git HEAD: df207d859da2aab929d5b1b90b25f72cb32797ae
-- Last commit: docs: post-session sync 2026-06-15 02:44
+- Generated: 2026-06-15 14:35 +06
+- Git HEAD: 6f573ea3d169f2e750b55bee44d893e3112ca2f7
+- Last commit: docs: post-session sync 2026-06-15 14:34
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Mon 2026-06-15 02:43:25 +06; 1min 26s ago
- Invocation: 5ee4d5e6e5944e5db5647d63ab94fbdc
-   Main PID: 164146 (python)
-      Tasks: 19 (limit: 15177)
-     Memory: 92.1M (peak: 107.3M)
-        CPU: 2.520s
+     Active: active (running) since Mon 2026-06-15 14:16:11 +06; 19min ago
+ Invocation: e80bf66619a74809af46d81aca1071ed
+   Main PID: 2622 (python)
+      Tasks: 20 (limit: 15177)
+     Memory: 187.1M (peak: 209.7M)
+        CPU: 5.293s
      CGroup: /system.slice/nina.service
-             └─164146 /home/aibony/nina/.venv/bin/python main.py
+             └─2622 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 15 02:44:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://text.pollinations.ai/openai/chat/completions "HTTP/1.1 429 Too Many Requests"
-Jun 15 02:44:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: 2026-06-15 02:44:29.501 | WARNING  | core.router:_idle_monitor:567 - quality_probe_fail provider=%s
-Jun 15 02:44:30 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 02:44:40 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 15 02:44:50 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[164146]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 14:35:00 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 14:35:10 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 14:35:20 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 14:35:31 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 15 14:35:41 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[2622]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -49,11 +49,11 @@ _Found 0 READY items_
 
 ## 5. Last 5 Completions
 ```
-df207d8 docs: post-session sync 2026-06-15 02:44
-a7fb399 merge(feature): merge rule0 audit and pr-255 fixes
-337fe28 merge(origin): pull remote main
-3be732c Merge pull request #254 from aibony/jules-7812791168657500729-d9097e8b
-716c2a3 docs: post-session sync 2026-06-15 02:37
+6f573ea docs: post-session sync 2026-06-15 14:34
+25eb58c Merge pull request #256 from aibony/jules-15194061829583027677-d10f7e76
+eeafb51 feat(rule0-audit): Implement RULE0_AUDIT and fix nf argument parsing
+ae9e646 🛡️ Sentinel: [HIGH] Remove forbidden shutil.rmtree usage
+7944448 docs: post-session sync 2026-06-15 02:45
 ```
 
 ## 6. Open Blockers
@@ -81,7 +81,7 @@ a7fb399 merge(feature): merge rule0 audit and pr-255 fixes
 | crons/manager.py | APScheduler, reminders, daily reports | MEDIUM |
 | data/memory/facts.json | Personal context facts (F-02 injection pending) | MEDIUM |
 ## 8. PRs Ready to Merge (agy merge candidates)
-- No open PRs
+#257 feat(rule0-audit): Implement RULE0_AUDIT and fix nf argument parsing [jules-feat-rule0-audit-6156341434024541627]
 
 ## 9. Error Register (OPEN only)
 | ID | Description | Status |
@@ -105,4 +105,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 5063 bytes_
+_Feed size: 5248 bytes_

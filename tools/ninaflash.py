@@ -114,6 +114,12 @@ def main():
     p_mpr = p_mts.add_parser("pr"); p_mpr.add_argument("pr_id"); p_mpr.add_argument("--task", dest="task_id")
     p_mpr.add_argument("--title"); p_mpr.add_argument("--summary")
 
+    p_gemini = subparsers.add_parser("gemini"); p_gems = p_gemini.add_subparsers(dest="sub")
+    p_gems.add_parser("context")
+    p_gpr = p_gems.add_parser("prompt"); p_gpr.add_argument("--task", required=True)
+    p_gems.add_parser("status")
+    p_grun = p_gems.add_parser("run"); p_grun.add_argument("--task", required=True)
+
     # Dispatch
     args = parser.parse_args()
     import time as _time

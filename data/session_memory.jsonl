@@ -24,3 +24,4 @@
 {"ts": "2026-06-15T01:14:26.993529", "summary": "Fixed orphaned Jules auto-unblocking logic in ninajulesgithub.py", "head": "db1112b9265e2bcc61557d369582ede9f4f64cc6", "branch": "main"}
 {"ts": "2026-06-15T02:13:39.916421", "summary": "Fix type hints recursion and vulture CLI paths in venv", "head": "18f22bbc59d942207ebd612959208514e59c484f", "branch": "feature/rule0-audit"}
 {"ts": "2026-06-15T14:34:41.529818", "summary": "retrieve and report ninagate status, providers, models, quotas, and limits", "head": "eeafb519bf80c4421ace97a3390125f511eb111f", "branch": "jules-feat-rule0-audit-6156341434024541627"}
+{"ts": "2026-06-15T14:47:58.724316", "summary": "integrate ninagate status reporting into nf gemini status command", "head": "6f573ea3d169f2e750b55bee44d893e3112ca2f7", "branch": "jules-feat-rule0-audit-6156341434024541627"}

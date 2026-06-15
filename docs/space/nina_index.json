@@ -1,6 +1,6 @@
 {
   "version": "14.3",
-  "generated_at": "2026-06-15T14:34:25.293223",
+  "generated_at": "2026-06-15T14:47:23.234312",
   "repo": "NINA",
   "files": [
     {
@@ -1631,7 +1631,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "6d72f0bca766dfcf7bda0bf65dc2da77",
+      "hash": "cfc0a87077b081a31c1608c18801de2f",
       "tags": [
         "config",
         "active",
@@ -1715,7 +1715,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "ba03508af0d76406d49220bf2501256f",
+      "hash": "9148494cdf4c3101b2dffbbf593c0211",
       "tags": [
         "other",
         "active",
@@ -2639,7 +2639,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "ff9ed05595e0a617ff1c39a30e3c7218",
+      "hash": "2f23d8e8a8eae2adb4d421a6636a7933",
       "tags": [
         "other",
         "active",
@@ -2660,7 +2660,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "c106f1a324521ee1942a7399429e14eb",
+      "hash": "10729f3882ed13eff0c0d10a07503d48",
       "tags": [
         "config",
         "active",
@@ -2954,7 +2954,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "3d5a61db6a37526aba3dafacd5319d6b",
+      "hash": "e44fbfa0ce97c3ba0d7b1ba06bfb111a",
       "tags": [
         "doc",
         "active",
@@ -3227,7 +3227,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "7ef931b5881b23e0ecc3dbb969bcffa0",
+      "hash": "48d84fb18717b2609fbe304f3cbf3ff4",
       "tags": [
         "config",
         "active",
@@ -3838,7 +3838,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "e28c355e1849aa500b7e6055a6479255",
+      "hash": "e104e2e2a22372dca93fe359f22ade2e",
       "tags": [
         "log",
         "active",
@@ -3859,7 +3859,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "0858af9c0be678582d77605982235905",
+      "hash": "fadd1d17360702a15c437319bb574915",
       "tags": [
         "log",
         "active",
@@ -4048,7 +4048,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "48dca9cc9c7b99bb239d81a6ec0e98d8",
+      "hash": "eb2b8fda4e5f6fb473d748e18e42f9c9",
       "tags": [
         "log",
         "active",
@@ -4069,7 +4069,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "c0f55b9e9487ba6dc5b2655286dc11ba",
+      "hash": "a0211240966ecf361f443bb4ecc7039a",
       "tags": [
         "log",
         "active",
@@ -4869,7 +4869,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "6580f28741f04f7b37362f90112e47e2",
+      "hash": "89df8c7c50241bbfb0b303791e3ded1b",
       "tags": [
         "doc",
         "active",
@@ -6906,7 +6906,7 @@
       "doc_required": true,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "2817347dd16cba8ba165266e6353fb85",
+      "hash": "2b62865559fe6e3813d76f985adeba9e",
       "tags": [
         "code",
         "active",
@@ -7011,7 +7011,7 @@
       "doc_required": true,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "608fb0047ce15a3a20cb0ccb489ccc40",
+      "hash": "4cafb7a2ca1343b6bf83005b80e2efdc",
       "tags": [
         "code",
         "active",
@@ -17981,6 +17981,27 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_codebase_backup_20260615_143548.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_codebase_backup_20260615_143548.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "7b1d909ff5cc93e4c0d40cd49bc64a08",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_docbase_backup_20260609_220745.md",
       "category": "backup",
       "role": "archive",
@@ -21341,6 +21362,27 @@
       ]
     },
     {
+      "path": "upgrades/backups/nina_docbase_backup_20260615_143547.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_docbase_backup_20260615_143547.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "0b7eded5d843e3fb1996d365927dfb92",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
       "path": "upgrades/backups/nina_logbase_backup_20260609_220744.md",
       "category": "backup",
       "role": "archive",
@@ -24652,6 +24694,27 @@
       "guardrails": [],
       "summary": "Governed artifact.",
       "hash": "f811b2bcdd6389cc214f89cbe81d364a",
+      "tags": [
+        "backup",
+        "archived",
+        "archive"
+      ]
+    },
+    {
+      "path": "upgrades/backups/nina_logbase_backup_20260615_143546.md",
+      "category": "backup",
+      "role": "archive",
+      "governed": true,
+      "lifecycle": "archived",
+      "origin": "script:backup",
+      "retention_policy": "keep_latest_n: 10",
+      "series_id": "nina_logbase_backup_20260615_143546.md",
+      "series_type": "backup",
+      "requires_tests": false,
+      "doc_required": false,
+      "guardrails": [],
+      "summary": "Governed artifact.",
+      "hash": "bd63ed64c8109ac5e975b7bcd0d7f968",
       "tags": [
         "backup",
         "archived",
