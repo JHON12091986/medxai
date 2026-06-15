@@ -21,6 +21,8 @@ unset GOOGLE_GEMINI_BASE_URL
 export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"
 ```
 
+> **Note on Antigravity (agy):** While the universal wrapper intercepts `agy` executions, it currently bypasses the proxy. `agy` uses proprietary Google internal endpoints (`cloudcode-pa.googleapis.com/v1internal`) and native OAuth keyring authentication instead of standard APIs. It will continue to use the cloud directly until a custom `v1internal` protocol translator is added to NinaGate.
+
 ## Gemini CLI Extension (MCP)
 
 NINA includes a native extension for Gemini CLI located at `.gemini/extensions/nina/`. When Gemini CLI starts, it automatically recognizes NINA's environment and loads specialized utilities.

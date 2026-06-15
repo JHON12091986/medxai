@@ -23,4 +23,10 @@ The universal wrapper:
   - `bin/gemini -> nina-universal-wrapper.sh`
   - `bin/agy -> nina-universal-wrapper.sh`
 
-This configuration ensures that any CLI tool executed from the NINA workspace inherently routes its LLM requests through NINA's quota-aware routing logic, local inference fallbacks, and provider circuits—protecting cloud limits and increasing resilience automatically.
+## Known Limitations (Antigravity CLI)
+
+While the wrapper successfully intercepts `agy` executions and injects the proxy environment variables, deep telemetry reveals that the `agy` binary uses proprietary, undocumented internal endpoints (`daily-cloudcode-pa.googleapis.com/v1internal`). It relies on internal OAuth keyring authentication rather than standard API keys, and ignores `GOOGLE_GEMINI_BASE_URL`. 
+
+As a result, `agy` traffic currently **bypasses NinaGate** and cannot leverage local fallback via Ollama. It will continue to use the cloud directly until a custom `v1internal` protocol translator is added to NinaGate.
+
+This configuration ensures that any standard CLI tool executed from the NINA workspace inherently routes its LLM requests through NINA's quota-aware routing logic, local inference fallbacks, and provider circuits—protecting cloud limits and increasing resilience automatically.

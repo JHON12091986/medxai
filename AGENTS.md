@@ -633,3 +633,10 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ROUTING_WIN: Direct answering of math requests.
 - CONTEXT_HINT: None.
 - RULE0_VIOLATION: None.
+
+### [2026-06-15] Session Update — Gemini CLI - agy Proxy Limitation Discovery
+- OFFLOAD_OPPORTUNITY: None.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Identified that while `nina-universal-wrapper.sh` successfully intercepts the Antigravity (`agy`) CLI, `agy` communicates directly with Google's proprietary internal Cloud Code APIs (`daily-cloudcode-pa.googleapis.com/v1internal`) and authenticates via OAuth keyring. As a result, it ignores `GOOGLE_GEMINI_BASE_URL` and completely bypasses NinaGate.
+- CONTEXT_HINT: Standard API proxying fails for `agy` until a custom `v1internal` protocol translator is implemented in NinaGate. `agy` will continue to function autonomously via the cloud.
+- RULE0_VIOLATION: None.
