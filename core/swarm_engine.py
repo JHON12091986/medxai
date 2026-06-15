@@ -26,7 +26,7 @@ PROVIDER_MAP: Dict[TaskType, tuple] = {
     TaskType.REASONING:  ("GEMINI",      "gemini-2.5-pro",           1_048_576),
     TaskType.FAST_CODE:  ("GROQ",         "llama-3.3-70b-versatile",  8_192),
     TaskType.LONG_CTX:   ("GEMINI",       "gemini-2.5-flash",         1_048_576),
-    TaskType.MICRO:      ("OLLAMA",        "qwen2.5:1.5b",             8_192),
+    TaskType.MICRO:      ("CEREBRAS",      "llama-3.3-70b",            8_192), # Changed from OLLAMA
     TaskType.RESEARCH:   ("PERPLEXITY",   "sonar-pro",                32_768),
     TaskType.CREATIVE:   ("DEEPSEEK",     "deepseek-chat",            65_536),
     TaskType.SYNTHESIS:  ("GEMINI",       "gemini-2.5-pro",           1_048_576),
@@ -36,6 +36,7 @@ PROVIDER_MAP: Dict[TaskType, tuple] = {
 FALLBACK_CHAIN: Dict[str, List[str]] = {
     "GEMINI":      ["OPENROUTER", "MISTRAL", "OLLAMA"],
     "GROQ":        ["CEREBRAS", "FIREWORKS", "OLLAMA"],
+    "CEREBRAS":    ["OLLAMA"], # Added fallback for CEREBRAS
     "PERPLEXITY":  ["OPENROUTER", "GEMINI", "OLLAMA"],
     "DEEPSEEK":    ["OPENROUTER", "NOVITA", "OLLAMA"],
     "OLLAMA":      [],  # local — never falls back
@@ -169,8 +170,9 @@ class SwarmEngine:
             # Attempt with fallbacks
             for attempt_provider, attempt_model in self._provider_chain(provider, model):
                 try:
-                    result, tokens = await self._call(
-                        attempt_provider, attempt_model, prompt
+                    result, tokens = await asyncio.wait_for(
+                        self._call(attempt_provider, attempt_model, prompt),
+                        timeout=30.0
                     )
                     node.mark_done(result, attempt_provider, tokens)
 
@@ -188,8 +190,9 @@ class SwarmEngine:
                             node.mark_failed("FeedbackGate: max retries exceeded")
                     break
 
-                except Exception as exc:
-                    _emit("node_error", {"id": node.id, "error": str(exc),
+                except (asyncio.TimeoutError, Exception) as exc:
+                    error_msg = f"Timeout ({attempt_provider}) " if isinstance(exc, asyncio.TimeoutError) else str(exc)
+                    _emit("node_error", {"id": node.id, "error": error_msg,
                                          "provider": attempt_provider})
                     continue
             else:

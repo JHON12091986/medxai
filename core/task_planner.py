@@ -336,12 +336,21 @@ class TaskPlanner:
     def _build_prompt(self, segment: str, mission: MissionMemory) -> str:
         return f"[MISSION CONTEXT]\n{mission.compress()}\n\n[TASK]\n{segment}"
 
-    def _emit_telemetry(self, event: str, data: Dict[str, Any]):
-        import json, os
-        entry = {"event": event, "ts": time.time(), **data}
-        path = os.path.join(os.path.dirname(__file__), "..", "telemetry.jsonl")
+    # Helper to write telemetry in a non-blocking way
+    def _write_telemetry_entry(self, entry_str: str, path: str):
         try:
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(path), exist_ok=True)
             with open(path, "a") as f:
-                f.write(json.dumps(entry) + "\n")
+                f.write(entry_str + "\n")
         except Exception:
             pass
+
+    def _emit_telemetry(self, event: str, data: Dict[str, Any]):
+        import json, os, threading # Import threading
+        entry = {"event": event, "ts": time.time(), **data}
+        entry_str = json.dumps(entry)
+        path = os.path.join(os.path.dirname(__file__), "..", "telemetry.jsonl")
+        
+        # Offload to a thread to prevent blocking the main thread
+        threading.Thread(target=self._write_telemetry_entry, args=(entry_str, path)).start()
