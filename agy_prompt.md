@@ -10,23 +10,25 @@ Permanent approval mode active — all steps pre-approved, no confirmation neede
 2. `cat ~/nina/juleslock.txt` — confirm target file is NOT locked
 3. Confirm target file is NOT in the protected list below
 4. `git status` → confirm working tree is clean before starting
+5. Read `~/nina/agy_session.md` last 5 entries — know what changed recently before touching anything
+6. Read relevant rows from `~/nina/nina_codemap.md` for the target file — know its importers and imports
 
 If any check fails: STOP and report. Do not proceed.
 
 ## Core Rules
 - Plain English only — never raw bash or code in the prompt
-- One task, one file at a time — sequential, never parallel
+- One task, one file at a time — sequential, never parallel (use Multi-File Protocol below for exceptions)
 - **Atomic commits:** one logical change = one commit. Never bundle unrelated edits.
-- **Idempotency:** every task must be safe to run twice. If run again on an already-patched file, it must produce no diff. Write guarded changes (`if not already X, do X`), never blind appends.
+- **Idempotency:** every task must be safe to run twice. Write guarded changes (`if not already X, do X`), never blind appends.
 - agy performs ALL Jules PR merges — never use GitHub UI
-- Pre-merge: always run DRY-RUN diagnostic on changed files first, then `python3 rule0_audit.py` + `python3 -m py_compile <file>` + `pyflakes <file>` + check `juleslock.txt`
-- Post-merge: `./nina_sync.sh` — no exceptions. If `nina_sync.sh` exits non-zero, STOP and report the exact error. Do not proceed with the next task.
-- After successful merge + sync: remove the target file's entry from `juleslock.txt`
+- Pre-merge: always run DRY-RUN diagnostic on changed files first, then `python3 rule0_audit.py` + `python3 -m py_compile <file>` + `pyflakes <file>` + `python3 agy_impact_check.py <file>` + check `juleslock.txt`
+- Post-merge: `./nina_sync.sh` — no exceptions. If `nina_sync.sh` exits non-zero, STOP and report the exact error.
+- After successful merge + sync: remove the target file's entry from `juleslock.txt` and append to `agy_session.md`
 - Merge conflict? Stop — escalate to Perplexity, no blind resolution
-- If a task requires more than 3 file reads + 1 write, it is multi-file scope — STOP and escalate to Gemini CLI or Qwen Code CLI
+- If a task requires more than 3 file reads + 1 write without a Multi-File Protocol — STOP and escalate to Gemini CLI or Qwen Code CLI
 
 ## Reasoning Protocol (chain-of-thought — mandatory)
-Before making ANY edit, output a 3-line plan inside the response:
+Before making ANY edit, output a 3-line plan:
 ```
 PLAN:
 1. What I will change: <specific line/function/value>
@@ -35,8 +37,55 @@ PLAN:
 ```
 Do not proceed with the edit until the plan is written.
 
+## Dependency Tracing (mandatory for core/ and interfaces/)
+Before editing any file in `core/` or `interfaces/`, explicitly state:
+```
+DEPENDENCY CHECK:
+- Files that import <target_file>: <list>
+- Files that <target_file> imports: <list>
+- Impact radius: <which callers are affected by this change>
+- Verdict: safe to proceed / requires multi-file protocol
+```
+If the impact radius touches more than 2 callers, switch to Multi-File Protocol.
+
+## Impact Radius Declaration (mandatory before every edit)
+Before touching any function, explicitly declare:
+```
+IMPACT RADIUS:
+- Function being changed: <name>
+- Known callers: <list from codemap or grep>
+- Caller signatures still valid after change: yes / no
+- Side effects on other files: <none / describe>
+```
+If caller signatures break, fix callers in the same task or STOP.
+
 ## Self-Review Step (mandatory before every commit)
-After completing the edit, re-read the changed lines and confirm they match the acceptance criteria before committing. If they do not match, fix and re-read again. Never commit without self-review.
+After completing the edit, re-read the changed lines and confirm they match the acceptance criteria. If they do not match, fix and re-read again. Never commit without self-review.
+
+## Session Journal (mandatory — append after every completed task)
+After every successful commit, append to `~/nina/agy_session.md`:
+```markdown
+## <TASK_ID> | <file>
+Changed: <what changed>
+Did NOT touch: <explicit list>
+Side effects: <none / describe>
+Rollback SHA: <previous commit sha>
+```
+This is non-negotiable. It is how the next task knows what happened before.
+
+## Multi-File Task Protocol
+For legitimate multi-file changes only. Never use without explicit instruction.
+```
+Mode: MULTI-FILE
+Files: [file_A, file_B, file_C]  ← ordered deepest dependency first
+Dependency order rationale: <why this order>
+Step 1: DRY-RUN all files — confirm no conflicts
+Step 2: Edit deepest dependency → verify → commit
+Step 3: Edit next layer → verify → commit
+Step 4: Edit top-level file → verify → commit
+Rollback plan: if any step fails, revert in reverse order using rollback SHAs
+```
+Rule: always edit in dependency order — deepest (fewest callers) first, top-level (most callers) last.
 
 ## Protected Classes / Names
 - `core/nina.py` class must remain `Nina` (capital N). Never rename.
@@ -68,7 +117,7 @@ File: <path/to/file.py>
 Do NOT touch: <list any files or functions to leave alone>   ← keep this high
 Task: <plain English description of the single change>
 Acceptance: <one-line check — what should be true when done>
-Post-task verify: run `python3 -m py_compile <file>` + `pyflakes <file>` — confirm zero errors before committing
+Post-task verify: run `python3 -m py_compile <file>` + `pyflakes <file>` + `python3 agy_impact_check.py <file>` — zero errors before committing
 ```
 
 ## Hot-Path Templates
@@ -117,7 +166,6 @@ Mode: DRY-RUN — read and report only. Zero file edits. Zero commits.
 Task: <plain English description of what to inspect/audit>
 Report: <what to output — e.g. list of issues, log lines, diff preview>
 ```
-Use this when grepping logs, auditing files, or scanning for issues.
 **Mandatory before any Jules PR merge:** run DRY-RUN on all changed files before executing the merge.
 
 ## Rollback Template
@@ -130,7 +178,6 @@ Revert: the change introduced in commit <sha>
 Do NOT touch: <any other files>
 Verify: file matches pre-commit state, `python3 -m py_compile <file>` passes, guardian reports no drift
 ```
-Use when a post-merge break is detected and the change needs to be undone immediately.
 
 ## Commit Format
 - `fix(scope): description (ID)`
