@@ -254,6 +254,8 @@ To enable focused reasoning and reduced verbosity per user preference (telemetry
     - All autonomous Jules tasks must maintain repository hygiene. Clean up/delete any untracked scratch/temporary files and revert any out-of-scope modifications (e.g., configuration, cache files like `data/router_cache.json`, or test smoke files) before submitting.
     - Code modification and refactoring tools MUST implement explicit safety boundaries (e.g. raising errors on encountering control flow statements like `Return`, `Break`, or `Continue` inside blocks slated for extraction).
 
+11. After EVERY task completion, run: python3 tools/post_task_hook.py
+
 ### LOCKED FILES (never touch under any circumstances)
 tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 
@@ -321,6 +323,27 @@ Run tools/rule0_audit.py to identify missed nf opportunities.
 - Run `python3 tools/rule0_audit.py` to check for RULE0 violations.
 
 ### 6B. Append to AGENTS.md — "## NinaGate Routing History" section
+
+### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
+- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
+- RULE0_VIOLATION: None. All file operations compliant.
+
+### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
+- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
+- RULE0_VIOLATION: None. All file operations compliant.
+
+### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
+- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
+- RULE0_VIOLATION: None. All file operations compliant.
 ```
 ### [YYYY-MM-DD] Session Update — [tool used]
 - OFFLOAD_OPPORTUNITY: [task type] → route to NinaFlash next time

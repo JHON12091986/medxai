@@ -155,6 +155,16 @@ fi
 
 echo "[5/8] Staging..."
 if [ "$DRY_RUN" = false ]; then
+  # Check if post_task_hook.py has been run since last commit
+  if [ -f "$NINA/AGENTS.md" ]; then
+    LAST_COMMIT_TS=$(git log -1 --format=%ct 2>/dev/null || echo "0")
+    AGENTS_MTIME=$(stat -c %Y "$NINA/AGENTS.md" 2>/dev/null || echo "0")
+    if [ "$AGENTS_MTIME" -le "$LAST_COMMIT_TS" ]; then
+      echo "⚠ DOCS NOT UPDATED — run: python3 tools/post_task_hook.py"
+      exit 1
+    fi
+  fi
+
   git add docs/space/ "${SPACE_FILES[@]}" nina_sync.sh 2>/dev/null || true
   git add -u 2>/dev/null || true
 fi
