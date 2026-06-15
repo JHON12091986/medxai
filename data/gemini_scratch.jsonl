@@ -286,3 +286,6 @@
 {"t": "2026-06-15T15:15:55.851151+06:00", "step": 11, "action": "shell", "file": "", "detail": "Staging and committing ninagate keyless provider fix", "status": "ok"}
 {"t": "2026-06-15T15:16:04.906715+06:00", "step": 12, "action": "shell", "file": "", "detail": "Pushing proxy fixes to origin", "status": "ok"}
 {"t": "2026-06-15T15:16:14.382664+06:00", "step": -1, "action": "done", "file": "", "detail": "Implemented and resolved provider key verification bugs allowing keyless lanes to activate, created the dashboard artifact, and pushed updates to main.", "status": "ok"}
+{"t": "2026-06-15T09:16:21.833273+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/4 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-15T15:19:06.297475+06:00", "step": 13, "action": "shell", "file": "", "detail": "Staging and committing AGENTS.md update for keyless providers", "status": "ok"}
+{"t": "2026-06-15T15:19:15.765098+06:00", "step": 14, "action": "shell", "file": "", "detail": "Pushing AGENTS.md update to origin", "status": "ok"}
