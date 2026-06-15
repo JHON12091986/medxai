@@ -3873,3 +3873,13 @@
 **Files changed:** core/nina.py,data/gemini_scratch.jsonl,docs/space/claude_feed.md,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md,tests/test_tier_routing.py,tools/validate_index.py
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 364 — 2026-06-16 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** AGENTS.md,data/gemini_scratch.jsonl,docs/space/claude_feed.md,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md
+
+**Verification:** git push OK, nina.service active
