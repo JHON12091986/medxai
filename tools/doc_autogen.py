@@ -10,7 +10,11 @@ def extract_facts():
     try:
         with open(".gemini/settings.json", "r") as f:
             data = json.load(f)
-            facts["MODEL"] = data.get("model", "unknown")
+            model_val = data.get("model", "unknown")
+            if isinstance(model_val, dict):
+                facts["MODEL"] = model_val.get("name", "unknown")
+            else:
+                facts["MODEL"] = str(model_val)
     except Exception as e:
         print(f"Error extracting MODEL: {e}")
         facts["MODEL"] = "unknown"
@@ -72,27 +76,17 @@ def main():
     facts = extract_facts()
     patched = []
 
-    # ARCHITECTURE.md updates
-    if patch_file("ARCHITECTURE.md", 
-                  r"(### 3\. NinaGate Proxy.*?Gemini\s+)(.*?)(?=\s+usage)", 
-                  r"\g<1>{MODEL}", facts):
-        patched.append("ARCHITECTURE.md (Model)")
-    
-    if patch_file("ARCHITECTURE.md", 
-                  r"(### 3\. NinaGate Proxy.*?port\s+)(\d+)", 
-                  r"\g<1>{NINAGATE_PORT}", facts):
-        patched.append("ARCHITECTURE.md (Port)")
-
-    # README.md updates
-    if patch_file("README.md", 
-                  r"(\| ninaflash \(nf\) \| Local Muscle \| )(.*?)(\s+\|)", 
-                  r"\g<1>{MODEL}\g<3>", facts):
-        patched.append("README.md (Model-Table)")
-
-    if patch_file("README.md", 
+    # WORKFLOW.md updates
+    if patch_file("WORKFLOW.md", 
                   r"(\| ninaflash \(agy\) \| )(.*?)(\s+\|)", 
                   r"\g<1>{MODEL}\g<3>", facts):
-        patched.append("README.md (Model-Quota)")
+        patched.append("WORKFLOW.md (Model-Quota)")
+
+    # docs/jules_agent_memory.md updates
+    if patch_file("docs/jules_agent_memory.md", 
+                  r"(\| agy \| )(.*?)(\s+\|)", 
+                  r"\g<1>{MODEL}\g<3>", facts):
+        patched.append("docs/jules_agent_memory.md (Model-Quota)")
 
     # docs/nina_proxy_usage.md updates
     if patch_file("docs/nina_proxy_usage.md", 

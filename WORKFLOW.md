@@ -117,7 +117,7 @@ Never run parallel agent tasks from the same working directory.
 | Tool | Model | Daily Quota | Reset |
 |------|-------|-------------|-------|
 | NinaFlash (Ollama local) | qwen2.5-coder:7b | Unlimited | Never |
-| ninaflash (agy) | Gemini Flash | ~5h rolling | Rolling |
+| ninaflash (agy) | gemini-2.5-flash | ~5h rolling | Rolling |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
 | Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |

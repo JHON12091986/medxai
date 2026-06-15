@@ -272,7 +272,7 @@ Perplexity is NOT idle during coding — it remains available for unblocking and
 #### Quota Reference
 | Tool | Model | Daily Quota | Reset |
 |------|-------|-------------|-------|
-| agy | Gemini Flash | ~5h rolling | Rolling |
+| agy | gemini-2.5-flash | ~5h rolling | Rolling |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
 | Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |
