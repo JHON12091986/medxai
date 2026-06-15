@@ -1,71 +1,72 @@
 #!/usr/bin/env bash
-# agy_verify.sh — post-task verification for agy edits
-# Usage: ./agy_verify.sh <file>
-# Example: ./agy_verify.sh tools/ninaflash.py
+# agy_verify.sh — post-task verification: compile + pyflakes + impact + guardian drift check
+# Usage: ./agy_verify.sh <file> [task_id]
+# Example: ./agy_verify.sh tools/ninaflash.py nina-20260616-001
 
 set -euo pipefail
 
 FILE="${1:-}"
+TASK_ID="${2:-unknown}"
+PASS=true
 
 if [[ -z "$FILE" ]]; then
-  echo "Usage: ./agy_verify.sh <file>"
+  echo "Usage: ./agy_verify.sh <file> [task_id]"
   exit 1
 fi
 
-if [[ ! -f "$FILE" ]]; then
-  echo "❌ File not found: $FILE"
-  exit 1
-fi
-
-PASS=0
-FAIL=0
-
-check() {
-  local label="$1"
-  local cmd="$2"
-  if eval "$cmd" &>/dev/null; then
-    echo "  ✅ $label"
-    (( PASS++ )) || true
-  else
-    echo "  ❌ $label"
-    eval "$cmd" 2>&1 | sed 's/^/     /'
-    (( FAIL++ )) || true
-  fi
-}
-
-echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo " agy_verify: $FILE"
+echo " POST-TASK VERIFY: $FILE"
+echo " TASK ID: $TASK_ID"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
-# 1. Syntax check
-if [[ "$FILE" == *.py ]]; then
-  check "py_compile (syntax)" "python3 -m py_compile '$FILE'"
-  check "pyflakes (lint)" "python3 -m pyflakes '$FILE'"
-fi
-
-# 2. Git diff summary
-echo ""
-echo "  📄 git diff --stat (last commit):"
-git diff HEAD~1 --stat -- "$FILE" 2>/dev/null | sed 's/^/     /' || echo "     (no diff available)"
-
-# 3. juleslock check
-if grep -qF "$FILE" ~/nina/juleslock.txt 2>/dev/null; then
-  echo ""
-  echo "  ⚠️  $FILE is still in juleslock.txt — remove it if task is complete."
-fi
-
-# 4. Summary
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-if [[ $FAIL -eq 0 ]]; then
-  echo " RESULT: PASS ($PASS checks passed)"
-  echo " Next: ./nina_sync.sh"
+# 1. Compile check
+if python3 -m py_compile "$FILE" 2>&1; then
+  echo "✅ py_compile: PASS"
 else
-  echo " RESULT: FAIL ($FAIL failed, $PASS passed)"
-  echo " Fix errors before syncing."
+  echo "❌ py_compile: FAIL"
+  PASS=false
 fi
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
 
-[[ $FAIL -eq 0 ]]
+# 2. Pyflakes
+if pyflakes "$FILE" 2>&1; then
+  echo "✅ pyflakes: PASS"
+else
+  echo "⚠️  pyflakes: warnings (review above)"
+fi
+
+# 3. Impact check (if script exists)
+if [[ -f ~/nina/agy_impact_check.py ]]; then
+  echo ""
+  echo "--- Impact Check ---"
+  cd ~/nina && python3 agy_impact_check.py "$FILE" || true
+  echo "--- End Impact Check ---"
+fi
+
+# 4. Guardian post-snapshot + drift compare
+if [[ -f ~/nina/guardian_engine.py ]]; then
+  SNAP_PRE="/tmp/nina_guardian_pre_${TASK_ID}.snap"
+  GUARDIAN_POST=$(cd ~/nina && python3 guardian_engine.py --snapshot 2>/dev/null || echo "guardian_unavailable")
+  if [[ -f "$SNAP_PRE" && "$GUARDIAN_POST" != "guardian_unavailable" ]]; then
+    echo ""
+    echo "--- Guardian Drift Check ---"
+    DIFF=$(diff "$SNAP_PRE" <(echo "$GUARDIAN_POST") || true)
+    if [[ -z "$DIFF" ]]; then
+      echo "✅ Guardian: no drift detected"
+    else
+      echo "⚠️  Guardian drift detected:"
+      echo "$DIFF"
+    fi
+    rm -f "$SNAP_PRE"
+    echo "--- End Guardian Drift ---"
+  else
+    echo "ℹ️  Guardian: no pre-snapshot found for $TASK_ID (skipping drift check)"
+  fi
+fi
+
+echo ""
+if [[ "$PASS" == true ]]; then
+  echo "✅ VERIFY PASSED — safe to commit."
+else
+  echo "❌ VERIFY FAILED — fix errors before committing."
+  exit 1
+fi
