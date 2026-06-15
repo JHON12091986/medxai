@@ -52,3 +52,6 @@
 {"t": "2026-06-15T17:56:15.164324+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
 {"t": "2026-06-16T00:02:56.068775Z", "step": 0, "action": "start", "file": ".geminiignore", "detail": "Replace .geminiignore with user content", "status": "ok"}
 {"t": "2026-06-16T00:04:13.415234Z", "step": -1, "action": "done", "file": ".geminiignore", "detail": "replaced .geminiignore content, tracked core/prompt_cache.py, and ran sync script", "status": "ok"}
+{"t": "2026-06-15T18:04:18.790759+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-16T00:08:20.362346Z", "step": 0, "action": "start", "file": "ninagate/main.py", "detail": "Apply patches to ninagate/main.py", "status": "ok"}
+{"t": "2026-06-16T00:10:01.513175Z", "step": -1, "action": "done", "file": "ninagate/main.py", "detail": "implemented connection pooling, true streaming, token budgeting, and unified make_provider_response, then ran sync script", "status": "ok"}
