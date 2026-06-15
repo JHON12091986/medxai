@@ -1,41 +1,43 @@
+# Build artifacts
 __pycache__/
 *.pyc
 *.pyo
-.git/
-.github/
-*.egg-info/
-dist/
-build/
-.tox/
-venv/
-.venv/
-env/
-*.log
-logs/
-data/plans/
-data/session_ledger.json
-data/session_ledger.tmp
-data/gemini_preamble.md
-juleslock.txt
-docs/space/
-nina_master_backup*.md
+*.pyd
+.coverage
+htmlcov/
+
+# Large data / test artifacts — DO NOT ingest
+call_graph_test.json
+efficiency_report.json
+bench_report.md
+commit_message.txt
+exports/
+data/memory/chromadb/
+data/logs/
+data/backups/
+
+# Temp / scratch scripts in root
+fix_caps_again.py
+modify_agent_final.py
+modify_nina_final.py
+fix_*.py
+modify_*.py
+
+# Node / env
+node_modules/
+.env
+.env.*
+!.env.example
+
+# Media
+*.mp4
+*.mp3
 *.png
 *.jpg
 *.jpeg
 *.gif
-*.ico
 *.svg
-*.db
-*.sqlite
-*.sqlite3
-node_modules/
-.env
-upgrades/
-logs/
-data/plans/
-upgrades/backups/
-!data/session_checkpoint.json
-!data/workspace/
-!data/memory_stash.json
-!data/quota_state.json
 
+# OS
+.DS_Store
+Thumbs.db

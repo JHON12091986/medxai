@@ -710,3 +710,10 @@ When agy quota exhausts, work stops unless we have alternate paths.
 - ROUTING_WIN: Using `update_index.py` and `audit_repo_hygiene.py` to automatically regenerate project manifests.
 - CONTEXT_HINT: Always run `update_index.py` before validation to ensure new dependencies or file changes are captured.
 - RULE0_VIOLATION: None. All file status checks and listings were performed via compliant `ninaflash` commands.
+
+### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - Geminiignore Customization
+- OFFLOAD_OPPORTUNITY: Text replacements and basic writes to configuration ignore files -> route to NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Direct replacement of `.geminiignore` prevents cloud code context and token bloat from ingesting large artifacts.
+- CONTEXT_HINT: Avoid including unnecessary file types in prompt payload sizes by setting precise ignore matching rules.
+- RULE0_VIOLATION: None. All file status checks and git runs performed via compliant `ninaflash` CLI wrapper commands.

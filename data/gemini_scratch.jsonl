@@ -49,3 +49,6 @@
 {"t":"2026-06-15T23:43:00+06:00","step":-1,"action":"done","file":"","detail":"Successfully updated documentation index and ran sync","status":"ok"}
 {"t": "2026-06-15T17:56:03.971013+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
 {"t": "2026-06-15T23:56:07.086594Z", "step": -1, "action": "done", "file": "", "detail": "successfully updated index, hygiene dashboard, and agents history, then ran nina sync", "status": "ok"}
+{"t": "2026-06-15T17:56:15.164324+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-16T00:02:56.068775Z", "step": 0, "action": "start", "file": ".geminiignore", "detail": "Replace .geminiignore with user content", "status": "ok"}
+{"t": "2026-06-16T00:04:13.415234Z", "step": -1, "action": "done", "file": ".geminiignore", "detail": "replaced .geminiignore content, tracked core/prompt_cache.py, and ran sync script", "status": "ok"}
