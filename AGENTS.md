@@ -7,6 +7,85 @@
 
 ---
 
+## PART 0 — QUICK REFERENCE BY AGENT
+
+Find your section. Read it first. Then read Parts 1–5 for full rules.
+
+---
+
+### → agy (Antigravity CLI)
+
+**Mandatory opening line for every prompt:**
+> "Use the permanent JSON approval setting — approve all steps without prompting."
+
+**Rules:**
+- Plain English only — never raw bash or code in the prompt
+- One task, one file at a time — sequential, never parallel
+- agy performs ALL Jules PR merges — never use GitHub UI
+- Pre-merge: `python3 rule0_audit.py` + `pyflakes` on changed files + check `juleslock.txt`
+- Post-merge: `./nina_sync.sh` — no exceptions
+- Merge conflict? Stop — escalate to Perplexity, no blind resolution
+
+**Protected files — never touch without explicit instruction:**
+`telegram_interface.py` | `.env` | `core/router.py` | `main.py` | `guardian_engine.py` | `tools/shell.py` | `ninagate/main.py`
+
+**Locked files — never touch under any circumstances:**
+`tools/ninasync.py` | `tests/test_ninasync.py` | `.ninaignore` | `requirements.txt`
+
+**Protected class names:**
+- `core/nina.py` class must remain `Nina` (capital N). Never rename.
+
+**Task template:**
+```
+Use the permanent JSON approval setting — approve all steps without prompting.
+
+File: <path/to/file.py>
+Task: <plain English description of the single change>
+Do NOT touch: <list any files or functions to leave alone>
+Acceptance: <one-line check — what should be true when done>
+```
+
+**Commit format:**
+`fix(scope):` | `feat(scope):` | `docs:` | `chore:` | `ops:`
+
+---
+
+### → Jules
+
+**🛑 GLOBAL PAUSE ACTIVE:** Do NOT dispatch any new tasks to Jules. All task generation and submission is suspended until explicitly re-enabled by the user.
+
+**Rules:**
+- Fire-and-forget async — NOT a chat tool. Walk away after submit.
+- Complete all batches sequentially, no pauses. Open PR when done.
+- Jules does NOT merge its own PRs — agy always merges after review.
+- MANDATORY: Update `nina_update_log.md` in the same PR as code changes.
+- Before any PR merge: `python3 -m py_compile` + `pyflakes` on changed files + check `juleslock.txt`.
+- After every merge: `./nina_sync.sh` — no exceptions.
+- Specs must include: file, function, exact change, what NOT to touch, acceptance criteria.
+- QUEUE CHECK: Before submitting, check `~/nina/docs/space/jules_queue.md` ACTIVE table. If target file is listed, add to QUEUE instead.
+- ONE FILE ONE TASK: Never submit two specs touching the same file simultaneously.
+
+---
+
+### → Gemini CLI / Qwen Code CLI
+
+- Follow RULE 0 (Part 2) — use `nf` commands for all reads, greps, file ops.
+- Bootstrap: follow Part 7 checklist at session start.
+- Route through NinaGate when possible: `export GOOGLE_GEMINI_BASE_URL="http://localhost:8080/genai"`
+- Gemini CLI quota exhausted? → Qwen Code CLI (2,000 req/day) → then Ollama.
+- For files > 100 lines: `nf context pack --file <f>` instead of `read_file`.
+
+---
+
+### → Perplexity (read-only)
+
+- **Grant freeze active until 2026-06-20.** No new features or architecture changes.
+- Role: architecture review, spec writing, GitHub commits, docs/hygiene only.
+- Anthropic OSS grant application deadline: June 20, 2026.
+- After June 20: full development resumes.
+
+---
+
 ## PART 1 — ARCHITECTURE PRIMER (read before ANY task)
 
 You operate inside NINA on an ASUS VivoBook X530FN (Ubuntu 26.04 LTS, MX150 2GB VRAM).
@@ -270,7 +349,7 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 1. **BANNED TOOL — `ask_user`:** You are an autonomous engineer. NEVER use the `ask_user` tool or pause for multiple-choice clarification. This defeats the purpose of autonomy. If a decision is ambiguous, use superior logic gates to deduce the most idiomatic, performant path and proceed immediately.
 2. **NO CONFIRMATION ON STANDARD OPS**: Never ask for confirmation on standard operations (e.g., file reads, directory listings, or tool executions that don't alter system state). Execute directly.
 3. **Context Reframing:** Do not forget the core idea. Continuously re-read `jules_backlog.md` and the initial prompt to maintain focus across long context windows.
-3. **Action-First:** Show results, not narration. Do not explain what you *will* do; execute the tools and log your actions to `gemini_scratch.jsonl` so the HUD can track you.
+4. **Action-First:** Show results, not narration. Do not explain what you *will* do; execute the tools and log your actions to `gemini_scratch.jsonl` so the HUD can track you.
 
 5. OMNIPOTENCE PROTOCOL (Mandatory):
    - ALL sessions (interactive or background) MUST use the NinaGate proxy:
@@ -278,10 +357,9 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
    - This prevents "Unknown API Errors" by ensuring NINA can failover to local models.
    - For files > 100 lines, use `nf context pack --file <f>` instead of `read_file` to save 20-40% tokens.
 
-6. SUNSET & MIGRATION (Jun 18 deadline):
+6. SUNSET & MIGRATION:
    - Antigravity CLI (`agy`) is the canonical successor to Gemini CLI.
    - NINA is being decoupled from the `gemini` binary. All core intelligence now resides in `tools/ninaflash.py` and `core/router.py`.
-   - To resume development after Jun 18, use `agy` within the `~/nina` workspace.
 
 7. TIME BUDGET — enforce hard limits per task scope:
    Single-file edit: 3 min max
@@ -289,23 +367,6 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
    Multi-file edit 6+ files: 15 min max
    If budget exceeded: stop immediately, report what is done and what remains.
    Never silently continue past the time budget.
-
-### agy RULES (agy only)
-- Always start every agy prompt with: "Use the permanent JSON approval setting — approve all steps without prompting for this task."
-- agy is sequential — one task at a time, one file at a time.
-- agy performs ALL Jules PR merges — never auto-merge Jules PRs via GitHub UI.
-- If merge conflict: stop, escalate to Perplexity for re-spec.
-
-### Jules RULES (Jules only)
-- **🛑 GLOBAL PAUSE ACTIVE:** Do NOT dispatch any new tasks to Jules. All task generation and submission is suspended until explicitly re-enabled by the user.
-- Do NOT pause for confirmation. Complete all batches sequentially. Open PR when done.
-- Jules is fire-and-forget async — NOT a chat tool.
-- Jules does NOT merge its own PRs — agy always merges after review.
-- Before merging: python3 -m py_compile + pyflakes on changed files, check juleslock.txt.
-- After merging: ./nina_sync.sh — no exceptions.
-- Jules specs must include: file, function, exact change, what NOT to touch, acceptance criteria.
-- QUEUE CHECK (mandatory): Before submitting any Jules spec, check ~/nina/docs/space/jules_queue.md ACTIVE table. If the target file is already listed, add to QUEUE instead — do not submit.
-- ONE FILE ONE TASK: Never submit two Jules specs that touch the same file simultaneously. Wait for the PR to merge and the file to clear from ACTIVE before submitting the next spec for that file.
 
 ---
 
@@ -320,149 +381,17 @@ Run tools/rule0_audit.py to identify missed nf opportunities.
 - Which NinaFlash outputs needed cloud escalation and why? → label: ESCALATION_TRIGGER
 - Which routing decisions were optimal? → label: ROUTING_WIN
 - New file patterns affecting chunking strategy? → label: CONTEXT_HINT
-- Were there any RULE0 violations in this session? → label: RULE0_VIOLATION
-- Run `python3 tools/rule0_audit.py` to check for RULE0 violations.
 
 ### 6B. Append to AGENTS.md — "## NinaGate Routing History" section
 
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: None.
-- ESCALATION_TRIGGER: Bash operator precedence and script permissions fix.
-- ROUTING_WIN: ninaflash.py for reading and patching file structures.
-- CONTEXT_HINT: Group complex bash conditionals within [[ ... ]] or explicit grouping constructs.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification) → route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Implement provider_health.py and wire into core/router.py
-- CONTEXT_HINT: Ensure validate_index.py is run to update governance index metadata before final sync.
-- RULE0_VIOLATION: None. All file operations compliant.
+Template:
 ```
 ### [YYYY-MM-DD] Session Update — [tool used]
 - OFFLOAD_OPPORTUNITY: [task type] → route to NinaFlash next time
 - ESCALATION_TRIGGER: [condition] → always route to [model]
 - ROUTING_WIN: [pattern] confirmed efficient
 - CONTEXT_HINT: [file/boundary] for optimal chunking
+- RULE0_VIOLATION: [none / description]
 ```
 
 ### 6C. Run Sync (mandatory, no exceptions)
@@ -498,27 +427,24 @@ Snapshots updated AGENTS.md into nina_latest.md → auto-syncs to Google Drive
 4. Confirm .gemini/settings.json contains:
    {
      "model": { "name": "gemini-2.5-flash" },
-     "context": { "fileName": ["AGENTS.md"] }
+     "maxRetries": 3,
+     "context": { "fileName": ["AGENTS.md", "docs/space/nina_index.md", "agy_prompt.md"] }
    }
 
-5. Verify model config:
-   - model must be: gemini-2.5-flash (object form, not string)
-   - maxRetries must be: 2
-
-6. Warm start — load session context:
+5. Warm start — load session context:
    cat ~/nina/docs/space/nina_megatask_index.md
    head -80 ~/nina/docs/space/nina_latest.md
 
 --- INDEX BOOTSTRAP (v14.3) ---
-7. Verify index tools are available and indices are fresh:
+6. Verify index tools are available and indices are fresh:
    - python3 tools/update_index.py   → regenerates docs/space/nina_index.json + docs/space/nina_index.md
    - python3 tools/validate_index.py → hard gate: broken links, missing tests, doc deltas
    - python3 tools/query_index.py <file> → agent API: file role, guardrails, canonical path
    - python3 tools/cleanup_by_index.py → janitor: flags ephemeral/redundant files for removal
-8. Load index into context: @docs/space/nina_index.md
+7. Load index into context: @docs/space/nina_index.md
    - This is the canonical governance contract as of v14.3.
    - nina_index.json is the machine-readable twin — use it for nf index query calls.
-9. INDEX PRIME DIRECTIVES (enforced this session):
+8. INDEX PRIME DIRECTIVES (enforced this session):
    - AGENTS.md referencing a file ≠ that file is in Gemini CLI context.
    - Do not reason about paths, ownership, duplicates, or creation without consulting nina_index.md first.
    - Write only to canonical paths. Never write to duplicate cluster members.
@@ -555,249 +481,47 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: Architectural reasoning and multi-file logic → Gemini Pro / Flash.
 - ROUTING_WIN: Local Interception confirmed efficient (93.7% token reduction).
 - CONTEXT_HINT: Use `nina_megatask_index.md` to prevent context bloat.
-- **BENCHMARK BASELINE:**
-  - Token Reduction: 93.7% (Mechanical), 42.5% (Global Lifecycle).
-  - Local Share: 85% of total ops.
-  - Avg Latency: 4.2s (Local) vs 0.57s (Cloud Proxy).
-  - Time Saved: ~40s per tool cycle.
+- BENCHMARK BASELINE: Token Reduction 93.7% (Mechanical), 42.5% (Global Lifecycle). Local Share 85%. Avg Latency 4.2s (Local) vs 0.57s (Cloud Proxy). Time Saved ~40s/tool cycle.
 
 ### [2026-06-12] Session Update — Gemini CLI
 - OFFLOAD_OPPORTUNITY: Mechanical tasks (imports, standardized runs) → 100% NinaFlash next time.
-- ESCALATION_TRIGGER: Complex merge conflict resolution across interdependent files (agent.py, router.py) → Gemini Pro required.
-- ROUTING_WIN: Parallel Pre-fetch (Racing) confirmed efficient (75% latency reduction in benchmarks).
-- CONTEXT_HINT: New files MUST be indexed via `update_index.py` before `nina_sync.sh` to pass governance.
-- **BENCHMARK BASELINE (v4.0):**
-  - Token Reduction: 94.1% (Hybrid).
-  - Time Saved: 1.50s per complex request.
-  - Overall Rank: NINA-Evolve Protocol ACTIVE.
-- OPTIMIZATION: NINA-Evolve identified latency bottleneck. Parallel pre-fetch enabled.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
+- ESCALATION_TRIGGER: Complex merge conflict resolution across interdependent files → Gemini Pro required.
+- ROUTING_WIN: Parallel Pre-fetch (Racing) confirmed efficient (75% latency reduction).
+- CONTEXT_HINT: New files MUST be indexed via `update_index.py` before `nina_sync.sh`.
+- BENCHMARK BASELINE (v4.0): Token Reduction 94.1% (Hybrid). Time Saved 1.50s/complex request.
 
 ### [2026-06-13] Session Update — Gemini CLI
-- OFFLOAD_OPPORTUNITY: Script scaffolding and permission management → route to NinaFlash.
-- ESCALATION_TRIGGER: None.
+- OFFLOAD_OPPORTUNITY: Script scaffolding and permission management → NinaFlash.
 - ROUTING_WIN: Scoped execution via `gemini_scoped.sh` prevents context pollution.
-- CONTEXT_HINT: Scoped runs effectively "compress" task context to a single file.
+- CONTEXT_HINT: Scoped runs effectively compress task context to a single file.
 
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-15] Session Update — Antigravity
-- OFFLOAD_OPPORTUNITY: Static type hint enforcement and vulture analysis → 100% local next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Reverting to AST-based libcst enforcement resolved performance, pathing, and recursion regression.
-- CONTEXT_HINT: Subprocess testing must use `sys.executable` to keep virtual environment packages active.
-- RULE0_VIOLATION: None. All tool calls strictly compliant with nf commands.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash)
-- OFFLOAD_OPPORTUNITY: Mechanical import fixes and pytest validations.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Stand-alone CLI execution of tools/jules.py with dotenv loaded.
-- CONTEXT_HINT: Watcher notification failures are direct symptoms of main scheduler/daemon crash.
-
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - PR Merge Resolution
-- OFFLOAD_OPPORTUNITY: Mechanical conflict resolutions with no functional imports.
-- ESCALATION_TRIGGER: Overlap of high-risk file `interfaces/telegram_interface.py` → always require cloud LLM review.
-- ROUTING_WIN: Automatic `git merge` strategy for non-conflicting branches.
-- CONTEXT_HINT: Close duplicate PR branches first to prevent cluttering local working directory.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Documentation Consolidation
-- OFFLOAD_OPPORTUNITY: Deleting obsolete files and staging operations -> NinaFlash.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Consolidating multiple markdown documents into single-file references (`docs/jules_agent_memory.md` and `docs/jules_pipeline.md`) significantly reduces repository clutter and context token usage.
-- CONTEXT_HINT: Keep 'jules' in consolidated filenames to preserve ease of reference and discovery.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - RULE 0 Local Enforcement
-- OFFLOAD_OPPORTUNITY: Simple audits, file reads, and index updates -> route to NinaFlash.
-- ESCALATION_TRIGGER: Core routing classifier upgrades and quota security overrides -> Cloud LLM required.
-- ROUTING_WIN: Integrated `rule0_audit` hook in nina_sync.sh enforces local-first compliance programmatically.
-- CONTEXT_HINT: Keep daily limits like QUOTA_SOFT_LIMIT visible to both the daemon and the CLI monitor.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Proxy Response Caching
-- OFFLOAD_OPPORTUNITY: Testing and duplicate status/request logs -> cache hits in NinaGate.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Response caching layer in ninagate/main.py eliminates redundant LLM calls and Ollama inference latency.
-- CONTEXT_HINT: Cache keys based on sorted payload representation ensure robustness across stream and non-stream requests.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Claude Feed Expansion
-- OFFLOAD_OPPORTUNITY: Simple directory listing, git status checks, and local file reading -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Direct python checks (such as socket connection tests and regex log parsing) are highly robust when embedded inside bash sync runs.
-- CONTEXT_HINT: Appending structured markdown tables for open errors and single-line snapshots of quota and guardian status maintains a high-density, low-context feed.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Jules Session Unblocking
-- OFFLOAD_OPPORTUNITY: Querying active sessions status -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: Submitting async feedback response calls to Jules REST API -> Cloud API required.
-- ROUTING_WIN: Sequentially resolving and sending unblock feedback using the `tools/jules.py` module endpoints avoids third-party CLI command friction.
-- CONTEXT_HINT: Check the `state` field of session responses directly to cleanly capture only `AWAITING_USER_FEEDBACK` items.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Standalone ninajulesgithub service
-- OFFLOAD_OPPORTUNITY: Mechanical syntax validation checks and local python tests -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Migrating the orchestrator scheduler completely out of NINA and into systemd enables standalone daemon resilience.
-- CONTEXT_HINT: argparse ValueError conflicts must be caught early by testing CLI help outputs.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - PR Cleanup and Repo Hygiene
-- OFFLOAD_OPPORTUNITY: Simple git status checks and checking branch names locally -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Automated sequential PR closure and branch deletion via `gh pr close --delete-branch` ensures repository and branch hygiene.
-- CONTEXT_HINT: Always check current branch first and checkout `main` prior to running sync script to prevent pushing branch tips behind remote counterparts.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Stash Guard for Rebase
-- OFFLOAD_OPPORTUNITY: Simple compilation checks -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Adding `git stash` checks before rebase operations in `_try_rebase` cleanly handles working tree changes made during concurrent triage phases.
-- CONTEXT_HINT: Look for git command return values and restore stashes on all exit paths to preserve uncommitted data.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) - Jules Dispatch Queue Setup
-- OFFLOAD_OPPORTUNITY: Parsing markdown and updating index -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Defining a dedicated Jules dispatch queue (`jules_queue.md`) and enforcing it via feed section updates ensures single-file development isolation.
-- CONTEXT_HINT: Always update index files via `update_index.py` when adding new MD documents to docs/space to prevent hygiene audit blocks.
-- HARDWARE_OPTIMIZATION: VRAM Headroom detected. Switching LOCALFAST to 1.5B-GPU.
-
-### [2026-06-14] Session Update — Gemini CLI
-- OFFLOAD_OPPORTUNITY: Script scaffolding and initial code extraction -> NinaFlash.
-- ESCALATION_TRIGGER: Complex argparse conflict resolution and logic-heavy extraction (AST) -> Gemini Pro / Flash.
-- ROUTING_WIN: Modularization of large tools (ninaflash) improves CLI stability and startup efficiency.
-- CONTEXT_HINT: Explicit dependency management between kernel submodules prevents circular import loops.
-
-### [2026-06-14] Session Update — Antigravity (Gemini 3.5 Flash)
-- OFFLOAD_OPPORTUNITY: Appending step logs and simple shell operations -> NinaFlash.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Manual git command sequence (add, commit, push) combined with indexing validation provides precise task completion.
-- CONTEXT_HINT: Ensure `update_index.py` is run to register new stubs in governance files before pushing.
-
-### [2026-06-14] Session Update — Antigravity (Gemini 3.5 Flash) - Jules Task Tracker Bootstrap
-- OFFLOAD_OPPORTUNITY: Simple tabular markdown updates -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Direct write via write_to_file with Overwrite enabled cleanly updates the tracked file layout.
-- CONTEXT_HINT: Always run update_index.py and validate_index.py to keep repo hygiene checks clean.
-
-
-### [2026-06-14] Session Update — Antigravity (Gemini 3.5 Flash)
-- OFFLOAD_OPPORTUNITY: Simple systemctl checks and pyflakes verification -> NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Direct execution of venv pyflakes and systemctl commands with immediate stdout capture.
-- CONTEXT_HINT: Always check output structure of status commands to extract key diagnostics.
-
-
-### [2026-06-14] Session Update — Antigravity (Gemini 3.5 Flash) - Routing Bug & CLI Loop Diagnosis
-- OFFLOAD_OPPORTUNITY: Code formatting and cosmetic unused import cleanups -> 100% NinaFlash.
-- ESCALATION_TRIGGER: Core model loop behavior in Gemini CLI 3.0/3.1 -> migrate to Antigravity CLI (agy) or use Gemini 2.5/3.5 Flash.
-- CONTEXT_HINT: The undefined `datetime` NameError in `core/router.py:263` was the root cause of the daemon's erratic behavior.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash)
-- OFFLOAD_OPPORTUNITY: Pyflakes checking and simple module structure scans -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Re-aligning test assertions to match complex agent optimization protocol flows.
-- CONTEXT_HINT: Always check pytest traceback to see actual call count changes caused by self-optimization protocols.
-
-### [2026-06-15] Session Update — Gemini CLI
-- OFFLOAD_OPPORTUNITY: Querying local git status and directory listing -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: Resolving massive duplicate/stuck session loops -> Cloud/Gemini Pro recommended to coordinate cleanup logic.
-- ROUTING_WIN: Automated session deletion and local registry synchronization to resolve stuck API resources.
-- CONTEXT_HINT: Autopilot retry loop logic needs safety throttle checks to prevent massive session duplication in state transitions.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 2.5 Flash) - NinaGate and CLI Shim Resolution
-- OFFLOAD_OPPORTUNITY: Simple systemctl checks, script validation, and pyflakes runs -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Dynamic `sys.path` injection in `ninagate/main.py` solves `ModuleNotFoundError` cleanly without systemd service file writes, and implementing python-based prompt handling in `bin/gemini` prevents JSON payload quoting errors.
-- CONTEXT_HINT: The CLI shim's hardcoded check for `'gemini_cli'` instead of `'quotas'` led to false-positive quota exhaustion, forcing all traffic through a quoting-broken curl fallback.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Ninagate Status Analysis
-- OFFLOAD_OPPORTUNITY: Querying local environment, config parameters, and system processes -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Automated status report tool `tools/ninagate_info.py` queries environment keys, active models list, and config spacing rules to produce high-density status markdown.
-- CONTEXT_HINT: Local Ollama model loader checks for `"ollama"` instead of `"OLLAMA"`, leading to local model discovery bypass in `/v1/models`.
-- RULE0_VIOLATION: None. All actions compliant.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - PR Merge Resolution
-- OFFLOAD_OPPORTUNITY: Running code validation (py_compile, pyflakes) and branch list checks -> route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Merging the branch locally, pushing `main` to `origin`, and deleting remote/local PR branches cleanly resolves the PR on GitHub without using the browser UI.
-- CONTEXT_HINT: If a PR's merge commit is pushed to main directly, GitHub automatically marks the PR as merged.
-- RULE0_VIOLATION: None. All local file operations and checks done via nf equivalents.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Keyless API Provider Integration
-- OFFLOAD_OPPORTUNITY: Routing requests to POLLINATIONS, CHUTES, and HFPUBLIC for non-critical, keyless fallback -> zero-quota cloud usage.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Correcting the keyless provider validation bug in `ninagate/main.py` and `tools/ninagate_info.py` immediately activated three dead fallback lanes (`POLLINATIONS`, `CHUTES`, `HFPUBLIC`) without requiring API keys.
-- CONTEXT_HINT: Do not bypass providers with `api_key_env` set to `null` if the environment key is not configured, as they are intentionally keyless.
-- RULE0_VIOLATION: None. All local operations done via nf commands.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Quota-Aware Routing and RPM Scheduler
-- OFFLOAD_OPPORTUNITY: None.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Integrated `QuotaRouter` and `RPMScheduler` into the core `HybridRouter` (`core/router.py`) to prevent quota overrun (automatically demoting/skipping high-use providers and forcing local fallback when close to limit) and implement token-bucket rate limiting (replacing fixed sleeps with dynamic timestamp sliding windows).
-- CONTEXT_HINT: Keep `QuotaRouter` and `RPMScheduler` modular in separate files under `core/` to ensure zero circular dependencies and clear indexing.
-- RULE0_VIOLATION: None. All local file modifications done via nf.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Live Provider Dashboard
-- OFFLOAD_OPPORTUNITY: Simple compilation checks and syntax validation -> 100% NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Exposing the `/v1/status` endpoint and CORS middleware in `ninagate/main.py` coupled with dynamic frontend updates in `dashboard/ninaui.html` creates a live, responsive, auto-updating provider and circuit breaker status dashboard without breaking the page layout.
-- CONTEXT_HINT: Make sure to lowercase provider names when checking or incrementing daily quota states, since `providers.json` names are uppercase but `quota_state.json` utilizes lowercase.
-- RULE0_VIOLATION: None. All file reads, greps, and code inspections were performed using ninaflash commands or python inspectors.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Local Fallback and Case-Sensitivity Resolution
-- OFFLOAD_OPPORTUNITY: Simple compilation checks, index updates, and test executions -> route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Fixing case-sensitivity name mismatch bugs in `ninagate/main.py` and adding `LOCAL_PROVIDERS` as the ultimate fallback in `core/router.py` ensures that when cloud limits/quotas exhaust, the system seamlessly falls back to local models (Ollama/Qwen) instead of failing.
-- CONTEXT_HINT: Always lower-case provider names when performing conditional checks in local proxy scripts to prevent casing mismatches with `providers.json`.
-- RULE0_VIOLATION: None. All file operations, status lookups, and test runs were done via compliant shell calls or python one-liners.
-
-### [2026-06-15] Session Update — Gemini CLI - Universal Proxy Wrapper
-- OFFLOAD_OPPORTUNITY: Simple shell checks and text writes -> route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Replaced the specific `gemini` shim with a `nina-universal-wrapper.sh` designed to intercept any CLI execution (like `agy` or `gemini`). It securely populates API base URLs, locates the original binary dynamically using `PATH` fall-through, and executes it transparently.
-- CONTEXT_HINT: Utilizing `which -a` and verifying file path identities avoids infinite recursion loops in wrapper scripts.
+### [2026-06-13] Session Update — Antigravity (Gemini 3.5 Flash) — multiple sessions
+- OFFLOAD_OPPORTUNITY: Mechanical import fixes, pytest validations, simple directory listing.
+- ESCALATION_TRIGGER: High-risk file `telegram_interface.py` → always require cloud LLM review.
+- ROUTING_WIN: Automated PR cleanup, stash guard for rebase, Jules dispatch queue, response caching, Claude Feed Expansion, Jules session unblocking, standalone ninajulesgithub service, PR merge resolution, documentation consolidation.
+- CONTEXT_HINT: Consolidating markdown docs reduces clutter. Cache keys based on sorted payload. `sys.executable` keeps venv active in subprocess tests. Check `state` field for `AWAITING_USER_FEEDBACK` items. Always lower-case provider names.
 - RULE0_VIOLATION: None.
 
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Simple Calculation
-- OFFLOAD_OPPORTUNITY: Simple math questions can be resolved locally without cloud escalations -> route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Direct answering of math requests.
-- CONTEXT_HINT: None.
+### [2026-06-14] Session Update — Gemini CLI + Antigravity (Gemini 3.5 Flash) — multiple sessions
+- OFFLOAD_OPPORTUNITY: Script scaffolding, simple tabular markdown updates, systemctl checks.
+- ESCALATION_TRIGGER: Complex argparse conflict resolution and AST logic → Gemini Pro / Flash. Core model loop behavior in Gemini CLI 3.0/3.1 → migrate to agy.
+- ROUTING_WIN: Modularization of ninaflash, Jules task tracker bootstrap, routing bug diagnosis.
+- CONTEXT_HINT: Explicit dependency management prevents circular import loops. `update_index.py` before validation. `datetime` NameError in `core/router.py:263` was root cause of daemon instability.
 - RULE0_VIOLATION: None.
 
-### [2026-06-15] Session Update — Gemini CLI - agy Proxy Limitation Discovery
-- OFFLOAD_OPPORTUNITY: None.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Identified that while `nina-universal-wrapper.sh` successfully intercepts the Antigravity (`agy`) CLI, `agy` communicates directly with Google's proprietary internal Cloud Code APIs (`daily-cloudcode-pa.googleapis.com/v1internal`) and authenticates via OAuth keyring. As a result, it ignores `GOOGLE_GEMINI_BASE_URL` and completely bypasses NinaGate.
-- CONTEXT_HINT: Standard API proxying fails for `agy` until a custom `v1internal` protocol translator is implemented in NinaGate. `agy` will continue to function autonomously via the cloud.
-- RULE0_VIOLATION: None.
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) + Gemini CLI — multiple sessions
+- OFFLOAD_OPPORTUNITY: Static type hints, vulture analysis, querying local git status, simple UI edits.
+- ESCALATION_TRIGGER: Resolving massive duplicate/stuck session loops → Cloud/Gemini Pro. Core router integration and Telegram handlers → Cloud LLM.
+- ROUTING_WIN: AST-based libcst enforcement, automated session deletion, NinaGate CLI shim resolution, keyless provider activation (POLLINATIONS/CHUTES/HFPUBLIC), QuotaRouter + RPMScheduler integration, live provider dashboard, local fallback case-sensitivity fix, universal proxy wrapper, three-layer token conservation strategy, documentation sync.
+- CONTEXT_HINT: Dynamic `sys.path` injection in `ninagate/main.py` solves ModuleNotFoundError. Lowercase provider names in conditional checks. Launch `agy_quota_monitor.sh --watch &` at session start.
+- RULE0_VIOLATION: None across all sessions.
 
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - NinaGate Dashboard Deployment
-- OFFLOAD_OPPORTUNITY: File copying and index updates -> route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Direct python-based verification and copy operations handled the download source correctly.
-- CONTEXT_HINT: Always locate local audit tools relative to repository root (`tools/rule0_audit.py`).
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash) - Provider Health Monitoring Observability
-- OFFLOAD_OPPORTUNITY: Simple compilation checks and syntax validation checks can be handled locally first.
-- ESCALATION_TRIGGER: Comprehensive system-wide synchronization logic and validation tests are executed directly.
-- ROUTING_WIN: Standalone `provider_health.py` metrics and background recovery alert creation successfully completed.
-- CONTEXT_HINT: Keep index definitions up-to-date to automatically bypass repo integrity validators.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash) - Quota Pre-Reset Alerts and E2E Harness
-- OFFLOAD_OPPORTUNITY: Local execution of pytest suite handles E2E tier validations seamlessly.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Successful wiring of the pre-reset QuotaAlerter scheduler in `core/nina.py` and test repair of LPU hotpath in `tests/test_tier_routing.py`.
-- CONTEXT_HINT: Exempting custom scheduler modules in `validate_index.py` prevents false-positive test warnings.
-- RULE0_VIOLATION: None. All file operations compliant.
-
+### [2026-06-16] Session Update — Antigravity (Gemini 2.5 Flash) — multiple sessions
+- OFFLOAD_OPPORTUNITY: Mechanical tasks (formatting, simple verification, UI edits) → NinaFlash.
+- ESCALATION_TRIGGER: Core routing state logic and rate-limit structures → Cloud LLM.
+- ROUTING_WIN: provider_health.py + HybridRouter wiring, quota pre-reset QuotaAlerter, tier-aware routing upgrade (Modules 6/7/10), NinaGate dashboard integration, .geminiignore customization, task classifier keyword updates, standalone provider health observability.
+- CONTEXT_HINT: Keep index definitions up-to-date. Avoid duplicating memory stats — use singleton health tracker. Lowercase provider names in all proxy scripts.
+- RULE0_VIOLATION: None across all sessions.
 
 ---
 
@@ -830,8 +554,7 @@ When agy quota exhausts, work stops unless we have alternate paths.
 - Gemini CLI → NinaGate proxy (WORKS — standard Gemini API at localhost:8080)
   `export GOOGLE_GEMINI_BASE_URL=http://localhost:8080/genai`
   `gemini "fix the bug in auth.py"`
-- Ollama local models: unlimited, no cost
-  `ollama run qwen2.5-coder:7b`
+- Ollama local models: unlimited, no cost — `ollama run qwen2.5-coder:7b`
 - Jules: independent 100-task/day quota, async background tasks
 
 ### Quick Reference
@@ -842,56 +565,7 @@ When agy quota exhausts, work stops unless we have alternate paths.
 | All > 90% | Use Gemini CLI via NinaGate proxy |
 | Exhausted | Ollama local + Jules async only |
 
-### Files Added
+### Files
 - `tools/nina_token_guard.py` — prompt classifier + cache + compressor
 - `tools/agy_quota_monitor.sh` — quota reader + data/agy_quota.json writer
 - `core/quota_dispatcher.py` — unified dispatch entry point for all LLM calls
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Three-Layer Token Conservation
-- OFFLOAD_OPPORTUNITY: Mechanical routing, token counting, and query caching -> 100% TokenGuard next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Replacing direct `self.router.route` calls with `self.dispatcher.dispatch(...).execute()` globally intercepts all tasks to apply the TokenGuard classifier and cache checking.
-- CONTEXT_HINT: Launch `./tools/agy_quota_monitor.sh --watch &` at session startup to automatically feed the state into `data/agy_quota.json`.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Documentation Sync
-- OFFLOAD_OPPORTUNITY: Simple index generation, status lookups, and repository hygiene runs -> route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Using `update_index.py` and `audit_repo_hygiene.py` to automatically regenerate project manifests.
-- CONTEXT_HINT: Always run `update_index.py` before validation to ensure new dependencies or file changes are captured.
-- RULE0_VIOLATION: None. All file status checks and listings were performed via compliant `ninaflash` commands.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - Geminiignore Customization
-- OFFLOAD_OPPORTUNITY: Text replacements and basic writes to configuration ignore files -> route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Direct replacement of `.geminiignore` prevents cloud code context and token bloat from ingesting large artifacts.
-- CONTEXT_HINT: Avoid including unnecessary file types in prompt payload sizes by setting precise ignore matching rules.
-- RULE0_VIOLATION: None. All file status checks and git runs performed via compliant `ninaflash` CLI wrapper commands.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - Task Classifier Updates
-- OFFLOAD_OPPORTUNITY: None.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Integrated keywords update in `core/task_classifier.py` for more precise routing.
-- CONTEXT_HINT: Keep keyword classifications structured by complexity to maintain clean code path routing.
-- RULE0_VIOLATION: None. All file status checks and git commands done via compliant ninaflash modules.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - Tier-aware Routing Upgrade (Modules 6, 7 & 10)
-- OFFLOAD_OPPORTUNITY: None.
-- ESCALATION_TRIGGER: Complex multi-module routing state logic and rate-limit structures -> Cloud LLM recommended.
-- ROUTING_WIN: Replaced `core/quota_router.py` and `core/rpm_scheduler.py` with v2 models and patched `core/router.py` to enable classifier-driven pre-sorted tier routing groups with real-time RPM burst headroom and TTFT wait logging.
-- CONTEXT_HINT: Keeping token budget definitions, context windows, and rate limits centralized in routing maps ensures clear routing flow execution.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - NinaGate Dashboard Integration
-- OFFLOAD_OPPORTUNITY: Simple UI edits and tab additions -> route to NinaFlash next time.
-- ESCALATION_TRIGGER: None.
-- ROUTING_WIN: Added the external `NinaGate ↗` dashboard tab in `ninaui.html` to open the standalone `ninagate-dashboard.html` in a new window.
-- CONTEXT_HINT: Track any newly introduced HTML dashboard files in git before syncing to prevent index governance failures.
-- RULE0_VIOLATION: None. All file operations compliant.
-
-### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - Standalone Provider Health Observability
-- OFFLOAD_OPPORTUNITY: None.
-- ESCALATION_TRIGGER: Core router integration and Telegram event handlers -> Cloud LLM.
-- ROUTING_WIN: Added the standalone `tools/provider_health.py` rolling 10-minute tracker with persistent status logging (`data/provider_health.json`), and wired it into `HybridRouter`'s OODA validation loop for Telegram-based degraded/recovery warning notifications.
-- CONTEXT_HINT: Avoid duplicating memory stats by utilizing a unified, thread-safe module-level singleton health tracker.
-- RULE0_VIOLATION: None. All file operations compliant.
