@@ -1,6 +1,6 @@
 {
   "version": "14.3",
-  "generated_at": "2026-06-16T01:09:05.523984",
+  "generated_at": "2026-06-16T01:09:40.147048",
   "repo": "NINA",
   "files": [
     {
@@ -206,7 +206,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "26edb85c134727609e0d68b64edbd188",
+      "hash": "98d9ac038eaad120d6ffa24af62dfd0a",
       "tags": [
         "doc",
         "active",
@@ -1834,7 +1834,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "b9541d34fa9e820ede8a3838061fb6a3",
+      "hash": "54bb8bf115773289976f7eea0ca4a3ec",
       "tags": [
         "config",
         "active",
@@ -1918,7 +1918,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "4bd28095901e3f833addfc641fbbed2a",
+      "hash": "f9c64b126950efe118a0fa0d4a5794bb",
       "tags": [
         "other",
         "active",
@@ -3409,7 +3409,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "48b90898f460cdf551ae8f932e4a45b9",
+      "hash": "9de1c19c60ab580d731d8113b450cec6",
       "tags": [
         "doc",
         "active",
@@ -3430,7 +3430,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "d792af8f5f6e0bdbf548799c3bd55f14",
+      "hash": "20142889430ab9d607c37cb314de1d8a",
       "tags": [
         "config",
         "active",
@@ -3493,7 +3493,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "3da8387b53a3cfad470fd98f5f1ef846",
+      "hash": "b26a4f21721be213c689f6a4b1a99212",
       "tags": [
         "doc",
         "active",
@@ -4294,7 +4294,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "a5a3e6f316c7e68371a7402e76bf074a",
+      "hash": "894530d560615a17984b54d1a6845a86",
       "tags": [
         "log",
         "active",
@@ -5115,7 +5115,7 @@
       "doc_required": false,
       "guardrails": [],
       "summary": "Governed artifact.",
-      "hash": "a5a3e6f316c7e68371a7402e76bf074a",
+      "hash": "894530d560615a17984b54d1a6845a86",
       "tags": [
         "doc",
         "active",
