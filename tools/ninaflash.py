@@ -71,7 +71,7 @@ def main():
 
     # Code & Docs
     p_code = subparsers.add_parser("code"); p_cs = p_code.add_subparsers(dest="sub")
-    p_cs.add_parser("outline").add_argument("file"); p_cs.add_parser("dep-map"); p_idx = p_cs.add_parser("index"); p_idx.add_argument("--dir")
+    p_cs.add_parser("outline").add_argument("file"); p_cs.add_parser("dep-map"); p_idx = p_cs.add_parser("index"); p_idx.add_argument("--dir", default=".")
     p_cs.add_parser("call-graph").add_argument("file", nargs="?"); p_cs.add_parser("cycles"); p_cs.add_parser("sigs").add_argument("dir"); p_cs.add_parser("doc").add_argument("keyword"); p_cs.add_parser("call-stack").add_argument("file"); p_cs.choices["call-stack"].add_argument("name"); p_cs.add_parser("dead-code").add_argument("target")
     p_cs.add_parser("migrate").add_argument("old_name"); p_cs.choices["migrate"].add_argument("new_name"); p_cs.choices["migrate"].add_argument("--dir", default=".")
     p_sym = p_cs.add_parser("symbol"); p_sym.add_argument("file"); p_sym.add_argument("name")
@@ -113,6 +113,12 @@ def main():
     p_maintain = subparsers.add_parser("maintain"); p_mts = p_maintain.add_subparsers(dest="sub")
     p_mpr = p_mts.add_parser("pr"); p_mpr.add_argument("pr_id"); p_mpr.add_argument("--task", dest="task_id")
     p_mpr.add_argument("--title"); p_mpr.add_argument("--summary")
+
+    p_gemini = subparsers.add_parser("gemini"); p_gems = p_gemini.add_subparsers(dest="sub")
+    p_gems.add_parser("context")
+    p_gpr = p_gems.add_parser("prompt"); p_gpr.add_argument("--task", required=True)
+    p_gems.add_parser("status")
+    p_grun = p_gems.add_parser("run"); p_grun.add_argument("--task", required=True)
 
     # Dispatch
     args = parser.parse_args()

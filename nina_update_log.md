@@ -3523,3 +3523,46 @@
 **Files changed:** AGENTS.md,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,extract_agy_changelog.py,monkeytype.sqlite3
 
 **Verification:** git push OK, nina.service active
+
+---
+
+## Entry 329 — 2026-06-15 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** core/task_classifier.py,docs/space/claude_feed.md,docs/space/nina_repo_hygiene_dashboard.md,ninagate/main.py,extract_agy_changelog.py,monkeytype.sqlite3
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 330 — 2026-06-15 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** docs/space/claude_feed.md,tools/jules.py,extract_agy_changelog.py,monkeytype.sqlite3
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 331 — 2026-06-15 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** .jules/bolt.md,.jules/sentinel.md,AGENTS.md,ARCHITECTURE.md,WORKFLOW.md,bin/gemini,commit_message.txt,core/agent.py,core/memory.py,core/router.py,data/agy_upgrades_changelog.md,data/gemini_scratch.jsonl,data/session_memory.jsonl,docs/jules_pipeline.md,docs/router.md,docs/space/claude_feed.md,docs/space/nina_error_register.md,docs/space/nina_index.json,docs/space/nina_index.md,docs/space/nina_repo_hygiene_dashboard.md,nina_update_log.md,ninagate/README.md,ninagate/main.py,ninagate/ninagate.service,ninajulesgithub.py,tests/test_agent.py,tests/test_enforce_type_hints.py,tests/test_task_classifier.py,tests/test_tools_smoke.py,tools/dependency_mapper.py,tools/enforce_type_hints.py,tools/gemini_perf.py,tools/ninaflash.py,tools/ninaflash_code.py,tools/symbol_mapper.py,tools/update_index.py,tools/upgradepipeline.py,tools/ninagate_info.py
+
+**Verification:** git push OK, nina.service active
+
+---
+
+## Entry 332 — 2026-06-15 · D-sync Post-session sync
+
+**Triggered by:** nina_sync.sh v5 automated run
+
+**Files changed:** data/gemini_scratch.jsonl,data/session_memory.jsonl,docs/space/claude_feed.md,docs/space/nina_index.json,docs/space/nina_index.md,tools/ninaflash.py,tools/ninaflash_guard.py,tools/ninagate_info.py
+
+**Verification:** git push OK, nina.service active
+
+## Auto-doc patch — 2026-06-15
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 1

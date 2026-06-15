@@ -103,7 +103,8 @@ def cmd_gemini_prompt(args):
     print("Generating Gemini prompt...")
 
 def cmd_gemini_status(args):
-    print("Gemini Status: OK")
+    from tools.ninagate_info import get_info
+    get_info()
 
 def cmd_gemini_run(args):
     print(f"Running Gemini task: {args.task}")

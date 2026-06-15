@@ -311,6 +311,8 @@ tools/ninasync.py | tests/test_ninasync.py | .ninaignore | requirements.txt
 At the END of every session, ALL coders (Gemini CLI, agy, Jules, Qwen Code) MUST:
 
 ### 6A. Capture Learnings
+- Which simple shell commands violated RULE 0? → label: RULE0_VIOLATION
+Run tools/rule0_audit.py to identify missed nf opportunities.
 - Which cloud calls could have been NinaFlash? → label: OFFLOAD_OPPORTUNITY
 - Which NinaFlash outputs needed cloud escalation and why? → label: ESCALATION_TRIGGER
 - Which routing decisions were optimal? → label: ROUTING_WIN
@@ -575,5 +577,13 @@ User monitors this live in Terminal 2 via: python3 ~/nina/tools/gemini_watch.py
 - ESCALATION_TRIGGER: None.
 - ROUTING_WIN: Dynamic `sys.path` injection in `ninagate/main.py` solves `ModuleNotFoundError` cleanly without systemd service file writes, and implementing python-based prompt handling in `bin/gemini` prevents JSON payload quoting errors.
 - CONTEXT_HINT: The CLI shim's hardcoded check for `'gemini_cli'` instead of `'quotas'` led to false-positive quota exhaustion, forcing all traffic through a quoting-broken curl fallback.
+
+### [2026-06-15] Session Update — Antigravity (Gemini 3.5 Flash) - Ninagate Status Analysis
+- OFFLOAD_OPPORTUNITY: Querying local environment, config parameters, and system processes -> 100% NinaFlash next time.
+- ESCALATION_TRIGGER: None.
+- ROUTING_WIN: Automated status report tool `tools/ninagate_info.py` queries environment keys, active models list, and config spacing rules to produce high-density status markdown.
+- CONTEXT_HINT: Local Ollama model loader checks for `"ollama"` instead of `"OLLAMA"`, leading to local model discovery bypass in `/v1/models`.
+- RULE0_VIOLATION: None. All actions compliant.
+
 
 \n

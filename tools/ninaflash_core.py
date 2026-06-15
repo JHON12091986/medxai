@@ -260,6 +260,7 @@ def cmd_status(args):
 
 def cmd_check_ignore(args):
     patterns = _load_geminiignore()
+    _ = patterns
     count = 0
     for p in REPO_ROOT.rglob('*'):
         if p.is_file() and _is_ignored_path(p):
@@ -301,7 +302,9 @@ def cmd_file_read(args):
 def cmd_file_grep(args):
     pattern = args.pattern
     exts = (getattr(args, "ext", ".py,.md") or ".py,.md").split(",")
+    dir_filter = getattr(args, "dir", None)
     for p in _find_py_files() + _find_md_files():
+        if dir_filter and not p.is_relative_to(_path_resolve(dir_filter)): continue
         if any(str(p).endswith(e) for e in exts):
             lines = p.read_text(errors="ignore").splitlines()
             for i, line in enumerate(lines, 1):
