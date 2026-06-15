@@ -42,3 +42,5 @@
 {"t":"2026-06-15T23:38:00+06:00","step":4,"action":"shell","file":"","detail":"Ran nina_sync.sh","status":"ok"}
 {"t":"2026-06-15T23:39:05+06:00","step":5,"action":"shell","file":"","detail":"Started agy_quota_monitor daemon in watch mode","status":"ok"}
 {"t":"2026-06-15T23:39:15+06:00","step":-1,"action":"done","file":"","detail":"Successfully completed deploying three-layer token conservation strategy, updating config/agents, committing/pushing, starting watch daemon, and running sync","status":"ok"}
+{"t": "2026-06-15T17:39:23.225774+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t":"2026-06-15T23:41:40+06:00","step":0,"action":"start","file":"","detail":"task summary: update documentation index and sync workspace","status":"ok"}
