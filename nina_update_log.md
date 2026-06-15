@@ -3563,3 +3563,6 @@
 **Files changed:** data/gemini_scratch.jsonl,data/session_memory.jsonl,docs/space/claude_feed.md,docs/space/nina_index.json,docs/space/nina_index.md,tools/ninaflash.py,tools/ninaflash_guard.py,tools/ninagate_info.py
 
 **Verification:** git push OK, nina.service active
+
+## Auto-doc patch — 2026-06-15
+- Model: {'name': 'gemini-2.5-flash'}, NinaGate: 8080, Providers: 1
