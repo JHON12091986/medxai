@@ -17,6 +17,7 @@ import httpx
 from core.config import NinaConfig
 from core.logger import get_logger
 from core.task_classifier import ClassifiedTask
+from tools.provider_health import tracker as _health_tracker
 import tools.jules as jules
 from tools.model_discovery import ModelDiscoveryService
 from core.quota_router import QuotaRouter
@@ -302,6 +303,7 @@ class HybridRouter:
 
     async def initialize(self) -> None:
         self.http = httpx.AsyncClient(timeout=60.0)
+        _health_tracker.set_notify(jules.send_telegram)
         self.cache.load("data/router_cache.json")
         self._load_circuit_state()
         self._idle_task = asyncio.create_task(self._idle_monitor())
@@ -521,6 +523,7 @@ class HybridRouter:
                         is_valid, error = await self._validate_response(content, task)
                         if is_valid:
                             self.health[pid].record_success(lat, i + o)
+                            asyncio.create_task(_health_tracker.record(pid, True, lat))
                             ttl = CACHE_TTL.get(task.task_type, 3600)
                             if ttl > 0:
                                 self.cache.set(goal, content, ttl, messages)
@@ -533,6 +536,7 @@ class HybridRouter:
                             continue
                     except Exception as e:
                         self.health[pid].record_failure()
+                        asyncio.create_task(_health_tracker.record(pid, False, 0.0, str(e)))
                         asyncio.create_task(self._check_health_and_notify(pid))
                         logger.bind(provider=pid, error=str(e)).warning("provider_retry")
                         continue

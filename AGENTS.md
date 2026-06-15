@@ -738,3 +738,10 @@ When agy quota exhausts, work stops unless we have alternate paths.
 - ROUTING_WIN: Added the external `NinaGate ↗` dashboard tab in `ninaui.html` to open the standalone `ninagate-dashboard.html` in a new window.
 - CONTEXT_HINT: Track any newly introduced HTML dashboard files in git before syncing to prevent index governance failures.
 - RULE0_VIOLATION: None. All file operations compliant.
+
+### [2026-06-16] Session Update — Antigravity (Gemini 3.5 Flash) - Standalone Provider Health Observability
+- OFFLOAD_OPPORTUNITY: None.
+- ESCALATION_TRIGGER: Core router integration and Telegram event handlers -> Cloud LLM.
+- ROUTING_WIN: Added the standalone `tools/provider_health.py` rolling 10-minute tracker with persistent status logging (`data/provider_health.json`), and wired it into `HybridRouter`'s OODA validation loop for Telegram-based degraded/recovery warning notifications.
+- CONTEXT_HINT: Avoid duplicating memory stats by utilizing a unified, thread-safe module-level singleton health tracker.
+- RULE0_VIOLATION: None. All file operations compliant.
