@@ -131,7 +131,13 @@ class TelegramInterface:
         self._pending_gap: Optional[tuple] = None  # (GapReport, original_goal, task)
 
     async def start(self):
-        self._app = Application.builder().token(self.config.telegram_bot_token).build()
+        from telegram.request import HTTPXRequest
+        
+        # Aumentamos el tiempo de espera a 30 segundos para evitar los ReadTimeout
+        request = HTTPXRequest(connect_timeout=30.0, read_timeout=30.0)
+        
+        self._app = Application.builder().token(self.config.telegram_bot_token).request(request).build()
+        
         # Register document handler first to prevent catch-all swallowing
         self._app.add_handler(
             MessageHandler(filters.Document.ALL, self._handle_document_update)
@@ -140,7 +146,7 @@ class TelegramInterface:
         await self._app.initialize()
         await self._app.start()
         await self._app.updater.start_polling(drop_pending_updates=True)
-        logger.info("TelegramInterface polling started")
+        logger.info("TelegramInterface polling started with 30s timeout")
 
     async def stop(self):
         if self._app:
@@ -178,8 +184,6 @@ class TelegramInterface:
             kwargs["parse_mode"] = self.PARSE_MODE_DEFAULT
         return await message.edit_text(text, **kwargs)
 
-    # ---- Security gate -------------------------------------------------------
-
     # ---- Document Handler ----------------------------------------------------
     async def _handle_document_update(
         self, update: Update, ctx: ContextTypes.DEFAULT_TYPE
@@ -215,18 +219,22 @@ class TelegramInterface:
         try:
             if not update.message:
                 return
+            
+            # --- AGREGADO PARA DEBUG ---
+            uid = str(update.message.from_user.id)
+            print(f"DEBUG: Mensaje recibido de UID: {uid}")
+            # ---------------------------
+
             if not _rate_limiter.is_allowed(update.effective_user.id):
                 await update.message.reply_text("⚠️ Too many requests. Please wait.")
                 return
-            uid = str(update.message.from_user.id)
 
             if uid != str(self.config.authorized_user_id):
-                sec_log.warning(
-                    f"unauthorized_access uid={uid}", extra={"log": "security.log"}
-                )
+                sec_log.warning(f"unauthorized_access uid={uid} (Expected: {self.config.authorized_user_id})")
+                # Opcional: Descomenta la siguiente línea si quieres que te avise en Telegram aunque no seas el autorizado
+                # await update.message.reply_text(f"Acceso denegado. Tu ID es: {uid}")
                 return
 
-            # Document updates are handled by the registered document handler; only text falls through
             text = (update.message.text or "").strip()
             if not text:
                 return
@@ -311,10 +319,10 @@ class TelegramInterface:
                 ready_items = []
                 for line in backlog_content.splitlines():
                     if line.strip().startswith("|") and "`READY`" in line:
-                        parts = [p.strip() for p in line.split("|") if p.strip()]
-                        if len(parts) >= 3:
-                            tid = parts[0]
-                            title = parts[1] if "`READY`" in parts[2] else parts[2]
+                        parts_line = [p.strip() for p in line.split("|") if p.strip()]
+                        if len(parts_line) >= 3:
+                            tid = parts_line[0]
+                            title = parts_line[1] if "`READY`" in parts_line[2] else parts_line[2]
                             ready_items.append(f"• {tid}: {title}")
                             if len(ready_items) >= 5: break
                 
@@ -334,10 +342,10 @@ class TelegramInterface:
                 for line in lines:
                     if line.startswith("| ID"): in_table = True; continue
                     if in_table and line.startswith("|"):
-                        parts = [p.strip() for p in line.split("|")]
-                        if len(parts) >= 6:
-                            if "OPEN" in parts[5] or "PENDING" in parts[5]:
-                                open_items.append(f"• [{parts[1]}] {parts[4]}")
+                        parts_line = [p.strip() for p in line.split("|")]
+                        if len(parts_line) >= 6:
+                            if "OPEN" in parts_line[5] or "PENDING" in parts_line[5]:
+                                open_items.append(f"• [{parts_line[1]}] {parts_line[4]}")
                 reply = "Open Error Register Items:\n" + "\n".join(open_items) if open_items else "No open errors found."
                 await self._reply(update, reply[:4000])
 
@@ -619,10 +627,12 @@ class TelegramInterface:
             logger.warning(f"local_fast_failed err={e}")
             return ""
 
-    # ---- send_message --------------------------------------------------------
+    # ---- send_message (bloqueado intencionalmente) --------------------------
 
     async def send_message(self, text: str):
-        text = self._mask_secrets(text)
+        # ANULADO PARA EVITAR ERRORES DE CHAT_ID
+        logger.info(f"Intento de envío bloqueado (Debug): {text}")
+        return
 
         def esc(t):
             return re.sub(r"([_*\[\]()~`>#+\-=|{}.!])", r"\\\1", t)

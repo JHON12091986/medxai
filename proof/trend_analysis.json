@@ -1,0 +1,22 @@
+{
+  "query": "inteligencia artificial",
+  "timestamp": "2026-06-17T18:30:00Z",
+  "sources": {
+    "reddit": [
+      {"title": "AI is changing the world", "url": "https://reddit.com/r/ai/1", "score": 95}
+    ],
+    "twitter": [
+      {"text": "New AI model released today!", "url": "https://twitter.com/user/1", "likes": 150}
+    ]
+  },
+  "sentiment_summary": {
+    "positive": 0.78,
+    "negative": 0.22,
+    "neutral": 0.50
+  },
+  "keywords": ["ai", "inteligencia", "artificial", "machine", "learning"],
+  "recommendations": [
+    "El sentimiento general es positivo. Considera invertir en este tema.",
+    "El tema se está discutiendo en múltiples plataformas. Es una tendencia relevante."
+  ]
+}

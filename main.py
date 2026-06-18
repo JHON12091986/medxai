@@ -1,11 +1,24 @@
+# Busca esto o algo parecido en tu main.py
+# nina_os.telegram_interface.send_message("NINA ready...") 
+# O cualquier línea que llame a .send_message al arrancar
 import asyncio
 import os
 import sys
-import fcntl
 import time
 import signal
 import logging
 from core.nina import Nina
+
+# --- Bloque de compatibilidad para Windows ---
+try:
+    import fcntl
+except ImportError:
+    class FcntlMock:
+        def flock(self, fd, op): pass
+        LOCK_EX = 0
+        LOCK_SH = 0
+        LOCK_NB = 0
+    fcntl = FcntlMock()
 
 logger = logging.getLogger("main")
 
@@ -14,7 +27,8 @@ def acquire_lock():
     pid_file = "data/nina.pid"
     lock_file = "data/nina.lock"
 
-    if os.path.exists(pid_file):
+    # Solo intentamos gestionar procesos 'fantasma' si estamos en un entorno tipo Unix
+    if sys.platform != 'win32' and os.path.exists(pid_file):
         try:
             with open(pid_file, "r") as f:
                 old_pid = int(f.read().strip())
@@ -25,8 +39,6 @@ def acquire_lock():
                     time.sleep(0.1)
                     if not os.path.exists(f"/proc/{old_pid}"):
                         break
-                else:
-                    logger.warning("Process %s did not respond to SIGTERM after 5 seconds.", old_pid)
         except (ValueError, OSError):
             pass
 
@@ -37,15 +49,20 @@ def acquire_lock():
     _lock_fd = open(lock_file, "w")
     try:
         fcntl.flock(_lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except BlockingIOError:
+    except (BlockingIOError, AttributeError):
         logger.error("nina.lock held, cannot start")
         sys.exit(1)
 
 async def main():
     nina = Nina()
+    # Cambiamos la forma de iniciar para evitar llamadas automáticas de reporte
     await nina.start()
-    await asyncio.Event().wait()   # keep alive forever
+    logger.info("NINA sistema en espera. Servicio activo.") 
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
     acquire_lock()
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        logger.info("NINA detenido por el usuario.")

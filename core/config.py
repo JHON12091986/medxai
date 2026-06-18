@@ -9,6 +9,7 @@ load_dotenv()
 
 logger = logging.getLogger("nina.config")
 
+
 RATELIMITS = {
     "GROQ":       {"rpm":30,  "tpd":None,    "rpd":14400, "min_spacing_s":2},
     "CEREBRAS":   {"rpm":30,  "tpd":100000,  "rpd":None,  "min_spacing_s":2},

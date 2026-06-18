@@ -1,0 +1,515 @@
+{
+  "ts": "2026-06-19T03:02:00.616663+09:00",
+  "start_date": "2026-03-01",
+  "status": "running",
+  "equity": 4237.29,
+  "available": 4237.29,
+  "unrealized": 0.0,
+  "daily_pnl": 0,
+  "total_pnl": -762.71,
+  "cum_pct": -15.25,
+  "daily_avg_pct": -0.149,
+  "annual_pct": -41.97,
+  "mdd": -15.26,
+  "current_dd": -15.25,
+  "seed_used": 0,
+  "seed_used_pct": 0.0,
+  "long_count": 0,
+  "short_count": 0,
+  "positions": [],
+  "signals": {
+    "BTCUSDT": {
+      "dir": "long",
+      "conf": 0.42
+    },
+    "ETHUSDT": {
+      "dir": "short",
+      "conf": 0.42
+    },
+    "LINKUSDT": {
+      "dir": "long",
+      "conf": 0.396
+    },
+    "ADAUSDT": {
+      "dir": "short",
+      "conf": 0.465
+    },
+    "HYPEUSDT": {
+      "dir": "long",
+      "conf": 0.686
+    },
+    "1000PEPEUSDT": {
+      "dir": "short",
+      "conf": 0.456
+    },
+    "SOLUSDT": {
+      "dir": "short",
+      "conf": 0.544
+    },
+    "SUIUSDT": {
+      "dir": "short",
+      "conf": 0.53
+    },
+    "XRPUSDT": {
+      "dir": "short",
+      "conf": 0.485
+    },
+    "TAOUSDT": {
+      "dir": "short",
+      "conf": 0.596
+    },
+    "DOGEUSDT": {
+      "dir": "short",
+      "conf": 0.439
+    },
+    "HBARUSDT": {
+      "dir": "short",
+      "conf": 0.758
+    },
+    "AAVEUSDT": {
+      "dir": "long",
+      "conf": 0.44
+    },
+    "DOTUSDT": {
+      "dir": "short",
+      "conf": 0.524
+    },
+    "AVAXUSDT": {
+      "dir": "neutral",
+      "conf": 0.43
+    },
+    "BNBUSDT": {
+      "dir": "long",
+      "conf": 0.384
+    },
+    "TRXUSDT": {
+      "dir": "short",
+      "conf": 0.557
+    },
+    "NEARUSDT": {
+      "dir": "short",
+      "conf": 0.541
+    },
+    "ENAUSDT": {
+      "dir": "short",
+      "conf": 0.503
+    },
+    "STABLEUSDT": {
+      "dir": "short",
+      "conf": 0.592
+    },
+    "UNIUSDT": {
+      "dir": "short",
+      "conf": 0.445
+    },
+    "LTCUSDT": {
+      "dir": "long",
+      "conf": 0.501
+    },
+    "ZECUSDT": {
+      "dir": "short",
+      "conf": 0.535
+    },
+    "ARBUSDT": {
+      "dir": "short",
+      "conf": 0.643
+    },
+    "ALGOUSDT": {
+      "dir": "short",
+      "conf": 0.529
+    },
+    "TRUMPUSDT": {
+      "dir": "short",
+      "conf": 0.386
+    },
+    "WLDUSDT": {
+      "dir": "long",
+      "conf": 0.483
+    },
+    "BCHUSDT": {
+      "dir": "short",
+      "conf": 0.491
+    },
+    "XMRUSDT": {
+      "dir": "long",
+      "conf": 0.474
+    },
+    "TONUSDT": {
+      "dir": "short",
+      "conf": 0.513
+    },
+    "WLFIUSDT": {
+      "dir": "short",
+      "conf": 0.524
+    },
+    "DASHUSDT": {
+      "dir": "short",
+      "conf": 0.711
+    },
+    "RAVEUSDT": {
+      "dir": "long",
+      "conf": 0.758
+    },
+    "ASTERUSDT": {
+      "dir": "short",
+      "conf": 0.596
+    },
+    "SIRENUSDT": {
+      "dir": "short",
+      "conf": 0.573
+    },
+    "1000BONKUSDT": {
+      "dir": "short",
+      "conf": 0.529
+    },
+    "APTUSDT": {
+      "dir": "long",
+      "conf": 0.511
+    },
+    "MUSDT": {
+      "dir": "long",
+      "conf": 0.508
+    },
+    "MNTUSDT": {
+      "dir": "long",
+      "conf": 0.504
+    },
+    "PENGUUSDT": {
+      "dir": "long",
+      "conf": 0.647
+    },
+    "ONDOUSDT": {
+      "dir": "short",
+      "conf": 0.532
+    },
+    "ICPUSDT": {
+      "dir": "short",
+      "conf": 0.388
+    },
+    "1000LUNCUSDT": {
+      "dir": "long",
+      "conf": 0.616
+    },
+    "FILUSDT": {
+      "dir": "long",
+      "conf": 0.558
+    },
+    "VIRTUALUSDT": {
+      "dir": "long",
+      "conf": 0.528
+    },
+    "VVVUSDT": {
+      "dir": "long",
+      "conf": 0.525
+    },
+    "BUSDT": {
+      "dir": "short",
+      "conf": 0.455
+    },
+    "INJUSDT": {
+      "dir": "short",
+      "conf": 0.496
+    },
+    "RENDERUSDT": {
+      "dir": "long",
+      "conf": 0.459
+    },
+    "LABUSDT": {
+      "dir": "short",
+      "conf": 0.471
+    },
+    "HUSDT": {
+      "dir": "long",
+      "conf": 0.651
+    },
+    "BEATUSDT": {
+      "dir": "short",
+      "conf": 0.639
+    },
+    "VELVETUSDT": {
+      "dir": "long",
+      "conf": 0.582
+    },
+    "XLMUSDT": {
+      "dir": "short",
+      "conf": 0.54
+    }
+  },
+  "equity_hist": [
+    {
+      "t": "2026-05-18",
+      "v": -156.32
+    },
+    {
+      "t": "2026-05-19",
+      "v": -153.13
+    },
+    {
+      "t": "2026-05-20",
+      "v": -156.87
+    },
+    {
+      "t": "2026-05-21",
+      "v": -211.65
+    },
+    {
+      "t": "2026-05-22",
+      "v": -85.13
+    },
+    {
+      "t": "2026-05-23",
+      "v": 131.65
+    },
+    {
+      "t": "2026-05-24",
+      "v": 82.5
+    },
+    {
+      "t": "2026-05-25",
+      "v": 87.5
+    },
+    {
+      "t": "2026-05-26",
+      "v": -76.4
+    },
+    {
+      "t": "2026-05-27",
+      "v": -205.0
+    },
+    {
+      "t": "2026-05-28",
+      "v": -160.73
+    },
+    {
+      "t": "2026-05-29",
+      "v": 174.21
+    },
+    {
+      "t": "2026-05-30",
+      "v": 126.85
+    },
+    {
+      "t": "2026-05-31",
+      "v": 436.28
+    },
+    {
+      "t": "2026-06-01",
+      "v": 517.54
+    },
+    {
+      "t": "2026-06-02",
+      "v": 431.2
+    },
+    {
+      "t": "2026-06-03",
+      "v": 727.7
+    },
+    {
+      "t": "2026-06-04",
+      "v": 693.94
+    },
+    {
+      "t": "2026-06-05",
+      "v": 989.75
+    },
+    {
+      "t": "2026-06-06",
+      "v": 835.03
+    },
+    {
+      "t": "2026-06-07",
+      "v": 422.87
+    },
+    {
+      "t": "2026-06-08",
+      "v": 407.52
+    },
+    {
+      "t": "2026-06-09",
+      "v": 148.75
+    },
+    {
+      "t": "2026-06-10",
+      "v": 475.82
+    },
+    {
+      "t": "2026-06-11",
+      "v": 317.31
+    },
+    {
+      "t": "2026-06-12",
+      "v": -177.77
+    },
+    {
+      "t": "2026-06-13",
+      "v": -784.91
+    },
+    {
+      "t": "2026-06-14",
+      "v": -264.54
+    },
+    {
+      "t": "2026-06-15",
+      "v": -469.48
+    },
+    {
+      "t": "2026-06-16",
+      "v": -478.23
+    },
+    {
+      "t": "2026-06-17",
+      "v": -669.86
+    },
+    {
+      "t": "2026-06-18",
+      "v": -762.34
+    },
+    {
+      "t": "2026-06-19",
+      "v": -762.71
+    }
+  ],
+  "trade_history": [
+    {
+      "ts": "2026-06-18 09:24",
+      "symbol": "SOLUSDT",
+      "side": "Sell",
+      "pnl": -1.2,
+      "reason": "1/2"
+    },
+    {
+      "ts": "2026-06-18 09:08",
+      "symbol": "SOLUSDT",
+      "side": "Sell",
+      "pnl": -0.99,
+      "reason": "2/2"
+    },
+    {
+      "ts": "2026-06-18 08:58",
+      "symbol": "BEATUSDT",
+      "side": "Sell",
+      "pnl": -91.41,
+      "reason": "External Exit"
+    },
+    {
+      "ts": "2026-06-18 06:48",
+      "symbol": "NEARUSDT",
+      "side": "Buy",
+      "pnl": -75.62,
+      "reason": "External Exit"
+    },
+    {
+      "ts": "2026-06-18 05:36",
+      "symbol": "XLMUSDT",
+      "side": "Sell",
+      "pnl": -12.65,
+      "reason": "External Exit"
+    },
+    {
+      "ts": "2026-06-18 04:18",
+      "symbol": "SOLUSDT",
+      "side": "Buy",
+      "pnl": 14.41,
+      "reason": "1/1"
+    },
+    {
+      "ts": "2026-06-18 04:13",
+      "symbol": "SOLUSDT",
+      "side": "Buy",
+      "pnl": 29.47,
+      "reason": "1/1"
+    },
+    {
+      "ts": "2026-06-18 01:17",
+      "symbol": "XLMUSDT",
+      "side": "Buy",
+      "pnl": 23.93,
+      "reason": "1/2"
+    },
+    {
+      "ts": "2026-06-18 00:38",
+      "symbol": "XLMUSDT",
+      "side": "Buy",
+      "pnl": 21.54,
+      "reason": "1/2"
+    },
+    {
+      "ts": "2026-06-17 20:33",
+      "symbol": "SOLUSDT",
+      "side": "Sell",
+      "pnl": 8.25,
+      "reason": "1/1"
+    },
+    {
+      "ts": "2026-06-17 20:17",
+      "symbol": "SOLUSDT",
+      "side": "Sell",
+      "pnl": 13.67,
+      "reason": "1/1"
+    },
+    {
+      "ts": "2026-06-17 20:02",
+      "symbol": "HYPEUSDT",
+      "side": "Buy",
+      "pnl": -76.08,
+      "reason": "External Exit"
+    },
+    {
+      "ts": "2026-06-17 17:31",
+      "symbol": "SOLUSDT",
+      "side": "Buy",
+      "pnl": -31.9,
+      "reason": "1/1"
+    },
+    {
+      "ts": "2026-06-17 10:46",
+      "symbol": "XLMUSDT",
+      "side": "Sell",
+      "pnl": -47.34,
+      "reason": "External Exit"
+    },
+    {
+      "ts": "2026-06-17 10:11",
+      "symbol": "HYPEUSDT",
+      "side": "Sell",
+      "pnl": -0.01,
+      "reason": "1/2"
+    },
+    {
+      "ts": "2026-06-17 09:56",
+      "symbol": "HYPEUSDT",
+      "side": "Sell",
+      "pnl": 2.51,
+      "reason": "2/2"
+    },
+    {
+      "ts": "2026-06-17 07:11",
+      "symbol": "ZECUSDT",
+      "side": "Sell",
+      "pnl": -66.43,
+      "reason": "External Exit"
+    },
+    {
+      "ts": "2026-06-17 02:12",
+      "symbol": "SOLUSDT",
+      "side": "Sell",
+      "pnl": 1.43,
+      "reason": "1/1"
+    },
+    {
+      "ts": "2026-06-17 01:58",
+      "symbol": "HYPEUSDT",
+      "side": "Buy",
+      "pnl": -5.19,
+      "reason": "2/2"
+    },
+    {
+      "ts": "2026-06-17 01:56",
+      "symbol": "SOLUSDT",
+      "side": "Sell",
+      "pnl": 5.71,
+      "reason": "1/1"
+    }
+  ],
+  "num_days": 111
+}
