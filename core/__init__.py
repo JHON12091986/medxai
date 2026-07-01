@@ -1,25 +1,27 @@
 """
-core — NINA core pipeline package.
+core/__init__.py
+NINA Core — single import point for all infrastructure modules.
 
-Public surface exported here for convenient imports across the codebase.
-
-Example::
-
-    from core import TaskStore, Task, TaskStatus
+Usage:
+    from core import cache_key, get_cached, set_cached
+    from core import count_tokens, fits_budget, trim_to_budget
+    from core import route_query, route_agent
+    from core import compress_file, compress_for_query
+    from core import should_run, mark_done
+    from core import HyperDriveCache, cache
 """
 
-from core.task_store import Task, TaskStatus, TaskStore  # noqa: F401
-from core.task_store import (
-    TaskNotFoundError,
-    TaskStoreCorruptedError,
-    TaskStoreLockError,
-)
+from core.memo_cache import cache_key, get_cached, set_cached, invalidate, cache_stats, HyperDriveCache, cache
+from core.token_counter import count_tokens, fits_budget, trim_to_budget, token_report
+from core.semantic_router import NINASemanticRouter
+from core.context_compressor import compress_file, compress_for_query
+from core.idempotency import should_run, mark_done, force_reset
 
 __all__ = [
-    "Task",
-    "TaskStatus",
-    "TaskStore",
-    "TaskNotFoundError",
-    "TaskStoreCorruptedError",
-    "TaskStoreLockError",
+    "cache_key", "get_cached", "set_cached", "invalidate", "cache_stats",
+    "HyperDriveCache", "cache",
+    "count_tokens", "fits_budget", "trim_to_budget", "token_report",
+    "NINASemanticRouter",
+    "compress_file", "compress_for_query",
+    "should_run", "mark_done", "force_reset",
 ]

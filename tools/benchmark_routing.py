@@ -58,3 +58,49 @@ async def run_benchmark():
 
 if __name__ == "__main__":
     asyncio.run(run_benchmark())
+
+
+# ── Continuous telemetry writer (NINA enhancement patch) ─────────────────────
+# NINA_FEATURE: benchmark-routing-telemetry v1.0
+# Run via cron: */30 * * * * cd ~/nina && python3 tools/benchmark_routing.py --telemetry
+
+import json as _json, time as _time, statistics as _stats
+from pathlib import Path as _Path
+
+_TELEM_FILE = _Path.home() / "nina" / "data" / "router_telemetry.jsonl"
+
+def record_telemetry(provider: str, latencies_ms: list[float], success_rate: float):
+    """Append a telemetry row for dashboarding. One row per provider per run."""
+    _TELEM_FILE.parent.mkdir(exist_ok=True)
+    row = {
+        "ts": _time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "provider": provider,
+        "p50_ms": round(_stats.median(latencies_ms), 1) if latencies_ms else None,
+        "p95_ms": round(_stats.quantiles(latencies_ms, n=20)[-1], 1) if len(latencies_ms) >= 5 else None,
+        "min_ms": round(min(latencies_ms), 1) if latencies_ms else None,
+        "max_ms": round(max(latencies_ms), 1) if latencies_ms else None,
+        "success_rate": round(success_rate, 3),
+        "sample_n": len(latencies_ms),
+    }
+    with open(_TELEM_FILE, "a") as f:
+        f.write(_json.dumps(row) + "\n")
+    return row
+
+def tail_telemetry(n: int = 20, provider: str = None) -> list:
+    """Return last n telemetry rows, optionally filtered by provider."""
+    if not _TELEM_FILE.exists(): return []
+    rows = [_json.loads(l) for l in _TELEM_FILE.read_text().splitlines() if l.strip()]
+    if provider:
+        rows = [r for r in rows if r.get("provider") == provider]
+    return rows[-n:]
+
+def telemetry_summary() -> dict:
+    """Return per-provider p50/p95 averages from last 100 entries."""
+    rows = tail_telemetry(100)
+    from collections import defaultdict
+    buckets = defaultdict(list)
+    for r in rows:
+        if r.get("p50_ms"):
+            buckets[r["provider"]].append(r["p50_ms"])
+    return {p: {"avg_p50_ms": round(sum(v)/len(v), 1), "samples": len(v)}
+            for p, v in buckets.items()}

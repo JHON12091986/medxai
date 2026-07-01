@@ -4,12 +4,13 @@ Implements: TaskNode DAG, parallel branch detection, FeedbackGate validation.
 Part of NINA Swarm v1.
 """
 from __future__ import annotations
-import asyncio
+import os
+import re
 import uuid
 import time
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 # ── Enums ────────────────────────────────────────────────────────────────────
@@ -31,6 +32,7 @@ class TaskType(Enum):
     RESEARCH    = "research"     # → Perplexity sonar-pro
     CREATIVE    = "creative"     # → DeepSeek-chat
     SYNTHESIS   = "synthesis"    # → Gemini 2.5 Pro (merge + contradiction check)
+    DIAGNOSTIC  = "diagnostic"   # → shell + file reads, fast provider
 
 
 # ── OODA Phase Labels ─────────────────────────────────────────────────────────
@@ -90,6 +92,7 @@ class TaskNode:
     tokens_used: int = 0
     retry_count: int = 0
     max_retries: int = 2
+    sla_seconds: float = 60.0
 
     def is_ready(self, completed_ids: set) -> bool:
         """True if all dependencies are resolved."""
@@ -241,7 +244,9 @@ class TaskPlanner:
             return TaskType.MICRO
         if any(k in g for k in ["refactor", "implement", "build", "create", "code", "fix"]):
             return TaskType.FAST_CODE
-        if any(k in g for k in ["analyse", "analyze", "reason", "explain", "why", "how"]):
+        if any(k in g for k in ["why", "why is", "why does", "why did", "deleted", "missing", "broken", "not working", "failed", "error"]):
+            return TaskType.DIAGNOSTIC
+        if any(k in g for k in ["analyse", "analyze", "reason", "explain", "how"]):
             return TaskType.REASONING
         if len(goal) > 800 or "entire" in g or "all" in g:
             return TaskType.LONG_CTX
@@ -324,14 +329,24 @@ class TaskPlanner:
         # Try semicolons
         if ';' in goal:
             return [p.strip() for p in goal.split(';') if p.strip()]
-        # Fall back — treat as single task
+        # Prose diagnostic: inject evidence-gathering prefix tasks
+        lower = goal.lower()
+        if any(k in lower for k in ["why", "deleted", "missing", "broken", "not working", "failed", "error"]):
+            return [
+                "Run: git log --all --full-history --oneline -- . | head -30",
+                "Run: grep -r 'nexus_discoveries\\|SPACE_FILES\\|rm\\|delete' nina_sync.sh docs/ --include='*.sh' --include='*.md' -l 2>/dev/null | head -20",
+                f"Read docs/space/nina_error_register.md and find any OPEN rows related to: {goal[:100]}",
+                f"Based on all evidence gathered above, answer: {goal}",
+            ]
+        # Default: single task
         return [goal]
+
+    _SEQ_RE = re.compile(r"then|after|finally|next|once|when done|following|subsequently|last", re.IGNORECASE)
 
     def _is_sequential(self, segment: str) -> bool:
         """Detect if segment implies ordering (then, after, finally, etc.)."""
-        seq_keywords = ["then", "after", "finally", "next", "once", "when done",
-                        "following", "subsequently", "last"]
-        return any(k in segment.lower() for k in seq_keywords)
+        # [Performance] Pre-compiled regex search avoids string allocation (.lower()) and python-level generator iteration in hot loop
+        return bool(self._SEQ_RE.search(segment))
 
     def _build_prompt(self, segment: str, mission: MissionMemory) -> str:
         return f"[MISSION CONTEXT]\n{mission.compress()}\n\n[TASK]\n{segment}"
@@ -347,7 +362,9 @@ class TaskPlanner:
             pass
 
     def _emit_telemetry(self, event: str, data: Dict[str, Any]):
-        import json, os, threading # Import threading
+        import json
+        import os
+        import threading # Import threading
         entry = {"event": event, "ts": time.time(), **data}
         entry_str = json.dumps(entry)
         path = os.path.join(os.path.dirname(__file__), "..", "telemetry.jsonl")

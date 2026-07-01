@@ -1,0 +1,2 @@
+# NinaMCP P2 outbox — relay_runner.py writes exec_result.json here after execution
+# ARCHITECT reads via get_file_contents

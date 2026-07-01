@@ -1,4 +1,173 @@
+"""NINA — AST-level self-patch engine.
+Blueprint pass 2: wrapped compile() + ast.parse() in asyncio.to_thread()
+so CPU-bound AST operations never block the event loop.
+
+Pass 2 changes (24 Jun 2026):
+  - _parse_async()   : awaitable wrapper for ast.parse()
+  - _compile_async() : awaitable wrapper for compile()
+  - apply_patch()    : updated to await both, replacing sync calls
+  All previous logic is preserved; only the blocking calls are lifted.
+"""
+from __future__ import annotations
+
 import ast
+import asyncio
+import logging
+import shutil
+import textwrap
+from datetime import datetime
+from pathlib import Path
+from typing import Callable
+
+logger = logging.getLogger("nina.ast_refactor")
+
+# ── Async wrappers for CPU-bound ops ──────────────────────────────────────
+
+async def _parse_async(source: str, filename: str = "<string>") -> ast.Module:
+    """Non-blocking ast.parse() via asyncio.to_thread().
+    Resolves blueprint § V: 'asyncio.to_thread() wrapping ast.parse() verified'
+    """
+    return await asyncio.to_thread(ast.parse, source, filename)
+
+
+async def _compile_async(
+    source: str | ast.AST,
+    filename: str = "<string>",
+    mode: str = "exec",
+) -> bool:
+    """Non-blocking compile() gate via asyncio.to_thread().
+    Returns True if source compiles cleanly, False on SyntaxError.
+    Resolves blueprint § V: 'asyncio.to_thread() wrapping compile() verified'
+    """
+    def _check() -> bool:
+        try:
+            compile(source, filename, mode)  # type: ignore[arg-type]
+            return True
+        except SyntaxError as exc:
+            logger.warning("ast_compile_gate_failed file=%s err=%s", filename, exc)
+            return False
+    return await asyncio.to_thread(_check)
+
+
+# ── Patch application ─────────────────────────────────────────────────────
+
+async def apply_patch(
+    file_path: str | Path,
+    node_locator: Callable[[ast.Module], ast.AST | None],
+    node_rewriter: Callable[[ast.AST], ast.AST],
+    *,
+    dry_run: bool = False,
+) -> bool:
+    """Atomically rewrite a single AST node in file_path.
+
+    Pipeline (Blueprint § II — Self-Patching Pipeline):
+      1. Read source
+      2. _parse_async()   — CPU-bound, non-blocking
+      3. Locate target node via node_locator()
+      4. Rewrite via node_rewriter()
+      5. _compile_async() — CPU-bound, non-blocking gate
+      6. If gate passes → atomic write via WAL (backup → write → verify)
+      7. Return True on success, False on any failure
+
+    Args:
+        file_path:     Path to the .py file to modify.
+        node_locator:  Callable(ast.Module) → target AST node or None.
+        node_rewriter: Callable(ast.AST) → modified AST node (in-place OK).
+        dry_run:       If True, parse + compile but do not write.
+    """
+    path = Path(file_path)
+    if not path.exists():
+        logger.error("ast_patch_file_not_found path=%s", path)
+        return False
+
+    try:
+        source = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        logger.error("ast_patch_read_error path=%s err=%s", path, exc)
+        return False
+
+    # Step 2 — non-blocking parse
+    try:
+        tree = await _parse_async(source, filename=str(path))
+    except SyntaxError as exc:
+        logger.error("ast_patch_parse_error path=%s err=%s", path, exc)
+        return False
+
+    # Step 3 — locate
+    target = node_locator(tree)
+    if target is None:
+        logger.warning("ast_patch_node_not_found path=%s", path)
+        return False
+
+    # Step 4 — rewrite
+    try:
+        node_rewriter(target)
+        ast.fix_missing_locations(tree)
+    except Exception as exc:
+        logger.error("ast_patch_rewrite_error path=%s err=%s", path, exc)
+        return False
+
+    # Step 5 — compile gate (non-blocking)
+    modified_source = ast.unparse(tree)
+    if not await _compile_async(modified_source, filename=str(path)):
+        logger.error("ast_patch_compile_gate_rejected path=%s", path)
+        return False
+
+    if dry_run:
+        logger.info("ast_patch_dry_run_ok path=%s", path)
+        return True
+
+    # Step 6 — atomic write via WAL (backup → write → verify)
+    backup = path.with_suffix(
+        f".bak_{datetime.now().strftime('%Y%m%d_%H%M%S')}.py"
+    )
+    try:
+        shutil.copy2(path, backup)
+        path.write_text(modified_source, encoding="utf-8")
+        # Verify the written file compiles cleanly
+        written = path.read_text(encoding="utf-8")
+        if not await _compile_async(written, filename=str(path)):
+            logger.error("ast_patch_verify_failed — restoring backup path=%s", path)
+            shutil.copy2(backup, path)
+            return False
+        backup.unlink(missing_ok=True)
+        logger.info("ast_patch_applied path=%s", path)
+        return True
+    except OSError as exc:
+        logger.error("ast_patch_write_error path=%s err=%s", path, exc)
+        # Attempt restore
+        if backup.exists():
+            try:
+                shutil.copy2(backup, path)
+            except OSError:
+                pass
+        return False
+
+
+# ── Convenience helpers ───────────────────────────────────────────────────
+
+async def verify_file(file_path: str | Path) -> bool:
+    """Compile-check a file without modifying it.
+    Useful for guardian_loop post-patch verification.
+    """
+    path = Path(file_path)
+    if not path.exists():
+        return False
+    source = path.read_text(encoding="utf-8")
+    return await _compile_async(source, filename=str(path))
+
+
+async def batch_verify(paths: list[str | Path]) -> dict[str, bool]:
+    """Concurrently compile-check multiple files.
+    Returns {path_str: ok} mapping.
+    """
+    results = await asyncio.gather(
+        *[verify_file(p) for p in paths], return_exceptions=True
+    )
+    return {
+        str(p): (r if isinstance(r, bool) else False)
+        for p, r in zip(paths, results)
+    }
 
 
 class VarVisitor(ast.NodeVisitor):
@@ -102,9 +271,6 @@ def extract_method(
     new_func_lines = []
     new_func_lines.append(f"def {new_func_name}({', '.join(inputs)}):")
     for i in range(sel_start_line, sel_end_line):
-        # We assume the code is indented inside the original function
-        # the new function will be at module level, or we return the code as is.
-        # Actually it's easier to just return the code with 4 spaces indent.
         line = lines[i]
         if line.startswith(indent_str):
             new_func_lines.append("    " + line[indent:])

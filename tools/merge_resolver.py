@@ -31,7 +31,7 @@ except ImportError:
 
 # ── Telegram notify (optional, graceful fallback) ────────────────────────────
 try:
-    from tools.telegram_notify import send as _telegram_send
+    from tools.telegram_notify import send_message as _telegram_send
     def _notify(msg: str) -> None:
         try:
             _telegram_send(msg)
@@ -181,7 +181,7 @@ def parse_conflict_blocks(filepath: str) -> list[ConflictBlock]:
 DOWNGRADE_PATTERNS = [
     re.compile(r"self\.config\.get_secret\("),          # known bug pattern
     re.compile(r'\b\w+\s*==\s*["\']ollama["\']'),           # old casing bug
-    re.compile(r"# TODO:.*remove", re.IGNORECASE),
+    # re.compile(r"# TODO:.*remove", re.IGNORECASE),  # removed stale pattern (todo.tools_merge_resolver_py_184)
     re.compile(r"DEPRECATED", re.IGNORECASE),
 ]
 
@@ -559,3 +559,42 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# ── NinaGate-routed conflict resolution (NINA enhancement patch) ──────────────
+# NINA_FEATURE: merge-resolver-ninagate v1.0
+
+import os as _os, urllib.request as _ur, json as _json
+
+def _ninagate_resolve(conflict_text: str) -> str:
+    """
+    Route merge conflict through NinaGate.
+    Small conflicts (<10 lines) → localfast (Ollama).
+    Large/semantic conflicts → NinaGate cascade (picks cheapest available).
+    """
+    lines = conflict_text.count("\n")
+    host = _os.getenv("NINAGATE_URL", "http://localhost:8080/v1")
+    model = "localfast" if lines < 10 else "auto"
+
+    payload = _json.dumps({
+        "model": model,
+        "messages": [{
+            "role": "user",
+            "content": (
+                "Resolve this git merge conflict. Output ONLY the resolved code, "
+                "no explanation, no conflict markers:\n\n" + conflict_text[:3000]
+            )
+        }],
+        "max_tokens": 800
+    }).encode()
+
+    try:
+        req = _ur.Request(
+            f"{host}/chat/completions",
+            data=payload,
+            headers={"Content-Type": "application/json", "Authorization": "Bearer ninagate"}
+        )
+        with _ur.urlopen(req, timeout=30) as r:
+            return _json.loads(r.read())["choices"][0]["message"]["content"].strip()
+    except Exception as e:
+        return f"# NinaGate resolution failed: {e}\n" + conflict_text

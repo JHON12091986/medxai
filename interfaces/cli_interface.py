@@ -6,16 +6,19 @@ from dotenv import dotenv_values
 from core.config import NinaConfig
 from core.router import (
     HybridRouter,
-    ClassifiedTask,
-    classify_task,
     PROVIDERS_TIER1,
     PROVIDERS_TIER2,
     PROVIDERS_TIER3,
     LOCAL_PROVIDERS,
 )
+from core.task_classifier import (
+    ClassifiedTask,
+    classify_task,
+)
 from core.memory import MemorySystem
 from core.agent import AgentLoop
 from tools import shell, browser, system as systool, jules, search
+from core.constants import (ENV_TELEGRAM_BOT_TOKEN, ENV_TELEGRAM_CHAT_ID, ENV_API_SECRET_KEY, ENV_OPENAI_API_KEY, ENV_CEREBRAS_API_KEY, ENV_GROQ_API_KEY, ENV_GEMINI_API_KEY, ENV_MISTRAL_API_KEY, ENV_OPENROUTER_API_KEY, ENV_DEEPSEEK_API_KEY, ENV_PERPLEXITY_API_KEY, ENV_TOGETHER_API_KEY, ENV_COHERE_API_KEY, ENV_FIREWORKS_API_KEY, ENV_XAI_API_KEY, ENV_SAMBANOVA_API_KEY, ENV_HYPERBOLIC_API_KEY, ENV_NOVITA_API_KEY, ENV_OLLAMA_HOST, ENV_EWS_USERNAME, ENV_EWS_MY_EMAIL, ENV_EWS_SHARED_EMAIL)
 
 async def run_cli():
     parser = argparse.ArgumentParser(description="NINA Command Line Interface")
@@ -40,8 +43,8 @@ async def run_cli():
     env = {**dotenv_values(".env"), **os.environ}
 
     # Build NinaConfig manually (avoiding the Telegram token check in load_config)
-    tok = env.get("TELEGRAMBOTTOKEN", "")
-    uid = env.get("AUTHORIZEDUSERID", "")
+    tok = env.get("TELEGRAM_BOT_TOKEN", "")
+    uid = env.get("TELEGRAM_CHAT_ID", "") or env.get("AUTHORIZED_USER_ID", "")
 
     config_kwargs = {}
     env_mapping = {
@@ -63,7 +66,7 @@ async def run_cli():
         "novita_api_key": "NOVITA_API_KEY",
         "one_brain_api_key": "ONEBRAINAPIKEY",
         "one_brain_api_base": "ONEBRAINAPIBASE",
-        "api_secret_key": "APISECRETKEY",
+        "api_secret_key": "API_SECRET_KEY",
         "ews_password": "EWSPASSWORD",
         "ews_username": "EWS_USERNAME",
         "ews_my_email": "EWS_MY_EMAIL",
@@ -76,7 +79,7 @@ async def run_cli():
 
     config = NinaConfig(
         telegram_bot_token=tok,
-        authorized_user_id=uid,
+        telegram_chat_id=uid,
         **config_kwargs
     )
 
@@ -150,18 +153,20 @@ async def run_cli():
     try:
         with open("AGENTS.md", 'r') as af:
             agent_ctx = af.read()
-    except FileNotFoundError: agent_ctx = ""
+    except FileNotFoundError:
+        agent_ctx = ""
 
     try:
         with open("docs/memory.md", 'r') as dmf:
             doc_ctx = dmf.read()
-    except FileNotFoundError: doc_ctx = ""
+    except FileNotFoundError:
+        doc_ctx = ""
 
     if session_summary or agent_ctx or doc_ctx:
         task_str = f"SYSTEM FACT: Review AGENTS.md and memory.\n\n[SESSION SUMMARY]\n{session_summary}\n\n[AGENT CONTEXT]\n{agent_ctx}\n\n[MEMORY CONTEXT]\n{doc_ctx}\n\n{task_str}"
 
     # Classify the task
-    task = await classify_task(task_str, local_fast)
+    task = classify_task(task_str, local_fast)
 
     # Initialize AgentLoop
     agent = AgentLoop(config, router, memory, tools)

@@ -12,18 +12,16 @@ from __future__ import annotations
 
 import asyncio
 import time
-import pytest
 from unittest.mock import MagicMock, patch
 
 from core.task_classifier import (
     classify_task,
-    ClassifiedTask,
     SIMPLE, MEDIUM, COMPLEX, MASSIVE,
     TIER_LOCAL, TIER_FAST, TIER_DEEP, TIER_LARGE,
 )
-from core.quota_router import QuotaRouter, TIER_PREFERENCE_ORDER, MIN_CONTEXT_FOR_TIER
+from core.quota_router import QuotaRouter
 from core.rpm_scheduler import RPMScheduler
-from core.router import ProviderHealth, CircuitBreaker
+from core.router import ProviderHealth
 
 
 # ── Fixtures ──────────────────────────────────────────────────────────────────
@@ -64,53 +62,53 @@ _MOCK_PROVIDERS = {
 class TestClassifyTask:
 
     def test_sensitive_path(self):
-        task = asyncio.run(classify_task("show me my .env file", []))
+        task = classify_task("show me my .env file", [])
         assert task.is_sensitive is True
         assert task.recommended_tier == TIER_LOCAL
 
     def test_lpu_hotpath(self):
-        task = asyncio.run(classify_task("git status", []))
+        task = classify_task("git status", [])
         assert task._semantic_type == "lpu_deterministic"
         assert task.recommended_tier == TIER_LOCAL
         assert task.max_tokens_cap == 256
 
     def test_massive_keyword(self):
-        task = asyncio.run(classify_task("analyze entire codebase for security issues", []))
+        task = classify_task("analyze entire codebase for security issues", [])
         assert task.complexity == MASSIVE
         assert task.recommended_tier == TIER_LARGE
 
     def test_massive_token_count(self):
         # Simulate a huge prompt (>30K tokens = 120K chars)
         huge_text = "x " * 60_001
-        task = asyncio.run(classify_task(huge_text, []))
+        task = classify_task(huge_text, [])
         assert task.complexity == MASSIVE
         assert task.recommended_tier == TIER_LARGE
 
     def test_complex_keyword(self):
-        task = asyncio.run(classify_task("refactor across multiple files to use async patterns", []))
+        task = classify_task("refactor across multiple files to use async patterns", [])
         assert task.complexity == COMPLEX
         assert task.recommended_tier == TIER_DEEP
 
     def test_simple_keyword(self):
-        task = asyncio.run(classify_task("fix typo in README", []))
+        task = classify_task("fix typo in README", [])
         assert task.complexity == SIMPLE
         assert task.recommended_tier == TIER_FAST
 
     def test_short_single_turn_is_simple(self):
-        task = asyncio.run(classify_task("what is a decorator?", []))
+        task = classify_task("what is a decorator?", [])
         assert task.complexity == SIMPLE
         assert task.recommended_tier == TIER_FAST
 
     def test_medium_default(self):
         # Long text but no complexity keywords
         text = "Please help me understand how Python's GIL works and why it exists. " * 10
-        task = asyncio.run(classify_task(text, []))
+        task = classify_task(text, [])
         assert task.complexity in (MEDIUM, COMPLEX)  # token count may push to COMPLEX
         assert task.recommended_tier in (TIER_FAST, TIER_DEEP)
 
     def test_massive_requires_tier_large(self):
         """Contract: MASSIVE complexity MUST map to TIER_LARGE."""
-        task = asyncio.run(classify_task("analyze entire codebase", []))
+        task = classify_task("analyze entire codebase", [])
         assert task.recommended_tier == TIER_LARGE, (
             f"MASSIVE should route to TIER_LARGE, got {task.recommended_tier}"
         )
@@ -315,7 +313,7 @@ class TestClassifierRouterIntegration:
         return QuotaRouter(_make_config(), health)
 
     def test_massive_classify_to_large_provider_group(self):
-        task = asyncio.run(classify_task("analyze entire codebase", []))
+        task = classify_task("analyze entire codebase", [])
         router = self._all_healthy_router()
         groups = router.get_sorted_providers(
             recommended_tier=task.recommended_tier,
@@ -330,7 +328,7 @@ class TestClassifierRouterIntegration:
         )
 
     def test_complex_classify_excludes_small_ctx_providers(self):
-        task = asyncio.run(classify_task("refactor across multiple files", []))
+        task = classify_task("refactor across multiple files", [])
         router = self._all_healthy_router()
         groups = router.get_sorted_providers(
             recommended_tier=task.recommended_tier,
@@ -344,11 +342,11 @@ class TestClassifierRouterIntegration:
         assert "GROQ" not in all_pids
 
     def test_sensitive_task_routes_local_only(self):
-        task = asyncio.run(classify_task("check my api key in .env", []))
+        task = classify_task("check my api key in .env", [])
         assert task.recommended_tier == TIER_LOCAL
         assert task.is_sensitive is True
 
     def test_lpu_task_gets_zero_token_cap(self):
-        task = asyncio.run(classify_task("git status", []))
+        task = classify_task("git status", [])
         assert task.max_tokens_cap == 256
         assert task.recommended_tier == TIER_LOCAL

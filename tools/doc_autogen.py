@@ -110,3 +110,71 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ── Signature drift detector (NINA enhancement patch) ────────────────────────
+# NINA_FEATURE: doc-autogen-drift-detection v1.0
+
+import ast as _ast, json as _json, hashlib as _hl
+from pathlib import Path as _Path
+
+_SIG_CACHE = _Path.home() / "nina" / ".cache" / "doc_sig_cache.json"
+
+def _sig_hash(func_node) -> str:
+    """Hash a function signature (name + args + return annotation)."""
+    args = [a.arg for a in func_node.args.args]
+    ret  = _ast.unparse(func_node.returns) if func_node.returns else ""
+    raw  = f"{func_node.name}({','.join(args)})->{ret}"
+    return _hl.md5(raw.encode()).hexdigest()[:10]
+
+def check_doc_drift(py_files: list) -> list:
+    """
+    Return list of (file, func_name, status) where status is 'STALE', 'NEW', or 'OK'.
+    STALE = signature changed since last doc gen run.
+    NEW   = function has docstring but no cached signature.
+    """
+    cache = {}
+    if _SIG_CACHE.exists():
+        try: cache = _json.loads(_SIG_CACHE.read_text())
+        except: pass
+
+    new_cache = {}
+    drift = []
+
+    for path in py_files:
+        path = _Path(path)
+        if not path.exists(): continue
+        try:
+            tree = _ast.parse(path.read_text(errors="replace"))
+        except:
+            continue
+        rel = str(path.relative_to(_Path.home()/"nina"))
+        for node in _ast.walk(tree):
+            if not isinstance(node, _ast.FunctionDef): continue
+            if not (_ast.get_docstring(node)): continue  # only tracked if has docstring
+            h = _sig_hash(node)
+            key = f"{rel}::{node.name}"
+            new_cache[key] = h
+            prev = cache.get(key)
+            if prev is None:
+                drift.append((rel, node.name, "NEW"))
+            elif prev != h:
+                drift.append((rel, node.name, "STALE"))
+
+    _SIG_CACHE.parent.mkdir(exist_ok=True)
+    _SIG_CACHE.write_text(_json.dumps(new_cache, indent=2))
+    return drift
+
+def print_drift_report(py_files: list):
+    drift = check_doc_drift(py_files)
+    stale = [d for d in drift if d[2] == "STALE"]
+    new   = [d for d in drift if d[2] == "NEW"]
+    if stale:
+        print(f"\n⚠️  {len(stale)} STALE docstrings (signature changed):")
+        for f, fn, _ in stale[:10]:
+            print(f"  {f}::{fn}")
+    if new:
+        print(f"\nℹ️  {len(new)} NEW functions with docstrings (not yet baselined).")
+    if not stale and not new:
+        print("✓ All docstrings are in sync with signatures.")
+    return stale

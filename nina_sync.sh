@@ -1,12 +1,19 @@
 #!/usr/bin/env bash
-# nina_sync.sh v5 — Full post-session sync + built-in MD scan (Step 7)
+# nina_sync.sh v5.3 — Full post-session sync + built-in MD scan (Step 7)
 # D-12: skip git push when Jules PR branches are open to prevent merge conflicts
+# v5.2: SPACE_FILES auto-discovery — no more manual whitelist maintenance
+# v5.3: fix(E-nexus-01): removed nexus_discoveries.md exclusion bug; clean auto-discovery
 
 set -euo pipefail
+trap '_tg_notify "🚨 nina_sync.sh CRASHED at line $LINENO — $TS"' ERR
 
 PATH="$HOME/bin:$PATH"
 
 NINA=~/nina
+PYTHON="$NINA/venv/bin/python"
+if [ ! -f "$PYTHON" ]; then
+  PYTHON="python3"
+fi
 SPACE_DIR="$NINA/docs/space"
 LOGS_DIR="$NINA/logs"
 DRY_RUN=false
@@ -15,16 +22,15 @@ DRY_RUN=false
 TS=$(date '+%Y-%m-%d %H:%M')
 DATE=$(date '+%Y-%m-%d')
 
-# Fixed list of files to mirror/sync
-SPACE_FILES=(
-  docs/space/ninaflash_task_tracker.md
-  docs/space/jules_backlog.md
-  docs/space/jules_task_tracker.md
-  docs/space/nina_error_register.md
-  docs/space/nina_exporter_contract.md
-  docs/space/nina_state.md
-  docs/space/jules_queue.md
-)
+# Dynamic auto-discovery: all .md files in docs/space/ are SPACE_FILES
+# No manual whitelist needed — new files are auto-included on every sync
+# v5.3: No exclusions — every .md in docs/space/ is preserved unconditionally
+SPACE_FILES=()
+if [ -d "$NINA/docs/space" ]; then
+  while IFS= read -r f; do
+    SPACE_FILES+=("${f#$NINA/}")
+  done < <(find "$NINA/docs/space" -maxdepth 1 -name "*.md" | sort)
+fi
 
 echo "================================================"
 echo " NINA POST-SESSION SYNC  $TS$([ "$DRY_RUN" = true ] && echo " [DRY-RUN]")"
@@ -35,8 +41,8 @@ cd "$NINA"
 _tg_notify() {
   local msg="$1"
   local token user_id
-  token=$(grep -E '^TELEGRAMBOTTOKEN=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
-  user_id=$(grep -E '^AUTHORIZEDUSERID=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
+  token=$(grep -E '^TELEGRAM_BOT_TOKEN=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
+  user_id=$(grep -E '^AUTHORIZED_USER_ID=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
   if [ -n "$token" ] && [ -n "$user_id" ]; then
     curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
       -d "chat_id=${user_id}" -d "text=${msg}" > /dev/null 2>&1 || true
@@ -82,7 +88,6 @@ done
 
 echo "[2/8] Mirror to docs/space/..."
 [ "$DRY_RUN" = false ] && mkdir -p "$SPACE_DIR"
-# 2. Fixed Mirror Loop
 for f in "${SPACE_FILES[@]}"; do
   SRC="$NINA/$f"; DST="$SPACE_DIR/$(basename "$f")"
   if [ ! -f "$SRC" ]; then echo "  ✗ MISSING: $f"; continue; fi
@@ -127,7 +132,7 @@ LAST_ENTRY=$(grep -c "^## Entry" "$NINA/nina_update_log.md" 2>/dev/null || echo 
 NEXT_NUM=$(printf '%03d' $((LAST_ENTRY + 1)))
 CHANGED_FILES=$(git status --porcelain 2>/dev/null | awk '{print $2}' | tr '\n' ',' | sed 's/,$//' || echo "none")
 if [ "$DRY_RUN" = false ] && [ -n "$CHANGED_FILES" ] && [ "$CHANGED_FILES" != "none" ]; then
-  python3 - << PYEOF
+  "$PYTHON" - << PYEOF
 lines = [
     "",
     "---",
@@ -155,13 +160,12 @@ fi
 
 echo "[5/8] Staging..."
 if [ "$DRY_RUN" = false ]; then
-  # Check if post_task_hook.py has been run since last commit
   if [ -f "$NINA/AGENTS.md" ]; then
     LAST_COMMIT_TS=$(git log -1 --format=%ct 2>/dev/null || echo "0")
-    AGENTS_MTIME=$(stat -c %Y "$NINA/AGENTS.md" 2>/dev/null || echo "0")
+    AGENTS_MTIME=$(stat -L -c %Y "$NINA/AGENTS.md" 2>/dev/null || stat -c %Y "$NINA/AGENTS.md" 2>/dev/null || echo "0")
     if [ "$AGENTS_MTIME" -le "$LAST_COMMIT_TS" ]; then
-      echo "⚠ DOCS NOT UPDATED — run: python3 tools/post_task_hook.py"
-      exit 1
+      echo "  ✓ Automating documentation: Running post_task_hook.py..."
+      "$PYTHON" "$NINA/tools/post_task_hook.py" || echo "⚠️  Failed to run post_task_hook.py"
     fi
   fi
 
@@ -171,10 +175,14 @@ fi
 
 echo "[5b/8] RULE 0 compliance audit..."
 if [ "$DRY_RUN" = false ]; then
-  python3 "$NINA/tools/rule0_audit.py" --hours 8 || true
+  "$PYTHON" "$NINA/tools/rule0_audit.py" --hours 8 || true
 else
   echo "  (dry-run: skipping)"
 fi
+
+"$PYTHON" nina_wiring_audit.py || echo "WARN: wiring audit issues detected — check log"
+"$PYTHON" nina_commit_index.py
+"$PYTHON" nina_context_graph.py || echo "WARN: context graph generation failed — check log"
 
 echo "[6/8] Committing and pushing..."
 if [ "$DRY_RUN" = true ]; then
@@ -185,11 +193,13 @@ else
     echo "  Changed files:"; echo "$STAGED" | sed 's/^/     /'
     git commit -m "docs: post-session sync $TS"
 
-    # D-12: Check for open Jules PR branches before pushing to main
-    # This prevents nina_sync.sh from moving main ahead of Jules branches
-    # and causing merge conflicts on all open Jules PRs.
     git remote prune origin --dry-run 2>/dev/null; git remote prune origin
-    JULES_BRANCHES=$(gh pr list --state open --json headRefName --limit 100 2>/dev/null | jq '[.[] | select(.headRefName | (startswith("jules-") or startswith("nina-j") or startswith("feat/") or startswith("pr-")))] | length' 2>/dev/null || echo "0")
+
+    echo "  Executing automated surgical PR audit, rebase, and merge..."
+    export NINA_SYNC_ACTIVE=1
+    "$PYTHON" tools/surgical_merge.py || echo "⚠️  Surgical merge tool finished with warnings — check log"
+
+    JULES_BRANCHES=$(gh pr list --state open --json headRefName --limit 100 2>/dev/null | jq '[.[] | select(.headRefName | (startswith("jules-") or startswith("nina-j") or startswith("feat/") or startswith("pr-") or startswith("fix-") or startswith("improve-") or startswith("task-")))] | length' 2>/dev/null || echo "0")
     if [ "$JULES_BRANCHES" -gt 0 ]; then
       echo ""
       echo "  ⚠️  PUSH SKIPPED — $JULES_BRANCHES open Jules PR branch(es) detected on origin."
@@ -201,9 +211,7 @@ else
       git push origin main
       STAT=$(git show --stat HEAD | tail -1)
       echo "  ✓ Pushed — $STAT"
-      _tg_notify "✅ NINA sync [$TS]
-$STAT
-Service: $SVC_STATUS"
+      _tg_notify "✅ NINA sync [$TS]\n$STAT\nService: $SVC_STATUS"
     fi
   else
     echo "  Nothing to commit"
@@ -220,7 +228,7 @@ for f in "${SPACE_FILES[@]}"; do
 done
 
 ALL_MD=$(find "$NINA" \
-  \( -path "*/venv/*" -o -path "*/.git/*" -o -path "*/node_modules/*" \
+  \( -path "*/venv/*" -o -path "*/.venv/*" -o -path "*/.git/*" -o -path "*/node_modules/*" \
      -o -path "*/upgrades/backups/*" -o -path "*/exports/*" \
      -o -path "*/__pycache__/*" \) -prune \
   -o \( -name "*.md" -o -name "*.txt" -o -name "*.json" \) -print | sort)
@@ -264,11 +272,11 @@ if [ "$UNCOVERED" -gt 0 ]; then
   echo "  ⚠️  Files not in docs/space (not uploaded to Perplexity):"
   echo -e "$UNCOVERED_LIST"
   echo ""
-  echo "  → Add them to SPACE_FILES array in nina_sync.sh if needed."
+  echo "  → Add them to docs/space/ if needed — they will be auto-included on next sync."
 fi
 echo "[8.0/8] Auto-regenerating docs from live source..."
 if [ "$DRY_RUN" = false ]; then
-  python3 "$NINA/tools/doc_autogen.py" && echo " ✅ Docs auto-patched" || echo " ⚠️ Doc autogen failed (non-fatal)"
+  "$PYTHON" "$NINA/tools/doc_autogen.py" && echo " ✅ Docs auto-patched" || echo " ⚠️ Doc autogen failed (non-fatal)"
 else
   echo "  (dry-run: skipping)"
 fi
@@ -277,8 +285,7 @@ echo "[8/8] Full master export for Perplexity Space..."
 if [ "$DRY_RUN" = true ]; then
   echo "  (dry-run: skipping)"
 else
-  # Step 8: Call the compact exporter Python script
-  python3 "$NINA/tools/compact_exporter.py"
+  "$PYTHON" "$NINA/tools/compact_exporter.py"
   
   echo "  ✅ nina_latest.md:      $(wc -c < $HOME/Downloads/nina_space_upload/nina_latest.md) bytes"
   echo "  ✅ nina_diff.md:        $(wc -c < $HOME/Downloads/nina_space_upload/nina_diff.md) bytes"
@@ -305,8 +312,7 @@ else
   echo "[8.1/8] Generating Claude feed..."
   export JULES_API_KEY=$(grep -E '^JULES_API_KEY=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || echo "")
   
-  # Generate Claude feed and upload
-  python3 - << 'PYEOF'
+  "$PYTHON" - << 'PYEOF'
 import subprocess, json, re, time
 from pathlib import Path
 
@@ -322,7 +328,6 @@ lines.append("# NINA Claude Feed — Session Startup Context")
 lines.append("> Auto-generated by nina_sync.sh — do not edit manually")
 lines.append("> Claude: read this. Then generate 10 non-overlapping Jules specs.\n")
 
-# 1. Snapshot header
 import subprocess, time
 head = subprocess.getoutput("cd ~/nina && git log -1 --pretty='%H|%s|%ci'").split("|")
 lines.append("## 1. Snapshot")
@@ -336,7 +341,6 @@ lines.append(f"```")
 lines.append(svc_detail.strip())
 lines.append(f"```")
 
-# 2. Active Jules sessions
 lines.append("## 2. Active Jules Sessions (live)")
 try:
     import asyncio, sys
@@ -348,7 +352,6 @@ except Exception as e:
     lines.append(f"- Jules API unavailable: {e}")
 lines.append("")
 
-# 3. File lock registry
 if LOCK.exists() and LOCK.read_text().strip():
     lines.append("## 3. Locked Files (do not touch in new specs)")
     lines.append(f"```\n{LOCK.read_text().strip()}\n```")
@@ -357,7 +360,6 @@ else:
     lines.append("- No files locked — juleslock.txt empty or missing")
 lines.append("")
 
-# 3b. Jules Queue (ACTIVE tasks)
 QUEUE_FILE = NINA / "docs/space/jules_queue.md"
 lines.append("## 3b. Jules Queue (ACTIVE tasks)")
 if QUEUE_FILE.exists():
@@ -378,7 +380,6 @@ else:
     lines.append("- jules_queue.md not found")
 lines.append("")
 
-# 4. READY backlog items
 lines.append("## 4. READY Items (eligible for new Jules specs)")
 if BACKLOG.exists():
     backlog = BACKLOG.read_text()
@@ -392,14 +393,12 @@ else:
     lines.append("- Backlog file not found")
 lines.append("")
 
-# 5. Last 5 completions
 lines.append("## 5. Last 5 Completions")
 lines.append("```")
 lines.append(subprocess.getoutput("cd ~/nina && git log --oneline -5"))
 lines.append("```")
 lines.append("")
 
-# 6. Open blockers
 lines.append("## 6. Open Blockers")
 if BACKLOG.exists():
     for line in BACKLOG.read_text().splitlines():
@@ -407,13 +406,12 @@ if BACKLOG.exists():
             lines.append(f"- {line.strip()}")
 lines.append("")
 
-# 7. Static cheatsheet
 lines.append("## 7. File Ownership Cheatsheet")
 lines.append("| File | Purpose | Risk |")
 lines.append("|------|---------|------|")
 cheatsheet = [
     ("core/nina.py","NinaOS orchestrator, system prompt","HIGH"),
-    ("core/router.py","HybridRouter V4, 19+ providers, circuit breaker","HIGH"),
+    ("core/router.py","HybridRouter V4, 19+ providers, circuit breaker, MoA","HIGH"),
     ("core/agent.py","AgentLoop THINK→PLAN→ACT, self-check, RAM guard","HIGH"),
     ("core/memory.py","ChromaDB + facts.json, build_context()","MEDIUM"),
     ("core/task_store.py","TaskStore persistence, file locking","MEDIUM"),
@@ -442,7 +440,6 @@ pr_list = subprocess.getoutput(
 lines.append(pr_list if pr_list else "- No open PRs")
 lines.append("")
 
-# 9. Error Register (OPEN only)
 lines.append("## 9. Error Register (OPEN only)")
 error_reg = NINA / "docs/space/nina_error_register.md"
 if error_reg.exists():
@@ -470,21 +467,18 @@ else:
     lines.append("No open errors")
 lines.append("")
 
-# 10. Quota Snapshot
 lines.append("## 10. Quota Snapshot")
 quota_file = NINA / "data/quota_state.json"
 if quota_file.exists():
     try:
         quota_data = json.loads(quota_file.read_text())
         gemini_used = quota_data.get("quotas", {}).get("gemini", 0)
-        
         import socket
         try:
             with socket.create_connection(("127.0.0.1", 8080), timeout=0.5):
                 ninagate_up = "yes"
         except OSError:
             ninagate_up = "no"
-            
         lines.append(f"gemini_api: {gemini_used}/1000 | ollama: unlimited | ninagate_up: {ninagate_up}")
     except Exception:
         lines.append("quota_state.json not found")
@@ -492,28 +486,23 @@ else:
     lines.append("quota_state.json not found")
 lines.append("")
 
-# 11. Guardian Last Run
 lines.append("## 11. Guardian Last Run")
 guardian_log = LOGS_DIR / "guardian.log"
 if not guardian_log.exists():
     logs = list(LOGS_DIR.glob("*guardian*"))
     if logs:
         guardian_log = logs[0]
-
 if guardian_log.exists():
     try:
         last_line = guardian_log.read_text().strip().splitlines()[-1]
         ts_match = re.search(r'(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d+)?)', last_line)
         pf_match = re.search(r'\b(PASS|FAIL|SUCCESS|BLOCKED)\b', last_line, re.IGNORECASE)
         violation_match = re.search(r'(\d+)\s*(?:violations|errors|issues)', last_line, re.IGNORECASE)
-        
         ts = ts_match.group(1) if ts_match else "unknown_time"
         pf = pf_match.group(1).upper() if pf_match else "unknown_result"
         if pf == "SUCCESS": pf = "PASS"
         if pf == "BLOCKED": pf = "FAIL"
-        
         violations = violation_match.group(1) if violation_match else "0"
-        
         lines.append(f"{ts} | {pf} | {violations} violations")
     except Exception:
         lines.append("Guardian log not found")
@@ -528,7 +517,6 @@ OUT.write_text("\n".join(lines))
 print(f"  ✅ claude_feed.md generated: {size} bytes")
 PYEOF
 
-  # Upload claude_feed.md to fixed location
   if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q "gdrive:"; then
     rclone copy "$NINA/docs/space/claude_feed.md" "gdrive:nina-backup/" --no-traverse 2>/dev/null \
       && echo "  ☁️  claude_feed.md → gdrive:nina-backup/ (overwritten)" \
@@ -550,6 +538,16 @@ if command -v rclone >/dev/null 2>&1 && rclone listremotes 2>/dev/null | grep -q
   [ -n "$CODEBASE_OUT" ] && rclone copy "$CODEBASE_OUT" "gdrive:nina-backup/versioned/" --no-traverse 2>/dev/null && echo "  ☁️  $(basename "$CODEBASE_OUT") → gdrive:nina-backup/versioned/" || echo "  ⚠️  Codebase backup upload failed"
 fi
 
+"$PYTHON" "$NINA/tools/session_brief.py" || echo "⚠️  Failed to generate session brief"
+
 echo "================================================"
-echo " SYNC COMPLETE  $TS"
+echo "  SYNC COMPLETE  $TS"
 echo "================================================"
+_sync_exit_code=$?
+if [ $_sync_exit_code -ne 0 ]; then
+  _tg_notify "🚨 nina_sync.sh FAILED (exit $_sync_exit_code) at $TS — backup may be incomplete."
+  echo "  🚨 Sync failed — Telegram alert sent"
+  exit $_sync_exit_code
+else
+  echo "  ✅ All sync steps completed successfully"
+fi

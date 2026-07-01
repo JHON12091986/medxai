@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# bin/opencode-start — Start OpenCode Ouroboros session
+# Usage: opencode-start [--no-attach]
+# Part of NINA Ouroboros loop. See OUROBOROS.md.
+set -euo pipefail
+
+SESSION="opencode-nina"
+NO_ATTACH="${1:-}"
+
+echo "[ouroboros] Starting OpenCode inhibitor..."
+systemctl --user start opencode-inhibit.service
+
+echo "[ouroboros] Starting OpenCode tmux session..."
+systemctl --user start opencode-session.service
+
+# Wait for tmux session to be ready
+sleep 1
+
+if systemctl --user is-active --quiet opencode-session.service; then
+    echo "[ouroboros] ✓ opencode-session running (tmux: $SESSION)"
+    echo "[ouroboros] ✓ sleep inhibitor active"
+    echo ""
+    if [ "$NO_ATTACH" != "--no-attach" ]; then
+        echo "Attaching to tmux session — detach with Ctrl+B then D"
+        sleep 0.5
+        tmux attach-session -t "$SESSION"
+        # After detach, remind user
+        echo ""
+        echo "[ouroboros] Detached. Session still running in background."
+        echo "  Re-attach : tmux attach -t $SESSION"
+        echo "  Stop all  : opencode-stop"
+        echo "  Logs      : journalctl --user -u opencode-session -f"
+    else
+        echo "  Attach    : tmux attach -t $SESSION"
+        echo "  Stop all  : opencode-stop"
+    fi
+else
+    echo "[ouroboros] ✗ opencode-session failed to start"
+    echo "  Debug: journalctl --user -u opencode-session -n 30"
+    systemctl --user stop opencode-inhibit.service 2>/dev/null || true
+    exit 1
+fi

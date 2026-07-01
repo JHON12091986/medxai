@@ -1,107 +1,34 @@
-{"t": "2026-06-15T16:16:11+06:00", "step": 0, "action": "start", "file": "", "detail": "continuing previous session development", "status": "ok"}
-{"t": "2026-06-15T16:16:16+06:00", "step": 1, "action": "shell", "file": "", "detail": "Indexed codebase to check existing files", "status": "ok"}
-{"t": "2026-06-15T16:16:21+06:00", "step": 2, "action": "shell", "file": "", "detail": "ran nf git changed to check status", "status": "ok"}
-{"t": "2026-06-15T10:21:19.041032+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/4 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T16:21:25.239334", "step": -1, "action": "done", "file": "", "detail": "Successfully resolved local fallback and case-sensitivity routing bugs. All 298 tests passed. Index and agents documentation synchronized.", "status": "ok"}
-{"t": "2026-06-15T10:21:32.234176+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/4 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T16:26:01.250949", "step": -1, "action": "done", "file": "", "detail": "Successfully updated architecture documentation with quota routing and fallback details. Saved session memory.", "status": "ok"}
-{"t": "2026-06-15T10:26:07.615176+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/4 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T16:03:37.963664+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/0 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T16:15:46.803613+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/0 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T22:56:17+06:00","step":0,"action":"start","file":"","detail":"Initializing session and greeting user","status":"ok"}
-{"t":"2026-06-15T22:56:45+06:00","step":1,"action":"think","file":"","detail":"Running bootstrap checklist","status":"ok"}
-{"t":"2026-06-15T22:56:55+06:00","step":2,"action":"think","file":"","detail":"Injecting memory and running monitor","status":"ok"}
-{"t":"2026-06-15T22:57:10+06:00","step":3,"action":"shell","file":"","detail":"Updating and validating the codebase index","status":"ok"}
-{"t":"2026-06-15T22:57:35+06:00","step":-1,"action":"done","file":"","detail":"Bootstrap checklist completed successfully and greeted user","status":"ok"}
-{"t":"2026-06-15T23:02:53+06:00","step":0,"action":"start","file":"","detail":"Answering 2+2 math question","status":"ok"}
-{"t":"2026-06-15T23:02:56+06:00","step":-1,"action":"done","file":"","detail":"Answering that 2+2 equals 4","status":"ok"}
-{"t": "2026-06-15T17:02:58.317817+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T17:03:25.736163+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T17:21:23.505527+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:23:10+06:00","step":0,"action":"start","file":"","detail":"task summary: copy dashboard file and run audit/sync","status":"ok"}
-{"t":"2026-06-15T23:23:15+06:00","step":1,"action":"shell","file":"dashboard/ninagate-dashboard.html","detail":"Checked source and copied ~/Downloads/ninagate-dashboard.html to dashboard/ninagate-dashboard.html","status":"ok"}
-{"t":"2026-06-15T23:23:20+06:00","step":2,"action":"shell","file":"","detail":"Ran python3 tools/rule0_audit.py","status":"ok"}
-{"t": "2026-06-15T17:23:15.729046+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:23:25+06:00","step":3,"action":"shell","file":"","detail":"Ran python3 tools/update_index.py","status":"ok"}
-{"t":"2026-06-15T23:23:42+06:00","step":4,"action":"shell","file":"","detail":"Ran git commit and git push","status":"ok"}
-{"t": "2026-06-15T17:24:00.814395+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:25:30+06:00","step":5,"action":"shell","file":"","detail":"Ran nina_sync.sh","status":"ok"}
-{"t":"2026-06-15T23:25:35+06:00","step":-1,"action":"done","file":"","detail":"Successfully completed copying dashboard file, running audit, update_index, committing, pushing, and running nina_sync.sh","status":"ok"}
-{"t": "2026-06-15T17:25:44.214597+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:26:45+06:00","step":0,"action":"start","file":"","detail":"task summary: update documentation and index","status":"ok"}
-{"t":"2026-06-15T23:26:50+06:00","step":1,"action":"shell","file":"","detail":"Ran python3 tools/update_index.py","status":"ok"}
-{"t": "2026-06-15T17:27:12.829793+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:27:12+06:00","step":2,"action":"shell","file":"","detail":"Ran nina_sync.sh","status":"ok"}
-{"t":"2026-06-15T23:28:55+06:00","step":-1,"action":"done","file":"","detail":"Successfully updated documentation, index, and ran nina_sync.sh","status":"ok"}
-{"t":"2026-06-15T23:35:15+06:00","step":0,"action":"start","file":"","detail":"task summary: install nina_token_guard, agy_quota_monitor, quota_dispatcher and edit core/router.py & ninagate/main.py","status":"ok"}
-{"t":"2026-06-15T23:35:20+06:00","step":1,"action":"shell","file":"tools/nina_token_guard.py","detail":"Copied files from ~/Downloads to workspace and ran chmod +x on agy_quota_monitor.sh","status":"ok"}
-{"t": "2026-06-15T17:37:26.144220+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:37:35+06:00","step":2,"action":"shell","file":"","detail":"Updated and validated index","status":"ok"}
-{"t":"2026-06-15T23:37:47+06:00","step":3,"action":"shell","file":"","detail":"Ran git commit and git push","status":"ok"}
-{"t": "2026-06-15T17:37:58.451308+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:38:00+06:00","step":4,"action":"shell","file":"","detail":"Ran nina_sync.sh","status":"ok"}
-{"t":"2026-06-15T23:39:05+06:00","step":5,"action":"shell","file":"","detail":"Started agy_quota_monitor daemon in watch mode","status":"ok"}
-{"t":"2026-06-15T23:39:15+06:00","step":-1,"action":"done","file":"","detail":"Successfully completed deploying three-layer token conservation strategy, updating config/agents, committing/pushing, starting watch daemon, and running sync","status":"ok"}
-{"t": "2026-06-15T17:39:23.225774+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:41:40+06:00","step":0,"action":"start","file":"","detail":"task summary: update documentation index and sync workspace","status":"ok"}
-{"t": "2026-06-15T17:41:54.807298+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t":"2026-06-15T23:41:55+06:00","step":2,"action":"shell","file":"","detail":"Ran nina_sync.sh","status":"ok"}
-{"t":"2026-06-15T23:43:00+06:00","step":-1,"action":"done","file":"","detail":"Successfully updated documentation index and ran sync","status":"ok"}
-{"t": "2026-06-15T17:56:03.971013+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T23:56:07.086594Z", "step": -1, "action": "done", "file": "", "detail": "successfully updated index, hygiene dashboard, and agents history, then ran nina sync", "status": "ok"}
-{"t": "2026-06-15T17:56:15.164324+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-16T00:02:56.068775Z", "step": 0, "action": "start", "file": ".geminiignore", "detail": "Replace .geminiignore with user content", "status": "ok"}
-{"t": "2026-06-16T00:04:13.415234Z", "step": -1, "action": "done", "file": ".geminiignore", "detail": "replaced .geminiignore content, tracked core/prompt_cache.py, and ran sync script", "status": "ok"}
-{"t": "2026-06-15T18:04:18.790759+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/1 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-16T00:08:20.362346Z", "step": 0, "action": "start", "file": "ninagate/main.py", "detail": "Apply patches to ninagate/main.py", "status": "ok"}
-{"t": "2026-06-16T00:10:01.513175Z", "step": -1, "action": "done", "file": "ninagate/main.py", "detail": "implemented connection pooling, true streaming, token budgeting, and unified make_provider_response, then ran sync script", "status": "ok"}
-{"t": "2026-06-15T18:10:07.917489+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-16T00:13:27.979291Z", "step": 0, "action": "start", "file": "core/task_classifier.py", "detail": "updating task classifier and syncing documentation", "status": "ok"}
-{"t": "2026-06-16T00:13:28.011511Z", "step": -1, "action": "done", "file": "core/task_classifier.py", "detail": "updated task classifier keywords, ran index tools, updated AGENTS.md, and ran nina sync", "status": "ok"}
-{"t": "2026-06-15T18:13:35.872239+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-16T00:20:08.915555Z", "step": 0, "action": "start", "file": "ninagate/main.py", "detail": "Wiring recommended_tier sorting and max_tokens_cap override", "status": "ok"}
-{"t": "2026-06-16T00:20:08.947382Z", "step": -1, "action": "done", "file": "ninagate/main.py", "detail": "wired recommended_tier sorting and max_tokens_cap override in main.py, verified classifier, ran sync", "status": "ok"}
-{"t": "2026-06-15T18:20:15.229762+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-16T00:24:15.091337Z", "step": 0, "action": "start", "file": "core/quota_router.py", "detail": "Replace core/quota_router.py, core/rpm_scheduler.py, and patch core/router.py", "status": "ok"}
-{"t": "2026-06-16T00:25:31.318470Z", "step": 0, "action": "start", "file": "core/quota_router.py", "detail": "Replacing core modules for tier routing", "status": "ok"}
-{"t": "2026-06-16T00:25:31.347803Z", "step": -1, "action": "done", "file": "core/quota_router.py", "detail": "replaced quota_router, rpm_scheduler, and patched router.py, validated classifier, ran sync", "status": "ok"}
-{"t": "2026-06-15T18:25:37.890940+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-16T00:35:11.697189Z", "step": 0, "action": "start", "file": "dashboard/ninaui.html", "detail": "Integrating new NinaGate dashboard tab", "status": "ok"}
-{"t": "2026-06-16T00:35:11.729150Z", "step": -1, "action": "done", "file": "dashboard/ninaui.html", "detail": "integrated NinaGate dashboard tab, tracked newly pasted html dashboard, and ran sync", "status": "ok"}
-{"t": "2026-06-15T18:35:31.799175+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T18:36:06.633145+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-16T00:38:12.090238Z", "step": 0, "action": "start", "file": "tools/provider_health.py", "detail": "Implement provider_health.py and wire into core/router.py", "status": "ok"}
-{"t": "2026-06-15T18:40:20.499491+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T18:41:54.462762+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T18:42:55.527368+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T18:45:29.226543+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T18:57:32.298785+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T18:59:57.896837+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:01:22.694768+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:05:10.925618+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:07:02.946149+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:07:31.111874+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:09:21.091416+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:09:55.522547+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:19:04.062035+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:29:01.630596+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:29:41.397546+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:30:18.858423+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:32:42.882117+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T19:59:02.254069+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T20:10:58.725662+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T20:11:52.094656+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T20:14:02.240433+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T20:44:59.342963+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T20:53:34.043161+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T20:56:17.100509+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T20:59:26.931834+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:01:35.890542+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:03:05.114102+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:03:28.492415+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:04:30.080926+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:17:56.056942+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:20:30.338845+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:23:42.908093+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:29:15.873824+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
-{"t": "2026-06-15T21:36:16.020432+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/2 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-22T18:35:07.466290+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-22T18:35:18.405828+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-22T18:35:55.904070+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-22T18:43:56.402889+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-22T18:44:16.461943+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-22T18:44:42.186668+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-23T05:18:06.802365+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/144 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-23T05:18:33.818138+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/5", "status": "ok"}
+{"t": "2026-06-23T05:18:33.822228+00:00", "step": 1, "action": "observe", "file": "", "detail": "FINAL: Done", "status": "ok"}
+{"t": "2026-06-23T05:18:33.822327+00:00", "step": 2, "action": "think", "file": "", "detail": "Reasoning through step 2/5", "status": "ok"}
+{"t": "2026-06-23T05:18:39.931039+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/10", "status": "ok"}
+{"t": "2026-06-23T05:18:39.934913+00:00", "step": 1, "action": "observe", "file": "", "detail": "TOOL:write_to_file INPUT:dummy.py", "status": "ok"}
+{"t": "2026-06-23T21:11:08.435122+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-23T21:11:11.072210+00:00", "step": 1, "action": "observe", "file": "", "detail": "## Step 1: GOAL ANALYSIS\nThe user's goal is to initiate a conversation with a greeting, \"hi\". The hidden intent is to st", "status": "ok"}
+{"t": "2026-06-23T21:11:11.072457+00:00", "step": 2, "action": "think", "file": "", "detail": "Reasoning through step 2/3", "status": "ok"}
+{"t": "2026-06-23T21:11:12.569437+00:00", "step": 2, "action": "observe", "file": "", "detail": "## Step 1: GOAL ANALYSIS\nThe user's goal is to initiate a conversation with a greeting, \"hi\". The hidden intent is to st", "status": "ok"}
+{"t": "2026-06-23T21:11:12.569542+00:00", "step": 3, "action": "think", "file": "", "detail": "Reasoning through step 3/3", "status": "ok"}
+{"t": "2026-06-23T21:11:24.750069+00:00", "step": 3, "action": "observe", "file": "", "detail": "<thinking>\n1. GOAL ANALYSIS:\n   The user's initial \"hi\" was a greeting, and my previous responses have already addressed", "status": "ok"}
+{"t": "2026-06-24T13:02:23.070736+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/47 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-24T13:03:27.854314+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/47 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-24T13:08:16.997595+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/47 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-24T13:13:26.961063+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-24T13:13:31.039017+00:00", "step": 1, "action": "observe", "file": "", "detail": "## Step 1: GOAL ANALYSIS\nThe user's goal is to initiate a conversation with a greeting, \"hi.\" There is no explicit hidde", "status": "ok"}
+{"t": "2026-06-24T13:13:31.041054+00:00", "step": 2, "action": "think", "file": "", "detail": "Reasoning through step 2/3", "status": "ok"}
+{"t": "2026-06-24T13:13:31.686625+00:00", "step": 1, "action": "think", "file": "", "detail": "Reasoning through step 1/3", "status": "ok"}
+{"t": "2026-06-24T13:13:35.248096+00:00", "step": 1, "action": "observe", "file": "", "detail": "## Step 1: GOAL ANALYSIS\nThe user is asking \"how r u\", which is a casual greeting inquiring about the well-being of the ", "status": "ok"}
+{"t": "2026-06-24T13:13:35.248992+00:00", "step": 2, "action": "think", "file": "", "detail": "Reasoning through step 2/3", "status": "ok"}
+{"t": "2026-06-24T13:13:37.980004+00:00", "step": 2, "action": "observe", "file": "", "detail": "## Step 1: GOAL ANALYSIS\nThe user is asking \"how r u\", which is a casual greeting inquiring about the well-being of the ", "status": "ok"}
+{"t": "2026-06-24T13:13:37.980528+00:00", "step": 3, "action": "think", "file": "", "detail": "Reasoning through step 3/3", "status": "ok"}
+{"t": "2026-06-24T13:13:51.443314+00:00", "step": 2, "action": "observe", "file": "", "detail": "<thinking>\n1. GOAL ANALYSIS:\n   - The user's explicit goal is a simple greeting (\"hi\").\n   - Hidden intent: Given the ex", "status": "ok"}
+{"t": "2026-06-24T13:13:51.444191+00:00", "step": 3, "action": "think", "file": "", "detail": "Reasoning through step 3/3", "status": "ok"}
+{"t": "2026-06-24T13:17:18.206213+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/53 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-25T05:14:48.416197+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/25 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}
+{"t": "2026-06-25T07:18:57.208686+00:00", "step": -99, "action": "audit", "file": "logs/ninagate.log", "detail": "RULE0 AUDIT (8h): 0/25 local (0.0%). CloudViolations=0 BannedTools=0. \u274c BELOW 66% TARGET", "status": "fail"}

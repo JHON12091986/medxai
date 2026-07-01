@@ -1,0 +1,30 @@
+# =============================================================================
+# ~/.bashrc_nina  —  Nina CLI aliases
+# source this from ~/.bashrc:
+#   echo 'source ~/nina/config/.bashrc_nina' >> ~/.bashrc
+# =============================================================================
+
+export NINA_HOME=~/nina
+
+# ── Git transport (pure: stage → commit → pull → push --no-verify) ───────────
+alias ngit='bash ~/nina/scripts/ngit.sh'
+
+# ── OODA brain (full audit + hygiene loop) ───────────────────────────────────
+alias sync='bash ~/nina/scripts/nina_sync.sh all'
+
+# ── Legacy alias (kept for muscle memory — calls ngit internally) ─────────────
+alias npush='bash ~/nina/scripts/ngit.sh'
+
+# ── Quick cd + venv ──────────────────────────────────────────────────────────
+alias nina='cd ~/nina && source venv/bin/activate'
+
+# ── Service shortcuts (--user, never sudo) ────────────────────────────────────
+alias nstart='systemctl --user start nina'
+alias nstop='systemctl --user stop nina'
+alias nstatus='systemctl --user status nina'
+alias nrestart='systemctl --user restart nina'
+alias nlog='journalctl --user -u nina -f'
+
+# ── Tail logs ────────────────────────────────────────────────────────────────
+alias ngit-log='tail -f ~/nina/runtime/logs/ngit.log'
+alias sync-log='tail -f ~/nina/runtime/logs/nina_sync.log'

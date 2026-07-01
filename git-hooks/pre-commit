@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# nina pre-commit hook — SSOT snake: every commit re-enters OODA
+REPO_ROOT=$(git rev-parse --show-toplevel)
+[[ -f "$REPO_ROOT/.push_in_flight" ]] && exit 0
+bash "$REPO_ROOT/scripts/nina_sync.sh" hooks
+bash "$REPO_ROOT/scripts/nina_sync.sh" audit

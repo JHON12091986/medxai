@@ -272,7 +272,7 @@ Perplexity is NOT idle during coding — it remains available for unblocking and
 #### Quota Reference
 | Tool | Model | Daily Quota | Reset |
 |------|-------|-------------|-------|
-| agy | gemini-2.5-flash | ~5h rolling | Rolling |
+| agy | unknown | ~5h rolling | Rolling |
 | Qwen Code CLI | Qwen3-Coder-480B | 2,000 req/day | Daily |
 | Jules | Gemini 3.1 Pro | 100 tasks/day | Rolling 24h |
 | Cursor Hobby | GPT-4o mini | 50 chat/month | Monthly |
@@ -280,3 +280,7 @@ Perplexity is NOT idle during coding — it remains available for unblocking and
 
 #### Quota Cascade Rule
 Gemini CLI exhausted → Qwen Code → agy → Cursor → Jules (async) → Ollama
+
+
+---
+**JULES_PIPELINE_CHECK: PASSED**

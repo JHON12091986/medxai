@@ -1,0 +1,35 @@
+[Unit]
+Description=NINA Autonomous Agent
+After=network.target ollama.service nina-ensure-env.service
+Wants=ollama.service nina-dashboard.service
+Requires=nina-ensure-env.service
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=aibony
+WorkingDirectory=/home/aibony/nina
+EnvironmentFile=/home/aibony/nina/.env
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONPATH=/home/aibony/nina
+
+ExecStartPre=/bin/bash /home/aibony/nina/scripts/ensure_env.sh
+ExecStart=/home/aibony/nina/venv/bin/python main.py
+
+WatchdogSec=120
+NotifyAccess=main
+Restart=always
+RestartSec=15
+TimeoutStartSec=90
+TimeoutStopSec=30
+
+MemoryMax=2G
+CPUQuota=90%
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nina
+
+[Install]
+WantedBy=default.target

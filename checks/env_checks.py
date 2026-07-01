@@ -25,9 +25,9 @@ def load_env():
 
 def check_env_keys(env):
     BLOCKER_KEYS = [
-        ("TELEGRAMBOTTOKEN",  "config.missing_env.telegrambottoken"),
-        ("AUTHORIZEDUSERID",  "config.missing_env.authorizeduserid"),
-        ("APISECRETKEY",        "config.missing_env.apisecretkey"),
+        ("TELEGRAM_BOT_TOKEN",  "config.missing_env.telegrambottoken"),
+        ("TELEGRAM_CHAT_ID",     "config.missing_env.telegramchatid"),
+        ("API_SECRET_KEY",        "config.missing_env.apisecretkey"),
     ]
     ADVISORY_KEYS = [
         ("TELEGRAMCHATID",    "config.missing_env.telegramchatid"),

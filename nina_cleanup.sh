@@ -6,6 +6,13 @@ set -e
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 cd "$DIR"
 
+PYTHON="python3"
+if [ -f "venv/bin/python" ]; then
+    PYTHON="venv/bin/python"
+elif [ -f "ninavenv/bin/python" ]; then
+    PYTHON="ninavenv/bin/python"
+fi
+
 echo "================================================"
 echo " NINA SAFE DUPLICATE CLEANUP"
 echo "================================================"
@@ -17,7 +24,7 @@ if [ -z "$VIRTUAL_ENV" ]; then
     elif [ -d "ninavenv" ]; then
         source ninavenv/bin/activate
     else
-        echo "⚠️ Virtual environment not found. Proceeding with system python3."
+        echo "⚠️ Virtual environment not found. Proceeding with $PYTHON."
     fi
 fi
 
@@ -74,19 +81,19 @@ fi
 # ---------------------------------------------------------------------------
 if [ "$1" == "--execute" ]; then
     echo "Running in EXECUTE mode..."
-    python3 tools/prune_duplicates.py --execute
+    "$PYTHON" tools/prune_duplicates.py --execute
 
     echo ""
     echo "Refreshing Governance Engine..."
-    python3 tools/update_index.py
-    python3 tools/validate_index.py
-    python3 tools/generate_dashboard.py
+    "$PYTHON" tools/update_index.py
+    "$PYTHON" tools/validate_index.py
+    "$PYTHON" tools/generate_dashboard.py
 
     echo ""
     echo "✅ Governance refresh complete."
 else
     echo "Running in DRY RUN mode..."
-    python3 tools/prune_duplicates.py
+    "$PYTHON" tools/prune_duplicates.py
     echo ""
     echo "To actually delete these files, run: ./nina_cleanup.sh --execute"
     echo ""

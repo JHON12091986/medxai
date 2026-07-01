@@ -1,0 +1,43 @@
+//! # Loan Contract
+//!
+//! This contract manages the cooperative's loan operations, handling:
+//! - Loan creation and approval
+//! - Payment processing
+//! - Interest calculations
+//! - Collateral management
+//!
+//! # Events
+//! - `LoanCreated`: emitted when a new loan is issued
+//! - `PaymentMade`: emitted when a payment is received
+//! - `LoanDefaulted`: emitted when a loan defaults
+
+use soroban_sdk::{contract, contractimpl, Env, Address, i128};
+
+#[contract]
+pub struct LoanContract;
+
+#[contractimpl]
+impl LoanContract {
+    /// Creates a new loan for a member.
+    ///
+    /// # Authorization
+    /// Only authorized admins can create loans.
+    ///
+    /// # Arguments
+    /// * `member` - The borrower's address
+    /// * `amount` - The principal amount
+    /// * `interest_rate` - Annual interest rate in basis points
+    ///
+    /// # Panics
+    /// Panics if `member` is the zero address or `amount` is zero.
+    ///
+    /// # Events
+    /// Emits `LoanCreated` with loan details.
+    ///
+    /// # Returns
+    /// Returns the loan ID.
+    pub fn create_loan(env: Env, member: Address, amount: i128, interest_rate: i128) -> i128 {
+        // implementation...
+        0
+    }
+}

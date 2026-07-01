@@ -1,0 +1,37 @@
+[Unit]
+Description=OpenCode Agent Session (tmux)
+Documentation=https://github.com/aibony/nina/blob/main/OUROBOROS.md
+After=ninagate.service opencode-inhibit.service
+Requires=opencode-inhibit.service
+Wants=ninagate.service
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=forking
+User=aibony
+WorkingDirectory=/home/aibony/nina
+EnvironmentFile=/home/aibony/nina/.env
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONPATH=/home/aibony/nina
+Environment=HOME=/home/aibony
+Environment=TMUX_SESSION=opencode-nina
+
+# Kill any stale session first, then create fresh
+ExecStartPre=/usr/bin/tmux kill-session -t opencode-nina 2>/dev/null || true
+ExecStart=/usr/bin/tmux new-session -d -s opencode-nina \
+  -c /home/aibony/nina \
+  '/home/aibony/nina/venv/bin/python -m opencode 2>&1 | tee -a /home/aibony/nina/data/logs/opencode-session.log || opencode 2>&1 | tee -a /home/aibony/nina/data/logs/opencode-session.log'
+
+ExecStop=/usr/bin/tmux kill-session -t opencode-nina 2>/dev/null || true
+
+RemainAfterExit=yes
+TimeoutStartSec=30
+TimeoutStopSec=15
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=opencode-session
+
+[Install]
+WantedBy=default.target

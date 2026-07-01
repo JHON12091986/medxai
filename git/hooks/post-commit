@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# NINA OODA post-commit hook — OBS-004
+# SOURCE: git/hooks/post-commit
+# Install via: bash git/scripts/install_hooks.sh
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Activate venv if not already active
+if [ -z "${VIRTUAL_ENV:-}" ]; then
+  source /home/aibony/nina/venv/bin/activate 2>/dev/null || source /home/aibony/nina/.venv/bin/activate 2>/dev/null || true
+fi
+
+echo "[post-commit] OODA OBSERVE phase triggered..."
+
+# Step 1: Update commit index
+python3 nina_commit_index.py 2>/dev/null \
+  && echo "[post-commit] commit index updated" \
+  || echo "[post-commit] WARN: commit index failed"
+
+# Step 2: Regenerate context graph
+python3 nina_context_graph.py 2>/dev/null \
+  && echo "[post-commit] context graph updated" \
+  || echo "[post-commit] WARN: context graph failed"
+
+# Step 3: Run wiring audit (non-blocking)
+python3 nina_wiring_audit.py 2>/dev/null \
+  && echo "[post-commit] wiring audit passed" \
+  || echo "[post-commit] WARN: wiring audit found issues"
+
+# Step 4: Read graph summary and log health
+python3 -c "
+import json, pathlib
+g = json.loads(pathlib.Path('nina_context_graph.json').read_text())
+s = g['summary']
+print(f'[post-commit] health={s[\"health\"]} | top_priority={s[\"top_priority\"]} | services_down={s[\"services_down\"]}')
+" 2>/dev/null || true
+
+echo "[post-commit] OBSERVE complete."
+
+# Auto-commit hook-generated governed files so they never appear dirty
+GENERATED_DIRTY=$(git diff --name-only -- \
+  docs/space/nina_index.md \
+  docs/space/nina_repo_hygiene_dashboard.md \
+  docs/context/nina_session_log.md 2>/dev/null)
+
+if [ -n "$GENERATED_DIRTY" ]; then
+  git add docs/space/nina_index.md \
+          docs/space/nina_repo_hygiene_dashboard.md \
+          docs/context/nina_session_log.md 2>/dev/null || true
+  git -c core.hooksPath=/dev/null commit \
+    -m "chore(auto): update hook-generated governed docs [skip ci]" \
+    --no-verify 2>/dev/null || true
+fi
+
+exit 0

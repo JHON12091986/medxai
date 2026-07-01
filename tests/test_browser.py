@@ -2,6 +2,17 @@ import pytest
 from unittest.mock import patch, AsyncMock
 from tools.browser import _is_internal, fetch
 
+@pytest.fixture(autouse=True)
+def mock_dns_resolve():
+    import socket
+    with patch("socket.gethostbyname") as mock_dns:
+        def side_effect(host):
+            if host in ("example.com", "google.com", "8.8.8.8", "1.1.1.1"):
+                return "93.184.215.14" # example.com external IP
+            raise socket.gaierror(-2, "Name or service not known")
+        mock_dns.side_effect = side_effect
+        yield mock_dns
+
 def test_is_internal_blocked():
     blocked_urls = [
         "http://127.0.0.1",

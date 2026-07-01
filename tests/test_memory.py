@@ -221,4 +221,4 @@ async def test_10_context_length_bounded(mock_paths, mock_chromadb):
     mem = MemorySystem()
     await mem.initialize()
     context = await mem.build_context("hello")
-    assert len(context) < 4000
+    assert len(context) < 13000

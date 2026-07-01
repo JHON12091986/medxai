@@ -1,0 +1,31 @@
+//! # Treasury Contract
+//!
+//! This contract manages the cooperative's treasury, handling:
+//! - Deposits and withdrawals
+//! - Balance tracking
+//! - Admin controls
+//!
+//! # Events
+//! - `Deposit`: emitted when funds are added
+//! - `Withdraw`: emitted when funds are removed
+//! - `AdminTransferred`: emitted when admin changes
+
+/// Deposits funds into the treasury.
+///
+/// # Authorization
+/// No authorization required (anyone can deposit).
+///
+/// # Arguments
+/// * `amount` - The amount to deposit
+///
+/// # Panics
+/// Panics if `amount` is zero.
+///
+/// # Events
+/// Emits `Deposit` with the amount and caller.
+///
+/// # Returns
+/// Returns the new balance.
+pub fn deposit(env: Env, amount: i128) -> i128 {
+    // implementation...
+}

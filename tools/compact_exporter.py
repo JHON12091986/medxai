@@ -252,3 +252,80 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ── Token-budget context packer (NINA enhancement patch) ─────────────────────
+# NINA_FEATURE: compact-exporter-token-budget v1.0
+
+def _rough_token_count(text: str) -> int:
+    """~4 chars per token heuristic (good enough for packing)."""
+    return len(text) // 4
+
+def pack_context_budget(
+    files: list,
+    budget_tokens: int = 32000,
+    changed_only: bool = False,
+    dep_graph_path = None,
+):
+    """
+    Return a ranked, token-capped list of (path, content) tuples.
+    Priority: (1) recently edited, (2) dependency-connected to changed files, (3) smallest size.
+    files: list of Path objects to consider
+    """
+    import subprocess, time, json
+
+    # Get recently changed files from git
+    try:
+        r = subprocess.run(["git","log","--name-only","--pretty=","--diff-filter=AM","-5"],
+                           capture_output=True, text=True,
+                           cwd=Path.home()/"nina")
+        recent = set(r.stdout.splitlines())
+    except:
+        recent = set()
+
+    # Load dependency graph for connectivity scoring
+    connected = set()
+    if dep_graph_path and Path(dep_graph_path).exists():
+        try:
+            g = json.loads(Path(dep_graph_path).read_text())
+            # Nodes connected to recently changed files
+            for node_id, node in g.get("nodes", {}).items():
+                deps = node.get("imports", []) + node.get("imported_by", [])
+                if any(r in dep for dep in deps for r in recent):
+                    connected.add(node_id)
+        except:
+            pass
+
+    scored = []
+    for p in files:
+        p = Path(p)
+        if not p.exists(): continue
+        rel = str(p.relative_to(Path.home()/"nina"))
+        try:
+            content = p.read_text(errors="replace")
+        except:
+            continue
+        tokens = _rough_token_count(content)
+        # Score: recency > connectivity > recency of mtime > smallness
+        score = (
+            (3 if rel in recent else 0) +
+            (2 if rel in connected else 0) +
+            (1 if p.stat().st_mtime > time.time() - 3600 else 0) +
+            (1 if tokens < 500 else 0)
+        )
+        if changed_only and rel not in recent:
+            continue
+        scored.append((score, tokens, rel, content))
+
+    scored.sort(key=lambda x: (-x[0], x[1]))  # high score, small size first
+
+    packed = []
+    used = 0
+    for score, tokens, rel, content in scored:
+        if used + tokens > budget_tokens:
+            break
+        packed.append((rel, content))
+        used += tokens
+
+    print(f"[compact_exporter] Packed {len(packed)} files, ~{used} tokens (budget={budget_tokens})")
+    return packed

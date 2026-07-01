@@ -1,8 +1,6 @@
 import pytest
 import time
-import json
-import os
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, patch
 
 from core.router import CircuitBreaker, HybridRouter, ClassifiedTask, ProviderHealth
 from core.config import NinaConfig
@@ -11,6 +9,7 @@ from core.config import NinaConfig
 def dummy_config():
     return NinaConfig(
         telegram_bot_token="dummy",
+        telegram_chat_id="dummy",
         authorized_user_id="123",
         groq_api_key="mock_key",
         gemini_api_key="mock_key"
@@ -58,12 +57,13 @@ async def test_router_route_basic(router):
     # We must patch it on the INSTANCE
     router._call_provider = AsyncMock(return_value=("Success", 10, 10, 50.0))
     
-    # Force a dummy provider into TIER1 and health
-    with patch("core.router.PROVIDERS_TIER1", {"TEST": {"model": "m", "base_url": "u", "key_field": None}}):
-        router.health = {"TEST": ProviderHealth()}
-        resp = await router.route("Hello", [], task)
-        assert resp == "Success"
-        assert router.health["TEST"].success_count == 1
+    # Force a dummy provider into ALL_PROVIDERS and TIER_PREFERENCE_ORDER and health
+    with patch("core.quota_router.TIER_PREFERENCE_ORDER", {"FAST": [["TEST"]]}):
+        with patch("core.router.ALL_PROVIDERS", {"TEST": {"model": "m", "base_url": "u", "key_field": None}}):
+            router.health["TEST"] = ProviderHealth()
+            resp = await router.route("Hello", [], task)
+            assert resp == "Success"
+            assert router.health["TEST"].success_count == 1
 
 @pytest.mark.asyncio
 async def test_router_fallback(router):
@@ -75,20 +75,22 @@ async def test_router_fallback(router):
     
     router._call_provider = AsyncMock(side_effect=mock_call)
     
-    # Mock TIER1 with two providers. Order them to ensure FAIL is tried first.
-    with patch("core.router.PROVIDERS_TIER1", {
-        "FAIL": {"model": "m1", "base_url": "u1", "key_field": None},
-        "OK": {"model": "m2", "base_url": "u2", "key_field": None}
-    }):
-        # Setup health for both
-        router.health = {"FAIL": ProviderHealth(), "OK": ProviderHealth()}
-        # Give FAIL a slightly better score to ensure it's picked first in available.sort()
-        router.health["FAIL"].success_count = 10 
-        
-        resp = await router.route("Goal", [], task)
-        assert resp == "Recovered"
-        assert router.health["FAIL"].failure_count == 1
-        assert router.health["OK"].success_count == 1
+    # Mock ALL_PROVIDERS and TIER_PREFERENCE_ORDER with two providers. Order them to ensure FAIL is tried first.
+    with patch("core.quota_router.TIER_PREFERENCE_ORDER", {"FAST": [["FAIL", "OK"]]}):
+        with patch("core.router.ALL_PROVIDERS", {
+            "FAIL": {"model": "m1", "base_url": "u1", "key_field": None},
+            "OK": {"model": "m2", "base_url": "u2", "key_field": None}
+        }):
+            # Setup health for both
+            router.health["FAIL"] = ProviderHealth()
+            router.health["OK"] = ProviderHealth()
+            # Give FAIL a slightly better score to ensure it's picked first in available.sort()
+            router.health["FAIL"].success_count = 10 
+            
+            resp = await router.route("Goal", [], task)
+            assert resp == "Recovered"
+            assert router.health["FAIL"].failure_count == 1
+            assert router.health["OK"].success_count == 1
 
 def test_provider_health_scoring():
     h = ProviderHealth()
@@ -104,3 +106,15 @@ def test_get_models_status(router):
     router.health = {"TEST": ProviderHealth()}
     status = router.get_models_status()
     assert "Provider" in status
+
+@pytest.mark.asyncio
+async def test_router_stream_no_providers(router):
+    task = ClassifiedTask("quick", 100, False, False)
+    # Empty all provider tier settings to guarantee no provider is chosen
+    with patch("core.quota_router.TIER_PREFERENCE_ORDER", {"FAST": []}):
+        res = await router.route("Hello", [], task, stream=True)
+        chunks = []
+        async for chunk in res:
+            chunks.append(chunk)
+        assert any("All providers are currently unavailable" in str(c) for c in chunks) or any("Streaming interrupted" in str(c) for c in chunks)
+

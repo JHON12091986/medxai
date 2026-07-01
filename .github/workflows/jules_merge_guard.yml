@@ -1,0 +1,153 @@
+name: Jules Merge Guard & Rollback
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-gate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Setup environment
+        run: |
+          echo "TELEGRAM_BOT_TOKEN=dummy" > .env
+          echo "AUTHORIZED_USER_ID=dummy" >> .env
+          echo "API_SECRET_KEY=dummy" >> .env
+      - name: Run Full Pytest Suite
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PYTHONPATH: ./tools:.
+        shell: python
+        run: |
+          import os
+          import json
+          import urllib.request
+          import subprocess
+
+          head_ref = os.environ.get("GITHUB_HEAD_REF", "")
+          is_jules = "jules" in head_ref.lower() or head_ref.startswith("jules/")
+
+          if not is_jules:
+              print(f"Not a Jules branch: '{head_ref}'. Skipping pre-merge test gate.")
+              exit(0)
+
+          print(f"Jules branch detected: '{head_ref}'. Running full test suite...")
+
+          # Run full test suite (not just one file)
+          result = subprocess.run(
+              ["pytest", "tests/", "--tb=short", "-q", "--timeout=120"],
+              stdout=subprocess.PIPE,
+              stderr=subprocess.STDOUT,
+              text=True
+          )
+
+          print(result.stdout)
+
+          if result.returncode != 0:
+              print("Tests failed! Posting failure comment and blocking merge.")
+
+              github_token = os.environ.get("GITHUB_TOKEN")
+              event_path = os.environ.get("GITHUB_EVENT_PATH")
+
+              with open(event_path, "r") as f:
+                  event_data = json.load(f)
+
+              pr_number = event_data["pull_request"]["number"]
+              repo_fullname = event_data["repository"]["full_name"]
+
+              comment_body = (
+                  f"### \u274c Pre-merge Test Gate Failed\n\n"
+                  f"Full pytest suite (`tests/`) failed on Jules branch `{head_ref}`. Merge blocked.\n\n"
+                  f"#### Output (last 4000 chars):\n"
+                  f"```text\n{result.stdout[-4000:]}\n```\n"
+              )
+
+              comment_url = f"https://api.github.com/repos/{repo_fullname}/issues/{pr_number}/comments"
+              comment_data = json.dumps({"body": comment_body}).encode("utf-8")
+
+              req = urllib.request.Request(comment_url, data=comment_data, method="POST")
+              req.add_header("Authorization", f"token {github_token}")
+              req.add_header("Accept", "application/vnd.github.v3+json")
+              req.add_header("Content-Type", "application/json")
+              req.add_header("User-Agent", "GitHub-Action-Jules-Merge-Guard")
+
+              try:
+                  with urllib.request.urlopen(req) as r:
+                      print("Successfully posted failing tests comment on PR.")
+              except Exception as e:
+                  print(f"Error posting comment: {e}")
+
+              exit(1)
+          else:
+              print("All tests passed! PR is clear to merge.")
+
+  rollback-tagger:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Generate Rollback Tag and Update Registry
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+
+          # Try multiple PR number extraction patterns (handles squash + merge commits)
+          PR_NUM=""
+
+          # Pattern 1: "Merge pull request #NNN"
+          if [[ "$COMMIT_MSG" =~ Merge\ pull\ request\ \#([0-9]+) ]]; then
+            PR_NUM="${BASH_REMATCH[1]}"
+
+          # Pattern 2: squash merge trailing "(#NNN)"
+          elif [[ "$COMMIT_MSG" =~ \(\#([0-9]+)\)$ ]]; then
+            PR_NUM="${BASH_REMATCH[1]}"
+
+          # Pattern 3: auto-merged "Auto-merged by ... PR #NNN"
+          elif [[ "$COMMIT_MSG" =~ PR[[:space:]]#([0-9]+) ]]; then
+            PR_NUM="${BASH_REMATCH[1]}"
+
+          # Pattern 4: "feat/fix/chore(scope): ... (#NNN)" anywhere in message
+          elif [[ "$COMMIT_MSG" =~ \#([0-9]+) ]]; then
+            PR_NUM="${BASH_REMATCH[1]}"
+
+          else
+            PR_NUM="ooda"  # OODA auto-commits get tag rollback/ooda/timestamp
+          fi
+
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          TAG_TIME=$(date -u +"%Y%m%d-%H%M%S")
+          COMMIT_SHA=$(git rev-parse HEAD)
+          TAG_NAME="rollback/pr-${PR_NUM}/${TAG_TIME}"
+
+          echo "Creating tag ${TAG_NAME}..."
+          git tag -a "${TAG_NAME}" -m "Rollback tag for commit ${COMMIT_SHA} generated at ${TIMESTAMP}"
+          git push origin "${TAG_NAME}"
+
+          REGISTRY="docs/space/rollback_registry.md"
+          NEW_ROW="| ${TIMESTAMP} | ${COMMIT_SHA} | \`${TAG_NAME}\` | ACTIVE | Auto-generated rollback checkpoint |"
+
+          echo "${NEW_ROW}" >> ${REGISTRY}
+
+          git add ${REGISTRY}
+          git commit -m "chore(rollback): Register rollback tag ${TAG_NAME} [skip ci]" || true
+          git push origin main || true

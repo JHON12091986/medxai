@@ -1,16 +1,30 @@
-"""NINA v12 — NinaOS orchestrator (Stage 1)."""
+"""NINA v13 — NinaOS orchestrator.
+Pass 3 change: Kernel wired into start() after idle_loop initialization.
+Kernel runs as a background asyncio.Task alongside the existing agent pipeline.
+Version bump: v12 → v13.
+"""
 from typing import Any
-import logging, os, time
+import logging, os, time, asyncio
+from apscheduler.triggers.cron import CronTrigger
+
+_orig_cron_trigger_init = CronTrigger.__init__
+
+def _patched_cron_trigger_init(self, *args, **kwargs):
+    if "day_of_week" in kwargs and kwargs["day_of_week"] == "sun-thu":
+        kwargs["day_of_week"] = "sun,mon,tue,wed,thu"
+    _orig_cron_trigger_init(self, *args, **kwargs)
+
+CronTrigger.__init__ = _patched_cron_trigger_init
 from core.config import load_config
 from core.router import HybridRouter
 from core.memory import MemorySystem
 from core.agent import AgentLoop
 from crons.manager import TaskScheduler
 from tools.upgradepipeline import UpgradePipeline, IDLE_QUEUE as _IDLE_QUEUE
-from idleloop import IdleUpgradeLoop
+from core.idleloop import IdleUpgradeLoop
 from core.hotreload import ConfigHotReload
 from interfaces.telegram_interface import TelegramInterface
-from tools import shell, browser, system as systool, jules, search
+from tools import shell, browser, system as systool, jules, search, finance, market, office_mail
 
 SYSTEM_PROMPT_TEMPLATE = """You are NINA — a personal autonomous AI agent, not a chatbot.
 
@@ -68,6 +82,8 @@ Hard constraints: Never send banking/sensitive data to cloud. Never bypass appro
 - Address Baizid directly. Peer-to-peer.
 """
 
+VERSION = "v13"
+
 
 class Nina:
     def __init__(self) -> None:
@@ -76,14 +92,17 @@ class Nina:
         self.memory  = MemorySystem()
         self.pipeline= UpgradePipeline(self.config, self.router)
         self.tools = {"shell": shell, "web": search, "browser": browser,
-                        "system": systool, "jules": jules}
+                        "system": systool, "jules": jules, "finance": finance,
+                        "market": market, "email": office_mail}
         self.agent   = None
         self.telegram= None
         self.scheduler=None
         self.idle_loop   = None
         self.hotreload   = None
+        self.kernel      = None   # Pass 3: 4-State Kernel task
         self.system_prompt = ""
         self._force_local_fast = False
+        self.shared_memory_path = "data/crew_shared_memory.json"
 
     async def start(self) -> None:
         # Single-instance lock moved to main.py
@@ -138,6 +157,10 @@ class Nina:
         logging.getLogger("nina.router_log").propagate = False
 
         await self.memory.initialize()
+        # QW-5: inject active goals into startup context
+        goals_ctx = await self.memory.goal_resume_context()
+        if goals_ctx:
+            logging.getLogger("nina").info(f"Resuming with {goals_ctx.count('goal_')} active goals")
         await self.router.initialize()
 
         # Pre-reset daily quota Telegram alert system
@@ -148,6 +171,7 @@ class Nina:
         await self.pipeline.initialize()
 
         self.agent     = AgentLoop(self.config, self.router, self.memory, self.tools)
+        self.agent.nina = self
         self.telegram  = TelegramInterface(self.config, self)
         self.scheduler = TaskScheduler(self)
         self.scheduler.start()
@@ -179,6 +203,62 @@ class Nina:
         await self.idle_loop.initialize()
         self.hotreload = ConfigHotReload(self.config, self.telegram)
         await self.hotreload.initialize()
+
+        # ─────────────────────────────────────────────────────────
+        # Pass 3: Wire 4-State Kernel (Blueprint § II)
+        # Kernel runs as a background task alongside the agent pipeline.
+        # It consumes from event_bus.queue and dispatches to agent_loop.
+        # If the kernel raises on import (e.g. missing dep), we log and
+        # continue — the existing agent pipeline is unaffected.
+        # ─────────────────────────────────────────────────────────
+        try:
+            from core.kernel import Kernel
+            from core.agent_loop import run_agent_turn
+
+            # Resolve event_bus: prefer self.pipeline.bus, fallback to new EventBus
+            _bus = (
+                getattr(self.pipeline, "bus", None)
+                or getattr(self.agent, "bus", None)
+                or getattr(self.router, "bus", None)
+            )
+            if _bus is None:
+                from core.event_bus import EventBus
+                _bus = EventBus()
+                logging.getLogger("nina").info("kernel: created standalone EventBus")
+
+            # Resolve guardian: prefer guardian_loop if already running
+            _guardian = (
+                getattr(self.pipeline, "guardian", None)
+                or getattr(self, "guardian", None)
+            )
+
+            # Wrap run_agent_turn so Kernel can call it with a TaskPacket
+            async def _kernel_agent_fn(packet):
+                return await run_agent_turn(
+                    packet.payload,
+                    config=self.config,
+                    router=self.router,
+                    memory=self.memory,
+                )
+
+            self.kernel = Kernel(
+                event_bus=_bus,
+                agent_loop_fn=_kernel_agent_fn,
+                memory=self.memory,
+                guardian=_guardian,
+            )
+            await self.kernel.start()
+            logging.getLogger("nina").info(
+                "kernel wired and running — NINA %s", VERSION
+            )
+        except Exception as _kernel_exc:
+            # Non-fatal: existing agent pipeline continues without the kernel
+            logging.getLogger("nina").warning(
+                "kernel_wire_failed (non-fatal, pipeline unaffected): %s", _kernel_exc
+            )
+            self.kernel = None
+        # ─────────────────────────────────────────────────────────
+
         await self._send_startup_message()
 
     async def _send_startup_message(self) -> None:
@@ -193,19 +273,26 @@ class Nina:
         except Exception: pass
         ct = f"{temps['cpu']}°C {'OK' if (temps['cpu'] or 0)<self.config.thermal_warn_cpu else 'WARN'}" if temps['cpu'] else "N/A"
         gt = f"{temps['gpu']}°C {'OK' if (temps['gpu'] or 0)<self.config.thermal_warn_gpu else 'WARN'}" if temps['gpu'] else "N/A"
-        msg = (f"NINA v12 ONLINE — {time.strftime('%Y-%m-%d %H:%M')} Dhaka\n"
+        kernel_status = "kernel=ACTIVE" if self.kernel else "kernel=STANDBY"
+        msg = (f"NINA {VERSION} ONLINE — {time.strftime('%Y-%m-%d %H:%M')} Dhaka\n"
                f"RAM {ram:.1f}/16GB  VRAM {vram}\n"
                f"Thermal CPU:{ct} GPU:{gt}\n"
                f"Scheduler: {self.scheduler.job_count} jobs | "
                f"Next report: {self.scheduler.next_job_time('morning_report')}\n"
-               f"Memory: {self.memory.conversation_count} conversations, {self.memory.fact_count} facts\nReady.")
+               f"Memory: {self.memory.conversation_count} conversations, {self.memory.fact_count} facts\n"
+               f"{kernel_status} | Ready.")
         await self.telegram.send_message(msg)
 
     async def get_status(self) -> str:
         s = await systool.get_status(self.config)
-        return f"{s}\n\n{self.router.get_status()}"
+        kernel_info = ""
+        if self.kernel:
+            kernel_info = f"\nKernel: ACTIVE cycles={self.kernel.cycles}"
+        return f"{s}\n\n{self.router.get_status()}{kernel_info}"
 
     async def shutdown(self) -> None:
+        if self.kernel:
+            await self.kernel.stop()
         self.scheduler.shutdown(wait=False)
         await self.router.close()
         await self.memory.close()
@@ -213,7 +300,7 @@ class Nina:
         logging.getLogger("nina").info("NINA shutdown complete")
 
     async def run_morning_report(self) -> None:
-        from tools import officemail
+        from tools import office_mail as officemail
         from tools import system as systool
         import httpx, time
         lines = [f"NINA Morning Report — {time.strftime('%A %d %b %Y')}"]
@@ -270,8 +357,8 @@ class Nina:
         logging.getLogger("nina.scheduler").info("provider_health_probe")
 
     async def run_provider_hunter(self) -> None:
-        from tools.providerhunter import hunt
-        await hunt(self.router, self.config)
+        from tools.providerhunter import run_discovery as hunt
+        await hunt()
 
     async def run_thermal_health(self) -> None:
         from tools import system as s
@@ -293,3 +380,155 @@ class Nina:
             msg = f"Reminder: {r.get('text', 'No text')}"
             await self.telegram.send_message(msg)
             await self.memory.mark_reminder_done(r.get("id"))
+
+    async def add_reminder(self, text: str, remind_at: str, repeat: str = "none") -> str:
+        import uuid, json, re
+        from datetime import datetime, timedelta
+        from pathlib import Path
+        
+        now = datetime.now()
+        remind_dt = now
+        remind_at_lower = remind_at.lower()
+        
+        if "tomorrow" in remind_at_lower:
+            remind_dt = now + timedelta(days=1)
+        elif "today" in remind_at_lower:
+            remind_dt = now
+        elif "in" in remind_at_lower:
+            m = re.search(r"in\s+(\d+)\s+(minute|hour|day)s?", remind_at_lower)
+            if m:
+                val = int(m.group(1))
+                unit = m.group(2)
+                if "minute" in unit:
+                    remind_dt = now + timedelta(minutes=val)
+                elif "hour" in unit:
+                    remind_dt = now + timedelta(hours=val)
+                elif "day" in unit:
+                    remind_dt = now + timedelta(days=val)
+        
+        time_match = re.search(r"(\d{1,2})(?::(\d{2}))?\s*(am|pm)?", remind_at_lower)
+        if time_match and "in" not in remind_at_lower:
+            hour = int(time_match.group(1))
+            minute = int(time_match.group(2)) if time_match.group(2) else 0
+            ampm = time_match.group(3)
+            if ampm == "pm" and hour < 12:
+                hour += 12
+            elif ampm == "am" and hour == 12:
+                hour = 0
+            remind_dt = remind_dt.replace(hour=hour, minute=minute, second=0, microsecond=0)
+            if remind_dt < now and "tomorrow" not in remind_at_lower:
+                remind_dt += timedelta(days=1)
+                
+        remind_at_iso = remind_dt.isoformat()
+        filepath = Path("data/reminders.json")
+        filepath.parent.mkdir(parents=True, exist_ok=True)
+        
+        def _write():
+            data = []
+            if filepath.exists():
+                try:
+                    with open(filepath, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                except Exception:
+                    data = []
+            
+            entry = {
+                "id": str(uuid.uuid4()),
+                "text": text,
+                "remind_at": remind_at_iso,
+                "repeat": repeat,
+                "created_at": now.isoformat(),
+                "fired": False
+            }
+            data.append(entry)
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(data, f, indent=2)
+            return entry
+            
+        await asyncio.to_thread(_write)
+        return f"✅ Reminder set: '{text}' at {remind_at_iso} (repeat={repeat})."
+
+    def set_shared_memory(self, key: str, value: Any) -> None:
+        import json
+        from pathlib import Path
+        path = Path(self.shared_memory_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        data = {}
+        if path.exists():
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+            except Exception: pass
+        data[key] = value
+        path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+
+    def get_shared_memory(self, key: str, default: Any = None) -> Any:
+        import json
+        from pathlib import Path
+        path = Path(self.shared_memory_path)
+        if not path.exists():
+            return default
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            return data.get(key, default)
+        except Exception:
+            return default
+
+    async def check_reminders(self) -> None:
+        import json
+        from datetime import datetime, timedelta
+        from pathlib import Path
+        filepath = Path("data/reminders.json")
+        if not filepath.exists():
+            return
+            
+        now = datetime.now()
+        
+        def _process():
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+            except Exception:
+                return []
+                
+            updated = []
+            to_fire = []
+            for r in data:
+                try:
+                    remind_dt = datetime.fromisoformat(r["remind_at"])
+                    if remind_dt <= now and not r.get("fired", False):
+                        to_fire.append(r)
+                        r["fired"] = True
+                        rep = r.get("repeat", "none").lower()
+                        if rep == "daily":
+                            next_dt = remind_dt + timedelta(days=1)
+                            import uuid
+                            new_rem = r.copy()
+                            new_rem["id"] = str(uuid.uuid4())
+                            new_rem["remind_at"] = next_dt.isoformat()
+                            new_rem["fired"] = False
+                            updated.append(new_rem)
+                        elif rep == "weekly":
+                            next_dt = remind_dt + timedelta(weeks=1)
+                            import uuid
+                            new_rem = r.copy()
+                            new_rem["id"] = str(uuid.uuid4())
+                            new_rem["remind_at"] = next_dt.isoformat()
+                            new_rem["fired"] = False
+                            updated.append(new_rem)
+                    updated.append(r)
+                except Exception:
+                    updated.append(r)
+                    
+            with open(filepath, "w", encoding="utf-8") as f:
+                json.dump(updated, f, indent=2)
+                
+            return to_fire
+            
+        to_fire = await asyncio.to_thread(_process)
+        for r in to_fire:
+            msg = f"🔔 *PROACTIVE REMINDER*:\n{r.get('text')}"
+            # F-06: fetch and append cross-session context from shared memory
+            context = self.get_shared_memory("reminder_context")
+            if context:
+                msg += f"\n\n*Shared Context*:\n{context}"
+            await self.telegram.send_message(msg)

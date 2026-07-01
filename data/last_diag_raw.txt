@@ -1,0 +1,258 @@
+
+────────────────────────────────────────────────────────────────────
+## 1. SERVICE STATE  (systemd nina.service)
+────────────────────────────────────────────────────────────────────
+  ActiveState                    activating
+  SubState                       auto-restart
+  Result                         exit-code
+  NRestarts                      2
+  MainPID                        0
+  🔴 nina.service is activating/auto-restart (Result=exit-code)
+     FIX: systemctl --user restart nina.service && journalctl --user -u nina.service -n 50 --no-pager
+
+────────────────────────────────────────────────────────────────────
+## 2. JOURNAL ERRORS  (last 300 lines → errors/warns only, deduped)
+────────────────────────────────────────────────────────────────────
+  ⚠  [ 5259.191917] ASUS nina[25905]: Traceback (most recent call last):
+  ⚠  [ 5259.192275] ASUS nina[25905]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5259.207151] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5274.435508] ASUS nina[25986]: Traceback (most recent call last):
+  ⚠  [ 5274.435888] ASUS nina[25986]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5274.450499] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5289.681175] ASUS nina[26022]: Traceback (most recent call last):
+  ⚠  [ 5289.681650] ASUS nina[26022]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5289.697070] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5304.944910] ASUS nina[26095]: Traceback (most recent call last):
+  ⚠  [ 5304.945228] ASUS nina[26095]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5304.958290] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5320.073901] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5320.073975] ASUS systemd[2133]: Failed to start nina.service - NINA Autonomous Agent.
+  ⚠  [ 5537.342741] ASUS nina[29923]: Traceback (most recent call last):
+  ⚠  [ 5537.343147] ASUS nina[29923]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5537.360866] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5552.679044] ASUS nina[29959]: Traceback (most recent call last):
+  ⚠  [ 5552.679414] ASUS nina[29959]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5552.693183] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5567.940932] ASUS nina[29992]: Traceback (most recent call last):
+  ⚠  [ 5567.941349] ASUS nina[29992]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5567.956110] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5583.177080] ASUS nina[30026]: Traceback (most recent call last):
+  ⚠  [ 5583.177470] ASUS nina[30026]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5583.191102] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5598.428950] ASUS nina[30057]: Traceback (most recent call last):
+  ⚠  [ 5598.429438] ASUS nina[30057]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 5598.443062] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5613.573974] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 5613.574063] ASUS systemd[2133]: Failed to start nina.service - NINA Autonomous Agent.
+  ⚠  [ 7357.253677] ASUS nina[37727]: Traceback (most recent call last):
+  ⚠  [ 7357.254188] ASUS nina[37727]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 7357.272690] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 7372.427955] ASUS nina[37774]: Traceback (most recent call last):
+  ⚠  [ 7372.428307] ASUS nina[37774]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 7372.450032] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  [ 7387.679988] ASUS nina[37815]: Traceback (most recent call last):
+  ⚠  [ 7387.680421] ASUS nina[37815]: ModuleNotFoundError: No module named 'sentence_transformers'
+  ⚠  [ 7387.694030] ASUS systemd[2133]: nina.service: Failed with result 'exit-code'.
+  ⚠  40 unique error pattern(s) in journal
+     FIX: See ROOT TRACEBACK section (§3) for the full exception chain
+
+────────────────────────────────────────────────────────────────────
+## 3. ROOT TRACEBACK  (first unhandled exception)
+────────────────────────────────────────────────────────────────────
+    Traceback (most recent call last):
+      File "/home/aibony/nina/main.py", line 8, in <module>
+        from core.nina import Nina
+      File "/home/aibony/nina/core/__init__.py", line 16, in <module>
+        from core.semantic_router import NINASemanticRouter
+      File "/home/aibony/nina/core/semantic_router.py", line 4, in <module>
+        from sentence_transformers import SentenceTransformer
+    ModuleNotFoundError: No module named 'sentence_transformers'
+    nina.service: Main process exited, code=exited, status=1/FAILURE
+    nina.service: Failed with result 'exit-code'.
+    nina.service: Scheduled restart job, restart counter is at 2.
+    Starting nina.service - NINA Autonomous Agent...
+    Started nina.service - NINA Autonomous Agent.
+    Traceback (most recent call last):
+      File "/home/aibony/nina/main.py", line 8, in <module>
+        from core.nina import Nina
+      File "/home/aibony/nina/core/__init__.py", line 16, in <module>
+        from core.semantic_router import NINASemanticRouter
+      File "/home/aibony/nina/core/semantic_router.py", line 4, in <module>
+        from sentence_transformers import SentenceTransformer
+    ModuleNotFoundError: No module named 'sentence_transformers'
+    nina.service: Main process exited, code=exited, status=1/FAILURE
+    nina.service: Failed with result 'exit-code'.
+    nina.service: Scheduled restart job, restart counter is at 3.
+    Starting nina.service - NINA Autonomous Agent...
+    Started nina.service - NINA Autonomous Agent.
+    Traceback (most recent call last):
+      File "/home/aibony/nina/main.py", line 8, in <module>
+        from core.nina import Nina
+      File "/home/aibony/nina/core/__init__.py", line 16, in <module>
+  🔴 Unhandled exception: ModuleNotFoundError: No module named 'sentence_transformers'
+     FIX: Check File "/home/aibony/nina/core/__init__.py", line 16, in <module> — fix the exception, then: systemctl --user restart nina.service
+
+────────────────────────────────────────────────────────────────────
+## 4. NINAGATE LOG  (/home/aibony/nina/logs/ninagate.log)
+────────────────────────────────────────────────────────────────────
+  ⚠  ": "MISTRAL", "total_ms": 18165.004014968872, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T03:13:21.303291"}
+  ⚠  r": "MISTRAL", "total_ms": 18884.30881500244, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T03:21:28.603323"}
+  ⚠  "MISTRAL", "total_ms": 1575.834035873413, "cached": false, "task_type": "sensitive", "escalated": false, "ts": "2026-06-23T03:56:19.251400"}
+  ⚠  MISTRAL", "total_ms": 2503.8182735443115, "cached": false, "task_type": "sensitive", "escalated": false, "ts": "2026-06-23T08:59:01.569562"}
+  ⚠  "MISTRAL", "total_ms": 3570.214033126831, "cached": false, "task_type": "sensitive", "escalated": false, "ts": "2026-06-23T09:05:45.852456"}
+  ⚠  r": "MISTRAL", "total_ms": 4253.727197647095, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T12:18:46.840172"}
+  ⚠  r": "MISTRAL", "total_ms": 6618.744611740112, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T12:21:35.554793"}
+  ⚠  "MISTRAL", "total_ms": 9620.152235031128, "cached": false, "task_type": "sensitive", "escalated": false, "ts": "2026-06-23T12:35:58.954744"}
+  ⚠  ": "MISTRAL", "total_ms": 10718.931436538696, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T12:45:06.550076"}
+  ⚠  r": "MISTRAL", "total_ms": 10357.99503326416, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T12:48:56.422129"}
+  ⚠  r": "MISTRAL", "total_ms": 4503.042697906494, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T13:04:30.693436"}
+  ⚠  er": "MISTRAL", "total_ms": 9130.57017326355, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T14:37:39.085005"}
+  ⚠  der": "OLLAMA", "total_ms": 58890.22922515869, "cached": false, "task_type": "quick", "escalated": true, "ts": "2026-06-23T17:04:00.850051"}
+  ⚠  13 ninagate error pattern(s) found
+     FIX: tail -100 /home/aibony/nina/logs/ninagate.log | grep -E 'ERROR|quota|rate.?limit|500|503'
+  [last 3 lines]
+     "OLLAMA", "total_ms": 58260.621786117554, "cached": false, "task_type": "sensitive", "escalated": true, "ts": "2026-06-23T20:06:53.271212"}
+    ider": "GROQ", "total_ms": 516.9129371643066, "cached": false, "task_type": "quick", "escalated": false, "ts": "2026-06-23T22:08:48.414541"}
+    {"provider": "GROQ", "total_ms": 0, "cached": true, "task_type": "quick", "ts": "2026-06-23T22:39:27.484834"}
+
+────────────────────────────────────────────────────────────────────
+## 5. OUROBOROS HEALTH  (loop heartbeat + /health probe + divergence)
+────────────────────────────────────────────────────────────────────
+  ⚠  ouroboros_state.json not found — loop may never have run
+     FIX: Run: bash scripts/ouroboros_loop.sh  (creates /home/aibony/nina/data/ouroboros_state.json)
+  🔴 NinaGate /health UNREACHABLE: <urlopen error [Errno 111] Connection refused>
+     FIX: systemctl --user status ninagate.service  OR  cd ~/nina && uvicorn ninagate.ninagate_server:app --port 7860
+
+────────────────────────────────────────────────────────────────────
+## 6. LOCK / PID FILES
+────────────────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────
+## 7. CRITICAL IMPORT CHECK  (smoke-test via .venv)
+────────────────────────────────────────────────────────────────────
+  🔴 IMPORT FAIL: from core.nina import Nina
+     FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.nina import Nina"  →  Traceback (most recent call last):
+  🔴 IMPORT FAIL: from core.router import HybridRouter
+     FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.router import HybridRouter"  →  Traceback (most recent call last):
+  🔴 IMPORT FAIL: from core.memory import MemorySystem
+     FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.memory import MemorySystem"  →  Traceback (most recent call last):
+  🔴 IMPORT FAIL: from core.scheduler import NinaScheduler
+     FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.scheduler import NinaScheduler"  →  Traceback (most recent call last):
+  🔴 IMPORT FAIL: from core.reflexion import ReflexionEngine
+     FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.reflexion import ReflexionEngine"  →  Traceback (most recent call last):
+  🔴 IMPORT FAIL: from core.observability import get_hub
+     FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.observability import get_hub"  →  Traceback (most recent call last):
+
+────────────────────────────────────────────────────────────────────
+## 8. ENV KEYS  (.env presence check — values NOT shown)
+────────────────────────────────────────────────────────────────────
+  🔴 OPENAI_API_KEY: MISSING
+     FIX: echo 'OPENAI_API_KEY=YOUR_VALUE' >> /home/aibony/nina/.env
+  🔴 GEMINI_API_KEY: MISSING
+     FIX: echo 'GEMINI_API_KEY=YOUR_VALUE' >> /home/aibony/nina/.env
+  ⚠  ALLOWED_USERS not set — ALL incoming Telegram messages may be rejected
+     FIX: echo 'ALLOWED_USERS=your_chat_id' >> .env
+
+────────────────────────────────────────────────────────────────────
+## 9. DUPLICATE NINA PROCESSES
+────────────────────────────────────────────────────────────────────
+  🔴 2 python/main.py processes — likely ghost/zombie
+     FIX: pkill -f 'python.*main.py' && systemctl --user restart nina.service
+  ⚠  No uvicorn/ninagate process found — NinaGate may be down
+
+────────────────────────────────────────────────────────────────────
+## 10. ERROR REGISTER  (nina_error_register.md — last 5 entries)
+────────────────────────────────────────────────────────────────────
+  ──
+    ---
+    title: NINA Error & Fix Register
+    version: 1.0
+    updated: 2026-06-23
+    source: auto-generated by ninaflash D-06 from update_log + guardian signatures + context
+    note: Update row status after every fix. Append new rows, never delete old ones.
+  ──
+    ## Legend
+    🔴 BLOCKER | 🟠 WARN | 🟡 DEBT | 🔵 OPEN/PENDING | ✅ FIXED
+    
+    | ID | Severity | Component | Issue (short) | Status | Assignee | Fixed In | File(s) | jules_attempts | jules_last_attem
+    |----|----------|-----------|---------------|--------|----------|----------|---------|----------------|-----------------
+    | config.missing_env.apisecretkey | 🔴 BLOCKER | core.config | API_SECRET_KEY missing or empty in .env | PAUSED_HUMAN_ACT
+
+────────────────────────────────────────────────────────────────────
+## 11. RESOURCES
+────────────────────────────────────────────────────────────────────
+  Disk ~/nina                    5.1G
+  Disk free /                    50G free of 113G
+  RAM free                       7.9Gi available of 14Gi
+  Python (.venv)                 Python 3.14.4
+
+────────────────────────────────────────────────────────────────────
+## 12. LAST 5 COMMITS  (git log)
+────────────────────────────────────────────────────────────────────
+  35e23d71 chore: cut chromadb (pulls sentence-transformers/onnxruntime stack) — replace with sqlite3 SSOT + mmh3 dedup
+  03ea81da fix: heredoc EOF + tr -d quoting bug in nina_rescue.sh
+  a68ed130 feat: nina_rescue.sh — self-healing safe-mode bootstrap with inference + Perplexity loop
+  d88afc08 chore(auto): OODA sync 2026-06-23 22:25:10 [skip ci]
+  ab639a73 fix: add nina_boot_fix.sh — 1-click post-reboot recovery script
+
+────────────────────────────────────────────────────────────────────
+## ACTIONABLE SUMMARY  — paste to ARCHITECT OVERWATCH
+────────────────────────────────────────────────────────────────────
+  Timestamp                      2026-06-23 23:10:25 +06
+  Service                        activating/auto-restart  (restarts=2)
+  Issues found                   17
+
+  [01] nina.service is activating/auto-restart (Result=exit-code)
+       FIX: systemctl --user restart nina.service && journalctl --user -u nina.service -n 50 --no-pager
+
+  [02] 40 unique error pattern(s) in journal
+       FIX: See ROOT TRACEBACK section (§3) for the full exception chain
+
+  [03] Unhandled exception: ModuleNotFoundError: No module named 'sentence_transformers'
+       FIX: Check File "/home/aibony/nina/core/__init__.py", line 16, in <module> — fix the exception, then: systemctl --user restar
+
+  [04] 13 ninagate error pattern(s) found
+       FIX: tail -100 /home/aibony/nina/logs/ninagate.log | grep -E 'ERROR|quota|rate.?limit|500|503'
+
+  [05] ouroboros_state.json not found — loop may never have run
+       FIX: Run: bash scripts/ouroboros_loop.sh  (creates /home/aibony/nina/data/ouroboros_state.json)
+
+  [06] NinaGate /health UNREACHABLE: <urlopen error [Errno 111] Connection refused>
+       FIX: systemctl --user status ninagate.service  OR  cd ~/nina && uvicorn ninagate.ninagate_server:app --port 7860
+
+  [07] IMPORT FAIL: from core.nina import Nina
+       FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.nina import Nina"  →  Traceback (most recent call last):
+
+  [08] IMPORT FAIL: from core.router import HybridRouter
+       FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.router import HybridRouter"  →  Traceback (most recent ca
+
+  [09] IMPORT FAIL: from core.memory import MemorySystem
+       FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.memory import MemorySystem"  →  Traceback (most recent ca
+
+  [10] IMPORT FAIL: from core.scheduler import NinaScheduler
+       FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.scheduler import NinaScheduler"  →  Traceback (most recen
+
+  [11] IMPORT FAIL: from core.reflexion import ReflexionEngine
+       FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.reflexion import ReflexionEngine"  →  Traceback (most rec
+
+  [12] IMPORT FAIL: from core.observability import get_hub
+       FIX: cd ~/nina && /home/aibony/nina/.venv/bin/python3 -c "from core.observability import get_hub"  →  Traceback (most recent 
+
+  [13] OPENAI_API_KEY: MISSING
+       FIX: echo 'OPENAI_API_KEY=YOUR_VALUE' >> /home/aibony/nina/.env
+
+  [14] GEMINI_API_KEY: MISSING
+       FIX: echo 'GEMINI_API_KEY=YOUR_VALUE' >> /home/aibony/nina/.env
+
+  [15] ALLOWED_USERS not set — ALL incoming Telegram messages may be rejected
+       FIX: echo 'ALLOWED_USERS=your_chat_id' >> .env
+
+  [16] 2 python/main.py processes — likely ghost/zombie
+       FIX: pkill -f 'python.*main.py' && systemctl --user restart nina.service
+
+  [17] No uvicorn/ninagate process found — NinaGate may be down
+       FIX: — see section above
+
+────────────────────────────────────────────────────────────────────
+END OF NINA FORENSIC DIAGNOSTIC REPORT — nina_diag.py v2  [ouroboros]
+────────────────────────────────────────────────────────────────────

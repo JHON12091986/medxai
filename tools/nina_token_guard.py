@@ -30,7 +30,7 @@ import json
 import re
 import sys
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
@@ -52,17 +52,16 @@ FORCE_COMPLEX_PATTERNS = [
 # Keywords that force TRIVIAL regardless of token count  
 FORCE_TRIVIAL_PATTERNS = [
     r"\btypo\b", r"\brendame?\b", r"\bformat\b", r"\bdocstring\b",
-    r"\bcomment\b", r"\bimport\b", r"\bprint\b.*\bdebug\b",
+    r"\bfix\s+typo\b", r"\bfix\s+indent\b", r"\bprint\b.*\bdebug\b",
     r"\badd.*line\b", r"\bfix.*indent\b",
 ]
 
 # Boilerplate stripping patterns (reduce context sent to LLM)
 STRIP_PATTERNS = [
-    (r"#\s*={10,}.*?={10,}\n", ""),          # Banner comments
-    (r"\"\"\"[^\"]{0,200}\"\"\"\s*\n", ""),   # Short docstrings
-    (r"^\s*#.*\n", "", re.MULTILINE),         # Inline comments
-    (r"\n{3,}", "\n\n"),                       # Excessive blank lines
-    (r"\s+$", "", re.MULTILINE),               # Trailing whitespace
+    (r"#\s*={10,}.*?={10,}\n", ""),          # Banner/section dividers only
+    (r"^\s*#(?!.*(?:critical|important|guard|lock|do not|don't|juleslock|F-\d|rule0)).*\n", "", re.MULTILINE),
+    (r"\n{3,}", "\n\n"),                      # Excessive blank lines
+    (r"\s+$", "", re.MULTILINE),              # Trailing whitespace
 ]
 
 PROVIDER_MAP = {
@@ -172,12 +171,12 @@ class TokenGuard:
     @staticmethod
     def classify(prompt: str, estimated_tokens: int) -> str:
         p = prompt.lower()
-        for pat in FORCE_TRIVIAL_PATTERNS:
-            if re.search(pat, p):
-                return "TRIVIAL"
         for pat in FORCE_COMPLEX_PATTERNS:
             if re.search(pat, p):
                 return "COMPLEX"
+        for pat in FORCE_TRIVIAL_PATTERNS:
+            if re.search(pat, p):
+                return "TRIVIAL"
         if estimated_tokens <= TRIVIAL_MAX_TOKENS:
             return "TRIVIAL"
         if estimated_tokens <= MEDIUM_MAX_TOKENS:
@@ -195,7 +194,15 @@ class TokenGuard:
         force_tier: Optional[str] = None,
     ) -> GuardDecision:
         full_input = (prompt + "\n" + context).strip()
-        compressed = self.compress(full_input)
+        _max_chars_by_tier = {
+            "TRIVIAL":  2000,
+            "MEDIUM":   6000,
+            "COMPLEX":  16000,
+            "CRITICAL": 48000,
+        }
+        _pre_tier = force_tier or self.classify(prompt, self._estimate_tokens(full_input))
+        _max_chars = _max_chars_by_tier.get(_pre_tier, 6000)
+        compressed = self.compress(full_input, max_chars=_max_chars)
         tokens = self._estimate_tokens(compressed)
 
         # 1. Cache check (always first)
@@ -231,7 +238,7 @@ class TokenGuard:
 
 # ── CLI usage ────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
-    import argparse, textwrap
+    import argparse
 
     parser = argparse.ArgumentParser(description="TokenGuard CLI")
     parser.add_argument("prompt", nargs="?", default="", help="Task prompt")
@@ -262,4 +269,4 @@ if __name__ == "__main__":
         print(f"Tokens:   {decision.estimated_tokens}")
         print(f"Reason:   {decision.reason}")
         if decision.cached:
-            print(f"CACHED:   YES (returning stored result)")
+            print("CACHED:   YES (returning stored result)")

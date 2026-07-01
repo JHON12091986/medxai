@@ -5,7 +5,7 @@ from core.config import NinaConfig
 
 @pytest.mark.asyncio
 async def test_telegram_interface_status():
-    config = NinaConfig(telegram_bot_token="test", authorized_user_id="1")
+    config = NinaConfig(telegram_bot_token="test", telegram_chat_id="1", authorized_user_id="1")
     nina_os = MagicMock()
     nina_os.config = config
     nina_os.router = MagicMock()

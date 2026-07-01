@@ -26,6 +26,32 @@ BANNED_PATTERNS = [
     ("run_shell_command: wc", "nf file read"),
 ]
 
+# ── SPEC-01: Protected space files ────────────────────────────────────────────
+# These files must NEVER be blanked or deleted by any hook operation.
+# Any attempt to write empty content to them will abort with an error.
+PROTECTED_SPACE_FILES = {
+    "nexus_discoveries.md",
+    "nina_session_log.md",
+    "nina_error_register.md",
+    "jules_backlog.md",
+    "nina_contract.md",
+}
+# ──────────────────────────────────────────────────────────────────────────────
+
+
+def _guard_protected_write(path: Path, content: str) -> None:
+    """
+    Raise RuntimeError if writing `content` to `path` would blank a protected file.
+    Call this before any write that touches docs/space/.
+    """
+    if path.name in PROTECTED_SPACE_FILES:
+        if not content.strip():
+            raise RuntimeError(
+                f"SPEC-01 GUARD: Refusing to blank protected file {path.name}. "
+                "Aborting hook to preserve integrity."
+            )
+
+
 def main():
     parser = argparse.ArgumentParser(description="Post-task doc auto-update hook")
     parser.add_argument("--summary", help="One-line summary override for the Telegram notification")
@@ -79,7 +105,7 @@ def main():
     # 1. Parse fields
     date_str = datetime.now().strftime("%Y-%m-%d")
     tool_used = "Antigravity (Gemini 2.5 Flash)"
-    
+
     # Check if we ran tasks that are mechanical
     offload_suggestions = []
     touched_files = set()
@@ -167,14 +193,14 @@ def main():
 
     agents_content = agents_path.read_text(encoding="utf-8")
     header_str = "## NinaGate Routing History"
-    
+
     if header_str not in agents_content:
         print(f"❌ Error: Heading '{header_str}' not found in AGENTS.md.")
         sys.exit(1)
 
     # Insert right after the header line (plus an empty line)
     target_pos = agents_content.find(header_str) + len(header_str)
-    
+
     # Find next newline
     insert_pos = agents_content.find("\n", target_pos)
     if insert_pos == -1:
@@ -189,6 +215,10 @@ def main():
         + "\n"
         + agents_content[insert_pos:]
     )
+
+    # ── SPEC-01 guard before writing AGENTS.md ────────────────────────────────
+    _guard_protected_write(agents_path, updated_content)
+    # ─────────────────────────────────────────────────────────────────────────
     agents_path.write_text(updated_content, encoding="utf-8")
     print(f"✅ Successfully updated AGENTS.md routing history.")
 
@@ -196,7 +226,7 @@ def main():
     summary_text = args.summary if args.summary else routing_win
     iso_ts = datetime.now().isoformat()
     tele_msg = f"✅ NINA docs updated — {summary_text} — {iso_ts}"
-    
+
     try:
         from telegram_notify import send_message
         success = send_message(tele_msg)

@@ -1,0 +1,64 @@
+[Unit]
+Description=NINA Ouroboros Self-Improving Loop
+Documentation=file://%h/nina/OUROBOROS.md
+After=network-online.target
+Wants=network-online.target
+# Uncomment if ninagate.service exists and should be a hard dependency:
+# After=ninagate.service
+# Wants=ninagate.service
+
+[Service]
+# Type=simple — watchdog is a long-running process, NOT a daemon that forks.
+# Type=forking caused 'timeout exceeded' because watchdog never fork+exited.
+Type=simple
+WorkingDirectory=%h/nina
+ExecStart=/bin/bash %h/nina/scripts/ouroboros_watchdog.sh
+
+# Never let systemd kill us during startup — loop runs indefinitely.
+TimeoutStartSec=infinity
+TimeoutStopSec=40s
+
+Restart=on-failure
+RestartSec=15s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+# Graceful shutdown
+KillMode=mixed
+KillSignal=SIGTERM
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=nina-ouroboros
+
+# Resource limits
+CPUQuota=40%
+MemoryMax=2G
+IOWeight=50
+
+# =============================================================================
+# FULL PATH — systemd --user does NOT inherit the login shell PATH.
+# ~/.opencode/bin  — DEFAULT opencode install location
+# ~/.local/bin     — go install / pipx / general user binaries
+# ~/go/bin         — GOPATH default
+# /usr/local/bin   — system-wide manual install
+# ~/.npm-global/bin — npm global
+# ~/nina/venv/bin  — virtualenv
+# /usr/local/go/bin — Go toolchain
+# =============================================================================
+Environment=HOME=%h
+Environment="PATH=%h/.opencode/bin:%h/.local/bin:%h/go/bin:/usr/local/bin:/usr/bin:/bin:%h/.npm-global/bin:%h/nina/venv/bin:/usr/local/go/bin"
+
+# NinaGate endpoint — opencode must use this, NOT OpenAI directly.
+# OPENAI_API_BASE redirects opencode's OpenAI calls to NinaGate.
+# OPENAI_API_KEY=nina is the NinaGate passthrough key (not a real OpenAI key).
+Environment="OPENAI_API_BASE=http://localhost:8080/v1"
+Environment="OPENAI_BASE_URL=http://localhost:8080/v1"
+Environment="OPENAI_API_KEY=nina"
+
+# Load secrets (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, real keys if any)
+EnvironmentFile=-%h/nina/.env
+
+[Install]
+WantedBy=default.target

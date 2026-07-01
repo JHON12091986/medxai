@@ -1,17 +1,17 @@
 [Unit]
-Description=NinaGate — OpenAI-compatible API proxy for CLI tools
-After=network.target
-Wants=network.target
+Description=NinaGate - AI Provider Proxy (OpenCode Gateway)
+After=network-online.target
+# Intentionally NOT After=nina.service — survives nina crashes
 
 [Service]
 Type=simple
-User=aibony
 WorkingDirectory=/home/aibony/nina
-ExecStart=/home/aibony/nina/venv/bin/python ninagate/main.py
+ExecStartPre=/bin/bash -c 'fuser -k 8080/tcp 2>/dev/null || true'
+ExecStart=/home/aibony/nina/venv/bin/python -m uvicorn ninagate.main:app --host 127.0.0.1 --port 8080 --log-level warning
 Restart=always
 RestartSec=3
-StandardOutput=journal
-StandardError=journal
+StandardOutput=append:/home/aibony/nina/logs/ninagate.log
+StandardError=append:/home/aibony/nina/logs/ninagate.log
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

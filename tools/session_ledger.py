@@ -148,3 +148,85 @@ def get_active_session(tool: str) -> SessionLedger | None:
         logger.warning(f"Failed to read ledger file in get_active_session: {e}")
 
     return None
+
+
+def audit_sessions() -> str:
+    from tools.append_log import append_to_log as append_log
+    from datetime import timezone
+
+    ledgers = []
+    if LEDGER_FILE.exists():
+        try:
+            with open(LEDGER_FILE, "r") as f:
+                ledgers = json.load(f)
+        except Exception as e:
+            logger.warning(f"Failed to read ledger file: {e}")
+            ledgers = []
+
+    orphans = []
+    sync_failed = []
+    ORPHAN_THRESHOLD_HOURS = 2
+    now = datetime.now(timezone.utc)
+
+    # Identify orphaned sessions
+    for ledger in ledgers:
+        status = ledger.get("status")
+        if status == "active":
+            started_at_str = ledger.get("started_at")
+            if started_at_str:
+                try:
+                    clean_str = started_at_str.replace("Z", "+00:00") if started_at_str.endswith("Z") else started_at_str
+                    started_dt = datetime.fromisoformat(clean_str)
+                    if started_dt.tzinfo is None:
+                        started_dt = started_dt.replace(tzinfo=timezone.utc)
+                    
+                    if (now - started_dt).total_seconds() > ORPHAN_THRESHOLD_HOURS * 3600:
+                        orphans.append(ledger)
+                except Exception as e:
+                    logger.warning(f"Failed to parse started_at: {started_at_str}, error: {e}")
+
+    # Identify sync-failed sessions
+    has_sync_field = False
+    for ledger in ledgers:
+        if ledger.get("status") != "active":
+            if "sync_ok" in ledger:
+                has_sync_field = True
+                if ledger.get("sync_ok") is False:
+                    sync_failed.append(ledger)
+            elif "sync_failed" in ledger:
+                has_sync_field = True
+                if ledger.get("sync_failed") is True:
+                    sync_failed.append(ledger)
+
+    # For each orphaned session, correct status, persist, and log the correction
+    for orphan in orphans:
+        try:
+            session_obj = SessionLedger(**orphan)
+            session_obj.status = "orphaned"
+            session_obj._save()
+            try:
+                append_log()
+            except Exception as e:
+                logger.warning(f"Failed to call append_log: {e}")
+        except Exception as e:
+            logger.warning(f"Failed to correct and save orphan session: {e}")
+
+    # Build and return formatted report
+    now_bd_str = datetime.now().strftime('%Y-%m-%d %H:%M BD')
+    report = "🔍 Session Ledger Audit\n"
+    report += f"Run: {now_bd_str}\n"
+    report += f"Orphaned sessions found: {len(orphans)}\n"
+    for orphan in orphans:
+        report += f"  ⚠️ {orphan.get('session_id')} — open since {orphan.get('started_at')}\n"
+
+    if not has_sync_field:
+        report += "Sync-failed sessions: sync_ok field absent\n"
+    else:
+        report += f"Sync-failed sessions: {len(sync_failed)}\n"
+        for sf in sync_failed:
+            closed_at = sf.get("ended_at") or sf.get("closed_at") or "unknown"
+            report += f"  ❌ {sf.get('session_id')} — closed at {closed_at}\n"
+
+    report += f"\n✅ Audit complete. {len(orphans)} records corrected."
+    return report
+

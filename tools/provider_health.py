@@ -6,12 +6,10 @@ Observability only. Does NOT modify routing logic in core/router.py.
 
 from __future__ import annotations
 
-import asyncio
 import json
-import os
 import time
 from collections import deque
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -46,8 +44,7 @@ class ProviderWindow:
         if ok:
             self.consecutive_failures = 0
             self.consecutive_successes += 1
-            if error:
-                self.last_error = ""
+            self.last_error = ""
         else:
             self.consecutive_successes = 0
             self.consecutive_failures += 1
@@ -152,25 +149,6 @@ class ProviderHealthTracker:
     def health_summary(self) -> dict[str, dict]:
         """Returns {provider: {ok_rate, avg_latency, last_error}} — used by /v1/status."""
         return {pid: w.summary() for pid, w in self._windows.items()}
-
-    def _persist(self) -> None:
-        try:
-            _STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
-            payload = {
-                pid: {
-                    "ok_rate": w.ok_rate,
-                    "avg_latency_ms": w.avg_latency_ms,
-                    "call_count_10m": w.call_count_window,
-                    "consecutive_failures": w.consecutive_failures,
-                    "last_error": w.last_error,
-                    "alerted_degraded": w.alerted_degraded,
-                    "updated_at": time.time(),
-                }
-                for pid, w in self._windows.items()
-            }
-            _STATE_PATH.write_text(json.dumps(payload, indent=2))
-        except Exception as e:
-            logger.warning("provider_health_persist_failed: %s", e)
 
     def _persist(self) -> None:
         try:

@@ -1,0 +1,51 @@
+# NinaMCP P2 — GitHub Actions Relay
+# Triggered when ARCHITECT writes a command to mcp/inbox/exec.json via create_or_update_file.
+# Executes repo-scoped commands on a GitHub-hosted runner.
+# Results written to mcp/outbox/exec_result.json — ARCHITECT reads via get_file_contents.
+#
+# SECURITY: Only allowlisted scripts in mcp/allowlist.txt may be executed.
+# mcp/inbox/exec.json schema: {"cmd": "scripts/nina_sync.sh audit", "request_id": "<uuid>"}
+
+name: NinaMCP P2 Relay
+
+on:
+  push:
+    paths:
+      - 'mcp/inbox/**'
+
+jobs:
+  relay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: |
+          pip install -q -r requirements.txt 2>/dev/null || true
+
+      - name: Execute relay command
+        id: relay
+        run: python3 mcp/relay_runner.py
+        env:
+          NINA_MCP_RELAY: "1"
+
+      - name: Commit result
+        run: |
+          git config user.name  "nina-mcp-relay[bot]"
+          git config user.email "nina-mcp@users.noreply.github.com"
+          git add mcp/outbox/
+          git diff --cached --quiet || \
+            git commit --no-verify -m "mcp: relay result [skip ci]"
+          git push origin HEAD

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# bin/opencode-stop — Stop OpenCode Ouroboros session cleanly
+# Usage: opencode-stop
+# Part of NINA Ouroboros loop. See OUROBOROS.md.
+set -euo pipefail
+
+SESSION="opencode-nina"
+
+echo "[ouroboros] Stopping OpenCode session..."
+systemctl --user stop opencode-session.service 2>/dev/null || true
+
+echo "[ouroboros] Releasing sleep inhibitor..."
+systemctl --user stop opencode-inhibit.service 2>/dev/null || true
+
+# Clean up any orphaned tmux session
+tmux kill-session -t "$SESSION" 2>/dev/null || true
+
+echo "[ouroboros] ✓ OpenCode session stopped. Sleep/lid behaviour restored."

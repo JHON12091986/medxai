@@ -22,5 +22,5 @@ jobs:
           python3 tools/validate_index.py --check-deltas
       - name: Audit Repository Hygiene
         run: |
-          chmod +x nina_audit.sh
-          ./nina_audit.sh --strict
+          chmod +x scripts/nina_audit.sh
+          ./scripts/nina_audit.sh --strict

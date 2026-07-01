@@ -1,0 +1,2 @@
+# NinaMCP P2 inbox — ARCHITECT writes exec.json here via create_or_update_file
+# Schema: {"cmd": "scripts/nina_sync.sh audit", "request_id": "<uuid>"}

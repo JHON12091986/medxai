@@ -1,0 +1,1022 @@
+{
+  "test_telegram.py": [
+    "interfaces/telegram_interface.py"
+  ],
+  "test_router.py": [
+    "core/router.py"
+  ],
+  "main.py": [
+    "core/nina.py",
+    "scripts/nina_watchdog_ping.py"
+  ],
+  "README.md": [
+    "ARCHITECTURE.md",
+    "docs/space/nina_session_brief.md",
+    "docs/nina_ssot.md",
+    "docs/space/FEATURES.md",
+    "FOLDER_TREE.md"
+  ],
+  "healthcheck.py": [
+    "checks/__init__.py"
+  ],
+  "docs/space/README.md": [
+    "docs/space/nina_future_roadmap.md",
+    "docs/space/NDEV.md",
+    "docs/space/FEATURES.md"
+  ],
+  "archive/orphan_cognitive/cognition/reflexion.py": [
+    "core/reflexion.py"
+  ],
+  "archive/orphan_cognitive/cognitive/reflector.py": [
+    "core/reflexion.py"
+  ],
+  "venv/lib/python3.14/site-packages/numpy/_core/tests/test_cython.py": [
+    "checks/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/exceptions.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/cli/generate.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/cli/apps_dev.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/server/low_level.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/server/context.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/server/middleware/error_handling.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/server/middleware/rate_limiting.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/server/tasks/elicitation.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/server/providers/proxy.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/prompts/base.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/utilities/logging.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/utilities/exceptions.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/roots.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/client.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/elicitation.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/mixins/task_management.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/transports/stdio.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/transports/http.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/transports/config.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/transports/sse.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/transports/base.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/transports/memory.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/sampling/__init__.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/sampling/handlers/google_genai.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastmcp/client/sampling/handlers/openai.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/fastapi/.agents/skills/fastapi/SKILL.md": [
+    "venv/lib/python3.14/site-packages/fastapi/.agents/skills/fastapi/references/other-tools.md",
+    "venv/lib/python3.14/site-packages/fastapi/.agents/skills/fastapi/references/streaming.md",
+    "venv/lib/python3.14/site-packages/fastapi/.agents/skills/fastapi/references/dependencies.md"
+  ],
+  "venv/lib/python3.14/site-packages/litellm/experimental_mcp_client/client.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/litellm/experimental_mcp_client/tools.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/litellm/proxy/_experimental/mcp_server/server.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/litellm/proxy/_experimental/mcp_server/mcp_server_manager.py": [
+    "mcp/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/aider/website/docs/llms/xai.md": [
+    "venv/lib/python3.14/site-packages/aider/website/docs/config/reasoning.md"
+  ],
+  "venv/lib/python3.14/site-packages/aider/website/docs/llms/anthropic.md": [
+    "venv/lib/python3.14/site-packages/aider/website/docs/llms/vertex.md",
+    "venv/lib/python3.14/site-packages/aider/website/docs/llms/openrouter.md"
+  ],
+  "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/SKILL.md": [
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/playwright-tests.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/test-generation.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/element-attributes.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/running-code.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/request-mocking.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/spec-driven-testing.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/video-recording.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/tracing.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/storage-state.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/session-management.md"
+  ],
+  "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/spec-driven-testing.md": [
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/playwright-tests.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/test-generation.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/request-mocking.md",
+    "venv/lib/python3.14/site-packages/playwright/driver/package/lib/tools/cli-client/skill/references/session-management.md"
+  ],
+  "venv/lib/python3.14/site-packages/posthog/ai/openai_agents/__init__.py": [
+    "agents/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/posthog/ai/openai_agents/processor.py": [
+    "agents/__init__.py"
+  ],
+  "venv/lib/python3.14/site-packages/mcp/client/session_group.py": [
+    "mcp/__init__.py"
+  ],
+  "memory/manifest.py": [
+    "core/file_registry.py"
+  ],
+  "memory/context_compressor.py": [
+    "memory/context_compressor.py"
+  ],
+  "memory/__init__.py": [
+    "memory/blackboard.py",
+    "memory/indexer.py",
+    "memory/manifest.py"
+  ],
+  "memory/indexer.py": [
+    "core/memory.py",
+    "core/layered_memory.py"
+  ],
+  "memory/blackboard.py": [
+    "core/event_bus.py"
+  ],
+  "memory/trie_index.py": [
+    "memory/trie_index.py"
+  ],
+  "checks/syntax_checks.py": [
+    "checks/runner.py"
+  ],
+  "checks/router_checks.py": [
+    "checks/runner.py"
+  ],
+  "checks/package_checks.py": [
+    "checks/runner.py"
+  ],
+  "checks/__init__.py": [
+    "checks/env_checks.py",
+    "checks/runner.py",
+    "checks/syntax_checks.py",
+    "checks/package_checks.py",
+    "checks/security_checks.py",
+    "checks/router_checks.py",
+    "checks/system_checks.py",
+    "checks/cron_checks.py",
+    "checks/state_checks.py",
+    "checks/import_checks.py"
+  ],
+  "checks/security_checks.py": [
+    "checks/runner.py"
+  ],
+  "checks/import_checks.py": [
+    "checks/runner.py"
+  ],
+  "checks/system_checks.py": [
+    "checks/runner.py"
+  ],
+  "checks/cron_checks.py": [
+    "checks/runner.py"
+  ],
+  "checks/env_checks.py": [
+    "checks/runner.py"
+  ],
+  "checks/state_checks.py": [
+    "checks/runner.py"
+  ],
+  "crons/manager.py": [
+    "tools/market.py",
+    "tools/jules.py",
+    "core/quota_dispatcher.py",
+    "tools/__init__.py",
+    "tools/session_ledger.py",
+    "tools/ninaflash_core.py",
+    "crons/registry.py",
+    "crons/backup_jobs.py",
+    "core/reminders.py",
+    "core/gap_scanner/scanner.py"
+  ],
+  "crons/memory_consolidation.py": [
+    "crons/memory_consolidation.py"
+  ],
+  "crons/nexus_evolution.py": [
+    "crons/registry.py"
+  ],
+  "crons/backup_jobs.py": [
+    "crons/registry.py"
+  ],
+  "crons/evolve_loop.py": [
+    "tools/evolve.py",
+    "core/jules_guard.py",
+    "tools/monitor.py"
+  ],
+  "crons/runner.py": [
+    "core/observability.py",
+    "crons/registry.py"
+  ],
+  "agents/archivist.py": [
+    "agents/base.py"
+  ],
+  "agents/critic.py": [
+    "agents/base.py",
+    "core/task_classifier.py",
+    "core/router.py"
+  ],
+  "agents/executor.py": [
+    "agents/base.py",
+    "core/task_classifier.py",
+    "core/router.py"
+  ],
+  "agents/orchestrator.py": [
+    "agents/critic.py",
+    "core/router.py",
+    "agents/base.py",
+    "agents/planner.py",
+    "agents/executor.py",
+    "agents/archivist.py",
+    "agents/reasoner.py"
+  ],
+  "agents/__init__.py": [
+    "agents/critic.py",
+    "agents/base.py",
+    "agents/planner.py",
+    "agents/executor.py",
+    "agents/archivist.py",
+    "agents/reasoner.py",
+    "agents/orchestrator.py"
+  ],
+  "agents/reasoner.py": [
+    "agents/base.py",
+    "core/task_classifier.py",
+    "core/router.py"
+  ],
+  "agents/planner.py": [
+    "agents/base.py",
+    "core/task_classifier.py"
+  ],
+  "agents/ninamcp/server.py": [
+    "core/agent.py",
+    "core/knowledge_graph.py",
+    "core/goal_manager.py"
+  ],
+  "agents/jules/ninajulesgithub.py": [
+    "tools/jules.py",
+    "core/logger.py",
+    "tools/heartbeat.py"
+  ],
+  "swarm/planner_intj.py": [
+    "core/coordinator_agent.py"
+  ],
+  "swarm/worker_intm.py": [
+    "core/agent_loop.py"
+  ],
+  "swarm/__init__.py": [
+    "swarm/auditor.py",
+    "swarm/planner_intj.py",
+    "swarm/worker_intm.py"
+  ],
+  "swarm/auditor.py": [
+    "core/critic.py",
+    "core/event_bus.py"
+  ],
+  "ninagate/main.py": [
+    "ninagate/circuit_breaker.py",
+    "core/task_classifier.py",
+    "core/config.py",
+    "telemetry/emitter.py",
+    "ninagate/supply_ledger.py",
+    "tools/heartbeat.py",
+    "tools/system.py"
+  ],
+  "ninagate/circuit_breaker.py": [
+    "ninagate/circuit_breaker.py"
+  ],
+  "tools/market.py": [
+    "tools/retry.py",
+    "tools/telegram_notify.py",
+    "tools/__init__.py"
+  ],
+  "tools/session_ledger.py": [
+    "tools/append_log.py"
+  ],
+  "tools/finance.py": [
+    "tools/retry.py"
+  ],
+  "tools/semantic_dedup.py": [
+    "core/constants.py"
+  ],
+  "tools/ninaflash_guard.py": [
+    "tools/ninagate_info.py",
+    "tools/ninaflash_core.py",
+    "tools/ninaflash_bench.py",
+    "tools/ninaflash_backlog.py"
+  ],
+  "tools/audit_repo_hygiene.py": [
+    "core/constants.py"
+  ],
+  "tools/ninaflash.py": [
+    "tools/ninaflash_core.py",
+    "tools/ninaflash_guard.py",
+    "tools/ninaflash_context.py",
+    "tools/ninaflash_bench.py",
+    "tools/ninaflash_memory.py",
+    "tools/ninaflash_code.py",
+    "tools/ninaflash_backlog.py"
+  ],
+  "tools/upgradepipeline.py": [
+    "core/router.py"
+  ],
+  "tools/system.py": [
+    "core/config.py"
+  ],
+  "tools/nina_token_guard.py": [
+    "tools/nina_token_guard.py"
+  ],
+  "tools/nina_sync.py": [
+    "core/observability.py",
+    "core/config.py"
+  ],
+  "tools/telegram_notify.py": [
+    "core/constants.py"
+  ],
+  "tools/pipeline_autopilot.py": [
+    "tools/__init__.py",
+    "core/constants.py"
+  ],
+  "tools/merge_resolver.py": [
+    "core/logger.py",
+    "tools/telegram_notify.py"
+  ],
+  "tools/nina_proxy.py": [
+    "core/router.py",
+    "core/quota_dispatcher.py",
+    "core/config.py"
+  ],
+  "tools/ninaflash_bench.py": [
+    "core/bench_runner.py"
+  ],
+  "tools/ninaflash_context.py": [
+    "tools/context_pruner.py",
+    "tools/ninaflash_core.py",
+    "tools/ninacontextpress.py"
+  ],
+  "tools/nina_dashboard.py": [
+    "core/observability.py",
+    "core/task_store.py",
+    "tools/heartbeat.py",
+    "crons/manager.py"
+  ],
+  "tools/jules.py": [
+    "core/event_bus.py",
+    "tools/__init__.py",
+    "tools/ninaflash_core.py",
+    "tools/predictive_ast.py",
+    "core/config.py",
+    "core/constants.py",
+    "core/key_resolver.py",
+    "tools/ninaflash_backlog.py"
+  ],
+  "tools/ninagate_info.py": [
+    "core/config.py"
+  ],
+  "tools/ratchet_cmd.py": [
+    "core/self_patch_logger.py",
+    "core/autonomy_ratchet.py"
+  ],
+  "tools/live_monitor.py": [
+    "tools/__init__.py"
+  ],
+  "tools/ninaflash_memory.py": [
+    "tools/ninaflash_core.py",
+    "tools/session_ledger.py",
+    "tools/session_preamble.py"
+  ],
+  "tools/nina_env_sync.py": [
+    "core/config.py"
+  ],
+  "tools/unsloth_trainer.py": [
+    "tools/unsloth_exporter.py"
+  ],
+  "tools/provider_health.py": [
+    "core/logger.py"
+  ],
+  "tools/surgical_merge.py": [
+    "tools/jules.py",
+    "core/logger.py"
+  ],
+  "tools/ninaflash_backlog.py": [
+    "tools/ninaflash_core.py"
+  ],
+  "tools/guardian_engine.py": [
+    "core/constants.py"
+  ],
+  "tools/observable_monitor.py": [
+    "tools/system.py"
+  ],
+  "tools/ninaflash_code.py": [
+    "tools/ninaflash_core.py"
+  ],
+  "tools/nina_cicd.py": [
+    "tools/jules.py",
+    "tools/telegram_notify.py",
+    "tools/__init__.py"
+  ],
+  "tools/hardware_check.py": [
+    "core/observability.py"
+  ],
+  "tools/nina_ooda.py": [
+    "tools/predictive_ast.py",
+    "tools/telegram_notify.py"
+  ],
+  "tools/ninagate_client.py": [
+    "core/constants.py"
+  ],
+  "tools/ninaflash_core.py": [
+    "tools/shell.py"
+  ],
+  "tools/update_index.py": [
+    "tools/validate_index.py"
+  ],
+  "tools/ninagate/main.py": [
+    "ninagate/circuit_breaker.py",
+    "core/constants.py"
+  ],
+  "tests/test_ast_refactor.py": [
+    "core/ast_refactor.py"
+  ],
+  "tests/test_ninaflash_cycles.py": [
+    "tools/ninaflash.py"
+  ],
+  "tests/test_idleloop.py": [
+    "core/idleloop.py"
+  ],
+  "tests/test_jules_dispatch.py": [
+    "tools/jules.py"
+  ],
+  "tests/test_tools_smoke.py": [
+    "tools/upgradepipeline.py",
+    "tools/__init__.py"
+  ],
+  "tests/test_ninavgod.py": [
+    "core/circuit_breaker.py",
+    "core/smart_router.py",
+    "core/memory.py",
+    "core/reflexion.py"
+  ],
+  "tests/test_utils.py": [
+    "core/utils.py"
+  ],
+  "tests/test_finance.py": [
+    "tools/finance.py"
+  ],
+  "tests/test_integration.py": [
+    "core/router.py",
+    "core/config.py"
+  ],
+  "tests/test_browser.py": [
+    "tools/browser.py"
+  ],
+  "tests/test_framework_ports.py": [
+    "core/nina.py",
+    "core/autogen.py",
+    "core/checkpoint.py",
+    "core/swarm.py",
+    "core/router.py",
+    "core/schema_val.py",
+    "core/agent.py",
+    "core/crew.py"
+  ],
+  "tests/test_telegram_interface_errors.py": [
+    "interfaces/telegram_interface.py"
+  ],
+  "tests/test_telegram_interface_status.py": [
+    "interfaces/telegram_interface.py",
+    "core/config.py"
+  ],
+  "tests/test_jules_guard.py": [
+    "core/jules_guard.py"
+  ],
+  "tests/test_task_manager.py": [
+    "core/task_manager/__init__.py",
+    "core/task_manager/queue.py",
+    "core/task_manager/task_spec.py"
+  ],
+  "tests/test_cron_registry.py": [
+    "crons/runner.py",
+    "crons/registry.py"
+  ],
+  "tests/test_agent_loop.py": [
+    "core/agent_loop.py"
+  ],
+  "tests/test_capabilities.py": [
+    "core/capabilities.py"
+  ],
+  "tests/test_model_discovery.py": [
+    "tools/model_discovery.py",
+    "core/config.py"
+  ],
+  "tests/test_base_adapter.py": [
+    "interfaces/base_adapter.py"
+  ],
+  "tests/test_merge_resolver.py": [
+    "tools/merge_resolver.py"
+  ],
+  "tests/test_cron_manager.py": [
+    "crons/manager.py"
+  ],
+  "tests/test_provider_health.py": [
+    "tools/provider_health.py"
+  ],
+  "tests/test_tier_routing.py": [
+    "core/task_classifier.py",
+    "core/router.py",
+    "core/rpm_scheduler.py",
+    "core/quota_router.py"
+  ],
+  "tests/test_config.py": [
+    "core/vault.py",
+    "core/config.py"
+  ],
+  "tests/test_router.py": [
+    "core/router.py",
+    "core/config.py"
+  ],
+  "tests/test_knowledge_graph_mcp.py": [
+    "core/mcp_client.py",
+    "core/knowledge_graph.py"
+  ],
+  "tests/test_shell.py": [
+    "tools/shell.py"
+  ],
+  "tests/test_method_extraction.py": [
+    "tools/ninaflash_code.py"
+  ],
+  "tests/test_surgical.py": [
+    "tools/git_ops.py",
+    "tools/files.py"
+  ],
+  "tests/test_memory_kb.py": [
+    "core/memory.py"
+  ],
+  "tests/test_reasoning_engine.py": [
+    "core/reasoning_engine.py"
+  ],
+  "tests/test_task_store.py": [
+    "core/task_store.py"
+  ],
+  "tests/test_tools_hardening.py": [
+    "tools/market.py",
+    "tools/retry.py",
+    "tools/finance.py"
+  ],
+  "tests/test_memo_cache.py": [
+    "core/memo_cache.py"
+  ],
+  "tests/test_finance_market.py": [
+    "tools/market.py",
+    "tools/finance.py"
+  ],
+  "tests/test_nina_proxy.py": [
+    "tools/nina_proxy.py"
+  ],
+  "tests/test_guardian.py": [
+    "guardian_engine.py"
+  ],
+  "tests/test_task_classifier.py": [
+    "core/task_classifier.py"
+  ],
+  "tests/test_key_resolver.py": [
+    "core/__init__.py",
+    "core/key_resolver.py"
+  ],
+  "tests/test_compile_extensions.py": [
+    "tools/compile_extensions.py"
+  ],
+  "tests/test_long_term_initiatives.py": [
+    "core/reasoning_engine.py",
+    "core/cognitive/__init__.py",
+    "core/agents/__init__.py",
+    "core/autonomy_ratchet.py",
+    "core/graph_rag.py",
+    "tools/unsloth_exporter.py"
+  ],
+  "tests/test_logger.py": [
+    "core/logger.py"
+  ],
+  "tests/test_verifier.py": [
+    "core/verifier.py"
+  ],
+  "tests/test_geminiignore.py": [
+    "tools/ninaflash_core.py",
+    "tools/files.py"
+  ],
+  "tests/test_validate_index.py": [
+    "tools/validate_index.py"
+  ],
+  "tests/test_hotreload.py": [
+    "core/hotreload.py",
+    "core/config.py"
+  ],
+  "tests/test_memory_manager.py": [
+    "core/memory_manager.py"
+  ],
+  "tests/test_telegram_middleware.py": [
+    "interfaces/middleware.py"
+  ],
+  "tests/test_smoke.py": [
+    "core/nina.py",
+    "core/memory.py",
+    "core/router.py",
+    "tools/shell.py",
+    "tools/upgradepipeline.py",
+    "core/capabilities.py",
+    "core/config.py",
+    "crons/manager.py",
+    "core/agent.py",
+    "core/hotreload.py",
+    "tools/system.py"
+  ],
+  "tests/test_observability.py": [
+    "core/observability.py"
+  ],
+  "tests/test_nina_sync.py": [
+    "tools/nina_sync.py"
+  ],
+  "tests/test_sandbox.py": [
+    "core/sandbox.py"
+  ],
+  "tests/test_ast_cache.py": [
+    "tools/ast_cache.py"
+  ],
+  "tests/test_regex_cache.py": [
+    "tools/regex_cache.py"
+  ],
+  "tests/test_agent.py": [
+    "core/agent.py",
+    "core/router.py"
+  ],
+  "tests/test_agent_imports.py": [
+    "agents/__init__.py"
+  ],
+  "tests/test_memory.py": [
+    "core/memory.py",
+    "core/memory_manager.py"
+  ],
+  "tests/test_vault.py": [
+    "core/vault.py"
+  ],
+  "tests/test_telegram_interface.py": [
+    "interfaces/telegram_interface.py"
+  ],
+  "tests/test_observability_otel.py": [
+    "core/observability_otel.py"
+  ],
+  "telemetry/__init__.py": [
+    "telemetry/tracker.py",
+    "telemetry/emitter.py"
+  ],
+  "telemetry/tracker.py": [
+    "core/otel_tracer.py"
+  ],
+  "telemetry/status_adapter.py": [
+    "telemetry/status_adapter.py",
+    "core/status_bus.py"
+  ],
+  "interfaces/telegram_interface.py": [
+    "core/status_bus.py",
+    "tools/__init__.py",
+    "core/task_classifier.py",
+    "tools/session_ledger.py",
+    "core/router.py",
+    "tools/search.py",
+    "core/cognition/reflexion.py",
+    "core/config.py",
+    "core/reminders.py",
+    "crons/manager.py",
+    "core/knowledge.py",
+    "core/gap_analysis.py",
+    "interfaces/middleware.py",
+    "tools/ratchet_cmd.py",
+    "tools/opencode.py",
+    "tools/finance.py"
+  ],
+  "interfaces/cli_interface.py": [
+    "core/memory.py",
+    "tools/__init__.py",
+    "core/task_classifier.py",
+    "core/router.py",
+    "core/config.py",
+    "core/constants.py",
+    "core/agent.py"
+  ],
+  "mcp/nina_mcp_server.py": [
+    "core/agent.py",
+    "core/knowledge_graph.py",
+    "core/goal_manager.py"
+  ],
+  "telegram/setkey_handler.py": [
+    "core/key_resolver.py",
+    "telegram/setkey_handler.py"
+  ],
+  "scripts/nina_diag.py": [
+    "core/constants.py"
+  ],
+  "scripts/nina_watchdog_ping.py": [
+    "scripts/nina_watchdog_ping.py"
+  ],
+  "scripts/nina_cicd.py": [
+    "tools/jules.py",
+    "tools/telegram_notify.py"
+  ],
+  "core/memory_consolidator.py": [
+    "core/memory_consolidator.py",
+    "core/layered_memory.py"
+  ],
+  "core/quota_alert.py": [
+    "tools/jules.py",
+    "core/router.py",
+    "core/config.py"
+  ],
+  "core/memo_cache.py": [
+    "core/memo_cache.py"
+  ],
+  "core/jules_guard.py": [
+    "tools/telegram_notify.py"
+  ],
+  "core/goal_manager.py": [
+    "core/goal_manager.py"
+  ],
+  "core/nina.py": [
+    "core/memory.py",
+    "core/event_bus.py",
+    "core/quota_alert.py",
+    "tools/__init__.py",
+    "core/router.py",
+    "tools/upgradepipeline.py",
+    "core/idleloop.py",
+    "core/config.py",
+    "crons/manager.py",
+    "tools/providerhunter.py",
+    "interfaces/telegram_interface.py",
+    "core/kernel.py",
+    "core/agent.py",
+    "core/hotreload.py",
+    "core/agent_loop.py"
+  ],
+  "core/contradiction_detector.py": [
+    "core/layered_memory.py",
+    "core/contradiction_detector.py"
+  ],
+  "core/context_compressor.py": [
+    "core/context_compressor.py"
+  ],
+  "core/sandboxed_exec.py": [
+    "core/sandboxed_exec.py"
+  ],
+  "core/config.py": [
+    "core/vault.py",
+    "core/constants.py"
+  ],
+  "core/hive_packet.py": [
+    "core/event_bus.py",
+    "core/hive_packet.py"
+  ],
+  "core/gap_analysis.py": [
+    "core/task_classifier.py",
+    "core/router.py"
+  ],
+  "core/knowledge_graph.py": [
+    "core/knowledge_graph.py"
+  ],
+  "core/coordinator_agent.py": [
+    "core/layered_memory.py",
+    "core/coordinator_agent.py"
+  ],
+  "core/layered_memory.py": [
+    "core/layered_memory.py"
+  ],
+  "core/grammar_guard.py": [
+    "core/grammar_guard.py"
+  ],
+  "core/constants.py": [
+    "core/constants.py"
+  ],
+  "core/canonicalizer.py": [
+    "core/canonicalizer.py"
+  ],
+  "core/bloom_filter.py": [
+    "core/bloom_filter.py"
+  ],
+  "core/status_bus.py": [
+    "core/status_bus.py"
+  ],
+  "core/__init__.py": [
+    "core/__init__.py",
+    "core/idempotency.py",
+    "core/token_counter.py",
+    "core/semantic_router.py",
+    "core/context_compressor.py",
+    "core/memo_cache.py"
+  ],
+  "core/hyperdrive_policy.py": [
+    "core/task_classifier.py",
+    "tools/predictive_ast.py",
+    "core/config.py"
+  ],
+  "core/self_patch_logger.py": [
+    "core/self_patch_logger.py"
+  ],
+  "core/idempotency.py": [
+    "core/idempotency.py"
+  ],
+  "core/memory.py": [
+    "core/hyperdrive_policy.py",
+    "core/observability.py",
+    "core/hyperdrive_context.py",
+    "core/hyperdrive_goals.py"
+  ],
+  "core/reflexion.py": [
+    "core/reflexion.py"
+  ],
+  "core/status_stages.py": [
+    "core/status_stages.py",
+    "core/status_bus.py"
+  ],
+  "core/agent_loop.py": [
+    "tools/__init__.py",
+    "core/task_classifier.py",
+    "core/swarm_engine.py",
+    "core/observability.py",
+    "core/task_planner.py",
+    "core/agent.py"
+  ],
+  "core/rpm_scheduler.py": [
+    "core/config.py"
+  ],
+  "core/guardian_loop.py": [
+    "core/canonicalization.py",
+    "core/indexer.py",
+    "core/file_registry.py"
+  ],
+  "core/vault.py": [
+    "core/key_resolver.py",
+    "core/constants.py"
+  ],
+  "core/react_engine.py": [
+    "core/layered_memory.py",
+    "core/react_engine.py"
+  ],
+  "core/autonomy_ratchet.py": [
+    "core/autonomy_ratchet.py"
+  ],
+  "core/token_counter.py": [
+    "core/token_counter.py"
+  ],
+  "core/otel_tracer.py": [
+    "core/otel_tracer.py"
+  ],
+  "core/router.py": [
+    "tools/jules.py",
+    "core/smart_router.py",
+    "core/logger.py",
+    "core/hyperdrive_policy.py",
+    "core/task_classifier.py",
+    "tools/provider_health.py",
+    "core/rpm_scheduler.py",
+    "core/quota_router.py",
+    "core/config.py",
+    "telemetry/emitter.py",
+    "tools/model_discovery.py",
+    "core/memo_cache.py",
+    "tools/system.py"
+  ],
+  "core/kernel.py": [
+    "memory/context_compressor.py",
+    "crons/manager.py",
+    "core/gap_scanner/scanner.py",
+    "core/kernel.py",
+    "core/manifest_watcher.py",
+    "core/bloom_filter.py",
+    "core/canonicalizer.py",
+    "memory/trie_index.py"
+  ],
+  "core/quota_dispatcher.py": [
+    "core/task_classifier.py",
+    "core/logger.py",
+    "core/quota_dispatcher.py",
+    "tools/nina_token_guard.py"
+  ],
+  "core/quota_router.py": [
+    "core/task_classifier.py",
+    "core/router.py",
+    "core/config.py"
+  ],
+  "core/manifest_watcher.py": [
+    "core/manifest_watcher.py",
+    "core/event_bus.py",
+    "core/hive_packet.py"
+  ],
+  "core/verifier.py": [
+    "core/task_classifier.py",
+    "core/router.py",
+    "core/config.py"
+  ],
+  "core/nina_ooda.py": [
+    "tools/predictive_ast.py",
+    "tools/telegram_notify.py"
+  ],
+  "core/event_watcher.py": [
+    "core/event_watcher.py"
+  ],
+  "core/key_resolver.py": [
+    "core/key_resolver.py"
+  ],
+  "core/agent.py": [
+    "tools/context_pruner.py",
+    "core/reasoning.py",
+    "core/hyperdrive_policy.py",
+    "core/goal_manager.py",
+    "core/quota_dispatcher.py",
+    "tools/__init__.py",
+    "core/knowledge_graph.py",
+    "core/circuit_breaker.py",
+    "core/task_classifier.py",
+    "core/router.py",
+    "core/capabilities.py",
+    "core/reflexion.py",
+    "agents/orchestrator.py"
+  ],
+  "core/task_store.py": [
+    "core/task_store.py"
+  ],
+  "core/idleloop.py": [
+    "core/task_manager/__init__.py",
+    "core/quota_dispatcher.py",
+    "tools/heartbeat.py"
+  ],
+  "core/mcp_client.py": [
+    "core/mcp_client.py"
+  ],
+  "core/task_manager/dispatcher.py": [
+    "core/config.py",
+    "core/task_manager/queue.py",
+    "core/constants.py",
+    "core/task_manager/task_spec.py"
+  ],
+  "core/task_manager/__init__.py": [
+    "core/task_manager/watcher.py",
+    "core/task_manager/dispatcher.py",
+    "core/task_manager/queue.py",
+    "core/task_manager/task_spec.py"
+  ],
+  "core/task_manager/watcher.py": [
+    "core/task_manager/queue.py"
+  ],
+  "core/task_manager/cli.py": [
+    "core/task_manager/dispatcher.py",
+    "core/task_manager/queue.py",
+    "core/task_manager/task_spec.py"
+  ],
+  "core/task_manager/queue.py": [
+    "core/task_manager/task_spec.py"
+  ],
+  "core/task_manager/seed_from_slots.py": [
+    "core/task_manager/queue.py",
+    "core/task_manager/task_spec.py"
+  ]
+}

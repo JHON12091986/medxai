@@ -1,52 +1,187 @@
-# NINA Observability Layer
+# NINA Observability & Telemetry
 
-## Overview
-The NINA Observability Layer provides a single, structured source of truth for the system's health, metrics, and telemetry. It relies on a lazy singleton, `ObservabilityHub`, to centrally aggregate operation and performance metrics, allowing components to emit consistent and standardized JSON logs.
+> **Status:** Telemetry Pass-2 COMPLETE — 2026-06-25  
+> All three pipeline layers (NinaGate → Ouroboros → providers) are fully instrumented.
 
-## Metrics Reference
+---
 
-| field                | type      | description                                        |
-| -------------------- | --------- | -------------------------------------------------- |
-| uptime_seconds       | float     | Uptime in seconds since hub initialization         |
-| tasks_total          | int       | Total number of tasks processed                    |
-| tasks_ok             | int       | Total number of successfully completed tasks       |
-| tasks_fail           | int       | Total number of failed tasks                       |
-| router_calls         | int       | Total number of router calls made                  |
-| last_sync_ts         | str       | ISO8601 timestamp of the last successful sync      |
-| last_health_check_ts | str       | ISO8601 timestamp of the last health check run     |
-| active_providers     | list[str] | List of active AI provider names                   |
-| error_rate           | float     | Error rate calculated as (tasks_fail/tasks_total)  |
-| memory_mb            | float     | Memory usage footprint mapped into megabytes       |
+## Architecture Overview
 
-## Health Status
-The health status represents the overall readiness and stability of NINA based on operational metrics.
-- **HEALTHY:** NINA is operating correctly. (error_rate <= 0.2)
-- **DEGRADED:** NINA is experiencing a high rate of errors. (0.2 < error_rate <= 0.5)
-- **CRITICAL:** NINA has encountered severe failures and requires immediate attention. (error_rate > 0.5)
+```
+opencode / user shell
+       │
+       ▼  HTTP
+  NinaGate (ninagate/main.py)
+       │  emit("ninagate", "request_in")   ← span_id generated here
+       │  emit("ninagate", "response_out")
+       │  emit("ninagate", "error")
+       ▼
+  Ouroboros Router (core/router.py)
+       │  emit("ouroboros", "route_start")       ← span_id propagated
+       │  emit("ouroboros", "provider_call_ok")
+       │  emit("ouroboros", "provider_error")
+       │  emit("ouroboros", "provider_stream_error")
+       │  emit("ouroboros", "route_ok")
+       │  emit("ouroboros", "route_ok_stream")
+       │  emit("ouroboros", "route_stream_error")
+       │  emit("ouroboros", "route_exhausted")
+       ▼
+  Ollama / Cloud Providers
+       │
+       ▼
+  telemetry.jsonl  ←── atomic append, 10 MB rotation, thread-safe
+       │
+       ▼  (parallel, non-blocking)
+  NinaTracer (OTel → Jaeger, null-fallback if SDK absent)
+```
 
-## Dashboard Endpoints
-- **Metrics JSON:** `GET /health` (standard health metrics)
-- **Live Visual UI:** `GET /dashboard` (renders `dashboard/ninaui.html`)
+---
 
-## [NEW] Live Visual Telemetry (v2.0)
-The visual dashboard provides a real-time Pulse of NINA's infrastructure. It is designed to provide empirical proof of local execution by visualizing:
-- **Resource "Bumps":** Real-time CPU/RAM spikes corresponding to local NinaFlash/Ollama activity.
-- **Routing Efficiency:** A live graph of Local vs. Cloud request ratios.
-- **Parallelism Indicator:** A gauge showing the number of concurrent `AgentLoop` tool tasks in flight.
+## Telemetry Package (`telemetry/`)
 
-## [NEW] Parallel Tool Monitoring
-With the introduction of the **Parallel Tool Hub**, NINA now tracks:
-- **`parallel_tool_executions`:** Count of tool calls executed concurrently via `asyncio.gather`.
-- **`overlap_latency_savings`:** Estimated time saved by running tools in parallel vs. sequential execution.
-- **`scout_success_rate`:** Success rate of speculative "Scout" patterns.
+### `telemetry/emitter.py` — Core JSONL Sink
 
-## Wiring
-The observability core is deeply integrated into various parts of NINA to update the central metrics cache.
-- `healthcheck.py`: Calls `get_hub().set_health_ts()` at the end of the health checks (via `get_prometheus_metrics` / `Final report`).
-- `tools/nina_sync.py`: Calls `get_hub().set_sync_ts()` exactly after performing a push and logging the push event.
-- `tools/nina_dashboard.py`: Exposes `get_hub().to_dict()` natively at `/health`.
+Atomic, thread-safe writer to `telemetry.jsonl`. Never raises — all I/O errors are swallowed to stderr.
 
-## [NEW] Local Performance Monitoring
-While the `ObservabilityHub` tracks high-level system state, `ninaflash` provides surgical performance monitoring:
-- **Command:** `nf monitor`
-- **Function:** Parses the last 200 requests from `ninagate.log` to calculate local/cloud ratios, average latencies per tier, and estimated tokens saved via local execution and caching.
+```python
+emit(stage: str, event: str, payload: dict, span_id: str | None = None)
+```
+
+**Schema per event line:**
+```json
+{
+  "ts": 1750000000.0,
+  "span_id": "a3f1c9b2",
+  "stage": "ouroboros",
+  "event": "route_ok",
+  "payload": {
+    "provider": "GROQ",
+    "task_type": "coding",
+    "latency_ms": 412.3,
+    "tokens_in": 180,
+    "tokens_out": 340,
+    "circuit_state": "CLOSED"
+  }
+}
+```
+
+**Rotation:** `telemetry.jsonl` is renamed to `telemetry.jsonl.1` when it exceeds 10 MB.
+
+### `telemetry/__init__.py` — Unified Export
+
+```python
+from telemetry import Tracker, emit
+```
+
+Both `Tracker` (OTel shim) and `emit` (JSONL) are available from one import.
+
+### `telemetry/reader.py` — CLI Tail
+
+```bash
+# Tail last 20 events
+python -m telemetry.reader --tail 20
+
+# Filter by stage
+python -m telemetry.reader --stage ouroboros --tail 50
+
+# Filter by event type
+python -m telemetry.reader --event route_exhausted
+
+# Follow live (like tail -f)
+python -m telemetry.reader --follow
+
+# Raw JSON output
+python -m telemetry.reader --json --tail 10
+```
+
+---
+
+## Event Reference
+
+### NinaGate Events (`stage: "ninagate"`)
+
+| Event | When | Key payload fields |
+|---|---|---|
+| `request_in` | Every proxy request entry | `provider`, `model`, `token_est`, `user_id`, `span_id` |
+| `response_out` | Successful response | `latency_ms`, `status`, `tokens_used` |
+| `error` | Exception in handler | `exc_type`, `msg` |
+
+### Ouroboros Events (`stage: "ouroboros"`)
+
+| Event | When | Key payload fields |
+|---|---|---|
+| `route_start` | `route()` entry | `task_type`, `estimated_tokens`, `stream`, `force_local` |
+| `route_ok` | Non-stream success | `provider`, `task_type`, `fallback_attempt`, `latency_ms`, `tokens_in`, `tokens_out`, `circuit_state` |
+| `route_ok_stream` | Stream success | `provider`, `task_type`, `latency_ms`, `tokens_est`, `circuit_state` |
+| `route_exhausted` | All providers failed | `task_type` |
+| `route_stream_error` | Stream generator exception | `provider`, `task_type`, `exc_type`, `msg` |
+| `provider_call_ok` | `_call_provider()` success | `provider`, `task_type`, `latency_ms`, `local`, `tokens_in`, `tokens_out`, `circuit_state` |
+| `provider_error` | `_call_provider()` exception | `provider`, `task_type`, `exc_type`, `msg`, `circuit_state` |
+| `provider_stream_error` | `_call_provider_stream()` exception | `provider`, `task_type`, `exc_type`, `msg`, `circuit_state` |
+
+---
+
+## Span ID Propagation
+
+A `span_id` (8-char UUID prefix) is generated at **NinaGate request entry** and propagated:
+
+```
+NinaGate: span_id = uuid4()[:8]  →  passed in request context dict
+Outoboros route():   _span_id received / or generates own if called standalone
+_call_provider():    span_id available via route() closure
+```
+
+This allows correlating a single user request across all three layers in `telemetry.jsonl`.
+
+---
+
+## Dual-Emit Pattern
+
+`core/router.py` runs **both** sinks in parallel — no existing `write_log` calls were removed:
+
+```python
+# Legacy structured log (logs/router.log) — unchanged
+write_log({"event": "route_ok", "span_id": _span_id, ...})
+
+# Telemetry pass-2: dual-emit to telemetry.jsonl
+_telem_emit("ouroboros", "route_ok", {
+    "provider": pid,
+    "task_type": task.task_type,
+    "latency_ms": round(lat, 1),
+    "circuit_state": self.health[pid].cb.state,
+}, span_id=_span_id)
+```
+
+The `_telem_emit` import block in `core/router.py` is null-safe:
+```python
+try:
+    from telemetry.emitter import emit as _telem_emit
+except ImportError:
+    def _telem_emit(stage, event, payload, span_id=None): pass
+```
+
+---
+
+## OTel / Jaeger (Optional)
+
+`telemetry/tracker.py` wraps `core/otel_tracer.py::NinaTracer`. If the OTel SDK or Jaeger is unavailable, the null-object fallback activates automatically — the JSONL emitter continues running independently.
+
+To enable Jaeger export, set `OTEL_EXPORTER_JAEGER_ENDPOINT` in the environment.
+
+---
+
+## Log Files
+
+| File | Written by | Format | Rotation |
+|---|---|---|---|
+| `telemetry.jsonl` | `telemetry/emitter.py` | JSONL | 10 MB → `.jsonl.1` |
+| `logs/router.log` | `core/router.py::write_log` | JSONL | 100 KB → keep last 100 lines |
+
+---
+
+## Telemetry Pass History
+
+| Pass | Date | Scope |
+|---|---|---|
+| Pass-1 | 2026-06-24 | `write_log` stubs in `core/router.py` (`route_start`, `route_ok`, `route_ok_stream`, `route_exhausted`, `provider_call_ok`) |
+| Pass-2 | 2026-06-25 | `telemetry/emitter.py` + `telemetry/reader.py` created; `_telem_emit` dual-emit wired into all router paths; NinaGate `request_in` / `response_out` / `error` wired |

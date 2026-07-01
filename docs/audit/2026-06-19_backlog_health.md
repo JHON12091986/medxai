@@ -1,0 +1,204 @@
+# Backlog Health Audit - 2026-06-19
+
+### Section 1: Status Count
+- DONE (Section 1): 15
+- PARTIAL (Section 2): 3
+- TODO-P1: 3
+- TODO-P2: 3
+- TODO-P3: 2
+- NEEDS SPEC: 2
+- READY (scattered READY items): 92
+- SURGICAL tasks total: 3
+- Phase I Batch tasks total: 0
+- IDLE placeholder entries (Suggestion 1 / 2 only): 0
+- IDLE entries with real content: 66
+
+### Section 2: Slot Coverage Check
+- Slot 01 (VAULT-001): PENDING
+- Slot 02 (VAULT-002): PENDING
+- Slot 03 (VAULT-003): PENDING
+- Slot 04 (SAND-001): PENDING
+- Slot 05 (SAND-002): PENDING
+- Slot 06 (SAND-003): PENDING
+- Slot 07 (OMNI-001): PENDING
+- Slot 08 (OMNI-002): PENDING
+- Slot 09 (OMNI-003): PENDING
+- Slot 10 (OBS-001): PENDING
+- Slot 11 (PERF-001): PENDING
+- Slot 12 (PERF-002): PENDING
+- Slot 13 (PERF-003): PENDING
+- Slot 14 (OBS-002): PENDING
+- Slot 15 (OBS-003): PENDING
+- Slot 16 (PROVIDER-REG): PENDING
+- Slot 17 (GOVERN-001): PENDING
+- Slot 18 (GOVERN-002): PENDING
+- Slot 19 (GOVERN-003): PENDING
+- Slot 20 (SYNC-FIX): PENDING
+- Slot 21 (SURGICAL-DOCS): PENDING
+- Slot 22 (IDLE-DEDUP): PENDING
+- Slot 23 (BACKLOG-AUDIT): PENDING
+- Slot 24 (DEBT-CLEAR): PENDING
+
+### Section 3: READY Items Not Yet in Slots
+- READY — config.missing_env.telegramchatid:
+- READY — E-nexus-01:
+- READY — F-07:
+- READY — feature.ews_blocked:
+- READY — F-06:
+- READY — F-08:
+- READY — todo.crons_manager_py_735:
+- READY — todo.tools_merge_resolver_py_184:
+- READY — todo.core_task_classifier_py_205:
+- READY — todo.crons_backup_jobs_py_41:
+- READY — feature.playwright_blocked:
+- IDLE-20260617-2153 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260617-2154 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260617-2154 | Auto-Promoted by IdleLoop | Tool Error Handling
+- IDLE-20260617-2157 | Auto-Promoted by IdleLoop | Morning Report
+- IDLE-20260617-2223 | Auto-Promoted by IdleLoop | Tool Error Handling
+- IDLE-20260617-2239 | Auto-Promoted by IdleLoop | Morning Report
+- IDLE-20260617-2246 | Auto-Promoted by IdleLoop | Provider Routing
+- IDLE-20260617-2247 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260617-2249 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260617-2251 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260617-2252 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260617-2254 | Auto-Promoted by IdleLoop | Provider Routing
+- IDLE-20260617-2257 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260617-2258 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260617-2259 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260617-2300 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260617-2301 | Auto-Promoted by IdleLoop | Tool Error Handling
+- IDLE-20260617-2303 | Auto-Promoted by IdleLoop | Morning Report
+- IDLE-20260617-2305 | Auto-Promoted by IdleLoop | Provider Routing
+- IDLE-20260617-2306 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260617-2309 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260617-2310 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260617-2315 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260617-2322 | Auto-Promoted by IdleLoop | Tool Error Handling
+- IDLE-20260617-2327 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260617-2328 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260617-2333 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260617-2357 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260617-2358 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260618-0004 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260618-0008 | Auto-Promoted by IdleLoop | Tool Error Handling
+- IDLE-20260618-0013 | Auto-Promoted by IdleLoop | Morning Report
+- IDLE-20260618-0014 | Auto-Promoted by IdleLoop | Provider Routing
+- IDLE-20260618-0018 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260618-0020 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260618-0021 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260618-0942 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260618-0945 | Auto-Promoted by IdleLoop | Morning Report
+- IDLE-20260618-1017 | Auto-Promoted by IdleLoop | Provider Routing
+- IDLE-20260618-1017 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260618-1128 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260618-1129 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260618-1130 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260618-1149 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260618-1157 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260618-1208 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260618-1212 | Auto-Promoted by IdleLoop | Tool Error Handling
+- IDLE-20260618-1218 | Auto-Promoted by IdleLoop | Morning Report
+- IDLE-20260618-1221 | Auto-Promoted by IdleLoop | Provider Routing
+- IDLE-20260618-1341 | Auto-Promoted by IdleLoop | Provider Routing
+- IDLE-20260618-1343 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260618-1347 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260618-1348 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260618-1406 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260618-1407 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260618-1411 | Auto-Promoted by IdleLoop | Scheduler Errors
+- IDLE-20260618-1417 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260618-1536 | Auto-Promoted by IdleLoop | Telegram Interface
+- IDLE-20260618-1539 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260618-1554 | Auto-Promoted by IdleLoop | Config Robustness
+- IDLE-20260618-1555 | Auto-Promoted by IdleLoop | Tool Error Handling
+- IDLE-20260618-1557 | Auto-Promoted by IdleLoop | Morning Report
+- IDLE-20260618-1404 | Auto-Promoted by IdleLoop | Morning Report
+- IDLE-20260618-1407 | Auto-Promoted by IdleLoop | Provider Routing
+- IDLE-20260618-1413 | Auto-Promoted by IdleLoop | Memory Context
+- IDLE-20260618-1419 | Auto-Promoted by IdleLoop | Scheduler Errors
+
+### Section 4: Stale READY Items
+- Need to manually verify promotion dates in git history or logs for:
+  - READY — config.missing_env.telegramchatid:
+  - READY — E-nexus-01:
+  - READY — F-07:
+  - READY — feature.ews_blocked:
+  - READY — F-06:
+  - READY — F-08:
+  - READY — todo.crons_manager_py_735:
+  - READY — todo.tools_merge_resolver_py_184:
+  - READY — todo.core_task_classifier_py_205:
+  - READY — todo.crons_backup_jobs_py_41:
+  - READY — feature.playwright_blocked:
+  - IDLE-20260617-2153 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260617-2154 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260617-2154 | Auto-Promoted by IdleLoop | Tool Error Handling
+  - IDLE-20260617-2157 | Auto-Promoted by IdleLoop | Morning Report
+  - IDLE-20260617-2223 | Auto-Promoted by IdleLoop | Tool Error Handling
+  - IDLE-20260617-2239 | Auto-Promoted by IdleLoop | Morning Report
+  - IDLE-20260617-2246 | Auto-Promoted by IdleLoop | Provider Routing
+  - IDLE-20260617-2247 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260617-2249 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260617-2251 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260617-2252 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260617-2254 | Auto-Promoted by IdleLoop | Provider Routing
+  - IDLE-20260617-2257 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260617-2258 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260617-2259 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260617-2300 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260617-2301 | Auto-Promoted by IdleLoop | Tool Error Handling
+  - IDLE-20260617-2303 | Auto-Promoted by IdleLoop | Morning Report
+  - IDLE-20260617-2305 | Auto-Promoted by IdleLoop | Provider Routing
+  - IDLE-20260617-2306 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260617-2309 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260617-2310 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260617-2315 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260617-2322 | Auto-Promoted by IdleLoop | Tool Error Handling
+  - IDLE-20260617-2327 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260617-2328 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260617-2333 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260617-2357 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260617-2358 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260618-0004 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260618-0008 | Auto-Promoted by IdleLoop | Tool Error Handling
+  - IDLE-20260618-0013 | Auto-Promoted by IdleLoop | Morning Report
+  - IDLE-20260618-0014 | Auto-Promoted by IdleLoop | Provider Routing
+  - IDLE-20260618-0018 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260618-0020 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260618-0021 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260618-0942 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260618-0945 | Auto-Promoted by IdleLoop | Morning Report
+  - IDLE-20260618-1017 | Auto-Promoted by IdleLoop | Provider Routing
+  - IDLE-20260618-1017 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260618-1128 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260618-1129 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260618-1130 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260618-1149 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260618-1157 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260618-1208 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260618-1212 | Auto-Promoted by IdleLoop | Tool Error Handling
+  - IDLE-20260618-1218 | Auto-Promoted by IdleLoop | Morning Report
+  - IDLE-20260618-1221 | Auto-Promoted by IdleLoop | Provider Routing
+  - IDLE-20260618-1341 | Auto-Promoted by IdleLoop | Provider Routing
+  - IDLE-20260618-1343 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260618-1347 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260618-1348 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260618-1406 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260618-1407 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260618-1411 | Auto-Promoted by IdleLoop | Scheduler Errors
+  - IDLE-20260618-1417 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260618-1536 | Auto-Promoted by IdleLoop | Telegram Interface
+  - IDLE-20260618-1539 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260618-1554 | Auto-Promoted by IdleLoop | Config Robustness
+  - IDLE-20260618-1555 | Auto-Promoted by IdleLoop | Tool Error Handling
+  - IDLE-20260618-1557 | Auto-Promoted by IdleLoop | Morning Report
+  - IDLE-20260618-1404 | Auto-Promoted by IdleLoop | Morning Report
+  - IDLE-20260618-1407 | Auto-Promoted by IdleLoop | Provider Routing
+  - IDLE-20260618-1413 | Auto-Promoted by IdleLoop | Memory Context
+  - IDLE-20260618-1419 | Auto-Promoted by IdleLoop | Scheduler Errors
+
+### Section 5: Recommendations
+1. READY — config.missing_env.telegramchatid:
+2. READY — E-nexus-01:
+3. READY — F-07:

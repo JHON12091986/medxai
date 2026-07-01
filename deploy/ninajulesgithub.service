@@ -1,0 +1,18 @@
+[Unit]
+Description=NinaJulesGitHub — Autonomous Jules/GitHub Pipeline Daemon
+After=network.target
+Documentation=file:///home/aibony/nina/jules/ninajulesgithub.py
+
+[Service]
+Type=simple
+User=aibony
+WorkingDirectory=/home/aibony/nina
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONPATH=/home/aibony/nina
+ExecStart=/home/aibony/nina/venv/bin/python3 /home/aibony/nina/jules/ninajulesgithub.py
+Restart=always
+RestartSec=15
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=default.target

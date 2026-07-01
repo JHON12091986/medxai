@@ -1,0 +1,4 @@
+# P0 GitHub Relay Bus — result slots written here by nina_mcp aliases
+# Slots: exec_result.json | tail_result.json | diff_result.json | search_result.json | status_result.json
+# ARCHITECT reads these via get_file_contents on demand.
+# These files are intentionally committed to the repo for async RPC.

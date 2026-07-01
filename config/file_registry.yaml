@@ -1,0 +1,299 @@
+# config/file_registry.yaml
+# ════════════════════════════════════════════════════════════
+# NINA FILE MANAGER — Single source of truth for ALL file types
+# Every file in this repo must have a registered entry here.
+# No script, agent, or tool may write a file whose type is
+# not registered. Enforced by: git-hooks/pre-commit
+# ════════════════════════════════════════════════════════════
+
+version: "1.0"
+updated_at: "2026-06-21"
+maintainer: human
+
+# ─────────────────────────────────────────────────────────────
+# GLOBAL ROOT RULES
+# Only these files/patterns are permitted at repo root.
+# Everything else must live in a subdirectory.
+# ─────────────────────────────────────────────────────────────
+global:
+  root_allowed_files:
+    - README.md
+    - CHANGELOG.md
+    - Makefile
+    - LICENSE
+    - .gitignore
+    - .ninaignore
+    - .geminiignore
+    - .env.example
+    - .env.local.template
+    - juleslock.txt
+    - healthcheck.py
+    - idleloop.py
+    - guardian_engine.py
+    - guardian
+    - generate_codemap.py
+    - generate_backups.sh
+    - agy_task.sh
+    - agy_verify.sh
+    - agy_watchdog.sh
+    - _fix_all.py
+
+  root_forbidden_patterns:
+    - "NDEV*.md"
+    - "NDEV_*.md"
+    - "*_audit.md"
+    - "*_report.md"
+    - "*_report.json"
+    - "bench_*.md"
+    - "call_graph_*.json"
+    - "efficiency_*.json"
+    - "nina_update_log.md"
+    - "nina_commit_index.md"
+    - "agy_session.md"
+
+# ─────────────────────────────────────────────────────────────
+# FILE TYPE REGISTRY
+# Each entry defines: allowed paths, authorized writers,
+# git commit policy, size limits, and rotation strategy.
+# ─────────────────────────────────────────────────────────────
+file_types:
+
+  # ── MARKDOWN (.md) ──────────────────────────────────────────
+  - type: md
+    category: documentation
+    subtypes:
+
+      - subtype: permanent_doc
+        description: "Human-authored, versioned documentation"
+        allowed_paths:
+          - docs/architecture/
+          - docs/agents/
+          - docs/agents/agy/
+          - docs/memory/
+          - docs/observability/
+          - docs/dev/
+          - docs/roadmap/
+          - docs/space/
+          - docs/context/
+          - docs/
+        written_by: [human, perplexity]
+        committed: true
+        max_size_kb: 500
+        rotation: none
+
+      - subtype: agent_report
+        description: "Task output MDs from Jules / AGY / Gemini agents"
+        allowed_paths:
+          - docs/generated/
+        written_by: [jules, agy, gemini]
+        committed: false
+        max_size_kb: 200
+        rotation: keep_last_5
+        naming_pattern: "NDEV_{YYYYMMDD_HHMMSS}.md"
+
+      - subtype: audit_snapshot
+        description: "Code/file audit outputs from guardian or agy"
+        allowed_paths:
+          - docs/audit/
+        written_by: [agy, guardian]
+        committed: false
+        max_size_kb: 300
+        rotation: keep_last_3
+
+      - subtype: error_register
+        description: "nina_error_register.md — permanent error ledger"
+        allowed_paths:
+          - docs/audit/
+        written_by: [nina, guardian, human]
+        committed: true
+        max_size_kb: 200
+        rotation: none
+
+      - subtype: update_log
+        description: "Rolling operational update log — never grows unbounded"
+        allowed_paths:
+          - data/logs/
+        written_by: [nina, agy]
+        committed: false
+        max_size_kb: 100
+        rotation: tail_500_lines
+
+      - subtype: backlog
+        description: "jules_backlog.md and similar planning files"
+        allowed_paths:
+          - docs/dev/
+          - .jules/
+        written_by: [human, jules, perplexity]
+        committed: true
+        max_size_kb: 100
+        rotation: none
+
+  # ── JSON (.json) ────────────────────────────────────────────
+  - type: json
+    category: data
+    subtypes:
+
+      - subtype: config
+        description: "Quota state, capability config"
+        allowed_paths:
+          - config/
+        written_by: [nina, agy]
+        committed: true
+        max_size_kb: 50
+
+      - subtype: call_graph
+        description: "Generated call graph snapshots"
+        allowed_paths:
+          - data/graphs/
+        written_by: [agy, generate_codemap.py]
+        committed: false
+        max_size_kb: 500
+        rotation: keep_last_2
+        naming_pattern: "call_graph_{YYYYMMDD}.json"
+
+      - subtype: report
+        description: "Efficiency / bench / performance reports"
+        allowed_paths:
+          - data/reports/
+        written_by: [guardian, agy]
+        committed: false
+        max_size_kb: 100
+        rotation: keep_last_5
+
+  # ── TXT (.txt) ──────────────────────────────────────────────
+  - type: txt
+    category: locks_and_signals
+    subtypes:
+
+      - subtype: lockfile
+        description: "Agent lock/signal files (juleslock.txt etc.)"
+        allowed_paths:
+          - ./
+        written_by: [jules, agy, nina]
+        committed: true
+        max_size_kb: 1
+        naming_pattern: "{agent}lock.txt"
+
+      - subtype: log
+        description: "Raw plaintext runtime logs"
+        allowed_paths:
+          - data/logs/
+          - exports/
+        written_by: [any]
+        committed: false
+        max_size_kb: 1000
+        rotation: tail_1000_lines
+
+  # ── YAML (.yaml / .yml) ─────────────────────────────────────
+  - type: yaml
+    category: config
+    subtypes:
+
+      - subtype: registry
+        description: "Canonical registries — capability_registry, file_registry"
+        allowed_paths:
+          - config/
+        written_by: [human, perplexity]
+        committed: true
+        max_size_kb: 100
+
+      - subtype: workflow
+        description: "GitHub Actions CI/CD workflows"
+        allowed_paths:
+          - .github/workflows/
+        written_by: [human, jules]
+        committed: true
+
+  # ── PYTHON (.py) ────────────────────────────────────────────
+  - type: py
+    category: code
+    subtypes:
+
+      - subtype: core
+        description: "Core Nina logic"
+        allowed_paths: [core/, agent/, interfaces/]
+        written_by: [human, jules, agy]
+        committed: true
+
+      - subtype: tool
+        description: "Tools, generators, and automation scripts in tools/"
+        allowed_paths: [tools/]
+        written_by: [human, perplexity, jules, agy]
+        committed: true
+        max_size_kb: 200
+        # Registered files (2026-06-21):
+        # tools/gen_claude_feed.py — extracted from nina_sync.sh v6.3
+        # tools/generate_codemap.py — codebase map generator
+        # (all other tools/ .py files covered by this subtype)
+
+      - subtype: test
+        description: "pytest test suite in tests/"
+        allowed_paths: [tests/]
+        written_by: [human, jules, agy]
+        committed: true
+        max_size_kb: 100
+        # Registered files (2026-06-21):
+        # tests/test_task_lock.py, test_task_spec.py, test_cli.py
+        # tests/test_async_shell.py, test_context_gate.py, test_nina_ooda.py
+        # tests/test_queue.py, test_output_validator.py, test_agy_briefing.py
+        # tests/test_seed_from_slots.py, test_per_loop.py, test_watcher.py
+        # tests/test_dispatcher.py, test_guardian_engine.py, test_quota_tracker.py
+        # tests/test_task_dag.py, test_prompt_compressor.py
+
+      - subtype: util
+        description: "Utility and check scripts"
+        allowed_paths: [bin/, checks/, crons/]
+        written_by: [human, jules]
+        committed: true
+
+      - subtype: root_util
+        description: "Root-level utility scripts (legacy — migrate to bin/)"
+        allowed_paths: [./]
+        written_by: [human]
+        committed: true
+        max_count: 15
+
+  # ── SHELL (.sh) ─────────────────────────────────────────────
+  - type: sh
+    category: code
+    subtypes:
+
+      - subtype: task_script
+        description: "Task automation and agent scripts"
+        allowed_paths: [./, bin/, git-hooks/, scripts/]
+        written_by: [human, jules, agy, perplexity]
+        committed: true
+        # Registered files (2026-06-21):
+        # scripts/gen_codemap.sh — codebase map generation wrapper
+        # scripts/nina_sync.sh v6.3 — main sync pipeline
+        # (all other scripts/ .sh files covered by this subtype)
+
+  # ── ENV (.env) ──────────────────────────────────────────────
+  - type: env
+    category: secrets
+    subtypes:
+
+      - subtype: live
+        description: ".env — never committed, local only"
+        allowed_paths: [./]
+        written_by: [human]
+        committed: false
+        gitignored: true
+
+      - subtype: template
+        description: ".env.example / .env.local.template — safe to commit"
+        allowed_paths: [./]
+        written_by: [human]
+        committed: true
+
+# ─────────────────────────────────────────────────────────────
+# ENFORCEMENT
+# ─────────────────────────────────────────────────────────────
+enforcement:
+  pre_commit_hook: git-hooks/pre-commit
+  runtime_check: guardian_engine.py
+  index_file: docs/README.md
+  violation_log: docs/audit/violations.md
+  violation_action: block_and_log
+  override_by: human
+  # To bypass (emergency only): git commit --no-verify

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "SHARED BRAIN: Read docs/AGENT_BRAIN.md before any task — hardware constraints (MX150 2GB VRAM ceiling), pre-flight checklist, BEDROCK rules, Guardian overrides, and Nina identity. This is non-negotiable.",
+    "NINA AUDIT PROTOCOL — You are operating inside the Nina AI infra project (aibony/nina). Owner: M. Baizid Alam. Stack: ASUS VivoBook X530FN · MX150 2GB VRAM · i5-8250U · 8GB RAM · Ubuntu 26.04 · Python 3.14.4 · ~/nina/venv.",
+    "RULE 1 — EVIDENCE ONLY: Never state a file exists, a function is defined, or a bug is present unless you have READ the file in this session. 'I believe', 'typically', 'probably' are banned. State facts or say 'I have not read this yet'.",
+    "RULE 2 — GREP BEFORE CLAIM: Before claiming any symbol, function, class, or variable exists, search for it. Before claiming a pattern is absent, grep for it.",
+    "RULE 3 — NO INFERENCE: Do not infer file contents from filenames, directory names, or project conventions. Read the actual file.",
+    "RULE 4 — PHASE GATE: Complete reading/analysis before writing any code. Do not interleave. Phase 1: understand. Phase 2: plan. Phase 3: execute.",
+    "RULE 5 — FALSIFICATION: Before submitting any solution, ask: what would break this? Run the breaking scenario mentally. If it breaks, fix it first.",
+    "HARDWARE RULE: MX150 = 2GB VRAM. Never suggest models requiring more. Approved: qwen2.5-coder:3b-q4, phi3.5:3.8b-q4, gemma3:4b-q4. Rejected: llama3.2:3b full, mistral:7b, any 7B+.",
+    "SERVICE RULE: systemctl --user ONLY. Never sudo systemctl. Never nohup for Nina services.",
+    "GUARDIAN RULE: High-risk files (interfaces/telegram_interface.py, .env, core/router.py, main.py, guardian_engine.py) require Guardian pipeline before any edit. Read docs/guardian.md.",
+    "Full audit protocol reference: docs/space/opencode_audit_protocol.md"
+  ]
+}

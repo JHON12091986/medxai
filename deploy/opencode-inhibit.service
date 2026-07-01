@@ -1,0 +1,25 @@
+[Unit]
+Description=OpenCode Sleep Inhibitor
+Documentation=https://github.com/aibony/nina/blob/main/OUROBOROS.md
+After=ninagate.service
+Wants=ninagate.service
+PartOf=opencode-session.service
+
+[Service]
+Type=simple
+User=aibony
+ExecStart=/usr/bin/systemd-inhibit \
+  --what=sleep:idle:handle-lid-switch \
+  --who=opencode \
+  --why="OpenCode Ouroboros agent session active" \
+  /bin/sleep infinity
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=10
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=opencode-inhibit
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,13 @@
+# NinaMCP P2 — allowlisted commands for GitHub Actions relay runner
+# Only commands starting with these prefixes are permitted.
+# ARCHITECT writes mcp/inbox/exec.json → relay runs → result in mcp/outbox/exec_result.json
+# Edit with care — this is the security boundary.
+
+scripts/nina_sync.sh
+python3 tools/update_index.py
+python3 tools/ssot_registry.py
+python3 tools/generate_codemap.py
+python3 mcp/search_relay.py
+git status
+git log
+git diff

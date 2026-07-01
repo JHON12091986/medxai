@@ -1,0 +1,5 @@
+# archive/root_strays/ — old forbidden root files saved here for reference
+# Nothing here is ever executed. Pure historical record.
+*
+!.gitignore
+!*.md

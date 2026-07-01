@@ -25,9 +25,20 @@
 DATA_FILE="data/agy_quota.json"
 mkdir -p data
 
+PYTHON="python3"
+if [ -f "venv/bin/python" ]; then
+    PYTHON="venv/bin/python"
+elif [ -f "../venv/bin/python" ]; then
+    PYTHON="../venv/bin/python"
+elif [ -f "ninavenv/bin/python" ]; then
+    PYTHON="ninavenv/bin/python"
+elif [ -f "../ninavenv/bin/python" ]; then
+    PYTHON="../ninavenv/bin/python"
+fi
+
 # ── Manual exhausted flag ─────────────────────────────────────────────────────
 if [[ "$1" == "--exhausted" ]]; then
-  python3 - <<PYEOF
+  "$PYTHON" - <<PYEOF
 import json, datetime, pathlib
 p = pathlib.Path("$DATA_FILE")
 data = json.loads(p.read_text()) if p.exists() else {}
@@ -43,7 +54,7 @@ fi
 parse_quota() {
   # agy outputs quota info when you run: agy --quota (or similar)
   # We scrape it with a lightweight Python parser
-  python3 - <<'PYEOF'
+  "$PYTHON" - <<'PYEOF'
 import subprocess, re, json, datetime, pathlib, sys
 
 DATA_FILE = "data/agy_quota.json"

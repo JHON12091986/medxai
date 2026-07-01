@@ -1,0 +1,13 @@
+{
+  "theme": "Default",
+  "autoAccept": true,
+  "contextFileName": "GEMINI.md",
+  "coreTools": [
+    "run_shell_command",
+    "read_file",
+    "write_file",
+    "list_directory",
+    "search_file_content",
+    "replace_in_file"
+  ]
+}

@@ -70,8 +70,8 @@
 - **Fix:** Always use venv; Ubuntu 26.04 enforces PEP 668
 
 ### R-10 — KeyError TELEGRAM_BOT_TOKEN on startup
-- **Cause:** .env used `TELEGRAMBOTTOKEN`; config expected `TELEGRAM_BOT_TOKEN`
-- **Fix:** `sed -i s/TELEGRAMBOTTOKEN/TELEGRAM_BOT_TOKEN/ nina/.env`
+- **Cause:** .env used `TELEGRAM_BOT_TOKEN`; config expected `TELEGRAM_BOT_TOKEN`
+- **Fix:** `sed -i s/TELEGRAM_BOT_TOKEN/TELEGRAM_BOT_TOKEN/ nina/.env`
 
 ### R-11 — AttributeError NinaOS has no attribute run_morning_report
 - **Cause:** Scheduler methods appended outside class body
@@ -413,8 +413,8 @@ EOF
 - **Fix:** `python -m pip install --upgrade mypy`
 - **Scope:** `venv`
 
-### R-74 — APISECRETKEY empty in .env
-- **Cause:** `.env` contained an empty `APISECRETKEY`, causing guardian config validation to fail
+### R-74 — API_SECRET_KEY empty in .env
+- **Cause:** `.env` contained an empty `API_SECRET_KEY`, causing guardian config validation to fail
 - **Fix:** inserted a non-empty secret value in `/home/aibony/nina/.env`
 - **Scope:** `.env`
 
@@ -457,7 +457,7 @@ cd ~/nina && BACKUP_MD="$(ls -t upgrades/backups/nina_export_*.md 2>/dev/null | 
 
 ### 2026-05-23 22:14:44 +0600 — Guardian forensic run
 - Guardian reported WARN status with health score 4.5/10, while startup checks and service restart still showed NINA active, Telegram polling confirmed, APScheduler started, and Ollama responding.
-- Signature phase reported likely false-positive blockers for `APISECRETKEY`, `TELEGRAMBOTTOKEN`, and `AUTHORIZEDUSERID` even though earlier env preflight and healthcheck marked them present.
+- Signature phase reported likely false-positive blockers for `API_SECRET_KEY`, `TELEGRAM_BOT_TOKEN`, and `AUTHORIZED_USER_ID` even though earlier env preflight and healthcheck marked them present.
 - Guardian also reported a concurrent-process/lock warning around `nina.lock` and PID 26097 before restart.
 - Advisory findings included duplicate log handler warning, Telegram Markdown parse warning, coroutine/lambda APScheduler warning, idle queue path mismatch warning, shell allowlist regression debt, weak eval/exec regex debt, and TELEGRAMCHATID missing info.
 - Guardian forensic engine crashed at the end with:

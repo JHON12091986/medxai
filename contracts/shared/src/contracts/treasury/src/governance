@@ -1,0 +1,41 @@
+//! # Governance Contract
+//!
+//! This contract manages the cooperative's governance, handling:
+//! - Member registration
+//! - Role management (admin, treasurer, etc.)
+//! - Quorum and threshold settings
+//!
+//! # Events
+//! - `MemberRegistered`: emitted when a new member joins
+//! - `RoleAssigned`: emitted when roles are updated
+//! - `ThresholdChanged`: emitted when governance parameters change
+
+use soroban_sdk::{contract, contractimpl, Address, Env, Symbol};
+
+#[contract]
+pub struct GovernanceContract;
+
+#[contractimpl]
+impl GovernanceContract {
+    /// Registers a new member in the cooperative.
+    ///
+    /// # Authorization
+    /// Only admins can register members.
+    ///
+    /// # Arguments
+    /// * `member` - The address to register
+    /// * `role` - The role to assign (Symbol)
+    ///
+    /// # Panics
+    /// Panics if `member` is already registered.
+    ///
+    /// # Events
+    /// Emits `MemberRegistered` with member address.
+    ///
+    /// # Returns
+    /// Returns the member's ID.
+    pub fn register_member(env: Env, member: Address, role: Symbol) -> i128 {
+        // implementation...
+        0
+    }
+}

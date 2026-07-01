@@ -20,7 +20,6 @@ USAGE
     result = await plan.execute()
 """
 
-import asyncio
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -48,7 +47,8 @@ class DispatchPlan:
             logger.info(f"dispatch_cache_hit tier={self.tier}")
             return self.cached_result
         if self._execute_fn:
-            return await self._execute_fn(self.provider, self.prompt)
+            import asyncio
+            return await asyncio.wait_for(self._execute_fn(self.provider, self.prompt), timeout=45.0)
         return f"[DispatchPlan] No executor set for provider={self.provider}"
 
 
@@ -93,22 +93,43 @@ class QuotaDispatcher:
         )
 
         async def _execute(provider: str, compressed_prompt: str) -> str:
+            from core.task_classifier import _semantic_type
+            sem_type = _semantic_type(compressed_prompt)
             task = ClassifiedTask(
-                task_type="quick" if decision.tier == "TRIVIAL" else
-                          "coding" if decision.tier in ("COMPLEX","CRITICAL") else "general",
+                task_type=sem_type,
+                complexity=decision.tier,
                 estimated_tokens=decision.estimated_tokens,
-                requires_tool_use=False,
-                is_multilingual=False,
             )
             messages = [{"role": "user", "content": compressed_prompt}]
             result = await self.router.route(
                 goal=compressed_prompt,
                 messages=messages,
                 task=task,
-                force_local=(provider in ("LOCALFAST", "LOCALHEAVY")),
+                force_local=(provider in ("LOCALFAST", "LOCALHEAVY") or force_tier == "LOCALFAST"),
             )
+            # Handle async generator output if providers are unavailable
+            import types
+            is_generator = isinstance(result, (types.AsyncGeneratorType,))
+            result_str = result
+            if is_generator:
+                acc = []
+                async for chunk in result:
+                    acc.append(chunk)
+                result_str = "".join(acc)
+                result = result_str # Replace the original reference
+
+            if isinstance(result, tuple):
+                result_str = str(result[0])
+            elif isinstance(result, Exception):
+                result_str = str(result)
+            elif not isinstance(result, str):
+                result_str = str(result)
+            else:
+                result_str = result
+
             # Cache the result for future identical calls
-            self.guard.cache_result(compressed_prompt, result, ttl=3600)
+            if "All providers are currently unavailable" not in result_str and not result_str.startswith("⚠️"):
+                self.guard.cache_result(compressed_prompt, result_str, ttl=3600)
             return result
 
         return DispatchPlan(

@@ -1,0 +1,24 @@
+2026-06-23 00:35:04,988 [DEBUG] nina.agent: agent input received: 'hi'
+2026-06-23 00:35:07,465 [DEBUG] nina.agent: knowledge_graph_query_failed: 'KnowledgeGraph' object has no attribute 'query'
+2026-06-23 00:35:07,466 [WARNING] nina.agent: goal_manager_context_failed: 'GoalManager' object has no attribute 'register'
+2026-06-23 00:35:15,861 [DEBUG] nina.agent: agent input received: 'how are you'
+2026-06-23 00:35:18,405 [DEBUG] nina.agent: knowledge_graph_query_failed: 'KnowledgeGraph' object has no attribute 'query'
+2026-06-23 00:35:18,405 [WARNING] nina.agent: goal_manager_context_failed: 'GoalManager' object has no attribute 'register'
+2026-06-23 00:35:35,673 [DEBUG] nina.agent: agent input received: 'why are you so slow !'
+2026-06-23 00:35:55,819 [WARNING] nina.agent: agent_loop_timeout goal='hi' exceeded=300s
+2026-06-23 00:35:55,903 [DEBUG] nina.agent: knowledge_graph_query_failed: 'KnowledgeGraph' object has no attribute 'query'
+2026-06-23 00:35:55,903 [WARNING] nina.agent: goal_manager_context_failed: 'GoalManager' object has no attribute 'register'
+2026-06-23 00:35:55,904 [INFO] nina.agent: tool_first_reflex: suggesting tool=shell before generation
+2026-06-23 00:36:03,414 [WARNING] nina.agent: agent_loop_timeout goal='how are you' exceeded=300s
+2026-06-23 00:36:40,914 [WARNING] nina.agent: agent_loop_timeout goal='why are you so slow !' exceeded=300s
+2026-06-23 00:43:53,814 [DEBUG] nina.agent: agent input received: 'hi'
+2026-06-23 00:43:56,402 [DEBUG] nina.agent: knowledge_graph_query_failed: 'KnowledgeGraph' object has no attribute 'query'
+2026-06-23 00:43:56,402 [WARNING] nina.agent: goal_manager_context_failed: 'GoalManager' object has no attribute 'register'
+2026-06-23 00:44:03,187 [DEBUG] nina.agent: agent input received: 'how are you'
+2026-06-23 00:44:03,248 [WARNING] nina.agent: thermal_warn CPU=81 GPU=59
+2026-06-23 00:44:16,461 [DEBUG] nina.agent: knowledge_graph_query_failed: 'KnowledgeGraph' object has no attribute 'query'
+2026-06-23 00:44:16,461 [WARNING] nina.agent: goal_manager_context_failed: 'GoalManager' object has no attribute 'register'
+2026-06-23 00:44:26,002 [DEBUG] nina.agent: agent input received: 'whats up'
+2026-06-23 00:44:42,077 [WARNING] nina.agent: agent_loop_timeout goal='hi' exceeded=300s
+2026-06-23 00:44:42,183 [DEBUG] nina.agent: knowledge_graph_query_failed: 'KnowledgeGraph' object has no attribute 'query'
+2026-06-23 00:44:42,184 [WARNING] nina.agent: goal_manager_context_failed: 'GoalManager' object has no attribute 'register'

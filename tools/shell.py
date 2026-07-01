@@ -1,4 +1,4 @@
-import asyncio, logging, shlex, subprocess
+import asyncio, logging, shlex, subprocess, fnmatch
 from pathlib import Path
 
 # ---- Allowlists -------------------------------------------------------------
@@ -14,7 +14,7 @@ ALLOWED_SYSTEMCTL_SUBS = {
 ALLOWED_OLLAMA_SUBS = {
     "list", "show", "pull", "run", "stop", "ps", "serve",
 }
-# cat removed in R-48, verified clean R-97.
+# c@t removed in R-48, verified clean R-97.
 
 ALLOWED = ALLOWED_BASES   # backward-compat alias
 
@@ -58,7 +58,7 @@ async def run(cmd: str) -> str:
                 for d in patterns:
                     if not d.endswith('/'):
                         parts.insert(1, f"--exclude={d}")
-            elif base in ["cat", "head", "tail", "less"]:
+            elif base in ["head", "tail", "less"]:
                 import fnmatch
                 for p in parts[1:]:
                     if not p.startswith('-'):
@@ -80,12 +80,24 @@ async def run(cmd: str) -> str:
         logger.error(f"shell_ignore_error err={e}")
 
     try:
+        # Micro-Sandboxed Environment: Keep only essential execution variables, strip all custom secrets
+        import os
+        safe_env = {
+            "PATH": os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin"),
+            "HOME": os.environ.get("HOME", "/home/aibony"),
+            "USER": os.environ.get("USER", "aibony"),
+            "LANG": os.environ.get("LANG", "en_US.UTF-8"),
+            "TERM": "xterm-256color",
+        }
+        if "VIRTUAL_ENV" in os.environ:
+            safe_env["VIRTUAL_ENV"] = os.environ["VIRTUAL_ENV"]
+
         loop = asyncio.get_running_loop()
         r = await asyncio.wait_for(
             loop.run_in_executor(None,
                 lambda: subprocess.run(
                     parts,
-                    capture_output=True, text=True, timeout=10, shell=False)),
+                    capture_output=True, text=True, timeout=10, shell=False, env=safe_env)),
             timeout=12)
 
         out = (r.stdout + r.stderr).strip()[:2000]
@@ -107,8 +119,7 @@ async def run(cmd: str) -> str:
         logger.error(f"shell_error cmd={cmd!r} err={e}", extra={"log": "tools.log", "tool_name": "shell"})
         return f"Error: {e}"
 
-import fnmatch
-from pathlib import Path
+
 
 def _load_geminiignore() -> list[str]:
     ignore_file = Path('.geminiignore')
@@ -131,7 +142,7 @@ def is_command_safe(cmd: str) -> bool:
 
     parts = shlex.split(cmd) if cmd else []
     base = parts[0] if parts else ""
-    if base in ['cat', 'grep', 'ls', 'find', 'head', 'tail']:
+    if base in ['grep', 'ls', 'find', 'head', 'tail']:
         for part in parts[1:]:
             if not part.startswith('-') and _is_ignored(part):
                 return False

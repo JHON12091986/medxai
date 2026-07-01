@@ -1,0 +1,83 @@
+version: '1.0'
+updated_at: '2026-06-18'
+tools:
+  - id: shell_exec
+    description: 'Run a shell command on the host machine'
+    executor: agy
+    input_schema: {cmd: string}
+    output_schema: {stdout: string, returncode: int}
+    quota_provider: agy
+    status: online
+  - id: web_search
+    description: 'Search the web for current information'
+    executor: ninaflash
+    input_schema: {query: string, num_results: int}
+    output_schema: {results: list}
+    quota_provider: perplexity
+    status: online
+  - id: github_pr_create
+    description: 'Create a GitHub pull request'
+    executor: ninaflash
+    input_schema: {title: string, body: string, branch: string}
+    output_schema: {pr_url: string, pr_number: int}
+    quota_provider: openai
+    status: online
+  - id: jules_task
+    description: 'Dispatch a coding task to Jules async agent'
+    executor: jules
+    input_schema: {prompt: string, files: list}
+    output_schema: {pr_url: string}
+    quota_provider: jules
+    status: online
+  - id: telegram_send
+    description: 'Send a message to the user via Telegram'
+    executor: ninaflash
+    input_schema: {message: string}
+    output_schema: {message_id: int}
+    quota_provider: null
+    status: online
+  - id: memory_store
+    description: 'Store a fact or note in NINA long-term memory'
+    executor: ninaflash
+    input_schema: {key: string, value: string}
+    output_schema: {stored: bool}
+    quota_provider: null
+    status: online
+  - id: code_edit
+    description: 'Edit a local Python file with targeted find-replace'
+    executor: agy
+    input_schema: {file_path: string, find: string, replace: string}
+    output_schema: {success: bool}
+    quota_provider: agy
+    status: online
+models:
+  - id: gpt-4o
+    provider: openai
+    context_window: 128000
+    cost_per_1k_tokens: 0.005
+    supports_streaming: true
+    status: online
+  - id: claude-sonnet-4-5
+    provider: anthropic
+    context_window: 200000
+    cost_per_1k_tokens: 0.003
+    supports_streaming: true
+    status: online
+  - id: gemini-2.5-pro
+    provider: gemini
+    context_window: 1000000
+    cost_per_1k_tokens: 0.00125
+    supports_streaming: true
+    status: online
+  - id: qwen2.5-coder:1.5b
+    provider: local
+    context_window: 32000
+    cost_per_1k_tokens: 0.0
+    supports_streaming: true
+    status: online
+  - id: qwen2.5-coder:7b
+    provider: local
+    context_window: 32000
+    cost_per_1k_tokens: 0.0
+    supports_streaming: true
+    status: online

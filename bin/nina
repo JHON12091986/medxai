@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
-source ~/nina/.venv/bin/activate
-cd ~/nina
-export PYTHONPATH=$PWD
-python -m interfaces.cli_interface "$@"
+# Nina Super AI CLI — unified entrypoint (promoted from bin/nina-super)
+set -euo pipefail
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$REPO_ROOT"
+
+# If first arg is a legacy subcommand understood by the old CLI, fall through
+# Otherwise route through nina_super_cli
+if python3 -c "from interfaces.cli_interface import app" >/dev/null 2>&1; then
+    HAVE_LEGACY=1
+else
+    HAVE_LEGACY=0
+fi
+
+if [ "${1:-}" = "ask" ] || [ "${1:-}" = "doctor" ] || [ "${1:-}" = "sync" ] || \
+   [ "${1:-}" = "fix" ]  || [ "${1:-}" = "upgrade" ] || [ "${1:-}" = "heal" ] || \
+   [ "${1:-}" = "evolve" ] || [ $HAVE_LEGACY -eq 0 ]; then
+    exec python3 tools/nina_super_cli.py "$@"
+else
+    exec python3 -m interfaces.cli_interface "$@"
+fi

@@ -25,6 +25,25 @@ async def get_temps() -> dict:
         pass
     return temps
 
+async def is_thermal_safe(cpu_limit: int = 80, gpu_limit: int = 80) -> tuple[bool, str]:
+    """
+    Checks if system temperatures are within safe operating limits.
+    Returns (is_safe, status_message).
+    """
+    temps = await get_temps()
+    cpu = temps.get("cpu")
+    gpu = temps.get("gpu")
+    
+    reasons = []
+    if cpu is not None and cpu >= cpu_limit:
+        reasons.append(f"CPU temp ({cpu}°C) exceeds limit ({cpu_limit}°C)")
+    if gpu is not None and gpu >= gpu_limit:
+        reasons.append(f"GPU temp ({gpu}°C) exceeds limit ({gpu_limit}°C)")
+        
+    if reasons:
+        return False, "Thermal throttle: " + " & ".join(reasons)
+    return True, f"Thermal safe: CPU={cpu or 'N/A'}°C GPU={gpu or 'N/A'}°C"
+
 async def get_ram_used_gb() -> float:
     return psutil.virtual_memory().used / 1e9
 
@@ -33,6 +52,16 @@ async def get_vram_used_mb() -> int:
     try:
         r = subprocess.run(
             ["nvidia-smi", "--query-gpu=memory.used", "--format=csv,noheader,nounits"],
+            capture_output=True, text=True, timeout=5
+        )
+        return int(r.stdout.strip())
+    except Exception:
+        return 0
+
+async def get_vram_free() -> int:
+    try:
+        r = subprocess.run(
+            ["nvidia-smi", "--query-gpu=memory.free", "--format=csv,noheader,nounits"],
             capture_output=True, text=True, timeout=5
         )
         return int(r.stdout.strip())

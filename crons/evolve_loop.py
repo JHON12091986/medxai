@@ -18,6 +18,21 @@ def run_evolution_cycle():
 
     print("ACT: Implementing proposals...")
     if action and action != "NONE":
+        import core.jules_guard as jules_guard
+        import json
+        open_prs = []
+        try:
+            state_path = Path(__file__).parent.parent / "docs/space/nina_state.json"
+            if state_path.exists():
+                with open(state_path, "r") as f:
+                    open_prs = json.load(f).get("open_prs", [])
+        except Exception:
+            pass
+        error_id = action
+        if jules_guard.check_before_jules_submit(error_id, open_prs):
+            print("EVOLVE: Skipping submission as it is already in open PRs.")
+            return
+
         branch_name = f"evolve-optimization-{uuid.uuid4().hex[:8]}"
         print(f"Creating temporary branch {branch_name}...")
         subprocess.run(["git", "checkout", "-b", branch_name], capture_output=True)

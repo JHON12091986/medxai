@@ -1,0 +1,42 @@
+//! # Voting Contract
+//!
+//! This contract manages the cooperative's voting system, handling:
+//! - Proposal creation
+//! - Vote casting
+//! - Vote tallying
+//! - Proposal execution
+//!
+//! # Events
+//! - `ProposalCreated`: emitted when a new proposal is submitted
+//! - `VoteCasted`: emitted when a vote is recorded
+//! - `ProposalExecuted`: emitted when a proposal passes
+
+use soroban_sdk::{contract, contractimpl, Env, Address};
+
+#[contract]
+pub struct VotingContract;
+
+#[contractimpl]
+impl VotingContract {
+    /// Casts a vote on a proposal.
+    ///
+    /// # Authorization
+    /// Only members can vote.
+    ///
+    /// # Arguments
+    /// * `proposal_id` - The ID of the proposal
+    /// * `support` - `true` for yes, `false` for no
+    ///
+    /// # Panics
+    /// Panics if `proposal_id` doesn't exist or member already voted.
+    ///
+    /// # Events
+    /// Emits `VoteCasted` with proposal ID and vote.
+    ///
+    /// # Returns
+    /// Returns the updated vote tally.
+    pub fn cast_vote(env: Env, proposal_id: i128, support: bool) -> i128 {
+        // implementation...
+        0
+    }
+}

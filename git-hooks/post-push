@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# =============================================================================
+# git-hooks/post-push  —  Nina OODA trigger
+#
+# Fires AFTER every successful push (ngit or manual git push).
+# Runs nina_sync.sh in the background so the push is never blocked.
+#
+# DO NOT add logic here. This is a thin trigger only.
+# All intelligence lives in nina_sync.sh.
+# =============================================================================
+
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "$HOME/nina")
+
+# Fire OODA in background — does not block the push
+nohup bash "$REPO_ROOT/scripts/nina_sync.sh" post-push \
+    >> "$REPO_ROOT/runtime/logs/nina_sync.log" 2>&1 &
+
+exit 0

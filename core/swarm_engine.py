@@ -11,10 +11,14 @@ import os
 import time
 from typing import Any, Callable, Dict, List, Optional
 
+from .logger import get_logger
 from .task_planner import (
     FeedbackGate, MissionMemory, OODAPhase,
     TaskNode, TaskStatus, TaskType
 )
+
+logger = get_logger("nina.swarm")
+
 
 
 # ── Provider Map ──────────────────────────────────────────────────────────────
@@ -30,6 +34,7 @@ PROVIDER_MAP: Dict[TaskType, tuple] = {
     TaskType.RESEARCH:   ("PERPLEXITY",   "sonar-pro",                32_768),
     TaskType.CREATIVE:   ("DEEPSEEK",     "deepseek-chat",            65_536),
     TaskType.SYNTHESIS:  ("GEMINI",       "gemini-2.5-pro",           1_048_576),
+    TaskType.DIAGNOSTIC: ("GROQ", "llama-3.3-70b-versatile", 8_192),
 }
 
 # Fallback chain when primary provider is exhausted / unhealthy
@@ -170,21 +175,26 @@ class SwarmEngine:
             # Attempt with fallbacks
             for attempt_provider, attempt_model in self._provider_chain(provider, model):
                 try:
-                    result, tokens = await asyncio.wait_for(
-                        self._call(attempt_provider, attempt_model, prompt),
-                        timeout=30.0
-                    )
+                    sla_timeout = getattr(node, "sla_seconds", 60.0)
+                    try:
+                        result, tokens = await asyncio.wait_for(
+                            self._call(attempt_provider, attempt_model, prompt),
+                            timeout=sla_timeout
+                        )
+                    except asyncio.TimeoutError:
+                        node.mark_failed(f"Subtask SLA Exceeded ({sla_timeout}s timeout)")
+                        logger.warning(f"[SLA] Node {getattr(node, 'id', '?')} timed out after {sla_timeout}s")
+                        return
                     node.mark_done(result, attempt_provider, tokens)
 
                     # FeedbackGate validation
                     if not self._gate.validate(node):
                         if node.retry_count < node.max_retries:
                             node.retry_count += 1
-                            node.status = TaskStatus.PENDING
                             node.result = None
-                            _emit("node_rejected", {**node.to_telemetry(),
-                                                   "score": node.feedback_score})
-                            # Re-run immediately with next provider
+                            node.status = TaskStatus.ACTIVE
+                            _emit("node_rejected", {**node.to_telemetry(), "score": node.feedback_score})
+                            # Try next provider in chain immediately — do not re-queue
                             continue
                         else:
                             node.mark_failed("FeedbackGate: max retries exceeded")
@@ -196,6 +206,7 @@ class SwarmEngine:
                                          "provider": attempt_provider})
                     continue
             else:
+                _emit("node_exhausted", {**node.to_telemetry(), "retries": node.retry_count})
                 node.mark_failed("all providers exhausted")
 
             # Register result

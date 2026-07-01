@@ -1,0 +1,15 @@
+[
+  {
+    "task": "Write a dummy function",
+    "outcome": "failure",
+    "what_worked": "",
+    "what_failed": "Task did not complete.",
+    "improvement": "Review trace for tool errors or missing context.",
+    "skill_tags": [],
+    "confidence": 0.4,
+    "trace_snippet": "Planner: Created verification plan.\nCritique Passes: 3 completed.\nTokens consumed in critique: 1236.0.",
+    "output_snippet": "",
+    "created_at": "2026-06-23T05:18:44.886101+00:00",
+    "error": ""
+  }
+]

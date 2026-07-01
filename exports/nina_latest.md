@@ -768,8 +768,8 @@ class NinaConfig(BaseModel):
     model_overrides: dict = {}
 
 def load_config() -> NinaConfig:
-    tok = os.getenv("TELEGRAMBOTTOKEN")
-    uid = os.getenv("AUTHORIZEDUSERID")
+    tok = os.getenv("TELEGRAM_BOT_TOKEN")
+    uid = os.getenv("AUTHORIZED_USER_ID")
     if not tok:
         raise RuntimeError("TELEGRAM_BOT_TOKEN missing from .env — cannot start NINA.")
     if not uid:
@@ -787,7 +787,7 @@ def load_config() -> NinaConfig:
             "xai_api_key":"XAIAPIKEY","sambanova_api_key":"SAMBANOVAAPIKEY",
             "hyperbolic_api_key":"HYPERBOLICAPIKEY","novita_api_key":"NOVITAAPIKEY",
             "one_brain_api_key":"ONEBRAINAPIKEY","one_brain_api_base":"ONEBRAINAPIBASE",
-            "api_secret_key":"APISECRETKEY","ews_password":"EWSPASSWORD","ews_username":"EWS_USERNAME","ews_my_email":"EWS_MY_EMAIL","ews_shared_email":"EWS_SHARED_EMAIL",
+            "api_secret_key":"API_SECRET_KEY","ews_password":"EWSPASSWORD","ews_username":"EWS_USERNAME","ews_my_email":"EWS_MY_EMAIL","ews_shared_email":"EWS_SHARED_EMAIL",
             "dead_man_ping_url":"DEADMANPINGURL",
         }.items() if os.getenv(v)}
     )
@@ -1578,8 +1578,8 @@ cd "$NINA"
 _tg_notify() {
   local msg="$1"
   local token user_id
-  token=$(grep -E '^TELEGRAMBOTTOKEN=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
-  user_id=$(grep -E '^AUTHORIZEDUSERID=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
+  token=$(grep -E '^TELEGRAM_BOT_TOKEN=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
+  user_id=$(grep -E '^AUTHORIZED_USER_ID=' "$NINA/.env" 2>/dev/null | cut -d= -f2 | tr -d '"' || true)
   if [ -n "$token" ] && [ -n "$user_id" ]; then
     curl -s -X POST "https://api.telegram.org/bot${token}/sendMessage" \
       -d "chat_id=${user_id}" -d "text=${msg}" > /dev/null 2>&1 || true

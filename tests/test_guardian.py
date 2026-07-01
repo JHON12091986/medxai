@@ -39,8 +39,8 @@ def test_run_cmd_exception():
         assert rc == 1
 
 def test_match_signatures_basic_match():
-    log_text = "RuntimeError: TELEGRAMBOTTOKEN is missing"
-    env_keys = {"TELEGRAMBOTTOKEN": "test"}
+    log_text = "RuntimeError: TELEGRAM_BOT_TOKEN is missing"
+    env_keys = {"TELEGRAM_BOT_TOKEN": "test"}
 
     with patch("builtins.open"):
         findings = guardian_engine.match_signatures(log_text, env_keys)
@@ -71,4 +71,4 @@ def test_match_signatures_missing_env():
     assert telegram_finding is not None
     assert telegram_finding["severity"] == "BLOCKER"
     # Verify the env_check evidence is added
-    assert any("[env_check] TELEGRAMBOTTOKEN absent or empty" in e for e in telegram_finding["evidence"])
+    assert any("[env_check] TELEGRAM_BOT_TOKEN absent or empty" in e for e in telegram_finding["evidence"])

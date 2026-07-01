@@ -1,0 +1,95 @@
+name: Duplicate PR Check
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  check-duplicate:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Check for Duplicate PRs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: python
+        run: |
+          import os
+          import json
+          import urllib.request
+          import difflib
+
+          github_token = os.environ.get("GITHUB_TOKEN")
+          event_path = os.environ.get("GITHUB_EVENT_PATH")
+
+          with open(event_path, 'r') as f:
+              event_data = json.load(f)
+
+          pr_data = event_data["pull_request"]
+          pr_number = pr_data["number"]
+          pr_title = pr_data["title"]
+          repo_fullname = event_data["repository"]["full_name"]
+
+          url = f"https://api.github.com/repos/{repo_fullname}/pulls?state=open"
+          req = urllib.request.Request(url)
+          req.add_header("Authorization", f"token {github_token}")
+          req.add_header("Accept", "application/vnd.github.v3+json")
+          req.add_header("User-Agent", "GitHub-Action-Duplicate-PR-Check")
+
+          try:
+              with urllib.request.urlopen(req) as response:
+                  open_prs = json.loads(response.read().decode())
+          except Exception as e:
+              print(f"Error fetching PRs: {e}")
+              exit(1)
+
+          duplicate_found = False
+          original_pr_number = None
+
+          for other_pr in open_prs:
+              other_number = other_pr["number"]
+              if other_number == pr_number:
+                  continue
+              
+              other_title = other_pr["title"]
+              ratio = difflib.SequenceMatcher(None, pr_title.lower(), other_title.lower()).ratio()
+              if ratio >= 0.8:
+                  duplicate_found = True
+                  original_pr_number = other_number
+                  print(f"Fuzzy match found: '{pr_title}' vs '{other_title}' (ratio: {ratio:.2f}). Original PR: #{other_number}")
+                  break
+
+          if duplicate_found:
+              comment_url = f"https://api.github.com/repos/{repo_fullname}/issues/{pr_number}/comments"
+              comment_data = json.dumps({
+                  "body": f"This pull request appears to be a duplicate of #{original_pr_number} (title fuzzy match >= 80%)."
+              }).encode('utf-8')
+              
+              comment_req = urllib.request.Request(comment_url, data=comment_data, method="POST")
+              comment_req.add_header("Authorization", f"token {github_token}")
+              comment_req.add_header("Accept", "application/vnd.github.v3+json")
+              comment_req.add_header("Content-Type", "application/json")
+              comment_req.add_header("User-Agent", "GitHub-Action-Duplicate-PR-Check")
+              
+              try:
+                  with urllib.request.urlopen(comment_req) as response:
+                      print("Successfully posted comment.")
+              except Exception as e:
+                  print(f"Error posting comment: {e}")
+                  
+              labels_url = f"https://api.github.com/repos/{repo_fullname}/issues/{pr_number}/labels"
+              labels_data = json.dumps({"labels": ["duplicate"]}).encode('utf-8')
+              
+              labels_req = urllib.request.Request(labels_url, data=labels_data, method="POST")
+              labels_req.add_header("Authorization", f"token {github_token}")
+              labels_req.add_header("Accept", "application/vnd.github.v3+json")
+              labels_req.add_header("Content-Type", "application/json")
+              labels_req.add_header("User-Agent", "GitHub-Action-Duplicate-PR-Check")
+              
+              try:
+                  with urllib.request.urlopen(labels_req) as response:
+                      print("Successfully added label 'duplicate'.")
+              except Exception as e:
+                  print(f"Error adding label: {e}")

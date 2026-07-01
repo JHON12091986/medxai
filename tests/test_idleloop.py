@@ -1,6 +1,6 @@
 import pytest
 import asyncio
-from idleloop import IdleProposalLoop
+from core.idleloop import IdleProposalLoop
 
 class MockConfig:
     idle_threshold_min = 0
@@ -8,14 +8,20 @@ class MockConfig:
     idle_report_min = 0
 
 class MockRouter:
-    async def route(self, prompt, msgs, task):
+    async def route(self, *args, **kwargs):
         return "IMPACT: High\n- Suggestion 1\n- Suggestion 2"
 
 @pytest.mark.asyncio
 async def test_idle_loop_single_iteration(nina_tmp_dir, monkeypatch):
-    monkeypatch.setattr("idleloop.PROPOSALS_DIR", nina_tmp_dir / "proposals")
+    monkeypatch.setattr("core.idleloop.PROPOSALS_DIR", nina_tmp_dir / "proposals")
 
     loop_obj = IdleProposalLoop(config=MockConfig(), router=MockRouter(), telegram=None)
+
+    class MockPlan:
+        async def execute(self):
+            return "IMPACT: High\n- Suggestion 1\n- Suggestion 2"
+
+    monkeypatch.setattr(loop_obj.dispatcher, "dispatch", lambda *args, **kwargs: MockPlan())
 
     await loop_obj._generate_proposal()
 
@@ -31,7 +37,7 @@ async def test_idle_loop_single_iteration(nina_tmp_dir, monkeypatch):
 
 @pytest.mark.asyncio
 async def test_idle_loop_handles_exception(nina_tmp_dir, monkeypatch):
-    monkeypatch.setattr("idleloop.PROPOSALS_DIR", nina_tmp_dir / "proposals")
+    monkeypatch.setattr("core.idleloop.PROPOSALS_DIR", nina_tmp_dir / "proposals")
 
     loop_obj = IdleProposalLoop(config=MockConfig(), router=MockRouter(), telegram=None)
 

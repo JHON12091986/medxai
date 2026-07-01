@@ -19,6 +19,7 @@ CLAUDE_THINKING_SCAFFOLD = """
 <thinking>
 1. GOAL ANALYSIS: What is the user actually asking for? What is the hidden intent?
 2. CONTEXTUAL AWARENESS: What already exists in the codebase? What are the dependencies?
+2b. READ FIRST: Run git log/cat/read_file on the relevant file BEFORE forming any hypothesis. Never theorize without reading source.
 3. RISK ASSESSMENT: What could break? Any security or stability concerns?
 4. ALTERNATIVE STRATEGIES: Is there a simpler or more idiomatic way?
 5. DEVIL'S ADVOCATE: Why might my proposed solution be wrong?
@@ -59,6 +60,9 @@ class ConstitutionalGate:
         (r"DROP (TABLE|DATABASE|SCHEMA)",                       "Destructive SQL"),
         # Credential leakage
         (r"(api_key|password|secret)\s*=\s*['\"][^'\"]{8,}",   "Possible credential in output"),
+        # Reasoning failures
+        (r"(i think|i believe|probably|likely|seems like).{0,60}(file|deleted|missing|error)", "Theorized without reading source"),
+        (r"(the issue is|the problem is|the bug is).{0,80}(?!.*(?:git log|read_file|cat ))", "Conclusion drawn without tool verification"),
     ]
 
     @classmethod
@@ -95,7 +99,10 @@ class MissionMemoryCarrier:
              constraints: Optional[List[str]] = None) -> str:
         summaries_text = ""
         if completed_summaries:
-            recent = completed_summaries[-3:]  # keep last 3
+            # keep first 1 (anchor) + last 3 (recent) to preserve initial context
+            anchor = completed_summaries[:1]
+            tail   = completed_summaries[-3:]
+            recent = anchor + tail if len(completed_summaries) > 4 else completed_summaries
             summaries_text = " | ".join(recent)
 
         constraints_text = "; ".join(constraints or [])
@@ -127,7 +134,9 @@ class ToolFirstReflex:
     """
     # Maps keyword patterns → tool name
     TOOL_TRIGGERS: List[tuple] = [
-        (r"(read|open|show|print|cat)\s+.+\.(py|json|yaml|md|txt|toml)", "read_file"),
+        (r"(git log|git show|git blame|git diff|git history)", "shell"),
+        (r"(why|deleted|missing|disappeared|when did|who changed|what changed)", "shell"),
+        (r"(read|open|show|print|cat)\s+.+\.(py|json|yaml|toml)", "shell"),
         (r"(run|execute|check|test)\s+(the\s+)?(tests?|pytest|unittest)",  "shell"),
         (r"(git (log|diff|status|blame))",                                 "shell"),
         (r"(list|find|search)\s+(file|dir|folder|path)",                   "shell"),
@@ -135,6 +144,20 @@ class ToolFirstReflex:
         (r"(memory|recall|remember|past session)",                         "memory"),
         (r"(quota|usage|limit|remaining)",                                  "ninagate_status"),
     ]
+
+    @classmethod
+    def suggest_command(cls, prompt: str) -> Optional[str]:
+        """Return a concrete shell command hint when a tool trigger matches."""
+        lower = prompt.lower()
+        if any(k in lower for k in ("deleted", "missing", "disappeared", "when did")):
+            return "git log --all --full-history -- <suspected_file>"
+        if any(k in lower for k in ("git log", "git show", "git blame")):
+            return "git log --oneline -20"
+        if any(k in lower for k in ("read", "open", "cat", "show")):
+            return "cat <filename>"
+        if any(k in lower for k in ("error register", "nina_error")):
+            return "cat docs/space/nina_error_register.md"
+        return None
 
     @classmethod
     def check(cls, prompt: str) -> tuple[bool, Optional[str]]:
@@ -181,11 +204,16 @@ class SycophancyDetector:
         0.0 = highly sycophantic, 1.0 = genuinely substantive.
         """
         lower = response.lower()
-        sycophancy_hits = sum(1 for p in cls.HOLLOW_OPENERS if lower.startswith(p)
-                              or f" {p} " in lower)
+        # Check first 120 chars (opener region) and whole-word boundary match
+        opener_region = lower[:120]
+        sycophancy_hits = sum(
+            1 for p in cls.HOLLOW_OPENERS
+            if opener_region.startswith(p)
+            or re.search(r'(?:^|[\s,!])' + re.escape(p) + r'(?:[\s,!]|$)', opener_region)
+        )
         substance_hits = sum(1 for s in cls.SUBSTANCE_INDICATORS if s in lower)
 
-        raw = 1.0 - (sycophancy_hits * 0.15) + (substance_hits * 0.10)
+        raw = 0.5 - (sycophancy_hits * 0.15) + (substance_hits * 0.10)
         return max(0.0, min(1.0, raw))
 
     @classmethod
@@ -229,12 +257,15 @@ class ContradictionDetector:
         for i, (la, ra) in enumerate(items):
             for lb, rb in items[i + 1:]:
                 for pos, neg in cls.NEGATION_PAIRS:
-                    if pos in ra.lower() and neg in rb.lower():
+                    ra_snip = ra[:600]
+                    rb_snip = rb[:600]
+                    if (re.search(r'\b' + re.escape(pos) + r'\b', ra_snip.lower()) and
+                        re.search(r'\b' + re.escape(neg) + r'\b', rb_snip.lower())):
                         conflicts.append({
                             "label_a": la, "label_b": lb,
                             "conflict": f"'{pos}' vs '{neg}'",
-                            "excerpt_a": ra[:100],
-                            "excerpt_b": rb[:100],
+                            "excerpt_a": ra_snip[:100],
+                            "excerpt_b": rb_snip[:100],
                         })
         return conflicts
 
@@ -270,18 +301,35 @@ class ReasoningKernel:
     gate_contradiction  = ContradictionDetector()
 
     @staticmethod
-    def get_system_frame(goal: str, context: str = "") -> str:
+    def get_system_frame(goal: str, context: str = "", slim: bool = False, mode: str = "") -> str:
         """
         Build a full system prompt frame with all gates active.
         Drop-in replacement for the previous get_system_frame().
         """
+        if mode == "diagnostic":
+            slim = True
+
+        if slim:
+            principles = ConstitutionalGate.inject_principles()
+            return (
+                f"Goal: {goal}\n"
+                f"Memory: {context}\n\n"
+                f"{principles}\n"
+                "READ FIRST RULE: Run git log/cat/read_file on any mentioned file BEFORE forming any hypothesis.\n"
+                "THINK -> ACT. TOOL:shell/read_file if needed. FINAL:answer when done.\n"
+            )
+
         principles = ConstitutionalGate.inject_principles()
         tool_rule  = ToolFirstReflex.inject_directive()
         syco_rule  = SycophancyDetector.inject_directive()
-
+        # Gate 2: wrap context with mission memory anchor
+        wrapped_context = MissionMemoryCarrier.wrap(
+            prompt=context,
+            root_goal=goal,
+        )
         return (
             f"Goal: {goal}\n"
-            f"Memory: {context}\n\n"
+            f"Memory: {wrapped_context}\n\n"
             "## REASONING PROTOCOL (MANDATORY):\n"
             "You MUST use the following scaffold for every complex decision:\n"
             f"{CLAUDE_THINKING_SCAFFOLD}\n"
@@ -301,9 +349,13 @@ class ReasoningKernel:
 
     @staticmethod
     def filter_sycophancy(response: str) -> str:
-        """Flags sycophantic responses. Returns response with prepended warning if flagged."""
         if SycophancyDetector.is_sycophantic(response):
-            return "[SYCOPHANCY DETECTED — response may lack genuine critique]\n" + response
+            score = SycophancyDetector.score(response)
+            return (
+                f"[SYCOPHANCY_FLAG:score={score:.2f}] "
+                f"[RETRY_HINT: Rewrite without hollow opener. Add genuine critique or alternative.]\n"
+                + response
+            )
         return response
 
     @staticmethod

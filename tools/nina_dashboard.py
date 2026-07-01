@@ -88,5 +88,104 @@ def index():
         page_load_time=page_load_time
     )
 
+@app.route('/api/godvision')
+def api_godvision():
+    import json
+    import re
+    
+    response_data = {
+        "context_graph": {},
+        "backlog_stats": {"DONE": 0, "TODO_P1": 0, "TODO_P2": 0, "TODO_P3": 0, "NEEDS_SPEC": 0},
+        "errors": {"open_count": 0, "items": []},
+        "queue": {"active": [], "waiting": []},
+        "system_status": {
+            "nina": "inactive",
+            "ninagate": "inactive",
+            "ninajulesgithub": "inactive",
+            "nina_dashboard": "inactive"
+        }
+    }
+
+    # 1. Load context graph
+    try:
+        graph_path = BASE_DIR / "nina_context_graph.json"
+        if graph_path.exists():
+            with open(graph_path, 'r') as f:
+                response_data["context_graph"] = json.load(f)
+    except Exception:
+        pass
+
+    # 2. Parse jules_backlog.md for stats
+    try:
+        backlog_path = BASE_DIR / "docs/space/jules_backlog.md"
+        if backlog_path.exists():
+            with open(backlog_path, 'r') as f:
+                content = f.read()
+                response_data["backlog_stats"]["DONE"] = len(re.findall(r'✅ DONE', content)) + len(re.findall(r'✅ Confirmed done', content))
+                response_data["backlog_stats"]["TODO_P1"] = len(re.findall(r'🔴 TODO-P1', content)) + len(re.findall(r'🔴 P1', content))
+                response_data["backlog_stats"]["TODO_P2"] = len(re.findall(r'🟠 TODO-P2', content)) + len(re.findall(r'🟠 P2', content))
+                response_data["backlog_stats"]["TODO_P3"] = len(re.findall(r'🟡 TODO-P3', content)) + len(re.findall(r'🟡 P3', content))
+                response_data["backlog_stats"]["NEEDS_SPEC"] = len(re.findall(r'📋 NEEDS SPEC', content)) + len(re.findall(r'📋 Needs spec', content))
+    except Exception:
+        pass
+
+    # 3. Parse nina_error_register.md for open errors
+    try:
+        error_path = BASE_DIR / "docs/space/nina_error_register.md"
+        if error_path.exists():
+            with open(error_path, 'r') as f:
+                lines = f.readlines()
+                for line in lines:
+                    if "OPEN" in line:
+                        response_data["errors"]["open_count"] += 1
+                        # extract brief description
+                        parts = [p.strip() for p in line.split('|') if p.strip()]
+                        if len(parts) > 1:
+                            response_data["errors"]["items"].append(parts[1])
+    except Exception:
+        pass
+
+    # 4. Parse jules_queue.md for active / waiting tasks
+    try:
+        queue_path = BASE_DIR / "docs/space/jules_queue.md"
+        if queue_path.exists():
+            with open(queue_path, 'r') as f:
+                content = f.read()
+                # Parse ACTIVE table
+                active_section = re.search(r'## ACTIVE.*?(?=## QUEUE|## COMPLETED|$)', content, re.DOTALL)
+                if active_section:
+                    for line in active_section.group(0).split('\n'):
+                        if '|' in line and 'File' not in line and '---' not in line and '_empty_' not in line:
+                            parts = [p.strip() for p in line.split('|') if p.strip()]
+                            if len(parts) >= 3:
+                                response_data["queue"]["active"].append({"file": parts[0], "task_id": parts[1], "session": parts[2]})
+    except Exception:
+        pass
+
+    # 5. Service statuses
+    for svc in ["nina", "ninagate", "ninajulesgithub", "nina-dashboard"]:
+        try:
+            status = subprocess.check_output(['systemctl', 'is-active', f'{svc}.service'], stderr=subprocess.DEVNULL).decode('utf-8').strip()
+            response_data["system_status"][svc] = status
+        except Exception:
+            response_data["system_status"][svc] = "inactive"
+
+    return app.response_class(
+        response=json.dumps(response_data, indent=2),
+        status=200,
+        mimetype='application/json'
+    )
+
+def run_dashboard_heartbeat():
+    import threading, time
+    from tools.heartbeat import write_heartbeat
+    def hb_loop():
+        while True:
+            time.sleep(60)
+            write_heartbeat("nina-dashboard.service")
+    threading.Thread(target=hb_loop, daemon=True).start()
+
 if __name__ == '__main__':
+    run_dashboard_heartbeat()
     app.run(host='127.0.0.1', port=8766)
+

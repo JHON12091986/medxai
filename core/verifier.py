@@ -5,7 +5,8 @@ import json
 import asyncio
 from dataclasses import dataclass
 from typing import List, Dict, Optional
-from core.router import HybridRouter, ClassifiedTask
+from core.router import HybridRouter
+from core.task_classifier import ClassifiedTask
 from core.config import NinaConfig
 logger = logging.getLogger('nina.verifier')
 

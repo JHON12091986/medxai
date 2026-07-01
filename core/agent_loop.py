@@ -4,7 +4,7 @@ import logging
 import asyncio
 
 # New imports
-from core.task_planner import TaskPlanner, MissionMemory, TaskNode, TaskType
+from core.task_planner import TaskPlanner, TaskType
 from core.swarm_engine import SwarmEngine
 from core.task_classifier import ClassifiedTask # Needed for _call_provider_wrapper
 
@@ -36,8 +36,11 @@ def think(input: str, context: dict) -> ThinkResult:
             return ThinkResult(intent="search", confidence=0.8, raw_input=input)
         elif any(w in lower_input for w in ["run", "shell", "cmd", "execute"]):
             return ThinkResult(intent="execute", confidence=0.8, raw_input=input)
-        # If the intent is not clear, let's treat it as a general reasoning task
-        return ThinkResult(intent="reasoning", confidence=0.7, raw_input=input)
+        elif any(w in lower_input for w in ["why", "why is", "why does", "why did", "deleted", "missing", "broken", "not working"]):
+            return ThinkResult(intent="diagnostic", confidence=0.85, raw_input=input)
+        elif any(w in lower_input for w in ["how", "solve", "reason", "explain", "think"]):
+            return ThinkResult(intent="reasoning", confidence=0.7, raw_input=input)
+        return ThinkResult(intent="unknown", confidence=0.5, raw_input=input)
     except Exception:
         return ThinkResult(intent="unknown", confidence=0.0, raw_input=input)
 
@@ -56,6 +59,12 @@ def plan(think_result: ThinkResult, available_tools: list[str]) -> PlanResult:
         tool = "web"
     elif think_result.intent == "execute" and "shell" in available_tools:
         tool = "shell"
+    elif think_result.intent in ("reasoning", "diagnostic") and "shell" in available_tools:
+        tool = "shell"
+        steps = [
+            {"action": "git log --all --full-history --oneline -- . | head -20"},
+            {"action": "cat docs/space/nina_error_register.md | head -40"},
+        ]
     elif available_tools:
         tool = available_tools[0] # Use the first available tool if any
 
@@ -66,13 +75,34 @@ def act(plan_result: PlanResult, context: dict) -> ActResult:
     error = None
     output = ""
     for step in plan_result.steps:
-        pass
+        action = step.get("action", "")
+        tool = plan_result.tool
+        try:
+            if tool == "shell":
+                import subprocess
+                cmd = context.get("shell_cmd", action)
+                if cmd and cmd != "shell":
+                    result = subprocess.run(
+                        cmd, shell=True, capture_output=True, text=True, timeout=30
+                    )
+                    output = result.stdout or result.stderr or "[no output]"
+                    ok = result.returncode == 0
+                    if not ok:
+                        error = f"exit code {result.returncode}"
+                else:
+                    output = f"[act] tool={tool} action={action} (no cmd provided)"
+            else:
+                output = f"[act] tool={tool} action={action}"
+        except Exception as e:
+            ok = False
+            error = str(e)
+            output = f"[act error] {e}"
     try:
         from core.observability import get_hub
         hub = get_hub()
         hub.record_task(ok=ok)
-    except Exception as e:
-        error = str(e)
+    except Exception:
+        pass
     return ActResult(ok=ok, output=output, error=error, tokens_used=5)
 
 class AgentLoop:
@@ -177,3 +207,16 @@ class AgentLoop:
         cloud_future_task = asyncio.create_task(cloud_task_orchestrator(scout_future))
         final_act_result = await cloud_future_task
         return final_act_result
+
+async def run_agent_turn(payload: Any, config: Any, router: Any, memory: Any) -> Any:
+    """Instantiate the main AgentLoop and run a turn."""
+    from core.agent import AgentLoop
+    from tools import shell, browser, search, finance, market, office_mail, jules
+    tools = {
+        "shell": shell, "web": search, "browser": browser,
+        "system": None, "jules": jules, "finance": finance,
+        "market": market, "email": office_mail
+    }
+    agent = AgentLoop(config, router, memory, tools)
+    goal = payload if isinstance(payload, str) else str(payload)
+    return await agent.run(goal)

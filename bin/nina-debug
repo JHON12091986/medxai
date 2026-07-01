@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+source ~/nina/.venv/bin/activate
+cd ~/nina
+export PYTHONPATH=$PWD
+python3 tools/debug_utility.py "$@"

@@ -3,27 +3,27 @@
 > Claude: read this. Then generate 10 non-overlapping Jules specs.
 
 ## 1. Snapshot
-- Generated: 2026-06-16 03:36 +06
-- Git HEAD: 49caa334a8c3bf86b20aab6add6d19531575e74a
-- Last commit: docs: post-session sync 2026-06-16 03:36
+- Generated: 2026-06-18 16:00 +06
+- Git HEAD: dc845d4bb4e559cf194c62ac6f2783c100201103
+- Last commit: docs: post-session sync 2026-06-18 16:00
 - Service: active
 ```
 ● nina.service - NINA Autonomous Agent
      Loaded: loaded (/etc/systemd/system/nina.service; enabled; preset: enabled)
-     Active: active (running) since Thu 2026-04-16 00:33:07 +06; 2 months 0 days ago
- Invocation: 1c4f2a665da64dc0903804e58f7f5e38
-   Main PID: 3350 (python)
-      Tasks: 17 (limit: 18333)
-     Memory: 198.3M (peak: 213.8M)
-        CPU: 12.942s
+     Active: active (running) since Thu 2026-06-18 11:17:14 +06; 4h 43min ago
+ Invocation: d524f38cb76944b289b2267bc3bfc6a4
+   Main PID: 3458 (python)
+      Tasks: 25 (limit: 15177)
+     Memory: 260.5M (peak: 275.6M)
+        CPU: 34.986s
      CGroup: /system.slice/nina.service
-             └─3350 /home/aibony/nina/.venv/bin/python main.py
+             └─3458 /home/aibony/nina/.venv/bin/python main.py
 
-Jun 16 03:36:04 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: 2026-06-16 03:36:04.790 | WARNING  | core.router:_idle_monitor:581 - quality_probe_fail provider=%s
-Jun 16 03:36:09 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 16 03:36:19 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 16 03:36:29 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
-Jun 16 03:36:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 18 16:00:17 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3458]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 18 16:00:25 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3458]: WARNING:nina.config:config_hotreload_mtime_failed [Errno 2] No such file or directory: '.env'
+Jun 18 16:00:27 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3458]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 18 16:00:37 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3458]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
+Jun 18 16:00:48 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3458]: INFO:httpx:HTTP Request: POST https://api.telegram.org/bot8654166270:AAFm755yqYl77fuSulNmk9jV1GPsKTAV5xc/getUpdates "HTTP/1.1 200 OK"
 ```
 ## 2. Active Jules Sessions (live)
 - Jules API unavailable: No module named 'tools.jules_api'
@@ -44,16 +44,247 @@ Jun 16 03:36:39 aibony-VivoBook-ASUSLaptop-X530FN-S530FN python[3350]: INFO:http
 
 
 ## 4. READY Items (eligible for new Jules specs)
-_Found 0 READY items_
+_Found 20 READY items_
+
+### READY — config.missing_env.telegramchatid: 
+**Status:** READY
+**Severity:** FEATURE
+**Date Promoted:** 2026-06-17T23:03:20.420710
+
+
+---
+
+### READY — E-nexus-01: 
+**Status:** READY
+**Severity:** FEATURE
+**Date Promoted:** 2026-06-17T23:33:20.413311
+
+
+---
+
+### READY — F-07: 
+**Status:** READY
+**Severity:** FEATURE
+**Date Promoted:** 2026-06-18T09:33:16.528855
+
+
+---
+
+### READY — feature.ews_blocked: 
+**Status:** READY
+**Severity:** FEATURE
+**Date Promoted:** 2026-06-18T09:38:13.586469
+
+
+---
+
+### READY — F-06: 
+**Status:** READY
+**Severity:** FEATURE
+**Date Promoted:** 2026-06-18T09:53:15.507981
+
+
+---
+
+### READY — F-08: 
+**Status:** READY
+**Severity:** FEATURE
+**Date Promoted:** 2026-06-18T11:42:20.267216
+
+
+---
+
+### READY — todo.crons_manager_py_735: 
+**Status:** READY
+**Severity:** DEBT
+**Date Promoted:** 2026-06-18T12:17:24.859270
+
+
+---
+
+### READY — todo.tools_merge_resolver_py_184: 
+**Status:** READY
+**Severity:** DEBT
+**Date Promoted:** 2026-06-18T12:27:24.101557
+
+
+---
+
+### READY — todo.core_task_classifier_py_205: 
+**Status:** READY
+**Severity:** DEBT
+**Date Promoted:** 2026-06-18T12:32:23.159731
+
+
+---
+
+### READY — todo.crons_backup_jobs_py_41: 
+**Status:** READY
+**Severity:** DEBT
+**Date Promoted:** 2026-06-18T12:42:20.142157
+
+
+---
+
+### READY — feature.playwright_blocked: 
+**Status:** READY
+**Severity:** FEATURE
+**Date Promoted:** 2026-06-18T14:17:19.311834
+
+## Summary Snapshot
+
+| Category | Count |
+|----------|-------|
+| ✅ Confirmed done | 14 |
+| ⚠️ Partial — follow-up needed | 3 |
+| 🔴 P1 — do next | 2 |
+| 🟠 P2 — this sprint | 3 |
+| 🟡 P3 — low priority | 2 |
+| 📋 Needs spec | 2 |
+
+**Recommended next session order:**
+1. `git p
+
+### IDLE-20260617-2153 | Auto-Promoted by IdleLoop | Telegram Interface
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 21:53
+**Topic:** telegram_interface
+
+**Analysis:**
+- Suggestion 1
+- Suggestion 2
+
+**Acceptance Criteria (Jules must verify):**
+- Implement the highest-priority suggestion from the analysis above
+- Touch only the file(s) explicitly named in the
+
+### IDLE-20260617-2154 | Auto-Promoted by IdleLoop | Config Robustness
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 21:54
+**Topic:** config_robustness
+
+**Analysis:**
+- Suggestion 1
+- Suggestion 2
+
+**Acceptance Criteria (Jules must verify):**
+- Implement the highest-priority suggestion from the analysis above
+- Touch only the file(s) explicitly named in the a
+
+### IDLE-20260617-2154 | Auto-Promoted by IdleLoop | Tool Error Handling
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 21:54
+**Topic:** tool_error_handling
+
+**Analysis:**
+- Suggestion 1
+- Suggestion 2
+
+**Acceptance Criteria (Jules must verify):**
+- Implement the highest-priority suggestion from the analysis above
+- Touch only the file(s) explicitly named in t
+
+### IDLE-20260617-2157 | Auto-Promoted by IdleLoop | Morning Report
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 21:57
+**Topic:** morning_report
+
+**Analysis:**
+- Suggestion 1
+- Suggestion 2
+
+**Acceptance Criteria (Jules must verify):**
+- Implement the highest-priority suggestion from the analysis above
+- Touch only the file(s) explicitly named in the analysi
+
+### IDLE-20260617-2223 | Auto-Promoted by IdleLoop | Tool Error Handling
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 22:23
+**Topic:** tool_error_handling
+
+**Analysis:**
+- IMPACT: Security Checks
+
+  * What can go wrong: The `checks/security_checks.py` file does not handle SSL/TLS certificate validation properly, allowing insecure connections to be establishe
+
+### IDLE-20260617-2239 | Auto-Promoted by IdleLoop | Morning Report
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 22:39
+**Topic:** morning_report
+
+**Analysis:**
+- Suggestion 1
+- Suggestion 2
+
+**Acceptance Criteria (Jules must verify):**
+- Implement the highest-priority suggestion from the analysis above
+- Touch only the file(s) explicitly named in the analysi
+
+### IDLE-20260617-2246 | Auto-Promoted by IdleLoop | Provider Routing
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 22:46
+**Topic:** provider_routing
+
+**Analysis:**
+- Suggestion 1
+- Suggestion 2
+
+**Acceptance Criteria (Jules must verify):**
+- Implement the highest-priority suggestion from the analysis above
+- Touch only the file(s) explicitly named in the ana
+
+### IDLE-20260617-2247 | Auto-Promoted by IdleLoop | Memory Context
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 22:47
+**Topic:** memory_context
+
+**Analysis:**
+- Suggestion 1
+- Suggestion 2
+
+**Acceptance Criteria (Jules must verify):**
+- Implement the highest-priority suggestion from the analysis above
+- Touch only the file(s) explicitly named in the analysi
+
+### IDLE-20260617-2249 | Auto-Promoted by IdleLoop | Scheduler Errors
+
+**Status:** READY
+**Impact:** High
+**Source:** idleloop auto-promotion — 2026-06-17 22:49
+**Topic:** scheduler_errors
+
+**Analysis:**
+- Suggestion 1
+- Suggestion 2
+
+**Acceptance Criteria (Jules must verify):**
+- Implement the highest-priority suggestion from the analysis above
+- Touch only the file(s) explicitly named in the ana
 
 
 ## 5. Last 5 Completions
 ```
-49caa33 docs: post-session sync 2026-06-16 03:36
-10dcaed feat(agy): god-tier upgrade — codemap, dependency tracing, impact radius, multi-file protocol, session journal, impact checker (nina-20260616-003)
-6f3cc2a docs: post-session sync 2026-06-16 03:29
-360ff05 feat(agy): lightning upgrade — CoT forcing, self-review, hot-path templates, inject-context flag, idempotency+atomic rules, watchdog script (nina-20260616-002)
-3849945 docs: post-session sync 2026-06-16 03:23
+dc845d4 docs: post-session sync 2026-06-18 16:00
+8efdb7b Merge branch 'main' of github.com:aibony/nina
+e749aa7 docs: post-session sync 2026-06-18 15:58
+bc4a0a2 feat(perf): establish automatic byte-compilation utilities
+a56cc92 feat(omni): introduce abstract base channel adapter
 ```
 
 ## 6. Open Blockers
@@ -63,7 +294,7 @@ _Found 0 READY items_
 | File | Purpose | Risk |
 |------|---------|------|
 | core/nina.py | NinaOS orchestrator, system prompt | HIGH |
-| core/router.py | HybridRouter V4, 19+ providers, circuit breaker | HIGH |
+| core/router.py | HybridRouter V4, 19+ providers, circuit breaker, MoA | HIGH |
 | core/agent.py | AgentLoop THINK→PLAN→ACT, self-check, RAM guard | HIGH |
 | core/memory.py | ChromaDB + facts.json, build_context() | MEDIUM |
 | core/task_store.py | TaskStore persistence, file locking | MEDIUM |
@@ -86,16 +317,12 @@ _Found 0 READY items_
 ## 9. Error Register (OPEN only)
 | ID | Description | Status |
 |----|-------------|--------|
-| F-01 | B-1 · Self-check pass for complex tasks | OPEN |
-| F-04 | C-1 · Expenditure tracker tool | OPEN |
-| F-05 | C-2 · Share market monitor (DSE/CSE alerts) | OPEN |
 | F-06 | C-3 · Proactive reminder engine | OPEN |
 | F-07 | C-4 · Email triage improvement | OPEN |
 | F-08 | C-5 · Personal knowledge base (`/remember` and `/recall`) | OPEN |
-| R-77 | A-1 · Fix `parallel_route` RAM guard crash | OPEN |
-| R-78 | A-3 · Fix tool grammar fragility (minimum viable guard) | OPEN |
-| config.missing_env.telegramchatid | TELEGRAMCHATID missing from .env (non-blocking) | OPEN |
 | feature.ews_blocked | EWS email feature blocked (open issue O-02) | OPEN |
+| feature.playwright_blocked | Playwright browser tool blocked (open issue O-01) | OPEN |
+| E-nexus-01 | File deleted on every sync — root cause unconfirmed, run `git log --all --full-history -- docs/space/nexus_discoveries.md` to identify committer | OPEN |
 
 ## 10. Quota Snapshot
 gemini_api: 0/1000 | ollama: unlimited | ninagate_up: yes
@@ -105,4 +332,4 @@ Guardian log not found
 
 
 ---
-_Feed size: 5270 bytes_
+_Feed size: 10211 bytes_

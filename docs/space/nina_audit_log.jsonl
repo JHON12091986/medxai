@@ -1,0 +1,273 @@
+
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:12:22.691518"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:12:22.693725"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:12:22.693913"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:12:22.694019"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:12:22.694094"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:12:22.694161"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T06:12:22.698697"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T06:12:22.698926"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T06:12:22.701970"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T06:12:22.702209"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T06:12:22.702433"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T06:12:22.704396"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T06:12:22.704575"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T06:12:22.704736"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T06:12:22.704823"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T06:12:22.704894"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T06:12:22.705211"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:18:40.929130"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:18:40.930605"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:18:40.930741"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:18:40.930818"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:18:40.930886"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:18:40.930949"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T06:18:40.934392"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T06:18:40.934624"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T06:18:40.937781"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T06:18:40.938074"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T06:18:40.938395"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['core/jules_guard.py', 'tools/jules.py']\"]", "timestamp": "2026-06-18T06:18:40.941098"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T06:18:40.941403"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T06:18:40.941717"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T06:18:40.941827"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T06:18:40.941898"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T06:18:40.942177"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:21:28.017979"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:21:28.020880"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:21:28.021137"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:21:28.021304"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:21:28.021492"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T06:21:28.021619"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T06:21:28.027176"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T06:21:28.027420"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T06:21:28.030024"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T06:21:28.030317"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T06:21:28.030621"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['core/jules_guard.py', 'tools/jules.py']\"]", "timestamp": "2026-06-18T06:21:28.033096"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T06:21:28.033243"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T06:21:28.033432"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T06:21:28.033519"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T06:21:28.033588"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T06:21:28.033804"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:41:09.845238"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:41:09.848017"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:41:09.848285"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:41:09.848441"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:41:09.848544"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:41:09.848622"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T07:41:09.852997"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T07:41:09.853252"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T07:41:09.856154"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T07:41:09.856430"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T07:41:09.856676"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['core/jules_guard.py', 'tools/jules.py']\"]", "timestamp": "2026-06-18T07:41:09.858940"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T07:41:09.859100"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T07:41:09.859233"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T07:41:09.859312"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T07:41:09.859393"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T07:41:09.859608"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:43:01.918454"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:43:01.920596"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:43:01.920806"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:43:01.920923"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:43:01.921047"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:43:01.921219"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T07:43:01.925519"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T07:43:01.925777"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T07:43:01.928403"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T07:43:01.928751"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T07:43:01.929039"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T07:43:01.931319"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T07:43:01.931488"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T07:43:01.931622"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T07:43:01.931713"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T07:43:01.931780"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T07:43:01.932072"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:47:36.984444"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:47:36.986512"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:47:36.986843"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:47:36.986979"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:47:36.987080"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:47:36.987171"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T07:47:36.991409"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T07:47:36.991652"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T07:47:36.994251"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T07:47:36.994612"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T07:47:36.994884"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['core/jules_guard.py', 'tools/jules.py']\"]", "timestamp": "2026-06-18T07:47:36.997032"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T07:47:36.997169"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T07:47:36.997341"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T07:47:36.997451"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T07:47:36.997573"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T07:47:36.998001"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:48:50.572693"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:48:50.574332"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:48:50.574520"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:48:50.574635"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:48:50.574750"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T07:48:50.574840"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T07:48:50.578365"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T07:48:50.578531"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T07:48:50.580946"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T07:48:50.581228"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T07:48:50.581487"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['core/jules_guard.py', 'tools/jules.py']\"]", "timestamp": "2026-06-18T07:48:50.583852"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T07:48:50.583978"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T07:48:50.584096"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T07:48:50.584200"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T07:48:50.584268"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T07:48:50.584511"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:06:26.663710"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:06:26.665854"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:06:26.666056"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:06:26.666169"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:06:26.666270"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:06:26.666376"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T08:06:26.670081"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T08:06:26.670306"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T08:06:26.672951"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T08:06:26.673292"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T08:06:26.673580"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T08:06:26.676321"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T08:06:26.676566"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T08:06:26.676843"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T08:06:26.677002"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T08:06:26.677134"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T08:06:26.677513"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:07:56.426546"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:07:56.428407"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:07:56.428547"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:07:56.428626"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:07:56.428698"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:07:56.428765"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T08:07:56.432106"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T08:07:56.432329"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T08:07:56.435035"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T08:07:56.435448"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T08:07:56.435760"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T08:07:56.438075"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T08:07:56.438269"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T08:07:56.438465"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T08:07:56.438584"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T08:07:56.438682"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T08:07:56.439044"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:11:10.188289"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:11:10.189993"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:11:10.190152"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:11:10.190237"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:11:10.190309"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:11:10.190387"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T08:11:10.193795"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T08:11:10.194017"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T08:11:10.196798"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T08:11:10.197197"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T08:11:10.197566"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T08:11:10.200074"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T08:11:10.200274"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T08:11:10.200482"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T08:11:10.200598"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T08:11:10.200691"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T08:11:10.201017"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:17:09.037546"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:17:09.039466"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:17:09.039650"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:17:09.039771"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:17:09.039870"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T08:17:09.039964"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T08:17:09.043635"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T08:17:09.043880"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T08:17:09.046518"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T08:17:09.046938"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T08:17:09.047337"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T08:17:09.049727"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T08:17:09.049905"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T08:17:09.050093"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T08:17:09.050199"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T08:17:09.050285"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T08:17:09.050677"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:36:19.796898"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:36:19.798533"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:36:19.798719"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:36:19.798849"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:36:19.798976"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:36:19.799099"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T09:36:19.802342"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T09:36:19.802619"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T09:36:19.804650"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T09:36:19.804936"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T09:36:19.805200"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T09:36:19.806906"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T09:36:19.807011"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T09:36:19.807149"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T09:36:19.807259"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T09:36:19.807334"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T09:36:19.807544"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:39:48.765942"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:39:48.767685"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:39:48.767837"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:39:48.767916"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:39:48.768001"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:39:48.768095"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T09:39:48.771614"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T09:39:48.771861"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T09:39:48.773920"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T09:39:48.774211"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T09:39:48.774450"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['core/jules_guard.py', 'tools/jules.py']\"]", "timestamp": "2026-06-18T09:39:48.776210"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T09:39:48.776335"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T09:39:48.776505"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T09:39:48.776618"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T09:39:48.776686"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T09:39:48.776908"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:54:25.574083"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:54:25.576671"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:54:25.576884"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:54:25.577013"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:54:25.577215"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:54:25.577346"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T09:54:25.582751"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T09:54:25.582933"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T09:54:25.585730"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T09:54:25.586144"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T09:54:25.586529"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T09:54:25.589821"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T09:54:25.590043"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T09:54:25.590273"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T09:54:25.590421"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T09:54:25.590526"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T09:54:25.590906"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:55:40.366708"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:55:40.369911"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:55:40.370086"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:55:40.370187"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:55:40.370280"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:55:40.370385"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T09:55:40.375331"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T09:55:40.375622"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T09:55:40.378620"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T09:55:40.379017"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T09:55:40.379345"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['core/jules_guard.py', 'tools/jules.py']\"]", "timestamp": "2026-06-18T09:55:40.381693"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T09:55:40.381912"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T09:55:40.382114"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T09:55:40.382237"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T09:55:40.382337"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T09:55:40.382725"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:57:58.882710"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:57:58.884568"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:57:58.884720"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:57:58.884817"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:57:58.884908"}
+{"action": "block", "reason": "Confidential pattern or blocked keyword found in task description", "timestamp": "2026-06-18T09:57:58.885005"}
+{"action": "block", "error_id": "ERR_404", "reason": "Loop detected, activating cooldown", "timestamp": "2026-06-18T09:57:58.887730"}
+{"action": "block", "error_id": "ERR_404", "reason": "Blocked by active cooldown", "timestamp": "2026-06-18T09:57:58.887896"}
+{"action": "dispatch", "count": 5, "timestamp": "2026-06-18T09:57:58.889736"}
+{"action": "block", "reason": "Daily dispatch limit reached", "timestamp": "2026-06-18T09:57:58.889972"}
+{"action": "dispatch", "count": 1, "timestamp": "2026-06-18T09:57:58.890172"}
+{"action": "block", "reason": "Task specification validation failed: [\"Expected exactly one file path, found 2: ['tools/jules.py', 'core/jules_guard.py']\"]", "timestamp": "2026-06-18T09:57:58.891690"}
+{"action": "block", "reason": "Task specification validation failed: ['Expected exactly one file path, found 0: []']", "timestamp": "2026-06-18T09:57:58.891847"}
+{"action": "block", "reason": "Task specification validation failed: ['Neither line number nor function name is present in task spec']", "timestamp": "2026-06-18T09:57:58.891976"}
+{"action": "block", "reason": "Task specification validation failed: [\"Secret keywords found: ['token', 'password']\"]", "timestamp": "2026-06-18T09:57:58.892056"}
+{"action": "block", "reason": "Task specification validation failed: ['Verify command or instruction is not present in task spec']", "timestamp": "2026-06-18T09:57:58.892121"}
+{"action": "block", "reason": "Task specification validation failed: ['Word count is 258, must be less than 200']", "timestamp": "2026-06-18T09:57:58.892319"}

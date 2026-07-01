@@ -9,17 +9,14 @@ emits terminal summary + report.json + summary.md + incident artifacts.
 import argparse
 import hashlib
 import json
-import logging
 import os
-import platform
 import re
 import shlex
-import shutil
 import socket
 import subprocess
 import sys
 import time
-from datetime import datetime, timezone
+from datetime import datetime
 from pathlib import Path
 
 # ── Paths ────────────────────────────────────────────────────────────────────
@@ -39,6 +36,7 @@ CRITICAL_FILES = [
     NINA_DIR / "core" / "router.py",
     NINA_DIR / "core" / "config.py",
     NINA_DIR / "interfaces" / "telegram_interface.py",
+    NINA_DIR / "ninagate" / "main.py",
 ]
 
 TRACKED_PY_FILES = [
@@ -59,6 +57,9 @@ TRACKED_PY_FILES = [
     NINA_DIR / "tools" / "system.py",
     NINA_DIR / "crons" / "manager.py",
     NINA_DIR / "idleloop.py",
+    NINA_DIR / "ninagate" / "main.py",
+    NINA_DIR / "tools" / "jules.py",
+    NINA_DIR / "core" / "task_classifier.py",
 ]
 
 REQUIRED_PACKAGES = [
@@ -68,9 +69,9 @@ REQUIRED_PACKAGES = [
 ]
 
 REQUIRED_ENV_KEYS_BLOCKER = [
-    "TELEGRAMBOTTOKEN",
-    "AUTHORIZEDUSERID",
-    "APISECRETKEY",
+    "TELEGRAM_BOT_TOKEN",
+    "AUTHORIZED_USER_ID",
+    "API_SECRET_KEY",
 ]
 
 REQUIRED_ENV_KEYS_WARN = [
@@ -110,45 +111,128 @@ def warn(msg): print(f"  {yellow('⚠')}  {yellow(msg)}")
 def fail(msg): print(f"  {red('✖')}  {red(msg)}")
 def info(msg): print(f"  {cyan('ℹ')}  {msg}")
 
+def _tg_send(message: str) -> bool:
+    """
+    Send a Telegram message via the Bot API.
+    Reads TELEGRAM_BOT_TOKEN and TELEGRAMCHATID from .env at call time.
+    Returns True on success, False on failure (non-fatal).
+    Non-blocking: uses urllib (stdlib only, no httpx dependency here).
+    """
+    import urllib.request
+    import urllib.parse
+    import urllib.error
+    env = load_env_file(ENV_FILE)
+    token = env.get("TELEGRAM_BOT_TOKEN", "").strip()
+    chat_id = env.get("TELEGRAMCHATID", "").strip()
+    if not token or not chat_id:
+        warn("_tg_send: TELEGRAM_BOT_TOKEN or TELEGRAMCHATID missing — skipping Telegram push")
+        return False
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    payload = urllib.parse.urlencode({
+        "chat_id": chat_id,
+        "text": message[:4000],          # Telegram 4096-char limit
+        "parse_mode": "Markdown",
+    }).encode()
+    try:
+        req = urllib.request.Request(url, data=payload, method="POST")
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return resp.status == 200
+    except Exception as e:
+        warn(f"_tg_send failed: {e}")
+        return False
+
+def format_tg_report(health_score: dict, findings: list, service_state: dict, drift: dict) -> str:
+    """Format a compact Guardian health summary for Telegram Markdown."""
+    ts = datetime.now().strftime("%Y-%m-%d %H:%M")
+    svc = "🟢 running" if service_state.get("active") else "🔴 DOWN"
+    tg  = "✅" if service_state.get("telegram_polling") else "❌"
+    sch = "✅" if service_state.get("apscheduler_started") else "❌"
+    olm = "✅" if service_state.get("local_inference_ok") else "❌"
+
+    score = health_score.get("overall", 0)
+    score_emoji = "🟢" if score >= 8 else ("🟡" if score >= 5 else "🔴")
+
+    blockers = [f for f in findings if f["severity"] == "BLOCKER"]
+    warns    = [f for f in findings if f["severity"] == "WARN"]
+    debts    = [f for f in findings if f["severity"] == "DEBT"]
+
+    lines = [
+        f"🛡 *Guardian Report* — {ts}",
+        "",
+        f"*Health:* {score_emoji} {score}/10",
+        f"*Service:* {svc}  |  TG: {tg}  |  Sched: {sch}  |  Ollama: {olm}",
+        "",
+        f"*Scores:* runtime={health_score.get('runtime')}"
+        f"  config={health_score.get('config')}"
+        f"  security={health_score.get('security')}"
+        f"  types={health_score.get('type_hygiene')}",
+        "",
+    ]
+
+    if blockers:
+        lines.append(f"🔴 *Blockers ({len(blockers)}):*")
+        for b in blockers[:3]:
+            lines.append(f"  • `{b['id']}` — {b['title']}")
+    if warns:
+        lines.append(f"⚠️ *Warnings ({len(warns)}):*")
+        for w in warns[:3]:
+            lines.append(f"  • `{w['id']}` — {w['title']}")
+    if debts:
+        lines.append(f"🟡 *Debt ({len(debts)}):* {', '.join(d['id'] for d in debts[:4])}")
+
+    if not blockers and not warns:
+        lines.append("✅ *No active issues found.*")
+
+    changed = drift.get("changed_files", [])
+    if changed:
+        lines.append("")
+        lines.append(f"📂 *Drift:* {len(changed)} file(s) changed since baseline")
+        for f in changed[:3]:
+            lines.append(f"  • `{f}`")
+
+    lines.append("")
+    lines.append("_Run `guardian` locally for full report._")
+    return "\n".join(lines)
+
 # ── Issue Signatures ──────────────────────────────────────────────────────────
 SIGNATURES = {
     # BLOCKER class
     "config.missing_env.telegrambottoken": {
         "severity": "BLOCKER",
-        "title": "TELEGRAMBOTTOKEN missing from .env",
+        "title": "TELEGRAM_BOT_TOKEN missing from .env",
         "component": "core.config",
         "files": [".env", "core/config.py"],
         "patterns": [
-            re.compile(r"KeyError.*TELEGRAMBOTTOKEN|RuntimeError.*TELEGRAMBOTTOKEN|envcheck: TELEGRAMBOTTOKEN absent or empty", re.IGNORECASE),
-            re.compile(r"KeyError.*TELEGRAMBOTTOKEN", re.IGNORECASE),
+            re.compile(r"KeyError.*TELEGRAM_BOT_TOKEN|RuntimeError.*TELEGRAM_BOT_TOKEN|envcheck: TELEGRAM_BOT_TOKEN absent or empty", re.IGNORECASE),
+            re.compile(r"KeyError.*TELEGRAM_BOT_TOKEN", re.IGNORECASE),
             re.compile(r"telegram.*bot.*token.*missing", re.IGNORECASE),
-            re.compile(r"RuntimeError.*TELEGRAMBOTTOKEN", re.IGNORECASE),
+            re.compile(r"RuntimeError.*TELEGRAM_BOT_TOKEN", re.IGNORECASE),
         ],
-        "fix": "Set TELEGRAMBOTTOKEN=<your_token> in ~/nina/.env and re-run guardian.",
+        "fix": "Set TELEGRAM_BOT_TOKEN=<your_token> in ~/nina/.env and re-run guardian.",
     },
     "config.missing_env.authorizeduserid": {
         "severity": "BLOCKER",
-        "title": "AUTHORIZEDUSERID missing from .env",
+        "title": "AUTHORIZED_USER_ID missing from .env",
         "component": "core.config",
         "files": [".env", "core/config.py"],
         "patterns": [
-            re.compile(r"KeyError.*AUTHORIZEDUSERID|RuntimeError.*AUTHORIZEDUSERID|envcheck: AUTHORIZEDUSERID absent or empty", re.IGNORECASE),
-            re.compile(r"KeyError.*AUTHORIZEDUSERID", re.IGNORECASE),
-            re.compile(r"RuntimeError.*AUTHORIZEDUSERID", re.IGNORECASE),
+            re.compile(r"KeyError.*AUTHORIZED_USER_ID|RuntimeError.*AUTHORIZED_USER_ID|envcheck: AUTHORIZED_USER_ID absent or empty", re.IGNORECASE),
+            re.compile(r"KeyError.*AUTHORIZED_USER_ID", re.IGNORECASE),
+            re.compile(r"RuntimeError.*AUTHORIZED_USER_ID", re.IGNORECASE),
         ],
-        "fix": "Set AUTHORIZEDUSERID=<your_telegram_id> in ~/nina/.env and re-run guardian.",
+        "fix": "Set AUTHORIZED_USER_ID=<your_telegram_id> in ~/nina/.env and re-run guardian.",
     },
     "config.missing_env.apisecretkey": {
         "severity": "BLOCKER",
-        "title": "APISECRETKEY missing or empty in .env",
+        "title": "API_SECRET_KEY missing or empty in .env",
         "component": "core.config",
         "files": [".env", "core/config.py"],
         "patterns": [
-            re.compile(r"RuntimeError.*APISECRETKEY|api.*secret.*key.*missing|envcheck: APISECRETKEY absent or empty", re.IGNORECASE),
+            re.compile(r"RuntimeError.*API_SECRET_KEY|api.*secret.*key.*missing|envcheck: API_SECRET_KEY absent or empty", re.IGNORECASE),
             re.compile(r"api.*secret.*key.*missing", re.IGNORECASE),
-            re.compile(r"RuntimeError.*APISECRETKEY", re.IGNORECASE),
+            re.compile(r"RuntimeError.*API_SECRET_KEY", re.IGNORECASE),
         ],
-        "fix": "Set a non-empty APISECRETKEY=<random_string> in ~/nina/.env and re-run guardian.",
+        "fix": "Set a non-empty API_SECRET_KEY=<random_string> in ~/nina/.env and re-run guardian.",
     },
     "router.attr.self_http": {
         "severity": "BLOCKER",
@@ -706,14 +790,14 @@ def match_signatures(log_text, env_keys):
 
         # Env key checks for config signatures
         if sig_id == "config.missing_env.telegrambottoken":
-            if "TELEGRAMBOTTOKEN" not in env_keys or not env_keys.get("TELEGRAMBOTTOKEN", "").strip():
-                matched_evidence.append("[env_check] TELEGRAMBOTTOKEN absent or empty in .env")
+            if "TELEGRAM_BOT_TOKEN" not in env_keys or not env_keys.get("TELEGRAM_BOT_TOKEN", "").strip():
+                matched_evidence.append("[env_check] TELEGRAM_BOT_TOKEN absent or empty in .env")
         if sig_id == "config.missing_env.authorizeduserid":
-            if "AUTHORIZEDUSERID" not in env_keys or not env_keys.get("AUTHORIZEDUSERID", "").strip():
-                matched_evidence.append("[env_check] AUTHORIZEDUSERID absent or empty in .env")
+            if "AUTHORIZED_USER_ID" not in env_keys or not env_keys.get("AUTHORIZED_USER_ID", "").strip():
+                matched_evidence.append("[env_check] AUTHORIZED_USER_ID absent or empty in .env")
         if sig_id == "config.missing_env.apisecretkey":
-            if "APISECRETKEY" not in env_keys or not env_keys.get("APISECRETKEY", "").strip():
-                matched_evidence.append("[env_check] APISECRETKEY absent or empty in .env")
+            if "API_SECRET_KEY" not in env_keys or not env_keys.get("API_SECRET_KEY", "").strip():
+                matched_evidence.append("[env_check] API_SECRET_KEY absent or empty in .env")
         if sig_id == "config.missing_env.telegramchatid":
             if "TELEGRAMCHATID" not in env_keys or not env_keys.get("TELEGRAMCHATID", "").strip():
                 matched_evidence.append("[env_check] TELEGRAMCHATID absent or empty in .env (non-blocking)")
@@ -1009,7 +1093,7 @@ def build_timeline(journal_recent, journal_15min, guardian_start_ts):
     Returns list of {t, event, source} dicts.
     """
     timeline = []
-    now_ts = time.time()
+    time.time()
 
     timeline.append({
         "t": "T+0s",
@@ -1265,82 +1349,82 @@ def write_summary_md(incident_dir, report):
     drift       = report.get("baseline_drift", {})
 
     lines = [
-        f"# NINA Guardian Incident Report",
-        f"",
+        "# NINA Guardian Incident Report",
+        "",
         f"**Run ID:** `{run_id}`  ",
         f"**Timestamp:** {ts}  ",
         f"**Host:** {report.get('hostname', 'unknown')}  ",
         f"**Overall Status:** {status}  ",
         f"**Deploy Blocked:** {'YES' if blocked else 'NO'}  ",
         f"**Health Score:** {score}/10  ",
-        f"",
-        f"---",
-        f"",
-        f"## Root Cause",
-        f"",
-        f"| Field | Value |",
-        f"|---|---|",
+        "",
+        "---",
+        "",
+        "## Root Cause",
+        "",
+        "| Field | Value |",
+        "|---|---|",
         f"| Title | {rc.get('title', 'N/A')} |",
         f"| Confidence | {rc.get('confidence', 'N/A')} |",
         f"| Fingerprint | `{rc.get('signature', 'N/A')}` |",
         f"| Component | {rc.get('component', 'N/A')} |",
         f"| Likely Files | {', '.join(rc.get('likely_files', []))} |",
-        f"",
-        f"**Evidence Summary:**  ",
+        "",
+        "**Evidence Summary:**  ",
         f"{rc.get('evidence_summary', 'N/A')}",
-        f"",
-        f"---",
-        f"",
-        f"## Health Scores",
-        f"",
-        f"| Dimension | Score |",
-        f"|---|---|",
+        "",
+        "---",
+        "",
+        "## Health Scores",
+        "",
+        "| Dimension | Score |",
+        "|---|---|",
         f"| Runtime | {report['health_score']['runtime']}/10 |",
         f"| Config | {report['health_score']['config']}/10 |",
         f"| Security | {report['health_score']['security']}/10 |",
         f"| Type Hygiene | {report['health_score']['type_hygiene']}/10 |",
         f"| **Overall** | **{score}/10** |",
-        f"",
-        f"---",
-        f"",
-        f"## Findings",
-        f"",
+        "",
+        "---",
+        "",
+        "## Findings",
+        "",
     ]
 
     for f in findings:
         root_label = " ← ROOT CAUSE" if f.get("is_root_cause") else ""
         sym_label  = " ← downstream symptom" if f.get("is_downstream_symptom") else ""
         lines.append(f"### [{f['severity']}] {f['title']}{root_label}{sym_label}")
-        lines.append(f"")
+        lines.append("")
         lines.append(f"- **ID:** `{f['id']}`")
         lines.append(f"- **Component:** {f['component']}")
         lines.append(f"- **Files:** {', '.join(f['files'])}")
         lines.append(f"- **Fix:** {f['suggested_fix']}")
         if f.get("evidence"):
-            lines.append(f"- **Evidence:**")
+            lines.append("- **Evidence:**")
             for ev in f["evidence"][:3]:
                 lines.append(f"  - `{ev}`")
-        lines.append(f"")
+        lines.append("")
 
     lines += [
-        f"---",
-        f"",
-        f"## Suggested Actions",
-        f"",
+        "---",
+        "",
+        "## Suggested Actions",
+        "",
     ]
     for a in actions:
         lines.append(f"{a['priority']}. **{a['action']}**")
         lines.append(f"   - Target: `{a['target_file']}`")
         lines.append(f"   - Expected: {a['expected_result']}")
-        lines.append(f"")
+        lines.append("")
 
     lines += [
-        f"---",
-        f"",
-        f"## Service State",
-        f"",
-        f"| Field | Value |",
-        f"|---|---|",
+        "---",
+        "",
+        "## Service State",
+        "",
+        "| Field | Value |",
+        "|---|---|",
         f"| Active | {svc.get('active', '?')} |",
         f"| PID | {svc.get('pid', 'N/A')} |",
         f"| Uptime | {svc.get('uptime', 'N/A')} |",
@@ -1349,26 +1433,26 @@ def write_summary_md(incident_dir, report):
         f"| Telegram Polling | {svc.get('telegram_polling', False)} |",
         f"| APScheduler | {svc.get('apscheduler_started', False)} |",
         f"| Local Inference | {svc.get('local_inference_ok', False)} |",
-        f"",
-        f"---",
-        f"",
-        f"## Baseline Drift",
-        f"",
+        "",
+        "---",
+        "",
+        "## Baseline Drift",
+        "",
         f"**Compared to:** {drift.get('compared_to', 'N/A')}  ",
         f"**Changed files:** {', '.join(drift.get('changed_files', [])) or 'none'}  ",
         f"**Package drift:** {'; '.join(drift.get('package_drift', [])) or 'none'}  ",
         f"**Env drift:** {'; '.join(drift.get('env_drift', [])) or 'none'}  ",
-        f"",
-        f"---",
-        f"",
-        f"## Rollback Snapshot",
-        f"",
+        "",
+        "---",
+        "",
+        "## Rollback Snapshot",
+        "",
         f"`{rollback}`",
-        f"",
-        f"---",
-        f"",
-        f"## Open Risks",
-        f"",
+        "",
+        "---",
+        "",
+        "## Open Risks",
+        "",
     ]
     for risk in report.get("open_risks", []):
         lines.append(f"- {risk}")
@@ -1383,17 +1467,17 @@ def write_pass_summary_md(incident_dir, report):
     ts    = report["timestamp"]
     svc   = report.get("service_state", {})
     lines = [
-        f"# NINA Guardian — PASS",
-        f"",
+        "# NINA Guardian — PASS",
+        "",
         f"**Timestamp:** {ts}  ",
         f"**Health Score:** {score}/10  ",
         f"**Service:** {'active' if svc.get('active') else 'INACTIVE'}  ",
         f"**Telegram polling:** {svc.get('telegram_polling', False)}  ",
         f"**APScheduler:** {svc.get('apscheduler_started', False)}  ",
-        f"**Baseline:** updated ✔  ",
-        f"",
-        f"No BLOCKER findings. NINA is healthy.",
-        f"",
+        "**Baseline:** updated ✔  ",
+        "",
+        "No BLOCKER findings. NINA is healthy.",
+        "",
     ]
     incident_dir.mkdir(parents=True, exist_ok=True)
     (incident_dir / "summary.md").write_text("\n".join(lines))
@@ -1798,7 +1882,64 @@ if __name__ == "__main__":
         action="store_true",
         help="Suppress terminal output, emit only JSON report path to stdout",
     )
+    parser.add_argument(
+        "--mode",
+        choices=["full", "hook", "report"],
+        default="full",
+        help="Scan mode: full=forensic engine, hook=pre-commit file scan, report=JSON only",
+    )
+    parser.add_argument(
+        "--files",
+        nargs="*",
+        default=None,
+        help="(hook mode) List of staged Python files to scan",
+    )
+    parser.add_argument(
+        "--max-violations",
+        type=int,
+        default=None,
+        help="(hook mode) Exit 1 if violations exceed this count (0 = block on any finding)",
+    )
     args = parser.parse_args()
+
+    if args.mode == "hook":
+        files_to_scan = args.files or []
+        max_v = args.max_violations if args.max_violations is not None else 0
+        violations = 0
+        for fpath in files_to_scan:
+            p = Path(fpath)
+            if not p.exists():
+                continue
+            out, err, rc = run_cmd(["python3", "-m", "pyflakes", str(p)])
+            if rc != 0 or out.strip() or err.strip():
+                print(f"  guardian hook: violations in {fpath}")
+                for line in (out + err).splitlines()[:10]:
+                    print(f"    {line}")
+                violations += 1
+        if violations > max_v:
+            sys.exit(1)
+        sys.exit(0)
+
+    if args.mode == "report":
+        # Run a full scan but output only to Telegram — no terminal report, no file writes
+        log_text, _ = collect_all_log_text()
+        env_keys = load_env_file(ENV_FILE)
+        service_state = inspect_service_state(log_text, log_text)
+        findings = match_signatures(log_text, env_keys)
+        findings = resolve_root_cause(findings)
+        current_hashes = compute_file_hashes()
+        pip_sha = pip_freeze_sha()
+        baseline = load_baseline()
+        drift = compute_baseline_drift(baseline, current_hashes, pip_sha, env_keys)
+        health_score = compute_health_score(findings, service_state, env_keys)
+        message = format_tg_report(health_score, findings, service_state, drift)
+        sent = _tg_send(message)
+        if sent:
+            print(green("  ✔  Guardian report sent to Telegram."))
+        else:
+            print(yellow("  ⚠  Telegram send failed — printing report to stdout:"))
+            print(message)
+        sys.exit(0 if not any(f["severity"] == "BLOCKER" for f in findings) else 1)
 
     if args.json_only:
         # Redirect terminal output to /dev/null

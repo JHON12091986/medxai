@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NINA Control Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f0c1b, #201335, #07050f);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f0ff;
+            --text-secondary: #9c8eb9;
+            --accent-purple: #9d4edd;
+            --accent-pink: #ff007f;
+            --health-green: #00f5d4;
+            --health-yellow: #ffb703;
+            --health-red: #ff4d6d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #00f5d4, #9d4edd, #ff007f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .refresh-tag {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            background: var(--card-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .refresh-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--health-green);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        .grid {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(157, 78, 221, 0.4);
+        }
+
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-yellow { background: rgba(255, 183, 3, 0.15); color: var(--health-yellow); border: 1px solid rgba(255, 183, 3, 0.3); }
+        .badge-green { background: rgba(0, 245, 212, 0.15); color: var(--health-green); border: 1px solid rgba(0, 245, 212, 0.3); }
+        .badge-red { background: rgba(255, 77, 109, 0.15); color: var(--health-red); border: 1px solid rgba(255, 77, 109, 0.3); }
+
+        .list-container {
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 0.5rem;
+        }
+
+        .list-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-purple);
+            font-family: monospace;
+            word-break: break-all;
+        }
+
+        .meta-footer {
+            width: 100%;
+            max-width: 1200px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>NINA OS Dashboard</h1>
+        <div class="refresh-tag">
+            <span class="refresh-dot"></span>
+            Auto-refreshing in 60s
+        </div>
+    </header>
+
+    <main class="grid">
+        <!-- Health Card -->
+        <div class="card">
+            <div class="card-title">System Health</div>
+            <div id="health-metric" class="metric">YELLOW</div>
+            <span id="health-badge" class="badge badge-yellow">Operational</span>
+        </div>
+
+        <!-- Progress Card -->
+        <div class="card">
+            <div class="card-title">Completion Rate</div>
+            <div id="completion-rate" class="metric">78.6%</div>
+            <div><span id="audited-count">33</span> of 42 Prompts Verified</div>
+        </div>
+
+        <!-- Sync Card -->
+        <div class="card">
+            <div class="card-title">Last Sync & Audit</div>
+            <div id="last-sync" style="font-size: 1.1rem; font-weight: 600; margin-top: 1rem; font-family: monospace;">-</div>
+            <div id="last-audit" style="font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.5rem; font-family: monospace;">-</div>
+        </div>
+
+        <!-- Open Errors -->
+        <div class="card" style="grid-column: span 2;">
+            <div class="card-title">
+                <span>Active Open Errors</span>
+                <span id="error-count" class="badge badge-red">0</span>
+            </div>
+            <div id="error-list" class="list-container">
+                <div class="list-item">No active errors registered.</div>
+            </div>
+        </div>
+
+        <!-- Jules Stats -->
+        <div class="card">
+            <div class="card-title">Jules PR Audit (Last 7 Days)</div>
+            <div id="jules-prs-total" style="font-size: 1.5rem; font-weight: 800; margin-top: 0.5rem;">Total PRs: 32</div>
+            <div style="margin-top: 0.5rem; font-size: 0.95rem;">
+                <p>Merge Rate: <strong style="color: var(--health-green);">3.1%</strong> (1/32)</p>
+                <p>Duplicate Rate: <strong style="color: var(--health-red);">93.8%</strong> (30/32)</p>
+                <p>Status: <strong class="badge badge-red">RED</strong></p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="meta-footer">
+        NINA Autonomous Node • Repository: aibony/nina
+    </footer>
+
+    <script>
+        async function fetchState() {
+            try {
+                const response = await fetch('./nina_state.json');
+                const state = await response.json();
+                
+                // Update Health
+                const health = (state.system_health || 'yellow').toUpperCase();
+                const healthElem = document.getElementById('health-metric');
+                const badgeElem = document.getElementById('health-badge');
+                healthElem.textContent = health;
+                if (health === 'GREEN') {
+                    healthElem.style.color = 'var(--health-green)';
+                    badgeElem.className = 'badge badge-green';
+                    badgeElem.textContent = 'All Good';
+                } else if (health === 'YELLOW') {
+                    healthElem.style.color = 'var(--health-yellow)';
+                    badgeElem.className = 'badge badge-yellow';
+                    badgeElem.textContent = 'Warning';
+                } else {
+                    healthElem.style.color = 'var(--health-red)';
+                    badgeElem.className = 'badge badge-red';
+                    badgeElem.textContent = 'Critical';
+                }
+
+                // Update Completion Rate
+                document.getElementById('completion-rate').textContent = (state.completion_rate || 0).toFixed(1) + '%';
+                const audited = Math.round(((state.completion_rate || 0) / 100) * (state.total_prompts_audited || 42));
+                document.getElementById('audited-count').textContent = audited;
+
+                // Update Timestamps
+                document.getElementById('last-sync').textContent = 'Sync: ' + new Date(state.last_sync).toLocaleString();
+                document.getElementById('last-audit').textContent = 'Audit: ' + new Date(state.last_audit_timestamp || state.last_sync).toLocaleString();
+
+                // Update Errors
+                const errors = state.open_errors || [];
+                document.getElementById('error-count').textContent = errors.length;
+                const errList = document.getElementById('error-list');
+                errList.innerHTML = '';
+                if (errors.length === 0) {
+                    errList.innerHTML = '<div class="list-item">No active errors registered.</div>';
+                } else {
+                    errors.forEach(err => {
+                        const div = document.createElement('div');
+                        div.className = 'list-item';
+                        div.textContent = err;
+                        errList.appendChild(div);
+                    });
+                }
+            } catch (err) {
+                console.error('Error fetching nina_state.json:', err);
+            }
+        }
+
+        fetchState();
+        setInterval(fetchState, 60000);
+    </script>
+</body>
+</html>

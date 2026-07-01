@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# NINA v15 Guardian Loop — post-commit hook
+# Triggers the full snake loop on every Python file change.
+# Runs in background so it never blocks git operations.
+#
+# Install: cp git-hooks/post-commit .git/hooks/post-commit && chmod +x .git/hooks/post-commit
+# Or use: git config core.hooksPath git-hooks
+
+set -euo pipefail
+
+NINA_ROOT="$(git rev-parse --show-toplevel)"
+VENV_PYTHON="${NINA_ROOT}/venv/bin/python"
+SYSTEM_PYTHON="$(which python3 2>/dev/null || which python)"
+PYTHON="${VENV_PYTHON}"
+
+# Fall back to system python if venv not present
+[ -f "${PYTHON}" ] || PYTHON="${SYSTEM_PYTHON}"
+
+# Get changed Python files in this commit
+CHANGED=$(git diff --name-only HEAD~1 HEAD 2>/dev/null | grep '\.py$' || true)
+
+# If no Python files changed, skip the loop
+if [ -z "${CHANGED}" ]; then
+  exit 0
+fi
+
+echo "[nina-guardian] 🐍 Change detected → triggering Guardian Loop..."
+echo "[nina-guardian] Files: $(echo ${CHANGED} | tr '\n' ' ')"
+
+# Update nina_index.json to reflect latest file changes (non-blocking)
+(
+  cd "${NINA_ROOT}"
+  PYTHONPATH="${NINA_ROOT}" "${PYTHON}" tools/update_index.py \
+    >> "${NINA_ROOT}/logs/update_index_hook.log" 2>&1
+  EXIT_CODE=$?
+  if [ ${EXIT_CODE} -eq 0 ]; then
+    echo "[nina-guardian] ✅ nina_index.json updated at $(date '+%H:%M:%S')"
+  else
+    echo "[nina-guardian] ⚠️  update_index.py exited with code ${EXIT_CODE} — check logs/update_index_hook.log"
+  fi
+) &
+disown $! 2>/dev/null || true
+
+# Run Guardian Loop in background (non-blocking)
+(
+  cd "${NINA_ROOT}"
+  PYTHONPATH="${NINA_ROOT}" "${PYTHON}" -m core.guardian_loop ${CHANGED} \
+    >> "${NINA_ROOT}/logs/guardian_loop_hook.log" 2>&1
+  EXIT_CODE=$?
+  if [ ${EXIT_CODE} -eq 0 ]; then
+    echo "[nina-guardian] ✅ Guardian Loop completed at $(date '+%H:%M:%S')"
+  else
+    echo "[nina-guardian] ⚠️  Guardian Loop exited with code ${EXIT_CODE} — check logs/guardian_loop_hook.log"
+  fi
+) &
+
+# Disown so it survives the hook shell
+disown $! 2>/dev/null || true
+
+exit 0

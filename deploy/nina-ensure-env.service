@@ -1,0 +1,13 @@
+[Unit]
+Description=NINA ensure .env from .env.local
+Before=nina.service
+After=default.target
+
+[Service]
+Type=oneshot
+User=aibony
+ExecStart=/bin/bash /home/aibony/nina/scripts/ensure_env.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

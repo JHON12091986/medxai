@@ -1,0 +1,17 @@
+[Unit]
+Description=Nina Jules GitHub Bridge (PR watcher / auto-dispatcher)
+After=network-online.target nina.service
+Wants=nina.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/aibony/nina
+ExecStart=/home/aibony/nina/venv/bin/python tools/jules.py --daemon
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/home/aibony/nina/logs/ninajulesgithub.log
+StandardError=append:/home/aibony/nina/logs/ninajulesgithub.log
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target

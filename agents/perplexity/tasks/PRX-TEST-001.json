@@ -1,0 +1,9 @@
+{
+  "id": "PRX-TEST-001",
+  "task": "Create a test file to verify relay is working",
+  "type": "file_op",
+  "steps": [
+    {"action": "create", "file": "perplexity/tasks/test_output.txt", "content": "relay works\n"},
+    {"action": "run", "cmd": "python3 rule0_audit.py"}
+  ]
+}

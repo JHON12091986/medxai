@@ -29,9 +29,16 @@ import sys
 import time
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from typing import Any
 
 import requests
+from core.constants import (ENV_TELEGRAM_BOT_TOKEN, ENV_TELEGRAM_CHAT_ID, ENV_API_SECRET_KEY, ENV_OPENAI_API_KEY, ENV_CEREBRAS_API_KEY, ENV_GROQ_API_KEY, ENV_GEMINI_API_KEY, ENV_MISTRAL_API_KEY, ENV_OPENROUTER_API_KEY, ENV_DEEPSEEK_API_KEY, ENV_PERPLEXITY_API_KEY, ENV_TOGETHER_API_KEY, ENV_COHERE_API_KEY, ENV_FIREWORKS_API_KEY, ENV_XAI_API_KEY, ENV_SAMBANOVA_API_KEY, ENV_HYPERBOLIC_API_KEY, ENV_NOVITA_API_KEY, ENV_OLLAMA_HOST, ENV_EWS_USERNAME, ENV_EWS_MY_EMAIL, ENV_EWS_SHARED_EMAIL)
+
+from core.constants import (
+    ENV_TELEGRAM_BOT_TOKEN,
+    ENV_TELEGRAM_CHAT_ID,
+    ENV_AUTHORIZED_USER_ID,
+    ENV_JULES_API_KEY,
+)
 
 # Lazy import to avoid circular load — jules imports happen at call-site
 _jules = None
@@ -97,8 +104,8 @@ def _save_registry(data: dict) -> None:
 
 def _send_telegram(message: str) -> None:
     import os
-    token = os.environ.get("TELEGRAMBOTTOKEN")
-    chat_id = os.environ.get("AUTHORIZEDUSERID")
+    token = os.environ.get(ENV_TELEGRAM_BOT_TOKEN)
+    chat_id = os.environ.get(ENV_TELEGRAM_CHAT_ID) or os.environ.get(ENV_AUTHORIZED_USER_ID)
     if not token or not chat_id:
         return
     try:
@@ -113,7 +120,7 @@ def _send_telegram(message: str) -> None:
 
 def _jules_api(method: str, path: str, **kwargs) -> dict:
     import os
-    key = os.environ.get("JULES_API_KEY", "")
+    key = os.environ.get(ENV_JULES_API_KEY, "")
     if not key:
         raise RuntimeError("JULES_API_KEY not set")
     headers = {"X-Goog-Api-Key": key, "Content-Type": "application/json"}
@@ -174,13 +181,13 @@ def _detect_duplicates(prs: list[dict]) -> dict[str, list[dict]]:
 
 def _pr_changed_files(branch: str) -> list[str]:
     res = _git("diff", "--name-only", f"origin/main...origin/{branch}")
-    return [l.strip() for l in res.stdout.splitlines() if l.strip()]
+    return [line.strip() for line in res.stdout.splitlines() if line.strip()]
 
 
 def _try_rebase_and_merge(pr: dict) -> tuple[bool, str]:
     """Attempt rebase of a conflicting branch onto main. Return (success, reason)."""
     branch = pr["headRefName"]
-    num = pr["number"]
+    pr["number"]
 
     # Check for high-risk file conflicts
     changed = _pr_changed_files(branch)
@@ -266,7 +273,6 @@ def phase1_pr_triage() -> dict:
         except Exception:
             age = timedelta(0)
         if age > timedelta(hours=72) and pr["mergeable"] == "CONFLICTING":
-            # Check if task already merged in git log
             branch = pr.get("headRefName", "")
             git_log = _git("log", "--oneline", "-100").stdout
             if any(word in git_log for word in re.findall(r"\d{10,}", branch)):
@@ -368,17 +374,15 @@ def phase1_5_doc_update(merged_count: int, merged_prs: list[int]) -> None:
     if not AGENTS_PATH.exists():
         return
 
-    # Identify changed files across merged PRs
     changed: list[str] = []
     try:
         log_res = _git("log", "--name-only", "--pretty=format:",
                        f"origin/main~{merged_count}..origin/main")
-        changed = sorted(set(l.strip() for l in log_res.stdout.splitlines() if l.strip()))
+        changed = sorted(set(line.strip() for line in log_res.stdout.splitlines() if line.strip()))
     except Exception as exc:
         logger.warning(f"Could not list changed files: {exc}")
         return
 
-    # Skip pure data/log changes
     if all(re.match(r"(data/|logs/|.*\.jsonl|.*\.lock)", f) for f in changed):
         return
 
@@ -398,7 +402,6 @@ def phase1_5_doc_update(merged_count: int, merged_prs: list[int]) -> None:
 
         elif path.startswith("core/") and path.endswith(".py") and full.exists():
             info = _extract_module_public_api(full)
-            # Only update if docstring is auto-generated or missing
             try:
                 src = full.read_text()
                 tree = ast.parse(src)
@@ -436,7 +439,6 @@ def phase1_5_doc_update(merged_count: int, merged_prs: list[int]) -> None:
         summary += "\n\n".join(doc_lines)
         _upsert_agents_section("TOOL_SUMMARIES", summary)
 
-    # Commit if anything changed
     diff = _git("diff", "--name-only", "AGENTS.md")
     staged = _git("diff", "--cached", "--name-only")
     if diff.stdout.strip() or staged.stdout.strip():
@@ -465,7 +467,7 @@ def _read_file_section(filepath: str, keyword: str, lines: int = 30) -> str:
 
 
 _NINAGATE_URL = "http://localhost:8080/v1/chat/completions"
-_NINAGATE_TIMEOUT = 45  # seconds — ollama can take 3-8s for longer responses
+_NINAGATE_TIMEOUT = 45
 
 _SYSTEM_PROMPT = """\
 You are an autonomous pipeline manager for the NINA AI OS codebase (Python, FastAPI, APScheduler).
@@ -487,13 +489,11 @@ def _build_context(question: str, session_title: str) -> str:
     """Assemble file snippets and backlog context relevant to the question."""
     chunks: list[str] = []
 
-    # Pull any referenced .py files from the question
     for match in re.findall(r"[\w./][\w/.-]+\.py", question):
         snippet = _read_file_section(match, "def ")
         if "not found" not in snippet and snippet.strip():
             chunks.append(f"### {match} (relevant excerpt)\n```python\n{snippet[:800]}\n```")
 
-    # Pull relevant backlog entry if task ID mentioned
     task_ids = re.findall(r"AG-[A-Z]-\d+|B-\d{3}", question + " " + session_title)
     if task_ids and BACKLOG_PATH.exists():
         text = BACKLOG_PATH.read_text()
@@ -529,10 +529,7 @@ def _auto_answer_fallback(question: str) -> str:
 
 
 def _auto_answer(question: str, session_title: str = "") -> str:
-    """Route Jules question through NinaGate for intelligent response.
-
-    Falls back to pattern-matcher if NinaGate is unreachable or times out.
-    """
+    """Route Jules question through NinaGate for intelligent response."""
     context = _build_context(question, session_title)
 
     user_content = f"Session title: {session_title}\n\n"
@@ -582,7 +579,6 @@ def phase2_session_health() -> dict:
         state = s.get("state", "UNKNOWN")
         title = s.get("title", "Untitled")
 
-        # Update registry
         if sid in registry:
             registry[sid]["status"] = state
             registry[sid]["last_updated"] = datetime.utcnow().isoformat() + "Z"
@@ -603,14 +599,12 @@ def phase2_session_health() -> dict:
                 logger.warning(f"Could not respond to session {sid}: {exc}")
 
         elif state == "FAILED":
-            # Re-dispatch once if not already re-dispatched
             entry = registry.get(sid, {})
             retries = entry.get("retry_count", 0)
             if retries < 1:
                 try:
                     task_ids = entry.get("tasks", [])
                     task_title = entry.get("title", title)
-                    # Find original prompt from backlog
                     prompt = f"Re-dispatch of failed task: {task_title}. Tasks: {', '.join(task_ids)}"
                     new_data = _jules_api("POST", "sessions", json={
                         "prompt": prompt,
@@ -668,7 +662,6 @@ def phase3_backlog_sync() -> int:
     registry = _load_registry()
     git_log = _git("log", "--oneline", "-200").stdout
 
-    # Get open PRs
     pr_res = _gh("pr", "list", "--json", "number,title,headRefName,state", "--limit", "50")
     open_prs: list[dict] = json.loads(pr_res.stdout or "[]")
 
@@ -683,7 +676,6 @@ def phase3_backlog_sync() -> int:
         reg_status = entry.get("status", "UNKNOWN")
 
         for task_id in task_ids:
-            # Determine true status
             if any(task_id in line for line in git_log.splitlines()):
                 true_status = "MERGED"
             elif any(task_id in (p.get("title", "") + p.get("headRefName", "")) for p in open_prs):
@@ -693,7 +685,6 @@ def phase3_backlog_sync() -> int:
 
             write_status = _STATUS_MAP.get(true_status, true_status)
 
-            # Update all matching rows
             pattern = rf'(\|\s*{re.escape(task_id)}\s*\|[^|]*\|[^|]*\|)\s*`?[A-Z_]+`?\s*(\|)'
             replacement = rf'\1 `{write_status}` \2'
             new_content, n = re.subn(pattern, replacement, content)
@@ -715,7 +706,6 @@ def phase3_backlog_sync() -> int:
     else:
         logger.info("Phase 3: backlog already up to date")
 
-    # Auto-dispatch READY tasks that have no active Jules session
     if not BACKLOG_PATH.exists():
         return updated
 
@@ -740,12 +730,11 @@ def phase3_backlog_sync() -> int:
     return updated
 
 
-
 # ── Phase 4 — Poll loop ────────────────────────────────────────────────────────
 
 async def phase4_poll(p2_result: dict) -> None:
     if p2_result["responded"] == 0:
-        return  # no new sessions to wait for
+        return
 
     for attempt in range(3):
         await asyncio.sleep(120)
@@ -757,7 +746,6 @@ async def phase4_poll(p2_result: dict) -> None:
             phase1_pr_triage()
             phase3_backlog_sync()
 
-        # Check if still any in-flight sessions
         try:
             sd = _jules_api("GET", "sessions", params={"pageSize": 100})
             in_flight = sum(
@@ -768,145 +756,3 @@ async def phase4_poll(p2_result: dict) -> None:
                 break
         except Exception:
             break
-
-
-# ── Phase 5 — Duplicate session cleanup ───────────────────────────────────────
-
-def phase5_cleanup() -> int:
-    registry = _load_registry()
-    cleaned: dict = {}
-    removed = 0
-
-    for sid, entry in registry.items():
-        cleaned[sid] = entry
-
-    # Group by task_id to find duplicates
-    task_to_sids: dict[str, list[str]] = {}
-    for sid, entry in registry.items():
-        for tid in entry.get("tasks", []):
-            task_to_sids.setdefault(tid, []).append(sid)
-
-    for tid, sids in task_to_sids.items():
-        if len(sids) <= 1:
-            continue
-        active = [s for s in sids if cleaned.get(s, {}).get("status") not in ("FAILED", "BLOCKED", "MERGED")]
-        if len(active) > 1:
-            active.sort(key=lambda s: cleaned.get(s, {}).get("created_at", ""), reverse=True)
-            for old_sid in active[1:]:
-                if old_sid in cleaned:
-                    cleaned[old_sid]["status"] = "DUPLICATE"
-                    removed += 1
-                    logger.info(f"Marked session {old_sid} as DUPLICATE for task {tid}")
-
-    _save_registry(cleaned)
-
-    # Session-end: flush insights to .jules/bolt.md (dry-run so no sync here)
-    try:
-        _get_jules().session_end(
-            title="Pipeline Autopilot Cycle",
-            learning=f"Cleaned {removed} duplicate sessions.",
-            action="Continue autopilot cycle.",
-            dry_run=True,
-        )
-    except Exception as exc:
-        logger.warning(f"Phase 5 session_end flush failed: {exc}")
-
-    return removed
-
-
-# ── Phase 6 — Final report ─────────────────────────────────────────────────────
-
-def phase6_report(
-    p1: dict, p2: dict, p3_updated: int,
-    p5_removed: int, duration: float,
-) -> None:
-    report = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "prs_merged": len(p1.get("merged", [])),
-        "prs_closed_duplicate": len(p1.get("closed_duplicate", [])),
-        "prs_closed_stale": len(p1.get("closed_stale", [])),
-        "prs_closed_high_risk": len(p1.get("closed_high_risk", [])),
-        "prs_remaining_open": p1.get("remaining", 0),
-        "sessions_responded": p2.get("responded", 0),
-        "sessions_redispatched": p2.get("redispatched", 0),
-        "tasks_status_updated": p3_updated,
-        "duplicate_sessions_cleaned": p5_removed,
-        "blockers": p2.get("blocked", []),
-        "duration_seconds": round(duration, 1),
-    }
-
-    logger.info(f"Pipeline report: {json.dumps(report)}")
-
-    blocker_txt = f" | Blockers: {len(report['blockers'])}" if report["blockers"] else ""
-    msg = (
-        f"🔄 *Pipeline Autopilot*\n"
-        f"PRs merged: {report['prs_merged']} | Remaining: {report['prs_remaining_open']}\n"
-        f"Sessions answered: {report['sessions_responded']}"
-        f" | Re-dispatched: {report['sessions_redispatched']}\n"
-        f"Tasks synced: {report['tasks_status_updated']}{blocker_txt}\n"
-        f"⏱ {report['duration_seconds']}s"
-    )
-    _send_telegram(msg)
-
-
-# ── Entry point ────────────────────────────────────────────────────────────────
-
-async def run_pipeline_autopilot() -> None:
-    """Execute all pipeline phases with file-lock guard."""
-    LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
-    start = time.monotonic()
-
-    with open(LOCK_PATH, "w") as lock_file:
-        try:
-            fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            logger.info("Pipeline already running — skipping this cycle")
-            return
-
-        try:
-            # Phase 0 — Safety
-            safety = phase0_safety()
-
-            # Phase 1 — PR triage and merge
-            p1 = phase1_pr_triage()
-
-            # Phase 1.5 — Doc update
-            phase1_5_doc_update(len(p1.get("merged", [])), p1.get("merged", []))
-
-            # Phase 2 — Jules session health (skip if global pause)
-            if not safety["global_pause"]:
-                p2 = phase2_session_health()
-            else:
-                p2 = {"responded": 0, "redispatched": 0, "blocked": []}
-
-            # Phase 3 — Backlog sync
-            p3 = phase3_backlog_sync()
-
-            # Phase 4 — Poll for new PRs from in-flight sessions
-            await phase4_poll(p2)
-
-            # Phase 5 — Duplicate session cleanup
-            p5 = phase5_cleanup()
-
-            # Phase 6 — Report
-            phase6_report(p1, p2, p3, p5, time.monotonic() - start)
-
-        except Exception as exc:
-            logger.exception(f"Pipeline autopilot unhandled error: {exc}")
-        finally:
-            fcntl.flock(lock_file, fcntl.LOCK_UN)
-
-
-# ── CLI shim for manual testing ────────────────────────────────────────────────
-
-if __name__ == "__main__":
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s %(levelname)s %(name)s — %(message)s",
-        handlers=[
-            logging.StreamHandler(sys.stdout),
-        ],
-    )
-    import dotenv
-    dotenv.load_dotenv()
-    asyncio.run(run_pipeline_autopilot())

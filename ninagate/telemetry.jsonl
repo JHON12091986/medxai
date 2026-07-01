@@ -1,0 +1,67 @@
+{"ts": 1782327124.1097, "span_id": "4f3da8ab", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-5-nano", "target_provider": null, "msg_count": 3}}
+{"ts": 1782327125.7034, "span_id": "619ea293", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327131.2137, "span_id": "4f3da8ab", "stage": "ninagate", "event": "response_out", "payload": {"provider": "POLLINATIONS", "task_type": "coding", "latency_ms": 6657.2, "stream": true, "escalated": false, "cached": false}}
+{"ts": 1782327137.7537, "span_id": "026c44e3", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327139.5365, "span_id": "619ea293", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 13833.6}}
+{"ts": 1782327151.7681, "span_id": "1bdc696e", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327163.7255, "span_id": "1bdc696e", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 11957.9}}
+{"ts": 1782327169.7821, "span_id": "564b3e33", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327177.3825, "span_id": "564b3e33", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 7600.9}}
+{"ts": 1782327193.4022, "span_id": "8005a8e2", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327193.7625, "span_id": "8005a8e2", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 360.7}}
+{"ts": 1782327197.0785, "span_id": "026c44e3", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 59325.7}}
+{"ts": 1782327225.8011, "span_id": "ac3f0e27", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327229.1058, "span_id": "ac3f0e27", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 3305.2}}
+{"ts": 1782327293.1293, "span_id": "0f9f5f48", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327333.1478, "span_id": "b9ad2337", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327335.1824, "span_id": "0f9f5f48", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 42053.7}}
+{"ts": 1782327335.2091, "span_id": "b9ad2337", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 2061.9}}
+{"ts": 1782327465.7733, "span_id": "519794fc", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "sensitive", "stream": true, "model": "gpt-5-nano", "target_provider": null, "msg_count": 3}}
+{"ts": 1782327467.5714, "span_id": "2994f326", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "sensitive", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327521.7769, "span_id": "b488f4f1", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "sensitive", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 3}}
+{"ts": 1782327608.2743, "span_id": "ca726abd", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "sensitive", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 4}}
+{"ts": 1782327787.8703, "span_id": "ca126fc4", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-5-nano", "target_provider": null, "msg_count": 3}}
+{"ts": 1782327789.5704, "span_id": "b971f086", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327800.5281, "span_id": "ca126fc4", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 12658.3}}
+{"ts": 1782327801.5807, "span_id": "8a1d6ab8", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327805.8434, "span_id": "8a1d6ab8", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 4263.2}}
+{"ts": 1782327809.8764, "span_id": "83b1dfd6", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327809.8769, "span_id": "83b1dfd6", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 1.0}}
+{"ts": 1782327817.9038, "span_id": "6dda8a0a", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327817.9043, "span_id": "6dda8a0a", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 1.1}}
+{"ts": 1782327827.475, "span_id": "b971f086", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 37905.4}}
+{"ts": 1782327833.9311, "span_id": "3baaf1be", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327833.9316, "span_id": "3baaf1be", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 1.0}}
+{"ts": 1782327865.9607, "span_id": "686c0b14", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327878.4541, "span_id": "686c0b14", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 12494.3}}
+{"ts": 1782327905.9719, "span_id": "ffd509c6", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782327906.2116, "span_id": "ffd509c6", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 240.2}}
+{"ts": 1782328034.2399, "span_id": "9990c1d0", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328047.7304, "span_id": "9990c1d0", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 13491.0}}
+{"ts": 1782328074.2563, "span_id": "b09f4912", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328074.4632, "span_id": "b09f4912", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 207.4}}
+{"ts": 1782328586.4978, "span_id": "91af3948", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328607.6213, "span_id": "91af3948", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 21124.0}}
+{"ts": 1782328675.0066, "span_id": "be0bc8d5", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-5-nano", "target_provider": null, "msg_count": 3}}
+{"ts": 1782328676.6095, "span_id": "ab0d104d", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328686.7115, "span_id": "be0bc8d5", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 11705.3}}
+{"ts": 1782328688.6269, "span_id": "74c69d62", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328688.8386, "span_id": "74c69d62", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 212.1}}
+{"ts": 1782328692.8672, "span_id": "0b469a50", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328692.8677, "span_id": "0b469a50", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 1.0}}
+{"ts": 1782328700.9013, "span_id": "30760315", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328700.9018, "span_id": "30760315", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 1.1}}
+{"ts": 1782328715.4503, "span_id": "ab0d104d", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 38841.8}}
+{"ts": 1782328716.9294, "span_id": "5297ac67", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328716.9299, "span_id": "5297ac67", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 1.1}}
+{"ts": 1782328748.9579, "span_id": "b77dcd8a", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328764.3796, "span_id": "b77dcd8a", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 15422.2}}
+{"ts": 1782328788.9757, "span_id": "47eb1dd9", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328788.9763, "span_id": "47eb1dd9", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 1.2}}
+{"ts": 1782328917.0187, "span_id": "bf7829f7", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328930.0159, "span_id": "bf7829f7", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 12997.7}}
+{"ts": 1782328957.037, "span_id": "62083ab9", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "coding", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 2}}
+{"ts": 1782328957.255, "span_id": "62083ab9", "stage": "ninagate", "event": "error", "payload": {"reason": "all providers exhausted", "task_type": "coding", "latency_ms": 218.6}}
+{"ts": 1782418967.2571, "span_id": "2eb7882c", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "quick", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 6}}
+{"ts": 1782418990.3518, "span_id": "2eb7882c", "stage": "ninagate", "event": "response_out", "payload": {"provider": "POLLINATIONS", "task_type": "quick", "latency_ms": 23066.6, "stream": true, "escalated": false, "cached": false}}
+{"ts": 1782418996.529, "span_id": "60aed4fc", "stage": "ninagate", "event": "request_in", "payload": {"task_type": "quick", "stream": true, "model": "gpt-4o", "target_provider": null, "msg_count": 8}}

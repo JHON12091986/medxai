@@ -1,0 +1,296 @@
+[
+  {
+    "task_id": "IDLE-20260618-1404",
+    "title": "Morning Report",
+    "body": "- Suggestion 1\n- Suggestion 2",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-18T14:04:23.217543",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "c9a165fe8de37d72",
+    "tags": [
+      "idle",
+      "backlog",
+      "morning_report"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260618-1407",
+    "title": "Provider Routing",
+    "body": "- Suggestion 1\n- Suggestion 2",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-18T14:07:44.157419",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "b04752f347609a98",
+    "tags": [
+      "idle",
+      "backlog",
+      "provider_routing"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260618-1413",
+    "title": "Memory Context",
+    "body": "- Suggestion 1\n- Suggestion 2",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-18T14:13:59.210863",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "f0c82044efaf2da0",
+    "tags": [
+      "idle",
+      "backlog",
+      "memory_context"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260618-1419",
+    "title": "Scheduler Errors",
+    "body": "- Suggestion 1\n- Suggestion 2",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-18T14:19:07.499977",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "cb925744120024dc",
+    "tags": [
+      "idle",
+      "backlog",
+      "scheduler_errors"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260619-0220",
+    "title": "Telegram Interface",
+    "body": "- Suggestion 1\n- Suggestion 2",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-19T02:20:52.507651",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "36232efe701d3a30",
+    "tags": [
+      "idle",
+      "backlog",
+      "telegram_interface"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260619-0223",
+    "title": "Config Robustness",
+    "body": "- Suggestion 1\n- Suggestion 2",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-19T02:23:45.364943",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "2e88bffbc4c2ed7a",
+    "tags": [
+      "idle",
+      "backlog",
+      "config_robustness"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260621-0222",
+    "title": "Tool Error Handling",
+    "body": "- Suggestion 1\n- Suggestion 2",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-21T02:22:36.253361",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "653120a51a602330",
+    "tags": [
+      "idle",
+      "backlog",
+      "tool_error_handling"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260621-1645",
+    "title": "Morning Report",
+    "body": "1. Missing:\n   - `run_morning_report` function is not defined in the `core/nina.py` file.\n\n2. Why it matters:\n   The `run_morning_report` function is crucial for generating morning reports and notifying users of new reports. Its absence means that NINA will miss out on these important notifications, potentially leading to missed updates or delayed awareness of new information. This could affect the overall effectiveness of NINA in its operations.\n\n3. Suggested fix:\n   Define the `run_morning_report` function in the `core/nina.py` file so it can be used for generating morning reports as expected. Ensure this function is properly integrated into the existing NINA structure and updates the morning report system accordingly.",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-21T16:45:47.143304",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "4af878081083354d",
+    "tags": [
+      "idle",
+      "backlog",
+      "morning_report"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260621-1717",
+    "title": "Provider Routing",
+    "body": "1) Exact scenario where routing silently fails:\n   - A connection is attempted to a remote node that does not exist or is unreachable.\n2) Impact:\n   - This failure mode can lead to network instability, as the application will fail without appropriate error handling or fallback logic.\n3) Suggested fix in plain English:\n   - Implement proper error handling and add retry mechanisms with backoff strategies. Ensure all nodes are discovered using reliable discovery protocols (e.g., DNS, BGP). Use a distributed file system like HDFS for storing configuration data to ensure availability across multiple servers.",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-21T17:17:01.587708",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "9888c1545ebd984e",
+    "tags": [
+      "idle",
+      "backlog",
+      "provider_routing"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260621-1802",
+    "title": "Memory Context",
+    "body": "Weakness:\n1) The build_context function is missing a check for stale or unused contexts in the memory agent module (core/memory.py).\n2) This weakness can lead to performance issues, especially when dealing with large amounts of data.\n3) Suggested fix:\n   Add a check within the build_context function to ensure that all contexts are either fully utilized or have been explicitly marked as stale. This will prevent any unnecessary computations and resource usage, improving response quality significantly.",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-21T18:02:51.027439",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "419fbc47d828f9fe",
+    "tags": [
+      "idle",
+      "backlog",
+      "memory_context"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260623-1118",
+    "title": "Morning Report",
+    "body": "- Suggestion 1\n- Suggestion 2",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-23T11:18:45.453027",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "93674e8edd151f9d",
+    "tags": [
+      "idle",
+      "backlog",
+      "morning_report"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260624-1329",
+    "title": "Tool Error Handling",
+    "body": "1. **Exact File + Function:**\n   - **agent/__init__.py** / `__main__`\n   \n2. **What Can Go Wrong:**\n   - The root cause of this issue could be the incorrect handling or execution of initialization logic for the agent module itself.\n   \n3. **Suggested Fix in Plain English:**\n   - Ensure that all necessary imports and configurations are correctly set up within the `__init__.py` file, especially if it serves as a parent class for other modules or initializes dependencies. Review any new scripts introduced to ensure they integrate seamlessly with the agent's initialization process without causing unexpected errors.\n\nThis high impact indicates potential issues in the foundational setup of NINA’s agents and their interactions with system-level infrastructure.",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-24T13:29:41.680849",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "08d42e5414b70375",
+    "tags": [
+      "idle",
+      "backlog",
+      "tool_error_handling"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260624-1401",
+    "title": "Morning Report",
+    "body": "1. Missing a comprehensive error handling mechanism in the `run_morning_report` function.\n   - Why it matters:\n     The morning report generator is responsible for processing various reports and scripts, including some that can fail due to network issues or incorrect configurations.\n     If these errors go unhandled, they could lead to incomplete or inaccurate reports being generated, which might result in decision-making based on outdated information.\n\n2. Fragile dependency management.\n   - Why it matters:\n     The script depends on several external tools and modules (e.g., `nina`, `agents`, etc.). If any of these dependencies are not installed correctly or are unavailable at runtime, the morning report generation could fail completely.\n\n3. Lack of monitoring and logging.\n   - Why it matters:\n     Without proper monitoring and logging mechanisms, issues that arise during the execution of the morning report will go unnoticed. This can lead to a high chance of errors going unnoticed until they result in significant problems downstream.\n\n4. Missing unit tests for key functionalities.\n   - Why it matters:\n     Unit testing ensures that each component of the system works as expected without any bugs or failures. Lacking such tests means that issues might only be discovered during production runs, leading to potential downtime and increased complexity when fixing bugs.\n\n5. Poor documentation.\n   - Why it matters:\n     Lack of clear documentation makes it difficult for new users or maintenance staff to understand how the morning report works. This can lead to inefficiencies in using the system and potentially cause errors if misconfigured settings are used inadvertently.\n\nSuggested fix:\n\n1. Implement a robust error handling mechanism that checks dependencies before executing critical parts of `run_morning_report`.\n2. Ensure all required tools/modules are correctly installed and configured.\n3. Add comprehensive logging throughout the script to track runtime issues.\n4. Write unit tests for key functionalities using a testing framework like Pytest or unittest.\n5. Enhance documentation with clear instructions on how to set up dependencies and configure settings.",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-24T14:01:14.928140",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "3341c4ae17220b5d",
+    "tags": [
+      "idle",
+      "backlog",
+      "morning_report"
+    ],
+    "target_files": [],
+    "depends_on": []
+  },
+  {
+    "task_id": "IDLE-20260624-2312",
+    "title": "Provider Routing",
+    "body": "- **Scenario:** If the HybridRouter fails to determine a suitable route based on incoming requests, it may silently fail to handle the request without providing any feedback to the client.\n  \n- **Impact:** This failure mode can lead to degraded user experience since clients might receive no response for valid routing requests. It also poses a security risk as it could potentially expose sensitive information or cause unexpected behavior in mission-critical applications.\n\n- **Suggested Fix:** To mitigate this issue, enhance the error handling mechanism within the HybridRouter. Implement a default fallback route that can handle any incoming request, ensuring that clients receive a response even if no specific routing strategy is found. Additionally, introduce logging mechanisms to capture and report errors more effectively, allowing for easier debugging and monitoring of potential issues.",
+    "priority": "P3",
+    "tier": "BACKLOG",
+    "source": "idleloop",
+    "status": "PENDING",
+    "created_at": "2026-06-24T23:12:37.020161",
+    "dispatched_at": "",
+    "done_at": "",
+    "pr_number": 0,
+    "idempotency_key": "b4ee6ed81ba11f20",
+    "tags": [
+      "idle",
+      "backlog",
+      "provider_routing"
+    ],
+    "target_files": [],
+    "depends_on": []
+  }
+]

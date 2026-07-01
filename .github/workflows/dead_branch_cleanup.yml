@@ -1,0 +1,77 @@
+name: Dead Branch Cleanup
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight UTC
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Delete Dead Branches
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: python
+        run: |
+          import subprocess
+          import json
+          import time
+
+          now = time.time()
+          two_weeks_ago = now - (14 * 24 * 3600)
+
+          pr_res = subprocess.run(
+              ["gh", "pr", "list", "--state", "open", "--json", "headRefName"],
+              capture_output=True, text=True
+          )
+          open_pr_branches = set()
+          if pr_res.returncode == 0:
+              for pr in json.loads(pr_res.stdout):
+                  open_pr_branches.add(pr["headRefName"])
+
+          branches_res = subprocess.run(
+              ["git", "branch", "-r"],
+              capture_output=True, text=True
+          )
+          if branches_res.returncode != 0:
+              print("Failed to list remote branches.")
+              exit(1)
+
+          for line in branches_res.stdout.splitlines():
+              line = line.strip()
+              if not line or "->" in line:
+                  continue
+              
+              if line.startswith("origin/"):
+                  branch_name = line[7:]
+              else:
+                  continue
+
+              if branch_name in ("main", "dev", "staging"):
+                  continue
+              if branch_name.startswith("release/"):
+                  continue
+              if branch_name in open_pr_branches:
+                  print(f"Skipping active branch with open PR: {branch_name}")
+                  continue
+
+              commit_res = subprocess.run(
+                  ["git", "log", "-1", "--format=%ct", f"origin/{branch_name}"],
+                  capture_output=True, text=True
+              )
+              if commit_res.returncode == 0:
+                  try:
+                      commit_time = int(commit_res.stdout.strip())
+                      age_days = (now - commit_time) / (24 * 3600)
+                      if commit_time < two_weeks_ago:
+                          print(f"Branch '{branch_name}' has no commits in {age_days:.1f} days (threshold: 14 days) and no open PRs. Deleting remote branch...")
+                          subprocess.run(["git", "push", "origin", "--delete", branch_name])
+                      else:
+                          print(f"Branch '{branch_name}' is active (last commit {age_days:.1f} days ago).")
+                  except ValueError:
+                      pass

@@ -18,7 +18,7 @@
 
 import logging
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 logger = logging.getLogger("nina.task_classifier")
@@ -63,14 +63,11 @@ class ClassifiedTask:
     # which reads .task_type and expects SIMPLE/MEDIUM/COMPLEX
     # We alias complexity → task_type for the proxy router
     def __post_init__(self):
-        # ninagate reads task_type for routing — expose complexity there too
-        # so existing code `task_type == "SIMPLE"` still works
-        if self.task_type not in (SIMPLE, MEDIUM, COMPLEX, MASSIVE):
-            # Store semantic type separately, expose complexity as task_type
-            self._semantic_type = self.task_type
-            self.task_type = self.complexity
-        else:
-            self._semantic_type = self.task_type
+        pass
+
+    @property
+    def _semantic_type(self) -> str:
+        return self.task_type
 
 
 # ── Keyword tables ────────────────────────────────────────────────────────────
@@ -80,7 +77,7 @@ _LPU_HOTPATH = {
     "ls ", "ls -", "find ", "grep ", "head ", "tail ", "cat ",
     "wc ", "sed ", "awk ", "chmod ", "mkdir ", "touch ", "echo ",
     "python3 -m py_compile", "python3 -m pyflakes",
-    "git status", "git diff", "git log", "git rev-parse", "git show",
+    "git status", "git diff", "git rev-parse", "git show",
     "nf monitor", "nf index", "nf memory", "nf query", "nf log",
 }
 
@@ -89,7 +86,8 @@ _SIMPLE_KEYWORDS = {
     "fix typo", "rename", "format", "add docstring", "add type hint",
     "add comment", "add import", "boilerplate", "sort imports",
     "remove unused", "lint", "compile check", "syntax check",
-    "print ", "show ", "list ", "count ", "status", "verify",
+    "print ", "show ", "list ", "count ", "git status",
+    "service status", "verify",
     "what is", "define ", "explain briefly", "one line",
     "git commit", "git push", "git pull", "git add",
     "summarize this", "summarise this", "tldr",
@@ -123,9 +121,27 @@ _SENSITIVE_KEYWORDS = {
 
 # Semantic type hints (secondary classification, doesn't affect routing tier)
 _CODING_KEYWORDS   = {"code", "python", "bug", "traceback", "function", "class", "patch", "implement", "debug", "error"}
-_RESEARCH_KEYWORDS = {"research", "compare", "search", "latest", "news", "find out", "investigate", "survey"}
+_RESEARCH_KEYWORDS = {"research", "compare", "search", "latest", "news", "survey"}
 _MATH_KEYWORDS     = {"calculate", "equation", "math", "solve", "integral", "derivative", "matrix", "probability"}
 _CREATIVE_KEYWORDS = {"write a", "draft", "story", "poem", "essay", "blog post", "creative"}
+_DIAGNOSTIC_KEYWORDS = {
+    "why is", "why does", "why did", "why isn't", "why doesn't",
+    "what's wrong", "what is wrong", "not working", "broken",
+    "deleted",
+    "gets deleted",
+    "was deleted",
+    "keeps deleting",
+    "being deleted",
+    "file missing",
+    "not persisting",
+    "disappears after",
+    "wiped by",
+    "disappear", "missing file", "root cause",
+    "troubleshoot", "debug why", "investigate why",
+    "trace the ",
+    "trace why",
+    "trace how",
+}
 
 # Pre-compile regexes for fast matching in hot-path classify_task
 _LPU_HOTPATH_REGEX = re.compile(
@@ -155,11 +171,17 @@ _MATH_KEYWORDS_REGEX = re.compile(
 _CREATIVE_KEYWORDS_REGEX = re.compile(
     r"(" + "|".join(re.escape(kw) for kw in _CREATIVE_KEYWORDS) + ")", re.IGNORECASE
 )
+_DIAGNOSTIC_KEYWORDS_REGEX = re.compile(
+    r"(" + "|".join(re.escape(kw) for kw in _DIAGNOSTIC_KEYWORDS) + ")",
+    re.IGNORECASE
+)
 
 
 def _estimate_tokens(text: str, messages: list) -> int:
     """Fast token estimate without tiktoken — 1 token ≈ 4 chars."""
-    total_chars = len(text) + sum(len(str(m.get("content", ""))) for m in messages)
+    # Weight message history at 25% to avoid over-promoting history-heavy requests
+    history_chars = sum(len(str(m.get("content", ""))) for m in messages)
+    total_chars = len(text) + (history_chars // 4)
     return max(1, total_chars // CHARS_PER_TOKEN)
 
 
@@ -167,6 +189,8 @@ def _semantic_type(text: str) -> str:
     """Classify semantic task type independently of complexity."""
     if _SENSITIVE_KEYWORDS_REGEX.search(text):
         return "sensitive"
+    if _DIAGNOSTIC_KEYWORDS_REGEX.search(text):
+        return "diagnostic"
     if _CODING_KEYWORDS_REGEX.search(text):
         return "coding"
     if _MATH_KEYWORDS_REGEX.search(text):
@@ -175,10 +199,10 @@ def _semantic_type(text: str) -> str:
         return "research"
     if _CREATIVE_KEYWORDS_REGEX.search(text):
         return "creative"
-    return "general"
+    return "quick"
 
 
-async def classify_task(
+def classify_task(
     text: str,
     messages: list[dict[str, Any]],
 ) -> ClassifiedTask:
@@ -242,7 +266,8 @@ async def classify_task(
             complexity=COMPLEX,
             estimated_tokens=est_tokens,
             recommended_tier=TIER_DEEP,
-            is_parallel_candidate=True,
+            # diagnostic+coding share TIER_DEEP; diagnostic-only stays TIER_DEEP
+            is_parallel_candidate=sem_type in ("research", "analysis"),
             is_sensitive=False,
             max_tokens_cap=OUTPUT_CAPS[COMPLEX],
         )
@@ -260,7 +285,7 @@ async def classify_task(
         )
 
     # ── 6. Short single-turn with no history → SIMPLE ────────────────────────
-    if len(text) < 300 and n_turns <= 2:
+    if len(text) < 300 and n_turns <= 2 and sem_type in ("general", "creative", "quick"):
         return ClassifiedTask(
             task_type=sem_type,
             complexity=SIMPLE,
@@ -278,7 +303,7 @@ async def classify_task(
             complexity=MEDIUM,
             estimated_tokens=est_tokens,
             recommended_tier=TIER_FAST,
-            is_parallel_candidate=sem_type in ("coding", "research"),
+            is_parallel_candidate=sem_type in ("coding", "research") and sem_type != "diagnostic",
             is_sensitive=False,
             max_tokens_cap=OUTPUT_CAPS[MEDIUM],
         )

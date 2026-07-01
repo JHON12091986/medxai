@@ -3,13 +3,19 @@ import pytest_asyncio
 import httpx
 from httpx import AsyncClient
 from typing import AsyncGenerator
-from unittest.mock import patch, AsyncMock
+from unittest.mock import patch, AsyncMock, MagicMock
 from tools.nina_proxy import app
 
 @pytest.fixture
 def mock_router():
     with patch("tools.nina_proxy.router") as mock:
         mock.route = AsyncMock(return_value="Mocked response")
+        
+        # Mock the dispatcher -> plan -> execute flow
+        mock_plan = MagicMock()
+        mock_plan.execute = AsyncMock(return_value="Mocked response")
+        mock.dispatcher.dispatch.return_value = mock_plan
+        
         yield mock
 
 @pytest_asyncio.fixture
@@ -36,7 +42,7 @@ async def test_chat_completions_success(proxy_client: AsyncClient, mock_router):
     assert data["choices"][0]["message"]["role"] == "assistant"
     assert data["choices"][0]["message"]["content"] == "Mocked response"
     assert data["choices"][0]["finish_reason"] == "stop"
-    mock_router.route.assert_called_once()
+    mock_router.dispatcher.dispatch.assert_called_once()
 
 @pytest.mark.asyncio
 async def test_chat_completions_empty_messages(proxy_client: AsyncClient, mock_router):
@@ -53,7 +59,7 @@ async def test_chat_completions_empty_messages(proxy_client: AsyncClient, mock_r
 
 @pytest.mark.asyncio
 async def test_chat_completions_router_exception(proxy_client: AsyncClient, mock_router):
-    mock_router.route.side_effect = Exception("Router failed internally")
+    mock_router.dispatcher.dispatch.side_effect = Exception("Router failed internally")
     response = await proxy_client.post(
         "/v1/chat/completions",
         json={

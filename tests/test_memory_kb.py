@@ -47,8 +47,9 @@ class MockCollection:
 from core.memory import MemorySystem
 
 @pytest.fixture
-def memory_system():
-    mem = MemorySystem()
+def memory_system(tmp_path):
+    db_file = tmp_path / "test_kb.db"
+    mem = MemorySystem(db_path=str(db_file))
     mem.col = MockCollection()
     yield mem
 

@@ -1,10 +1,13 @@
 import asyncio
 import os
-import json
 import requests
+import pytest
+
 
 async def test():
     key = os.environ.get("JULES_API_KEY")
+    if not key:
+        pytest.skip("Skipping because JULES_API_KEY is not set")
     url = "https://jules.googleapis.com/v1alpha/sessions"
     headers = {"X-Goog-Api-Key": key, "Content-Type": "application/json"}
     
@@ -17,7 +20,10 @@ async def test():
     }
     
     print("Sending request...")
-    r = requests.post(url, headers=headers, json=body)
+    try:
+        r = requests.post(url, headers=headers, json=body)
+    except requests.exceptions.ConnectionError:
+        pytest.skip("Skipping because Google API is unreachable (network offline)")
     print(f"Status: {r.status_code}")
     print(f"Response: {r.text}")
 

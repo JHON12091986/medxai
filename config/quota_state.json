@@ -1,0 +1,15 @@
+{
+  "updated_at": "2026-06-18T00:00:00Z",
+  "reset_hour_utc": 18,
+  "providers": {
+    "openai": {"daily_limit": 100, "used": 0, "unit": "requests"},
+    "anthropic": {"daily_limit": 50, "used": 0, "unit": "requests"},
+    "gemini": {"daily_limit": 1500, "used": 0, "unit": "requests"},
+    "groq": {"daily_limit": 500, "used": 0, "unit": "requests"},
+    "mistral": {"daily_limit": 200, "used": 0, "unit": "requests"},
+    "together": {"daily_limit": 200, "used": 0, "unit": "requests"},
+    "agy": {"daily_limit": 50, "used": 0, "unit": "tasks"},
+    "jules": {"daily_limit": 5, "used": 0, "unit": "tasks"},
+    "perplexity": {"daily_limit": 20, "used": 0, "unit": "requests"}
+  }
+}
